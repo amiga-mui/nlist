@@ -26,8 +26,6 @@
 
 /*** Include stuff ***/
 
-#include "amiga-align.h"
-
 #ifndef LIBRARIES_MUI_H
 #include "libraries/mui.h"
 #endif
@@ -36,6 +34,8 @@
 
 #include <mcc_common.h>
 #include <mcc_debug.h>
+
+#include "amiga-align.h"
 
 /*** MUI Defines ***/
 
