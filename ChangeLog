@@ -5,13 +5,17 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-03-16  Sebastian Bauer <mail@sebastianbauer.info>
+    * NList_mcc: Fixed base page access which happened when no entry
+      was selected and the keyboard was used (bug 1156362)
+
 2005-01-01  Nicolas Sallin <henes@biclodon.com>
 
     * NList_mcc: Fixed wrong usage of MUI_MAXMAX
 
 2004-12-15  Jens Langner <Jens.Langner@light-speed.de>
 
-    * made sure all revisions/dates are bumped of all Nlist classes
+    * made sure all revisions/dates are bumped of all NList classes
       for upcoming new NList release.
 
 2004-12-15  Sebastian Bauer <mail@sebastianbauer.info>
