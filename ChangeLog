@@ -5,6 +5,9 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-03-21  Gunther Nikl
+    * all: Minor source cleanup.
+
 2005-03-17  Sebastian Bauer <mail@sebastianbauer.info>
     * NListtree_mcc: Addressed bug 1095158 by rewritting the
       responsible parts. This might introduce other problems and
