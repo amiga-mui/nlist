@@ -78,6 +78,7 @@
 #define MUICFG_NList_SerMouseFix    0x9d51001D
 #define MUICFG_NList_Keys           0x9d51001E
 #define MUICFG_NList_DragLines      0x9d51001F
+#define MUICGF_NList_VCenteredLines 0x9d510020
 
 #define MUICFG_NList_WheelStep      0x9d510101
 #define MUICFG_NList_WheelFast      0x9d510102

@@ -111,6 +111,19 @@ static struct QualifierDef QualTab[] =
 };
 */
 
+Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
+{
+	Object *obj = MUI_MakeObject(MUIO_Checkmark, label);
+	if (obj)
+	{
+		SetAttrs(obj, MUIA_CycleChain, 1,
+		              MUIA_Selected, check, 
+		              MUIA_ShortHelp, help,
+					  TAG_DONE);
+	}
+	return (obj);
+}
+
 #define String2(contents,maxlen)\
   (void *)MUI_NewObject(MUIC_String,\
     StringFrame,\
@@ -312,7 +325,6 @@ static char *Pages3[] =
   "Misc3",
   "Misc4",
   "Misc5",
-  "Misc6",
   NULL
 };
 
@@ -853,14 +865,14 @@ MakeStaticHook(DestructHook, DestructFunc);
 static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   struct NListviews_MCP_Data *data;
-  APTR group1, group2, group31, group32, group33, group34, group35, group36, group4, group5;
+  APTR group1, group2, group31, group33, group34, group35, group36, group4, group5;
 
   if(!(obj = (Object *)DoSuperMethodA(cl, obj,(Msg) msg)))
     return(0);
 
   data = INST_DATA(cl,obj);
 
-  group1 = group2 = group31 = group32 = group33 = group34 = group35 = group36 = group4 = group5 = NULL;
+  group1 = group2 = group31 = group33 = group34 = group35 = group36 = group4 = group5 = NULL;
 
   data->mcp_group = data->mcp_list1 = data->mcp_list2 = NULL;
   data->mcp_PenTitle = data->mcp_PenList = NULL;
@@ -934,6 +946,16 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
               ASLFO_TitleText  , STRING(MSG_FIXED_FONT_ASL,"Please select the fixed font..."),
               ASLFO_FixedWidthOnly, TRUE,
             TAG_DONE),
+
+            Child, Label(STRING(MSG_LEADING,"Leading")),
+            Child, data->mcp_SL_VertInc = MUI_NewObject(MUIC_Slider,
+              MUIA_CycleChain, 1,
+              MUIA_Numeric_Min  , 0,
+              MUIA_Numeric_Max  , 9,
+              MUIA_Numeric_Value, 1,
+              MUIA_ShortHelp, STRING(MSG_LEADING_HELP,"Adjust the value which will be\nadded to the font height to get\nthe default entry height."),
+              TAG_DONE),
+
           TAG_DONE),
       TAG_DONE);
 
@@ -1075,46 +1097,6 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
         TAG_DONE);
 
-  group32 = MUI_NewObject(MUIC_Group,MUIA_Group_Horiz,TRUE,
-          Child, MUI_NewObject(MUIC_Group,
-
-            Child, MUI_NewObject(MUIC_Group,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-              Child, HSpace(0),
-              Child, MUI_NewObject(MUIC_Group,
-                MUIA_HorizWeight, 1000,
-                Child, VSpace(0),
-                Child, MUI_NewObject(MUIC_Group,MUIA_Group_Horiz,TRUE,
-                  Child, Label(STRING(MSG_LEADING,"Leading")),
-                  Child, data->mcp_SL_VertInc = MUI_NewObject(MUIC_Slider,
-                    MUIA_CycleChain, 1,
-                    MUIA_Numeric_Min  , 0,
-                    MUIA_Numeric_Max  , 9,
-                    MUIA_Numeric_Value, 1,
-                  TAG_DONE),
-                  MUIA_ShortHelp, STRING(MSG_LEADING_HELP,"Adjust the value which will be\nadded to the font height to get\nthe default entry height."),
-                TAG_DONE),
-                Child, VSpace(0),
-              TAG_DONE),
-              Child, HSpace(0),
-            TAG_DONE),
-
-          TAG_DONE),
-
-          Child, MUI_NewObject(MUIC_Group,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_DEFAULT_CONTEXT_MENU,"Default ContextMenu")),
-            Child, HSpace(0),
-            Child, MUI_NewObject(MUIC_Group,
-              Child, VSpace(0),
-              Child, data->mcp_NList_Menu = MUI_NewObject(MUIC_Radio,
-                MUIA_Radio_Entries,RS_Menu,
-                MUIA_ShortHelp, STRING(MSG_DEFAULT_CONTEXT_MENU_HELP,"NList permit to have its default\ncontext menu being disabled or enabled\nonly on title(top of list when no title).\n"),
-              TAG_DONE),
-              Child, VSpace(0),
-            TAG_DONE),
-            Child, HSpace(0),
-          TAG_DONE),
-
-        TAG_DONE);
-
   group33 = MUI_NewObject(MUIC_Group,MUIA_Group_Horiz,TRUE,
 
           Child, MUI_NewObject(MUIC_Group,
@@ -1157,6 +1139,28 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
                   TAG_DONE),
                   Child, Label(STRING(MSG_PARTIAL_CHARS_DRAWN,"Partial chars drawn")),
                   MUIA_ShortHelp, STRING(MSG_PARTIAL_CHARS_DRAWN_HELP,"When set, chars on the right and\nleft edge of the list which are\nnot fully visible will be drawn."),
+                TAG_DONE),
+                Child, VSpace(0),
+              TAG_DONE),
+              Child, HSpace(0),
+            TAG_DONE),
+
+            Child, MUI_NewObject(MUIC_Group,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
+              Child, HSpace(0),
+              Child, MUI_NewObject(MUIC_Group,
+                Child, VSpace(0),
+                Child, MUI_NewObject(MUIC_Group,MUIA_Group_Horiz,TRUE,
+                  Child, data->mcp_VerticalCenteredLines = MUI_NewObject(MUIC_Image,
+                    ImageButtonFrame,
+                    MUIA_InputMode        , MUIV_InputMode_Toggle,
+                    MUIA_Image_Spec       , MUII_CheckMark,
+                    MUIA_Image_FreeVert   , TRUE,
+                    MUIA_Background       , MUII_ButtonBack,
+                    MUIA_ShowSelState     , FALSE,
+                    MUIA_Selected         , FALSE,
+                  TAG_DONE),
+                  Child, Label("Vertical centered lines"),//STRING(MSG_PARTIAL_CHARS_DRAWN,"Partial chars drawn")),
+                  MUIA_ShortHelp, "If activated, the text lines are centered vertically.",//STRING(MSG_PARTIAL_CHARS_DRAWN_HELP,"When set, chars on the right and\nleft edge of the list which are\nnot fully visible will be drawn."),
                 TAG_DONE),
                 Child, VSpace(0),
               TAG_DONE),
@@ -1378,6 +1382,19 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
               Child, HSpace(0),
             TAG_DONE),
 
+            Child, MUI_NewObject(MUIC_Group,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_DEFAULT_CONTEXT_MENU,"Default ContextMenu")),
+              Child, HSpace(0),
+              Child, MUI_NewObject(MUIC_Group,
+                Child, VSpace(0),
+                Child, data->mcp_NList_Menu = MUI_NewObject(MUIC_Radio,
+                  MUIA_Radio_Entries,RS_Menu,
+                  MUIA_ShortHelp, STRING(MSG_DEFAULT_CONTEXT_MENU_HELP,"NList permit to have its default\ncontext menu being disabled or enabled\nonly on title(top of list when no title).\n"),
+                TAG_DONE),
+                Child, VSpace(0),
+              TAG_DONE),
+              Child, HSpace(0),
+            TAG_DONE),
+
           TAG_DONE),
 
         TAG_DONE);
@@ -1503,7 +1520,6 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
       Child, MUI_NewObject(MUIC_Register,MUIA_Register_Titles,(Pages3),
         MUIA_Register_Frame, TRUE,
         Child, group31,
-        Child, group32,
         Child, group33,
         Child, group34,
         Child, group35,
@@ -1704,6 +1720,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   }
 
   LOAD_DATALONG(data->mcp_DragLines,    MUIA_Numeric_Value,    MUICFG_NList_DragLines, DEFAULT_DRAGLINES);
+  LOAD_DATALONG(data->mcp_VerticalCenteredLines, MUIA_Selected, MUICGF_NList_VCenteredLines, TRUE);
   LOAD_DATALONG(data->mcp_PointerColor, MUIA_Numeric_Value,    MUICFG_NList_PointerColor, 2);
   LOAD_DATALONG(data->mcp_WheelStep,    MUIA_Numeric_Value,    MUICFG_NList_WheelStep, 1);
   LOAD_DATALONG(data->mcp_WheelFast,    MUIA_Numeric_Value,    MUICFG_NList_WheelFast, 5);
@@ -1879,13 +1896,10 @@ ULONG mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settings
   }
 
   SAVE_DATALONG(data->mcp_DragLines,    MUIA_Numeric_Value,     MUICFG_NList_DragLines);
-
+  SAVE_DATALONG(data->mcp_VerticalCenteredLines,    MUIA_Selected,     MUICGF_NList_VCenteredLines);
   SAVE_DATALONG(data->mcp_PointerColor, MUIA_Numeric_Value,     MUICFG_NList_PointerColor);
-
   SAVE_DATALONG(data->mcp_WheelStep,    MUIA_Numeric_Value,     MUICFG_NList_WheelStep);
-
   SAVE_DATALONG(data->mcp_WheelFast,    MUIA_Numeric_Value,     MUICFG_NList_WheelFast);
-
   SAVE_DATALONG(data->mcp_WheelMMB,     MUIA_Selected,          MUICFG_NList_WheelMMB);
 
   {

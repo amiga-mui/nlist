@@ -104,6 +104,7 @@ struct NListviews_MCP_Data
   APTR mcp_PointerColor;
   APTR mcp_SerMouseFix;
   APTR mcp_DragLines;
+  APTR mcp_VerticalCenteredLines;
 
   APTR mcp_WheelStep;
   APTR mcp_WheelFast;
