@@ -1579,14 +1579,14 @@ LONG GetVisualInsertPos( struct NListtree_Data *data, struct MUI_NListtree_ListN
 		temppos = GetVisualPos( data, CTN( ln ) );
 		GetVisualEntries( data, CTN(ln), temppos, &ent );
 
-		D(bug( "GetVisualInsertPos: 0x%08lx - %s after: %s, pos: %ld, ent: %ld\n", ln, ln->ln_Name, "TAIL", temppos, ent ) );
+		D(bug( "GetVisualInsertPos: 0x%08lx - %s after: %s, pos: %ld, ent: %ld\n", ln, ln->ln_Name?ln->ln_Name:"", "TAIL", temppos, ent ) );
 	}
 	else
 	{
 		temppos = GetVisualPos( data, prevtn );
 		GetVisualEntries( data, prevtn, temppos, &ent );
 
-		D(bug( "GetVisualInsertPos: 0x%08lx - %s after: %s, pos: %ld, ent: %ld\n", ln, ln->ln_Name, prevtn->tn_Name, temppos, ent ) );
+		D(bug( "GetVisualInsertPos: 0x%08lx - %s after: %s, pos: %ld, ent: %ld\n", ln, ln->ln_Name?ln->ln_Name:"", prevtn->tn_Name, temppos, ent ) );
 	}
 
 	if ( ( temppos == -1 ) && ( ln != &data->RootList ) )
@@ -5986,18 +5986,6 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 	}
 
 
-	//ActivateNotify( data );
-
-	data->EHNode.ehn_Priority	= 1;
-	data->EHNode.ehn_Flags		= 0;
-	data->EHNode.ehn_Object		= obj;
-	data->EHNode.ehn_Class		= cl;
-	data->EHNode.ehn_Events		= IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY;
-	DoMethod( _win( obj ), MUIM_Window_AddEventHandler, &data->EHNode );
-
-	//MUI_RequestIDCMP( obj, IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY );
-
-
 	D(bug( "After: cl_SubclassCount = %ld, cl_ObjectCount = %ld\n", cl->cl_SubclassCount, cl->cl_ObjectCount ) );
 
 	DoRefresh( data );
@@ -6020,13 +6008,6 @@ ULONG _Cleanup( struct IClass *cl, Object *obj, Msg msg )
 		DisposeImage( data, i );
 
 
-	//MUI_RejectIDCMP( obj, IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY );
-
-	DoMethod( _win( obj ), MUIM_Window_RemEventHandler, &data->EHNode );
-
-	//DeactivateNotify( data );
-
-
 	RelPen( data->MRI, &data->Pen[PEN_Line] );
 	RelPen( data->MRI, &data->Pen[PEN_Shadow] );
 	RelPen( data->MRI, &data->Pen[PEN_Draw] );
@@ -6043,13 +6024,30 @@ ULONG _Cleanup( struct IClass *cl, Object *obj, Msg msg )
 
 ULONG _Show( struct IClass *cl, Object *obj, Msg msg )
 {
-	return( DoSuperMethodA( cl, obj, msg ) );
+	struct NListtree_Data *data = INST_DATA( cl, obj );
+	
+	if (!DoSuperMethodA( cl, obj, (Msg)msg ))
+		return 0;
+
+	data->EHNode.ehn_Priority	= 1;
+	data->EHNode.ehn_Flags		= 0;
+	data->EHNode.ehn_Object		= obj;
+	data->EHNode.ehn_Class		= cl;
+	data->EHNode.ehn_Events		= IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY;
+	DoMethod( _win( obj ), MUIM_Window_AddEventHandler, &data->EHNode );
+	//ActivateNotify( data );
+
+	return 1;
 }
 
 
 ULONG _Hide( struct IClass *cl, Object *obj, Msg msg )
 {
-	return( DoSuperMethodA( cl, obj, msg ) );
+	struct NListtree_Data *data = INST_DATA( cl, obj );
+
+	DoMethod( _win( obj ), MUIM_Window_RemEventHandler, &data->EHNode );
+	//DeactivateNotify( data );
+	return DoSuperMethodA( cl, obj, msg );
 }
 
 
@@ -6178,12 +6176,13 @@ ULONG _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg
 		{
 			case IDCMP_MOUSEBUTTONS:
 			{
+D(bug("mousebutton\n"));
 				if ( _isinobject( mx, my ) )
 				{
 					struct MUI_NListtree_TreeNode *tn;
 					struct MUI_NList_TestPos_Result tpres;
 					struct timeval tv;
-
+D(bug("inobject\n"));
 					switch( msg->imsg->Code )
 					{
 						case SELECTDOWN:
