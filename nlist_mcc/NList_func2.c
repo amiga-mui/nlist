@@ -324,7 +324,8 @@ D(bug("qsort ended.\n"));
       }
 
       if (ent1 > ent)           /* exchange them */
-      { /* DO EXCHANGE */
+      {
+      	/* DO EXCHANGE */
         newentry = data->EntriesArray[ent];
         data->EntriesArray[ent] = data->EntriesArray[ent1];
         data->EntriesArray[ent1] = newentry;
@@ -333,18 +334,20 @@ D(bug("qsort ended.\n"));
 
         NL_Changed(data,ent);
         NL_Changed(data,ent1);
-        if (data->NList_Active == ent)
-        { set_Active(ent1);
-        }
-        else if (data->NList_Active == ent1)
-        { set_Active(ent);
-        }
+
+        if (data->NList_Active == ent) set_Active(ent1);
+        else if (data->NList_Active == ent1) set_Active(ent);
+
         if (data->NList_LastInserted == ent)
-        { data->NList_LastInserted--;
+        {
+        	/* sba: was data->NList_LastInserted--; */
+        	data->NList_LastInserted = ent1;
           DO_NOTIFY(NTF_Insert);
-        }
-        else if (data->NList_LastInserted == ent1)
-        { data->NList_LastInserted++;
+        } else 
+        if (data->NList_LastInserted == ent1)
+        {
+        	/* sba: was data->NList_LastInserted++; */
+        	data->NList_LastInserted = ent;
           DO_NOTIFY(NTF_Insert);
         }
         has_changed = TRUE;
