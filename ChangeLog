@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-12-15  Sebastian Bauer <mail@sebastianbauer.info>
+    * NList_mcc: On some circumstances MUIA_NList_InsertPositions was not
+      set correctly if the element has been inserted via MUIV_NList_Insert_Sorted.
+      Hopfully fixed now.
+    * Bumped revisions of NList_mcc (20.115), NListviews_mcp (19.66) and
+      NListtree (18.22)
+
 2004-12-14  Sebastian Bauer <mail@sebastianbauer.info>
     * NList_mcc: Fixed insert refresh problem
 
