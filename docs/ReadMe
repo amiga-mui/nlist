@@ -1,0 +1,70 @@
+Short:    NList custom classes for MUI (v0.96)
+Author:   NList Open Source Team
+Uploader: Sebastian Bauer <mail@sebastianbauer.info>
+Type:     dev/mui
+Requires: MUI 3.6+, OS 2.x (V37+), HotkeyString.mcc from Allan Odgaard
+Version:  0.96
+Replaces: dev/mui/MCC_NList.lha
+
+Introduction
+~~~~~~~~~~~~
+This is a MUI custom class package containing replacements for
+List/Listtree/Listview/Floattext MUI default class.
+
+The NList/NListview/NFloattext classes originally have been
+developed by Gilles Masson. The NListtree classes originally
+have been develeoped by Carsten Scholling.
+
+NList classes are available for OS3, OS4 and MorphOS.
+
+The NList classes project is hosted on SourceForge. Its project
+name is "nlist-classes".
+
+To report bugs use the bug tracker at
+ http://www.sf.net/projects/nlist-classes
+
+Features
+~~~~~~~~
+Actually the horizontal scrolling is fully supported, there are
+smooth scrolling, word wrap support, built-in copy to clipboard,
+classic char selection possibility, drag and drop and many other
+features. The user can change the column width with mouse and
+column titles can act as buttons.
+
+There is a pref class NListviews.mcp with it, which permit the
+user to choose all default backgrounds, pens and fonts, scrollbars
+mode, drag and drop mode, multiselect mode, keys and qualifiers and
+some others.
+
+Included is a Floattext.mui replacement which use NFloattext.mcc,
+permitting copy to clipboard and key moving.
+
+Versions
+~~~~~~~~
+Current MCC_NList classes versions are :
+
+NList.mcc         20.115    16.12.2004
+NListview.mcc     19.70     16.12.2004
+NFloattext.mcc    19.51     16.12.2004
+NListviews.mcp    19.66     16.12.2004
+NListtree.mcc     18.22     16.12.2004
+NListtree.mcp     18.10     16.12.2004
+
+
+Overview of changes since NList 0.95
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Merged NList and NListtree into one package
+- Ported to OS4
+- Added new NList option to disallow centering of the list lines.
+  This looks better if you have enabled solid window sizing.
+- Some bug fixes
+
+The detailed change log can be found in the ChangeLog file.
+
+         __
+        / /
+   __  / /   Only Amiga makes it possible...
+   \ \/ /
+    \__/
+
+Amiga is a trademark of Amiga, Inc.
