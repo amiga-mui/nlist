@@ -178,7 +178,7 @@ STATIC const struct SampleArray sa[] =
 
 
 
-#ifdef MORPHOS
+#ifdef __MORPHOS__
 #undef MUI_NewObject
 #undef MUI_MakeObject
 

@@ -106,6 +106,10 @@ $(OBJDIR)/library.o: library.c ../includes/mccheader.c NList_mcc.h private.h
 dump:
 	ppc-morphos-objdump --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
 
+install: all
+	cp $(TARGET) /mossys/Classes/MUI/NList.mcc
+	@-flushlib NList.mcc
+
 #
 
 .PHONY: clean

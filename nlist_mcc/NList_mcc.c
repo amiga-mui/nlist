@@ -229,7 +229,7 @@ static LONG Calc_Stack(Object *obj,struct NLData *data)
 {
   LONG total;
 
-#ifdef MORPHOS
+#ifdef __MORPHOS__
     return 100000;
 #endif
 

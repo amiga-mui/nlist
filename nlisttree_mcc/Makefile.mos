@@ -86,6 +86,10 @@ $(TARGET): $(OBJS)
 dump:
 	ppc-morphos-objdump --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
 
+install: all
+	cp $(TARGET) /mossys/Classes/MUI/NListtree.mcc
+	@-flushlib NListtree.mcc
+
 #
 
 .PHONY: clean

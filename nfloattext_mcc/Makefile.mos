@@ -92,6 +92,10 @@ NFloattext.o: NFloattext.c NFloattext_mcc.h private.h ../includes/mcc_common.h r
 dump:
 	ppc-morphos-objdump --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
 
+install: all
+	cp $(TARGET) /mossys/Classes/MUI/NFloattext.mcc
+	@-flushlib NFloattext.mcc
+
 #
 
 .PHONY: clean

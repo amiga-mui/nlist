@@ -182,7 +182,7 @@
 /*data->cols[column].style*/
 
 
-#ifdef MORPHOS
+#ifdef __MORPHOS__
 
 #define STACK_CHECK
 #define STACK_ALERT

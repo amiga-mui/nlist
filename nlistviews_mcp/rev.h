@@ -33,7 +33,7 @@
 #define LIB_DATE       "01.07.2004"
 
 #if defined(__PPC__)
-  #if defined(MORPHOS)
+  #if defined(__MORPHOS__)
     #define CPU " [MOS/PPC]"
   #else
     #define CPU " [OS4/PPC]"

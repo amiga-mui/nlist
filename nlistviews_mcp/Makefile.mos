@@ -97,6 +97,10 @@ $(OBJDIR)/NListviews.o: NListviews.c NListviews_mcp.h private.h \
 dump:
 	ppc-morphos-objdump --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
 
+install: all
+	cp $(TARGET) /mossys/Classes/MUI/NListviews.mcp
+	@-flushlib NListviews.mcp
+
 #
 
 .PHONY: clean
