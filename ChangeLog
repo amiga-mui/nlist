@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-12-13  Sebastian Bauer <mail@sebastianbauer.info>
+    * NList_mcc:  Fixed offset refresh bug
+    * NList_mcc, NListviews_mcp: Added new prefs option to disable
+      the vertical centering of the text lines (can be found on the
+      misc2 sub page)
+    * NListviews_mcp: Eliminated a misc sub page. In the future the
+      rest should be eliminated as well.
+
 2004-10-24  Jens Langner <Jens.Langner@light-speed.de>
 
     * include/mccclass_68k.S: updated mcc 68k->PPC cross call stubs to
