@@ -99,7 +99,7 @@ $(TARGET): $(OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
 	@$(STRIP) -o $@  --remove-section=.comment $@.debug
 
-$(OBJDIR)/library.o: library.c ../includes/mccheader.c NList_mcc.h private.h
+$(OBJDIR)/library.o: library.c ../includes/mccheader.c private.h
 
 #
 
