@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-07-27  Jens Langner <Jens.Langner@light-speed.de>
+
+    * mccheader.c: updated the general mcc source file to the
+      latest version also used with other .mcc's out there. Also
+      adapted all library.c files to define the USEDCLASSES stuff
+      correctly.
+
 2004-07-16  Jens Langner <Jens.Langner@light-speed.de>
 
     * gcc3: adapted all sources to be more gcc3 compliant. Removed

@@ -56,7 +56,8 @@
 #define UserLibID			"$VER: NFloattext.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	19
 
-const STRPTR USEDCLASSESP[] = { "NListviews.mcp", NULL };
+#define USEDCLASSESP  used_classesP
+static const STRPTR used_classesP[] = { "NListviews.mcp", NULL };
 
 /******************************************************************************/
 /*                                                                            */

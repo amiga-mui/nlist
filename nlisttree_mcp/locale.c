@@ -117,5 +117,5 @@ STRPTR GetString(APTR CatStr)
     StrNum=((struct LocStr *)CatStr)->ID;
     DefStr=((struct LocStr *) CatStr)->Str;
 
-    return(Catalog ? GetCatalogStr(Catalog,StrNum,DefStr) : DefStr);
+    return(Catalog ? (STRPTR)GetCatalogStr(Catalog,StrNum,DefStr) : DefStr);
 }

@@ -66,8 +66,10 @@
 #define UserLibID			"$VER: NListtree.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	19
 
-const STRPTR USEDCLASSESP[] = { "NListtree.mcp", "NListviews.mcp", NULL };
-const STRPTR USEDCLASSES[]  = { "NList.mcc", NULL };
+#define USEDCLASSESP  used_classesP
+#define USEDCLASSES   used_classes
+static const STRPTR used_classesP[] = { "NListtree.mcp", "NListviews.mcp", NULL };
+static const STRPTR used_classes[]  = { "NList.mcc", NULL };
 
 /******************************************************************************/
 /*                                                                            */
