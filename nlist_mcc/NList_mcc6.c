@@ -288,8 +288,9 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
 #ifndef DO_CLIPPING
         if (!data->NList_First_Incr || do_extrems || ((ent > data->NList_First) && (ent < data->NList_First + data->NList_Visible)))
 #endif
-        { linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
-          if (linelen > hmax)
+        {
+          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
+          if(linelen > hmax)
             hmax = linelen;
         }
         vert1 += data->vinc;

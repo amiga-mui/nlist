@@ -27,8 +27,6 @@
 
 #include "private.h"
 
-/*#define DO_CLIPPING*/
-
 LONG xget(Object *obj,ULONG attribute)
 {
   LONG x;
@@ -211,10 +209,13 @@ void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
     }
     data->vdbpos = data->mbottom + 1 - data->vdb;
 
-    data->vpos = data->mtop + data->vdt;
-    if (data->NList_Title)
-    { data->vpos += data->vinc;
-      if (data->NList_TitleSeparator)
+    // calculate the vertical top point the object starts
+    data->vpos = data->mtop;
+    if(data->NList_Title)
+    {
+      data->vpos += data->vinc;
+
+      if(data->NList_TitleSeparator)
         data->vpos += 2;
     }
     data->badrport = FALSE;
@@ -848,22 +849,30 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
  */
 
     if (data->NList_PartialChar)
-    { fullclipped = TRUE;
+    {
+      fullclipped = TRUE;
       fullclippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) data->vleft,(WORD) data->vtop,
                                               (WORD) data->vwidth,(WORD) data->vheight);
     }
+
     if ((data->NList_Active != data->NList_AffActive) && !data->NList_TypeSelect)
-    { data->do_draw_active = TRUE;
+    {
+      data->do_draw_active = TRUE;
+
       if (!(msg->flags & MADF_DRAWOBJECT))
-      { LONG old_one_more = 0;
+      {
+        LONG old_one_more = 0;
         BOOL clipped = FALSE;
-        if (data->NList_AffFirst_Incr)
+
+        if(data->NList_AffFirst_Incr)
           old_one_more = 1;
+
         ent = data->NList_AffActive;
-        if ((ent >= data->NList_AffFirst) && (ent < data->NList_AffFirst + data->NList_Visible + old_one_more))
+        if((ent >= data->NList_AffFirst) && (ent < data->NList_AffFirst + data->NList_Visible + old_one_more))
         {
           if ((data->NList_AffFirst_Incr) && ((ent <= data->NList_AffFirst) || (ent >= data->NList_AffFirst + data->NList_Visible)))
-          { clipped = TRUE;
+          {
+            clipped = TRUE;
             clippinghandle = MUI_AddClipping(muiRenderInfo(obj),
                                              (WORD) data->mleft,
                                              (WORD) data->vpos,
@@ -903,9 +912,12 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     vlyl = ((data->vbottom - data->vpos) / data->vinc) + 1;
 
     if (data->do_draw_all && data->do_draw_title && data->NList_Title/* && (vfyl <= 0)*/)
-    { data->Title_PixLen = DrawTitle(obj,data,PMIN,PMAX,hfirst);
-      if (data->Title_PixLen > data->NList_Horiz_Entries)
+    {
+      data->Title_PixLen = DrawTitle(obj,data,PMIN,PMAX,hfirst);
+
+      if(data->Title_PixLen > data->NList_Horiz_Entries)
         data->NList_Horiz_Entries = data->Title_PixLen;
+
       data->do_draw_title = FALSE;
     }
 /*
@@ -921,40 +933,48 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
       WORD not_all = 0;
       BOOL clipped = FALSE;
       data->drawall_bits = 0;
-      if (data->do_draw_all)
-      { SetBackGround(data->NList_ListBackGround)
-        if ((data->vdt > 0) && !data->NList_Title)
+      if(data->do_draw_all)
+      {
+        SetBackGround(data->NList_ListBackGround)
+
+        if((data->vdt > 0) && !data->NList_Title)
           DoMethod(obj,MUIM_DrawBackground,(LONG) data->mleft,(LONG) data->vdtpos,
                                            (LONG) data->mwidth,(LONG) data->vdt,
                                            (LONG) data->mleft+data->vdx,(LONG) data->vdtpos+data->vdy,(LONG) 0);
-        if (data->vdb > 0)
+        if(data->vdb > 0)
           DoMethod(obj,MUIM_DrawBackground,(LONG) data->mleft,(LONG) data->vdbpos,
                                            (LONG) data->mwidth,(LONG) data->vdb,
                                            (LONG) data->mleft+data->vdx,(LONG) data->vdbpos+data->vdy,(LONG) 0);
-        if (!data->dropping && !draw_all_force &&
-            ((abs(data->NList_First - data->NList_AffFirst) > (120 / data->vinc)) ||
-             (abs(hfirst - data->NList_Horiz_AffFirst) > 120)))
+
+        if(!data->dropping && !draw_all_force &&
+           ((abs(data->NList_First - data->NList_AffFirst) > (120 / data->vinc)) ||
+            (abs(hfirst - data->NList_Horiz_AffFirst) > 120)))
         {
           if (data->drawall_dobit == 1)
-          { not_all = 2;
+          {
+            not_all = 2;
             data->drawall_dobit = 0;
             data->drawall_bits = 1;
           }
           else if (data->drawall_dobit == 2)
-          { not_all = data->drawall_dobit = 1;
+          {
+            not_all = data->drawall_dobit = 1;
             data->drawall_bits = 2;
           }
         }
       }
       else
-      { if (data->first_change < data->NList_First)
+      {
+        if (data->first_change < data->NList_First)
           data->first_change = data->NList_First;
+
         if (data->last_change >= data->NList_First + data->NList_Visible + one_more)
           data->last_change = data->NList_First + data->NList_Visible + one_more;
       }
 
       if ((data->NList_First_Incr) && ((data->first_change <= data->NList_First) || (data->last_change >= data->NList_First + data->NList_Visible)))
-      { clipped = TRUE;
+      {
+        clipped = TRUE;
         clippinghandle = MUI_AddClipping(muiRenderInfo(obj),
                                          (WORD) data->mleft,
                                          (WORD) data->vpos,
@@ -972,19 +992,23 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
       if (hfirst + data->hvisible > hmax)
         hmax = hfirst + data->hvisible;
       if (data->do_draw_all)
-      { if ((data->drawall_bits) && (hmax != data->NList_Horiz_Entries))
+      {
+        if ((data->drawall_bits) && (hmax != data->NList_Horiz_Entries))
         { data->NList_Horiz_Entries = hmax;
           data->ScrollBarsTime = SCROLLBARSTIME;
         }
         else if (hmax != data->NList_Horiz_Entries)
           data->NList_Horiz_Entries = hmax;
+
         if (data->hvisible != data->NList_Horiz_Visible)
           data->NList_Horiz_Visible = data->hvisible;
       }
       else
-      { if (hmax > data->NList_Horiz_Entries)
+      {
+        if (hmax > data->NList_Horiz_Entries)
           data->NList_Horiz_Entries = hmax;
       }
+
       data->NList_Horiz_AffFirst = hfirst;
       data->NList_AffFirst = data->NList_First;
       data->NList_AffFirst_Incr = data->NList_First_Incr;
@@ -998,21 +1022,26 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
       vpos = data->vpos;
       vbot = data->vpos + (data->NList_Visible * data->vinc) - 1;
       if (data->vtop > vpos)
-      { vpos = data->vtop;
+      {
+        vpos = data->vtop;
         y1 = (vpos + data->NList_First_Incr - data->vpos);
         fyl = y1 / data->vinc;
       }
       else
-      { y1 = data->NList_First_Incr;
+      {
+        y1 = data->NList_First_Incr;
         fyl = 0;
       }
+
       if (data->vbottom < vbot)
-      { vbot = data->vbottom;
+      {
+        vbot = data->vbottom;
         y2 = (vbot + data->NList_First_Incr - data->vpos);
         lyl = y2 / data->vinc;
       }
       else
-      { y2 = (vbot + data->NList_First_Incr - data->vpos);
+      {
+        y2 = (vbot + data->NList_First_Incr - data->vpos);
         lyl = y2 / data->vinc;
       }
 
@@ -1085,17 +1114,21 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
       }
     }
     else if (hfirst != data->NList_Horiz_AffFirst)
-    { LONG fyl,lyl;
+    {
+      LONG fyl,lyl;
       WORD dx,fx,lx;
       BOOL clipped = FALSE;
       dx = hfirst - data->NList_Horiz_AffFirst;
+
       if (dx < 0)
-      { fx = data->vleft;
+      {
+        fx = data->vleft;
         lx = fx - dx;
         if (lx > data->vright + 1) lx = data->vright + 1;
       }
       else
-      { lx = data->vright + 1;
+      {
+        lx = data->vright + 1;
         fx = lx - dx;
         if (fx  < data->vleft) fx = data->vleft;
       }
@@ -1123,7 +1156,8 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 /*        if (fyl < lyl)*/
         {
           if (data->NList_First_Incr)
-          { clipped = TRUE;
+          {
+            clipped = TRUE;
             clippinghandle = MUI_AddClipping(muiRenderInfo(obj),
                                              (WORD) data->mleft,
                                              (WORD) data->vpos,
@@ -1155,7 +1189,8 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
       if ((ent >= data->NList_First) && (ent < data->NList_First + data->NList_Visible + one_more)/* && (vfyl <= ent) && (ent <= vlyl)*/)
       {
         if ((data->NList_First_Incr) && ((ent <= data->NList_First) || (ent >= data->NList_First + data->NList_Visible)))
-        { clipped = TRUE;
+        {
+          clipped = TRUE;
           clippinghandle = MUI_AddClipping(muiRenderInfo(obj),
                                            (WORD) data->mleft,
                                            (WORD) data->vpos,

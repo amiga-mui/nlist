@@ -88,11 +88,11 @@ DISPATCHERPROTO(NLI2_Dispatcher)
   }
   return(DoSuperMethodA(cl,obj,msg));
 }
-
+extern DISPATCHERPROTO(NLI_Dispatcher);
 struct MUI_CustomClass *NLI2_Create(void)
 {
-  //NLI2_Class = MUI_CreateCustomClass(NULL, MUIC_Image, NULL, sizeof(struct NLIData), ENTRY(NLI_Dispatcher));
-  NLI2_Class = MUI_CreateCustomClass(NULL, MUIC_Image, NULL, sizeof(struct NLIData), ENTRY(NLI2_Dispatcher));
+  NLI2_Class = MUI_CreateCustomClass(NULL, MUIC_Image, NULL, sizeof(struct NLIData), ENTRY(NLI_Dispatcher));
+  //NLI2_Class = MUI_CreateCustomClass(NULL, MUIC_Image, NULL, sizeof(struct NLIData), ENTRY(NLI2_Dispatcher));
   return (NLI2_Class);
 }
 

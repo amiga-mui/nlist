@@ -5,6 +5,17 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-08-07  Jens Langner <Jens.Langner@light-speed.de>
+
+    * nlist_mcc: fixed a rather annoying drawing bug where the
+      NList class wasn't calculating the correct vertical start
+      position on drawing the listview. This causes a very annoying
+      "stutterting" when instantly resizing the NList surrounding
+      group. However, this seems to trigger now another hided minor
+      drawing bug where not all of the vertical space of the NList
+      object is used. So this is something we have to look after
+      aswell.
+
 2004-07-27  Jens Langner <Jens.Langner@light-speed.de>
 
     * mccheader.c: updated the general mcc source file to the
