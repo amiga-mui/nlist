@@ -228,78 +228,80 @@ void  NL_SetPointer(Object *obj,struct NLData *data,LONG type)
   APTR old_PointerObj = data->PointerObj;
 
   if (type == MOVE_POINTER)
-  { if ((!data->PointerObj) || (data->PointerObj2 != move_pointer))
+  {
+    if ((!data->PointerObj) || (data->PointerObj2 != move_pointer))
     {
       if (LIBVER(IntuitionBase) >= INTUIBASEMIN)
       {
-        data->PointerObj = (APTR) NewObject( NULL, "pointerclass",
+        if ((data->PointerObj = (APTR) NewObject( NULL, "pointerclass",
             POINTERA_BitMap, (LONG) &move_pointer_bitmap,
             POINTERA_XOffset, (LONG) move_pointer_xoffset,
             POINTERA_YOffset, (LONG) move_pointer_yoffset,
             POINTERA_WordWidth, (ULONG) 1,
             POINTERA_XResolution, (ULONG) POINTERXRESN_SCREENRES,
             POINTERA_YResolution, (ULONG) POINTERYRESN_SCREENRESASPECT,
-          TAG_DONE);
-        if (data->PointerObj)
-        { data->PointerObj2 = move_pointer;
-          SetWindowPointer( _window(obj), WA_Pointer, (LONG) data->PointerObj,TAG_DONE );
+            TAG_DONE)))
+        {
+          data->PointerObj2 = move_pointer;
+          SetWindowPointer(_window(obj), WA_Pointer, (LONG) data->PointerObj, TAG_DONE);
+        } else
+        { 
+          data->PointerObj2 = NULL;
+          SetWindowPointer(_window(obj), TAG_DONE);
         }
-        else
-        { data->PointerObj2 = NULL;
-          SetWindowPointer( _window(obj),TAG_DONE );
-        }
+
         if (old_PointerObj)
-          DisposeObject(data->PointerObj);
-      }
-      else
-      { data->PointerObj = (APTR) AllocVec(sizeof(move_pointer),MEMF_CHIP|MEMF_PUBLIC);
-        if (data->PointerObj)
-        { memcpy(data->PointerObj,move_pointer,sizeof(move_pointer));
+          DisposeObject(old_PointerObj);
+      } else
+      {
+      	if ((data->PointerObj = (APTR) AllocVec(sizeof(move_pointer),MEMF_CHIP|MEMF_PUBLIC)))
+        {
+          memcpy(data->PointerObj,move_pointer,sizeof(move_pointer));
           data->PointerObj2 = move_pointer;
           SetPointer( _window(obj), data->PointerObj, move_pointer_height, move_pointer_width, move_pointer_xoffset, move_pointer_yoffset);
-        }
-        else
-        { data->PointerObj2 = NULL;
+        } else
+        {
+          data->PointerObj2 = NULL;
           ClearPointer( _window(obj) );
         }
         if (old_PointerObj)
           FreeVec(old_PointerObj);
       }
     }
-  }
-  else if (type == SIZE_POINTER)
-  { if ((!data->PointerObj) || (data->PointerObj2 != size_pointer))
+  } else if (type == SIZE_POINTER)
+  { 
+  	if ((!data->PointerObj) || (data->PointerObj2 != size_pointer))
     {
       if (LIBVER(IntuitionBase) >= INTUIBASEMIN)
       {
-        data->PointerObj = (APTR) NewObject( NULL, "pointerclass",
+        if ((data->PointerObj = (APTR) NewObject( NULL, "pointerclass",
             POINTERA_BitMap, (LONG) &size_pointer_bitmap,
             POINTERA_XOffset, (LONG) size_pointer_xoffset,
             POINTERA_YOffset, (LONG) size_pointer_yoffset,
             POINTERA_WordWidth, (ULONG) 1,
             POINTERA_XResolution, (ULONG) POINTERXRESN_SCREENRES,
             POINTERA_YResolution, (ULONG) POINTERYRESN_SCREENRESASPECT,
-          TAG_DONE);
-        if (data->PointerObj)
-        { data->PointerObj2 = size_pointer;
-          SetWindowPointer( _window(obj), WA_Pointer, (LONG) data->PointerObj,TAG_DONE );
-        }
-        else
-        { data->PointerObj2 = NULL;
-          SetWindowPointer( _window(obj),TAG_DONE );
+            TAG_DONE)))
+        {
+          data->PointerObj2 = size_pointer;
+          SetWindowPointer(_window(obj), WA_Pointer, (LONG) data->PointerObj, TAG_DONE);
+        } else
+        {
+          data->PointerObj2 = NULL;
+          SetWindowPointer( _window(obj), TAG_DONE );
         }
         if (old_PointerObj)
-          DisposeObject(data->PointerObj);
-      }
-      else
-      { data->PointerObj = (APTR) AllocVec(sizeof(size_pointer),MEMF_CHIP|MEMF_PUBLIC);
-        if (data->PointerObj)
-        { memcpy(data->PointerObj,size_pointer,sizeof(size_pointer));
+          DisposeObject(old_PointerObj);
+      } else
+      {
+      	if ((data->PointerObj = (APTR) AllocVec(sizeof(size_pointer),MEMF_CHIP|MEMF_PUBLIC)))
+        {
+          memcpy(data->PointerObj,size_pointer,sizeof(size_pointer));
           data->PointerObj2 = size_pointer;
           SetPointer( _window(obj), data->PointerObj, size_pointer_height, size_pointer_width, size_pointer_xoffset, size_pointer_yoffset);
-        }
-        else
-        { data->PointerObj2 = NULL;
+        } else
+        {
+          data->PointerObj2 = NULL;
           ClearPointer( _window(obj) );
         }
         if (old_PointerObj)
