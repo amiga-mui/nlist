@@ -1489,7 +1489,7 @@ INLINE LONG GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_Tree
 */
 BOOL GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG pos, LONG *ent )
 {
-	D(bug("GetVisualEntries()  tn 0x%lx  pos %ld  *ent %ld\n",tn,pos,*ent));
+	D(bug("tn=0x%lx pos=%ld  *ent %ld\n",tn,pos,ent?(*ent):0));
 	if ( tn->tn_Flags & TNF_LIST )
 	{
 		struct MUI_NListtree_TreeNode *tn2;
@@ -1511,9 +1511,7 @@ BOOL GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_TreeNod
 		}
 		else
 		{
-			D(bug( "Table  %ld\n",tn2->tn_IFlags & TNIF_VISIBLE ) );
-
-			if ( tn->tn_Flags & TNF_OPEN )
+			if (tn->tn_Flags & TNF_OPEN)
 			{
 				ULONG i;
 				struct Table *tb = &CLN( tn )->ln_Table;
