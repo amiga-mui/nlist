@@ -755,9 +755,13 @@ BOOL UserLibOpen(struct Library *base)
   if((MUIMasterBase = OpenLibrary("muimaster.library", MASTERVERSION)) &&
      GETINTERFACE(IMUIMaster, MUIMasterBase))
   {
-    #ifdef PreClassInit
-    PreClassInitFunc();
+  	    #ifdef PreClassInit
+    if (!PreClassInitFunc())
+    {
+    	return FALSE;
+    }
     #endif
+
 
     #ifdef SUPERCLASS
     ThisClass = MUI_CreateCustomClass(base, SUPERCLASS, NULL, sizeof(struct INSTDATA), ENTRY(_Dispatcher));
