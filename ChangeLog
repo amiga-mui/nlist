@@ -6,16 +6,19 @@ $Id$
 $Source$
 
 2004-12-15  Sebastian Bauer <mail@sebastianbauer.info>
+
     * NList_mcc: On some circumstances MUIA_NList_InsertPositions was not
-      set correctly if the element has been inserted via MUIV_NList_Insert_Sorted.
-      Hopfully fixed now.
+      set correctly if the element has been inserted via 
+      MUIV_NList_Insert_Sorted. Hopfully fixed now.
     * Bumped revisions of NList_mcc (20.115), NListviews_mcp (19.66) and
       NListtree (18.22)
 
 2004-12-14  Sebastian Bauer <mail@sebastianbauer.info>
+
     * NList_mcc: Fixed insert refresh problem
 
 2004-12-13  Sebastian Bauer <mail@sebastianbauer.info>
+
     * NList_mcc:  Fixed offset refresh bug
     * NList_mcc, NListviews_mcp: Added new prefs option to disable
       the vertical centering of the text lines (can be found on the
