@@ -5,6 +5,9 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-08-25  Nicolas Sallin <henes@morphos.de>
+    * All: Changes for morphos.
+
 2004-08-24  Sebastian Bauer <mail@sebastianbauer.info>
     * NListtree: Fixed alignment problems (the alignment enforcement
       surrounding include statements was discarded by subincludes).
