@@ -35,6 +35,8 @@
 #include <mcc_common.h>
 #include <mcc_debug.h>
 
+#include "amiga-align.h"
+
 /*** MUI Defines ***/
 
 #define MUIC_NListtree	"NListtree.mcc"
@@ -853,5 +855,8 @@ struct MUIP_NListtree_MultiTestMessage
 			SelFlags,
 			CurrType;
 };
+
+#include "default-align.h"
+
 
 #endif /* NLISTTREE_MCC_PRIVATE_H */
