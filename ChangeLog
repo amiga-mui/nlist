@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-03-17  Sebastian Bauer <mail@sebastianbauer.info>
+    * NListtree_mcc: Addressed bug 1095158 by rewritting the
+      responsible parts. This might introduce other problems and
+      needs proper testings.
+
 2005-03-16  Sebastian Bauer <mail@sebastianbauer.info>
     * NList_mcc: Fixed base page access which happened when no entry
       was selected and the keyboard was used (bug 1156362)
