@@ -196,28 +196,33 @@ void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
 
     data->lvisible = data->mheight / data->vinc;
     vdheight = (data->mheight - data->lvisible * data->vinc);
-    data->vdt = vdheight / 2;
+
+	/* Set vertical delta top, if text should be centered vertically */
+	if (data->NList_VerticalCenteredText) data->vdt = vdheight / 2;
+	else data->vdt = 0;
+
     data->vdb = vdheight - data->vdt;
     data->vdtpos = data->mtop;
     if (data->NList_Title)
-    { data->vdtitlepos = data->vdtpos;
+    {
+      data->vdtitlepos = data->vdtpos;
       data->vdtitleheight = data->vdt + data->vinc;
-    }
-    else
-    { data->vdtitlepos = data->vdtpos + data->vdt;
+    } else
+    {
+      data->vdtitlepos = data->vdtpos + data->vdt;
       data->vdtitleheight = data->vinc / 3;
     }
     data->vdbpos = data->mbottom + 1 - data->vdb;
 
-    // calculate the vertical top point the object starts
-    data->vpos = data->mtop;
-    if(data->NList_Title)
+    /* calculate the vertical top position of the first line of the list */
+    data->vpos = data->mtop + data->vdt;
+    if (data->NList_Title)
     {
       data->vpos += data->vinc;
-
-      if(data->NList_TitleSeparator)
+      if (data->NList_TitleSeparator)
         data->vpos += 2;
     }
+
     data->badrport = FALSE;
     data->NList_Visible = data->lvisible;
 

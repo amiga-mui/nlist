@@ -1377,6 +1377,16 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
       }
     }
   }
+
+  /* Use centered text lines? */
+  {
+  	LONG *vert;
+
+	data->NList_VerticalCenteredText = 1; /* default is yes */
+	if (DoMethod(obj, MUIM_GetConfigItem, MUICGF_NList_VCenteredLines, &vert))
+		data->NList_VerticalCenteredText = *vert;
+  }
+
   if (data->ContextMenu != data->ContextMenuOn)
   {
     if (/*(((data->ContextMenu & 0x9d510030) == 0x9d510030) && (data->numcols <= 1)) ||*/ /* sba: Contextmenu problem: Disabled */
