@@ -284,6 +284,8 @@ static int sort_compar(struct sort_entry *e1, struct sort_entry *e2)
 
 
 //$$$ARRAY+
+//fent = first entry
+//lent = last entry
 static ULONG NL_List_SortPart(Object *obj,struct NLData *data,LONG fent,LONG lent)
 {
   LONG ent, ent1, numfollow, numexch, has_changed;
@@ -300,7 +302,8 @@ D(bug("NL_List_SortPart(%lx)\n", data));
   if((entry = (struct sort_entry *) NL_Malloc(data,sizeof(struct sort_entry) * (lent-fent),"SortPart")))
   {
     for (ent = fent; ent < lent; ent++)
-    { entry[ent-fent].ent = ent;
+    {
+    	entry[ent-fent].ent = ent;
       entry[ent-fent].data = data;
     }
 
@@ -311,12 +314,15 @@ D(bug("qsort ended.\n"));
     ent1 = numfollow = numexch = 0;
 
     for (ent = fent; ent < lent; ent++)
-    { ent1 = entry[ent-fent].ent;
+    {
+    	ent1 = entry[ent-fent].ent;
       while (ent1 < ent)        /* find a ent1 not already done */
-      { ent1 = entry[ent1-fent].ent;
+      {
+      	ent1 = entry[ent1-fent].ent;
         numfollow++;
         if(numfollow > lent) break;
       }
+
       if (ent1 > ent)           /* exchange them */
       { /* DO EXCHANGE */
         newentry = data->EntriesArray[ent];
@@ -459,43 +465,49 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
     }
     wrapcol = wrapcol2 & TE_Wrap_TmpMask;
   }
+
   if (entries)
-  { LONG ent, ent1, ent2, ent3, maxent, nlentries;
+  {
+  	LONG ent, ent1, ent2, ent3, maxent, nlentries;
 
     //D(bug( "Inserting %ld entries at position %ld\n", count, pos ));
 
     data->display_ptr = NULL;
     if (count == -1)
-    { count = 0;
+    {
+    	count = 0;
       while (entries[count] != NULL)
         count++;
-    }
-    else if (count == -2)
-    { is_string = TRUE;
+    } else if (count == -2)
+    {
+    	is_string = TRUE;
       count = 1;
       string = (UBYTE *) entries;
       while (string[0] != '\0')
-      { if ((string[0] == '\n') || (string[0] == '\r'))
-          count++;
-        if ((string[0] == '\r') && (string[1] == '\n'))
-          string++;
+      {
+      	if ((string[0] == '\n') || (string[0] == '\r')) count++;
+        if ((string[0] == '\r') && (string[1] == '\n')) string++;
         string++;
       }
       string = (UBYTE *) entries;
-    }
-    else if (count > 0)
-    { newpos = 0;
+    } else if (count > 0)
+    {
+    	newpos = 0;
       while (newpos < count)
-      { if (entries[newpos] == NULL)
-          count--;
+      {
+      	if (entries[newpos] == NULL) count--;
         newpos++;
       }
     }
+
     if (count > 0)
-    { maxent = count + data->NList_Entries;
+    {
+    	maxent = count + data->NList_Entries;
       count2 = 0;
+
       switch (pos)
-      { case MUIV_NList_Insert_Top:
+      {
+      	case MUIV_NList_Insert_Top:
           newpos = 0;
           break;
         case MUIV_NList_Insert_Bottom:
@@ -515,12 +527,14 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
             newpos = data->NList_Entries;
           break;
       }
+
       if ((newpos >= 0) && (newpos < data->NList_Entries) && (data->EntriesArray[newpos]->Wrap & TE_Wrap_TmpLine))
         newpos -= data->EntriesArray[newpos]->dnum;
       data->moves = FALSE;
 
       if (maxent >= data->LastEntry)
-      { struct TypeEntry **newentries = NULL,**oldentries = data->EntriesArray;
+      {
+      	struct TypeEntry **newentries = NULL,**oldentries = data->EntriesArray;
         LONG le = ((maxent << 1) + 0x00FFL) & ~0x000FL;
 
         if((newentries = NL_Malloc(data,sizeof(struct TypeEntry *) * (le + 1),"Insert_Entries")))
@@ -562,22 +576,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
             {
               data->EntriesArray[ent] = newentry;
 
-#if 0
-              /* $$$Sensei */
-              /* NList.mcc is now using construct method instead of construct hooks directly. */
-              if (data->NList_ConstructHook)
-              { if (data->NList_ConstructHook2)
-                  newentry->Entry = (APTR) MyCallHookPktA(obj,data->NList_ConstructHook,entries[ent2],data->Pool);
-                else
-                  newentry->Entry = (APTR) MyCallHookPkt(obj,TRUE,data->NList_ConstructHook,data->Pool,entries[ent2]);
-              }
-              else
-                newentry->Entry = entries[ent2];
-#else
               newentry->Entry = (APTR) DoMethod( obj, MUIM_NList_Construct, entries[ent2], data->Pool );
-#endif
-
-              //D(bug( "Inserting: %s\n", newentry->Entry ));
 
               if (newentry->Entry)
               { newentry->Select = TE_Select_None;
@@ -637,28 +636,43 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
 
           data->NList_Entries = ent;
           count -= count2;
+
+					/* TODO: This stuff here can be merged with the stuff below */
           GetNImage_End(obj,data);
           GetNImage_Sizes(obj,data);
           if (count > 0)
-          { if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
-            { NL_SegChanged(data,newpos,data->NList_Entries);
-            }
+          {
+          	if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
+            	NL_SegChanged(data,newpos,data->NList_Entries);
             else
               data->NList_AffFirst += count;
+
             if ((data->NList_Active >= newpos) && (data->NList_Active < data->NList_Entries))
-            { set_Active(data->NList_Active + count);
+            {
+            	set_Active(data->NList_Active + count);
               NL_Changed(data,data->NList_Active);
             }
+
             UnSelectCharSel(obj,data,FALSE);
             if (wrapcol)
               data->do_wwrap = TRUE;
             if (pos == MUIV_NList_Insert_Sorted)
             {
-              NL_SetCols(obj,data);
-              if (data->sorted)
-                NL_List_SortMore(obj,data,newpos);
-              else
-                NL_List_Sort(obj,data);
+	          	int needs_redraw;
+
+	            NL_SetCols(obj,data);
+
+							/* NL_List_SortXXX returns wheather sorting has changed anything
+							 * and redraws the entries. If sorting hasn't changed anything
+							 * we still have to redraw the list, because there are new entries
+							 * in the list */
+	            if (data->sorted) needs_redraw = !NL_List_SortMore(obj,data,newpos);
+	            else needs_redraw = !NL_List_Sort(obj,data);
+
+							if (needs_redraw)
+							{
+								REDRAW;
+							}
             }
             else
             { Make_Active_Visible;
@@ -690,7 +704,8 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
         if (is_string)
           entries = (APTR *)(void*)&string;
         else
-        { while (!entries[ent2])
+        {
+        	while (!entries[ent2])
             ent2++;
         }
 
@@ -700,25 +715,11 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
           {
             data->EntriesArray[ent] = newentry;
 
-#if 0
-            /* $$$Sensei */
-            /* NList.mcc is now using construct method instead of construct hooks directly. */
-            if (data->NList_ConstructHook)
-            { if (data->NList_ConstructHook2)
-                newentry->Entry = (APTR) MyCallHookPktA(obj,data->NList_ConstructHook,entries[ent2],data->Pool);
-              else
-                newentry->Entry = (APTR) MyCallHookPkt(obj,TRUE,data->NList_ConstructHook,data->Pool,entries[ent2]);
-            }
-            else
-              newentry->Entry = entries[ent2];
-#else
             newentry->Entry = (APTR) DoMethod( obj, MUIM_NList_Construct, entries[ent2], data->Pool );
-#endif
-
-            //D(bug( "Inserting: %s\n", newentry->Entry ));
 
             if (newentry->Entry)
-            { newentry->Select = TE_Select_None;
+            {
+            	newentry->Select = TE_Select_None;
               newentry->Wrap = wrapcol;
               newentry->PixLen = -1;
               newentry->pos = 0;
@@ -763,29 +764,43 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
 
         GetNImage_End(obj,data);
         GetNImage_Sizes(obj,data);
+
+
         if (count > 0)
-        { if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
-          { NL_SegChanged(data,newpos,data->NList_Entries);
+        {
+        	if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
+          {
+          	NL_SegChanged(data,newpos,data->NList_Entries);
           }
-          else
-            data->NList_AffFirst += count;
+          else data->NList_AffFirst += count;
           if ((data->NList_Active >= newpos) && (data->NList_Active < data->NList_Entries))
-          { set_Active(data->NList_Active + count);
+          {
+          	set_Active(data->NList_Active + count);
             NL_Changed(data,data->NList_Active);
           }
           UnSelectCharSel(obj,data,FALSE);
-          if (wrapcol)
-            data->do_wwrap = TRUE;
+          if (wrapcol) data->do_wwrap = TRUE;
+
           if (pos == MUIV_NList_Insert_Sorted)
           {
+          	int needs_redraw;
+
             NL_SetCols(obj,data);
-            if (data->sorted)
-              NL_List_SortMore(obj,data,newpos);
-            else
-              NL_List_Sort(obj,data);
-          }
-          else
-          { Make_Active_Visible;
+
+						/* NL_List_SortXXX returns wheather sorting has changed anything
+						 * and redraws the entries. If sorting hasn't changed anything
+						 * we still have to redraw the list, because there are new entries
+						 * in the list */
+            if (data->sorted) needs_redraw = !NL_List_SortMore(obj,data,newpos);
+            else needs_redraw = !NL_List_Sort(obj,data);
+
+						if (needs_redraw)
+						{
+							REDRAW;
+						}
+          } else
+          {
+          	Make_Active_Visible;
             data->do_updatesb = TRUE;
             data->sorted = FALSE;
             REDRAW;
