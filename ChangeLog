@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-07-16  Jens Langner <Jens.Langner@light-speed.de>
+
+    * gcc3: adapted all sources to be more gcc3 compliant. Removed
+      all remaining warnings in -Wall mode. Please note that at
+      least for the AmigaOS4 port of the classes gcc 3.4.1 should
+      be considered the default compiler now.
+
 2004-07-03  Jens Langner <Jens.Langner@light-speed.de>
 
     * nlisttree_mcp: added the missing mcp class of the nlisttree

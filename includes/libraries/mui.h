@@ -1036,7 +1036,7 @@ struct MUI_List_TestPos_Result
 
 #ifndef __cplusplus
 
-#define get(obj,attr,store) GetAttr(attr,obj,(ULONG *)store)
+#define get(obj,attr,store) GetAttr(attr,obj,(ULONG *)(void*)store)
 #define set(obj,attr,value) SetAttrs(obj,attr,value,TAG_DONE)
 #define nnset(obj,attr,value) SetAttrs(obj,MUIA_NoNotify,TRUE,attr,value,TAG_DONE)
 

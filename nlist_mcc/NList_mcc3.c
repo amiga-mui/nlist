@@ -589,7 +589,7 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     mymsg.MethodID = MUIM_Draw;
     mymsg.flags = 0;
 /*D(bug("%lx|drawsuper1 %lx %lx %lx\n",obj,msg->flags,muiAreaData(obj)->mad_Flags,muiAreaData(data->drawsuper)->mad_Flags));*/
-    DoMethodA((Object *) data->drawsuper,(Msg) &mymsg);
+    DoMethodA((Object *)data->drawsuper, (Msg)(void*)&mymsg);
 /*D(bug("%lx|drawsuper2 %lx %lx %lx\n",obj,msg->flags,muiAreaData(obj)->mad_Flags,muiAreaData(data->drawsuper)->mad_Flags));*/
     msg->flags = 0;
     return(0);

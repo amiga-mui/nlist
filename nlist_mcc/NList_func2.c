@@ -539,7 +539,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
           ent3 = ent2 = 0;
 
           if (is_string)
-            entries = (APTR *) &string;
+            entries = (APTR *)(void*)&string;
           else
           { while (!entries[ent2])
               ent2++;
@@ -604,7 +604,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
                 { string++; string++; }
                 else if ((string[0] == '\n') ||(string[0] == '\r'))
                   string++;
-                entries = (APTR *) &string;
+                entries = (APTR *)(void*)&string;
               }
               else
               { ent2++;
@@ -688,7 +688,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
         ent3 = ent2 = 0;
 
         if (is_string)
-          entries = (APTR *) &string;
+          entries = (APTR *)(void*)&string;
         else
         { while (!entries[ent2])
             ent2++;
@@ -742,7 +742,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
               { string++; string++; }
               else if ((string[0] == '\n') ||(string[0] == '\r'))
                 string++;
-              entries = (APTR *) &string;
+              entries = (APTR *)(void*)&string;
             }
             else
             { ent2++;

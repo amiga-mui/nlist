@@ -26,6 +26,7 @@
 */
 #include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 #include <proto/intuition.h>
 #include <proto/graphics.h>
 #include <proto/locale.h>
