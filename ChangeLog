@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-10-03  Jens Langner <Jens.Langner@light-speed.de>,
+			Sebastian Bauer <mail@sebastianbauer.info>
+
+    * mccheader.c: Special Fun of Computing fix. Return value of
+      PreClassInitFunc() was not evaluated.
+
 2004-09-12  Jens Langner <Jens.Langner@light-speed.de>
 
     * all: modified all makefiles to use "-W -Wall" as the warning
