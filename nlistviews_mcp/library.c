@@ -79,7 +79,7 @@ struct ConsoleIFace *IConsole = NULL;
 
 struct IOStdReq ioreq;
 
-BOOL ClassInitFunc(struct Library *base)
+BOOL ClassInitFunc(UNUSED struct Library *base)
 {
 	if((CxBase = OpenLibrary("commodities.library", 37L)) &&
      GETINTERFACE(ICommodities, CxBase))
@@ -113,7 +113,7 @@ BOOL ClassInitFunc(struct Library *base)
 }
 
 
-VOID ClassExitFunc( struct Library *base )
+VOID ClassExitFunc( UNUSED struct Library *base )
 {
 	if(LocaleBase)
 	{

@@ -144,7 +144,7 @@ BOOL DontDoColumn(struct NLData *data,LONG ent,WORD column)
 }
 
 
-void FreeAffInfo(Object *obj,struct NLData *data)
+void FreeAffInfo(UNUSED Object *obj,struct NLData *data)
 {
   if (data->aff_infos)
   { NL_Free(data,data->aff_infos,"FreeAffInfo");
@@ -1215,7 +1215,7 @@ void FindCharInColumn(Object *obj,struct NLData *data,LONG ent,WORD column,WORD 
         *charxoffset = xoffset - curx2;
         if (*charxoffset > afinfo->len/2)
           *charxoffset = xoffset - curx;
-        if (data->storebutton && (afinfo->button >= 0))
+        if (data->storebutton && ((LONG)afinfo->button >= 0))
         {
           data->affimage = afinfo->imgnum; // RHP: Added for Special Shorthelp
           data->affbutton = afinfo->button;
@@ -1234,7 +1234,7 @@ void FindCharInColumn(Object *obj,struct NLData *data,LONG ent,WORD column,WORD 
         *charxoffset = xoffset - curx2;
         if (*charxoffset > afinfo->len/2)
           *charxoffset = xoffset - curx;
-        if (data->storebutton && (afinfo->button >= 0))
+        if (data->storebutton && ((LONG)afinfo->button >= 0))
         {
           data->affimage = afinfo->imgnum; // RHP: Added for Special Shorthelp
           data->affbutton = afinfo->button;

@@ -27,7 +27,7 @@
 
 #include "private.h"
 
-LONG NL_GetSelects(struct NLData *data,Object *obj,LONG ent)
+LONG NL_GetSelects(struct NLData *data, UNUSED Object *obj, LONG ent)
 {
   LONG selects = 0L;
 
@@ -1544,7 +1544,7 @@ ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
 
 
 
-ULONG mNL_List_Sort(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort *msg)
+ULONG mNL_List_Sort(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_Sort *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1555,7 +1555,7 @@ ULONG mNL_List_Sort(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort *msg)
 ULONG mNL_List_Sort2(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort2 *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  if ((msg->sort_type_add) && ((data->NList_SortType & ~MUIV_NList_SortTypeAdd_Mask) == msg->sort_type))
+  if ((msg->sort_type_add) && ((data->NList_SortType & ~MUIV_NList_SortTypeAdd_Mask) == (ULONG)msg->sort_type))
     data->NList_SortType += msg->sort_type_add;
   else
     data->NList_SortType = msg->sort_type;
@@ -1569,7 +1569,7 @@ ULONG mNL_List_Sort3(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort3 *msg
   struct NLData *data = INST_DATA(cl,obj);
   if (msg->which == MUIV_NList_Sort3_SortType_2)
   {
-    if ((msg->sort_type_add) && ((data->NList_SortType2 & ~MUIV_NList_SortTypeAdd_Mask) == msg->sort_type))
+    if ((msg->sort_type_add) && ((data->NList_SortType2 & ~MUIV_NList_SortTypeAdd_Mask) == (ULONG)msg->sort_type))
       data->NList_SortType2 += msg->sort_type_add;
     else
       data->NList_SortType2 = msg->sort_type;
@@ -1577,7 +1577,7 @@ ULONG mNL_List_Sort3(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort3 *msg
   }
   else
   {
-    if ((msg->sort_type_add) && ((data->NList_SortType & ~MUIV_NList_SortTypeAdd_Mask) == msg->sort_type))
+    if ((msg->sort_type_add) && ((data->NList_SortType & ~MUIV_NList_SortTypeAdd_Mask) == (ULONG)msg->sort_type))
       data->NList_SortType += msg->sort_type_add;
     else
       data->NList_SortType = msg->sort_type;
@@ -1654,7 +1654,7 @@ ULONG mNL_List_Move(struct IClass *cl,Object *obj,struct MUIP_NList_Move *msg)
 }
 
 
-ULONG mNL_List_Clear(struct IClass *cl,Object *obj,struct  MUIP_NList_Clear *msg)
+ULONG mNL_List_Clear(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_Clear *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1741,7 +1741,7 @@ ULONG mNL_DragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
   { type = MUIV_NList_DropType_Above;
     if (data->NList_DropMark == DROPMARK_START)
     { data->NList_DropMark = DROPMARK_NONE;
-      if (data->markdrawnum == MUIM_NList_Trigger)
+      if (data->markdrawnum == (LONG)MUIM_NList_Trigger)
         data->markdrawnum = 0;
       else if ((msg->x > data->mleft+6) && (msg->x < data->mright-6))
       { if (msg->y < data->vpos+4)
@@ -1899,13 +1899,13 @@ ULONG mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 }
 
 
-ULONG mNL_DropType(struct IClass *cl,Object *obj,struct MUIP_NList_DropType *msg)
+ULONG mNL_DropType(UNUSED struct IClass *cl, UNUSED Object *obj, UNUSED struct MUIP_NList_DropType *msg)
 {
   /*register struct NLData *data = INST_DATA(cl,obj);*/
   return(0);
 }
 
-ULONG mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NList_DropEntryDrawErase *msg)
+ULONG mNL_DropEntryDrawErase(UNUSED struct IClass *cl, UNUSED Object *obj, UNUSED struct MUIP_NList_DropEntryDrawErase *msg)
 {
   /*register struct NLData *data = INST_DATA(cl,obj);*/
   return(MUIM_NList_DropEntryDrawErase);

@@ -1047,7 +1047,7 @@ void ScrollHoriz(Object *obj,struct NLData *data,WORD dx,LONG LPVisible)
 }
 
 
-LONG  NL_ColToColumn(Object *obj,struct NLData *data,LONG col)
+LONG  NL_ColToColumn(UNUSED Object *obj,struct NLData *data,LONG col)
 { LONG column;
   if ((col >= 0) && (col < DISPLAY_ARRAY_MAX))
   { for (column = 0; column < data->numcols; column++)
@@ -1059,7 +1059,7 @@ LONG  NL_ColToColumn(Object *obj,struct NLData *data,LONG col)
 }
 
 
-LONG  NL_ColumnToCol(Object *obj,struct NLData *data,LONG column)
+LONG  NL_ColumnToCol(UNUSED Object *obj,struct NLData *data,LONG column)
 {
   if ((column >= 0) && (column < data->numcols))
     return ((LONG) data->cols[column].c->col);
@@ -1224,20 +1224,24 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
     return (0);
 
   if (get(obj,MUIA_ContextMenu,&mo) && mo)
-  { if ((mo & 0x9d510030) != 0x9d510030)
-    { if (data->MenuObj)
+  {
+    if ((mo & 0x9d510030) != 0x9d510030)
+    {
+      if (data->MenuObj)
       { MUI_DisposeObject(data->MenuObj);
         data->MenuObj = NULL;
       }
       return(DoSuperMethodA(cl,obj,(Msg) msg));
     }
-    else if (mo == MUIV_NList_ContextMenu_Never)
-    { data->ContextMenuOn = FALSE;
+    else if (mo == (LONG)MUIV_NList_ContextMenu_Never)
+    {
+      data->ContextMenuOn = FALSE;
       data->NList_ContextMenu = MUIV_NList_ContextMenu_Never;
       nnset(obj,MUIA_ContextMenu,NULL);
     }
     for (column = 0;column < data->numcols;column++)
-    { if (data->cols[column].c->userwidth >= 0)
+    {
+      if (data->cols[column].c->userwidth >= 0)
         do_it = TRUE;
       if (data->cols[column].c != &data->cols[column])
         order_it = TRUE;
@@ -1396,19 +1400,26 @@ void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
     taskname = "MUI Application";
 
   if (why == 0)
-  { struct EasyStruct stackES = {
-        sizeof (struct EasyStruct),
-        0,
-        "Stack Size Problem",
-        "MUI NList object \'0x%08lx\' have found that\n"
-        "the real stacksize of the task \'%s\'\n"
-        "is only %ld bytes.\n\n"
-        "Actually %ld bytes of the stack have been used\n"
-        "at some point of the object where it has been\n"
-        "tested, so you should increase the stack value\n"
-        "if you don't want to get a guru...",
-        "Ok",
-    };
+  {
+    struct EasyStruct stackES;
+
+    stackES.es_StructSize = sizeof(struct EasyStruct);
+    stackES.es_Flags      = 0;
+    stackES.es_Title      = "Stack Size Problem";
+    stackES.es_TextFormat = "MUI NList object \'0x%08lx\' have found that\n"
+                            "the real stacksize of the task \'%s\'\n"
+                            "is only %ld bytes.\n\n"
+                            "Actually %ld bytes of the stack have been used\n"
+                            "at some point of the object where it has been\n"
+                            "tested, so you should increase the stack value\n"
+                            "if you don't want to get a guru...";
+    stackES.es_GadgetFormat = "Ok";
+
+    #if defined(__amigaos4__)
+    stackES.es_Screen       = 0;
+    stackES.es_TagList      = 0;
+    #endif
+
     if (data->SHOW)
       w = _window(obj);
     data->NList_SPmin = data->NList_SPLowest - 200;
@@ -1419,20 +1430,26 @@ void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
   }
   else if (why == 1)
   {
-    struct EasyStruct stackES = {
-        sizeof (struct EasyStruct),
-        0,
-        "Stack Size Problem",
-        "MUI NList object \'0x%08lx\' have found that\n"
-        "the real stacksize of the task \'%s\'\n"
-        "is only %ld bytes.\n\n"
-        "The minimum stack size for MUI programs is 8 Kb,\n"
-        "and it's probably better to set it to\n"
-        "10 Kb, 12 Kb or 16 Kb...\n\n"
-        "NList object creation will fail until you'll\n"
-        "set a correct value for it.",
-        "Ok",
-    };
+    struct EasyStruct stackES;
+
+    stackES.es_StructSize = sizeof(struct EasyStruct);
+    stackES.es_Flags      = 0;
+    stackES.es_Title      = "Stack Size Problem";
+    stackES.es_TextFormat = "MUI NList object \'0x%08lx\' have found that\n"
+                            "the real stacksize of the task \'%s\'\n"
+                            "is only %ld bytes.\n\n"
+                            "The minimum stack size for MUI programs is 8 Kb,\n"
+                            "and it's probably better to set it to\n"
+                            "10 Kb, 12 Kb or 16 Kb...\n\n"
+                            "NList object creation will fail until you'll\n"
+                            "set a correct value for it.";
+    stackES.es_GadgetFormat = "Ok";
+
+    #if defined(__amigaos4__)
+    stackES.es_Screen       = 0;
+    stackES.es_TagList      = 0;
+    #endif
+
     if (data->SHOW)
       w = _window(obj);
     EasyRequest(w,&stackES,NULL,(LONG)obj,(LONG)taskname,data->NList_SPUpper - data->NList_SPLower);

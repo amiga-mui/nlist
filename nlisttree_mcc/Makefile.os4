@@ -31,7 +31,7 @@ BINDIR    = bin_os4
 CPU      = -mcpu=604e
 CPUFLAGS = -mmultiple
 CDEFS    = -D__NLT_VERDATE=\"`date +%d.%m.%Y`\" -D__NLT_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
-WARN     = -Wall
+WARN     = -W -Wall
 OPTFLAGS = -O3 -finline-functions -fomit-frame-pointer -funroll-loops
 DEBUG    = -DMYDEBUG -g -O0 -DWITH_DEBUG
 REDEFINE =

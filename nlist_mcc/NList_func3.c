@@ -338,7 +338,7 @@ VOID	NL_Pool_Internal_FreeVec( struct NLData *data, APTR memory )
 }
 
 /* These wrappers slow down, we should use macros or correct functions directly instead... */
-APTR	NL2_Malloc2( APTR pool, ULONG size, STRPTR string )
+APTR	NL2_Malloc2( APTR pool, ULONG size, UNUSED STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -346,7 +346,7 @@ APTR	NL2_Malloc2( APTR pool, ULONG size, STRPTR string )
 
 }
 
-VOID	NL2_Free2( APTR pool, APTR memory, STRPTR string )
+VOID	NL2_Free2( APTR pool, APTR memory, UNUSED STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -354,7 +354,7 @@ VOID	NL2_Free2( APTR pool, APTR memory, STRPTR string )
 
 }
 
-APTR	NL2_Malloc( struct NLData *data, ULONG size, STRPTR string )
+APTR	NL2_Malloc( struct NLData *data, ULONG size, UNUSED STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -362,7 +362,7 @@ APTR	NL2_Malloc( struct NLData *data, ULONG size, STRPTR string )
 
 }
 
-VOID	NL2_Free( struct NLData *data, APTR memory, STRPTR string )
+VOID	NL2_Free( struct NLData *data, APTR memory, UNUSED STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -413,7 +413,7 @@ struct parse_format
 };
 
 
-void NL_Free_Format(Object *obj,struct NLData *data)
+void NL_Free_Format(UNUSED Object *obj,struct NLData *data)
 {
   if (data->cols)
   { WORD column = 0;
@@ -899,8 +899,9 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
   { if (!(file = Open( filename, MODE_NEWFILE )))
       return (MUIV_NLCT_OpenErr);
   }
-  else if (clipnum >= 0)
-  { if (!(ior = CBOpen(clipnum)))
+  else if((LONG)clipnum >= 0)
+  {
+    if (!(ior = CBOpen(clipnum)))
       return (0);
   }
 
@@ -1030,8 +1031,10 @@ ULONG mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip 
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  if (msg->clipnum < 0)
+
+  if((LONG)msg->clipnum < 0)
     return (0);
+
   return ((ULONG) NL_CopyTo(obj,data,msg->pos,NULL,msg->clipnum,msg->entries,msg->hook));
 }
 

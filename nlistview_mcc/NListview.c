@@ -89,7 +89,10 @@
 static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
 {
 	UBYTE buf[4];
-	struct InputEvent ie = { 0, IECLASS_RAWKEY, 0, 0, 0 };
+	struct InputEvent ie;
+
+  memset(&ie, 0, sizeof(struct InputEvent));
+  ie.ie_Class = IECLASS_RAWKEY;
 
 	if (imsg->Class == IDCMP_RAWKEY)
 	{

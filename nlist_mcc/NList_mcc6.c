@@ -994,7 +994,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
  */
           _left(nimg->NImgObj) += nimg->dx;
           _top(nimg->NImgObj) += nimg->dy;
-          if ((data->affbutton >= 0) && (data->affbutton == afinfo->button))
+          if ((data->affbutton >= 0) && (data->affbutton == (LONG)afinfo->button))
           {
             if ((data->affbuttonstate == 2) || (data->affbuttonstate == -2))
             { muiAreaData(nimg->NImgObj)->mad_Flags &= ~MADF_VISIBLE;
@@ -1254,7 +1254,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
 }
 
 
-static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *rp,LONG ent,LONG col,LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,BOOL draw)
+static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *rp,LONG ent,LONG col,UNUSED LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,BOOL draw)
 {
   struct colinfo *cinfo;
   struct affinfo *afinfo;
@@ -1432,7 +1432,7 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
 }
 
 
-void DisposeDragRPort(Object *obj,struct NLData *data)
+void DisposeDragRPort(UNUSED Object *obj,struct NLData *data)
 {
   if (data->DragRPort)
   { struct BitMap *bm = data->DragRPort->BitMap;

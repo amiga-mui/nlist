@@ -422,11 +422,13 @@ struct NImgList *GetNImage(Object *obj,struct NLData *data,char *ImgName)
 }
 
 
-void DeleteNImages(Object *obj,struct NLData *data)
+void DeleteNImages(UNUSED Object *obj, struct NLData *data)
 {
   struct NImgList *nimg = data->NImage.next;
+
   while (nimg)
-  { data->NImage.next = nimg->next;
+  {
+    data->NImage.next = nimg->next;
     NL_Free(data,nimg,"creImage2");
     nimg = data->NImage.next;
   }
@@ -499,7 +501,7 @@ void DeleteNImages2(Object *obj,struct NLData *data)
 }
 
 
-void GetNImage_Sizes(Object *obj,struct NLData *data)
+void GetNImage_Sizes(UNUSED Object *obj, struct NLData *data)
 {
   if (data->SHOW)
   { struct NImgList *nimg = &data->NImage;
@@ -651,7 +653,7 @@ ULONG NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags
         bmimg->width = 0;
         bmimg->height = 0;
         bmimg->obtainpens = (APTR) imgobj;
-        if (flags != ~0)
+        if (flags != (ULONG)~0L)
           nnset(imgobj,MUIA_FillArea,FALSE);
 /*
  *         nnset(imgobj,MUIA_Image_FontMatch,FALSE);
@@ -682,7 +684,7 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
   if (!imgobj)
     return(0);
 
-  if ((flags == ~0L) || !get(imgobj,MUIA_Bitmap_Width,&CI_BM_Width))
+  if ((flags == (ULONG)~0L) || !get(imgobj,MUIA_Bitmap_Width,&CI_BM_Width))
     return (NL_CreateImage2(obj,data,imgobj,flags));
 
   if (imgobj && data->SETUP)

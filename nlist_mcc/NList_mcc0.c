@@ -428,7 +428,7 @@ static ULONG mNL_List_Compare( struct IClass *cl, Object *obj, struct MUIP_NList
 }
 
 //$$$Sensei
-static ULONG mNL_List_Display( struct IClass *cl, Object *obj, struct MUIP_NList_Display *msg )
+static ULONG mNL_List_Display( struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_Display *msg )
 {
 	struct NLData *data = INST_DATA( cl, obj );
 

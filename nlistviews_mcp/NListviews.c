@@ -727,8 +727,10 @@ HOOKPROTONH(ActiveFunc, VOID, Object *list, long *val)
 /*  Object *win = NULL;*/
   ULONG active = (ULONG) (val[1]);
   struct KeyBinding *key = NULL;
-  if (active >= 0)
-  { DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
+  if((LONG)active >= 0)
+  {
+    DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
+
     if (key)
     { LONG i;
       i = 0;
@@ -1762,11 +1764,11 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = 0;
-    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_Menu)))
+    if((ptrd = (LONG *)DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_Menu)) != NULL)
     {
-      if      (*ptrd == MUIV_NList_ContextMenu_TopOnly)
+      if(*ptrd == (LONG)MUIV_NList_ContextMenu_TopOnly)
         num = 1;
-      else if (*ptrd == MUIV_NList_ContextMenu_Never)
+      else if(*ptrd == (LONG)MUIV_NList_ContextMenu_Never)
         num = 2;
     }
     set(data->mcp_NList_Menu, MUIA_Radio_Active, num);

@@ -5,17 +5,29 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-09-12  Jens Langner <Jens.Langner@light-speed.de>
+
+    * all: modified all makefiles to use "-W -Wall" as the warning
+      level and adapted all source files accordingly. Reactivated
+      the DEBUG options in all morphos makefiles aswell as the
+      debugging options can be dynamically disabled on the
+      commandline by "make DEBUG=" anyway.
+
 2004-08-26  Nicolas Sallin <henes@morphos.de>
+
     * All: More changes for morphos.
 
 2004-08-25  Sebastian Bauer <mail@sebastianbauer.info>
+
     * NList4_func4.c: Fixed wrong disposion of mouse pointer
       objects. Bug found by Georg Steger.
 
 2004-08-25  Nicolas Sallin <henes@morphos.de>
+
     * All: Changes for morphos.
 
 2004-08-24  Sebastian Bauer <mail@sebastianbauer.info>
+
     * NListtree: Fixed alignment problems (the alignment enforcement
       surrounding include statements was discarded by subincludes).
       The events are now only subscribed between MUIM_Show/MUIM_Hide

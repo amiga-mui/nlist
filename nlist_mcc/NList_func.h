@@ -86,7 +86,7 @@
 #define ENDQUIET                  NL_DrawQuietBG(obj,data,5,0)
 #define LESSQUIET                 NL_DrawQuietBG(obj,data,6,0)
 
-#define SetBackGround(bg)         if (bg != data->actbackground) NL_DrawQuietBG(obj,data,7,(bg));
+#define SetBackGround(bg)         if((bg) != (ULONG)data->actbackground) NL_DrawQuietBG(obj, data, 7, (bg));
 #define SetBackGroundForce(bg)    NL_DrawQuietBG(obj,data,8,(bg))
 
 #define Make_Active_Visible       NL_DrawQuietBG(obj,data,9,0)

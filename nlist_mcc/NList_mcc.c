@@ -210,9 +210,10 @@ MakeStaticHook(NL_LayoutHookGroup, NL_LayoutFuncGroup);
 
 void release_pen(struct MUI_RenderInfo *mri, ULONG *pen)
 {
-  if(*pen != -1)
-  { MUI_ReleasePen(mri, *pen);
-    *pen = -1;
+  if(*pen != (ULONG)-1)
+  {
+    MUI_ReleasePen(mri, *pen);
+    *pen = (ULONG)-1;
   }
 }
 
@@ -230,7 +231,7 @@ static LONG Calc_Stack(Object *obj,struct NLData *data)
   LONG total;
 
 #ifdef __MORPHOS__
-    return 100000;
+  return 100000;
 #endif
 
 
@@ -627,14 +628,16 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
   if ((tag = FindTagItem(MUIA_NList_ConstructHook, taglist)) ||
       (tag = FindTagItem(MUIA_List_ConstructHook, taglist)))
-  { if (tag->ti_Data == MUIV_NList_ConstructHook_String)
+  {
+    if (tag->ti_Data == (ULONG)MUIV_NList_ConstructHook_String)
       data->NList_ConstructHook = (struct Hook *) &NL_ConstructHook_String;
     else
       data->NList_ConstructHook = (struct Hook *) tag->ti_Data;
   }
   if ((tag = FindTagItem(MUIA_NList_DestructHook, taglist)) ||
       (tag = FindTagItem(MUIA_List_DestructHook, taglist)))
-  { if (tag->ti_Data == MUIV_NList_DestructHook_String)
+  {
+    if (tag->ti_Data == (ULONG)MUIV_NList_DestructHook_String)
       data->NList_DestructHook = (struct Hook *) &NL_DestructHook_String;
     else
       data->NList_DestructHook = (struct Hook *) tag->ti_Data;
@@ -1057,16 +1060,20 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   {
     char *fontname = NULL;
     ULONG fonttmp = data->NList_Font;
-    if (data->NList_Font == MUIV_NList_Font)
-    { fonttmp = MUIV_Font_List;
+
+    if (data->NList_Font == (ULONG)MUIV_NList_Font)
+    {
+      fonttmp = MUIV_Font_List;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font, &fontname);
     }
-    else if (data->NList_Font == MUIV_NList_Font_Little)
-    { fonttmp = MUIV_Font_Tiny;
+    else if (data->NList_Font == (ULONG)MUIV_NList_Font_Little)
+    {
+      fonttmp = MUIV_Font_Tiny;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Little, &fontname);
     }
-    else if (data->NList_Font == MUIV_NList_Font_Fixed)
-    { fonttmp = MUIV_Font_Fixed;
+    else if (data->NList_Font == (ULONG)MUIV_NList_Font_Fixed)
+    {
+      fonttmp = MUIV_Font_Fixed;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Fixed, &fontname);
     }
     if (fontname && *fontname)
@@ -1356,8 +1363,9 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
       data->multisel_qualifier = IEQUALIFIER_MIDBUTTON;
   }
 
-  if (data->NList_ContextMenu == MUIV_NList_ContextMenu_Default)
-  { LONG *ptrd;
+  if (data->NList_ContextMenu == (LONG)MUIV_NList_ContextMenu_Default)
+  {
+    LONG *ptrd;
     data->ContextMenu = MUIV_NList_ContextMenu_Always;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Menu, &ptrd))
     { switch (*ptrd)
@@ -1370,8 +1378,9 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
   }
   if (data->ContextMenu != data->ContextMenuOn)
-  { if (/*(((data->ContextMenu & 0x9d510030) == 0x9d510030) && (data->numcols <= 1)) ||*/ /* sba: Contextmenu problem: Disabled */
-        (data->ContextMenu == MUIV_NList_ContextMenu_Never))
+  {
+    if (/*(((data->ContextMenu & 0x9d510030) == 0x9d510030) && (data->numcols <= 1)) ||*/ /* sba: Contextmenu problem: Disabled */
+        (data->ContextMenu == (LONG)MUIV_NList_ContextMenu_Never))
       notdoset(obj,MUIA_ContextMenu,NULL);
     else
       notdoset(obj,MUIA_ContextMenu,data->ContextMenu);

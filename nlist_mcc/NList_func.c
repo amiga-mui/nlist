@@ -1281,7 +1281,7 @@ ULONG NL_List_TestPos(Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_N
 }
 
 
-ULONG NL_List_TestPosOld(Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_List_TestPos_Result *res)
+ULONG NL_List_TestPosOld(UNUSED Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_List_TestPos_Result *res)
 {
   if (res)
   { WORD ly = (y - data->vpos);
@@ -1757,7 +1757,7 @@ ULONG mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod
        (msg->pos == MUIV_NList_DoMethod_Selected) ||
        (msg->pos == MUIV_NList_DoMethod_All) ||
        ((msg->pos >= 0) && (msg->pos < data->NList_Entries))))
-  { LONG num;
+  {
     LONG *table1 = (LONG *) &msg->FollowParams;
     LONG table2[64]; /* MAXIMUM 40 (see docs) <aphaso> */
 
@@ -1792,10 +1792,15 @@ ULONG mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod
     { if ((LONG) msg->DestObj == MUIV_NList_DoMethod_Entry)
         dest = data->EntriesArray[ent]->Entry;
       if (dest)
-      { table2[0] = table1[1];
-        for (num = 1;num < msg->FollowParams;num++)
-        { switch (table1[num+1])
-          { case MUIV_NList_EntryValue :
+      {
+        ULONG num;
+        table2[0] = table1[1];
+
+        for(num = 1;num < msg->FollowParams;num++)
+        {
+          switch (table1[num+1])
+          {
+            case MUIV_NList_EntryValue :
               table2[num] = (LONG) data->EntriesArray[ent]->Entry;
               break;
             case MUIV_NList_EntryPosValue :
@@ -1846,7 +1851,7 @@ ULONG mNL_List_GetPos(struct IClass *cl,Object *obj,struct MUIP_NList_GetPos *ms
   { *msg->pos = MUIV_NList_GetPos_End;
     return (FALSE);
   }
-  else if ( (ULONG)msg->entry == -2 )
+  else if ( (ULONG)msg->entry == (ULONG)-2 )
   {
     if ( data->NList_LastInserted == -1 )
       *msg->pos = ( data->NList_Entries - 1 );

@@ -37,15 +37,17 @@
 
 
 
-static LONG NL_TestKey(Object *obj,struct NLData *data,LONG KeyTag,UWORD Code,UWORD Qualifier, BOOL force)
-{ UWORD qual;
+static LONG NL_TestKey(UNUSED Object *obj,struct NLData *data,LONG KeyTag,UWORD Code,UWORD Qualifier, BOOL force)
+{
+  UWORD qual;
   LONG i;
   Qualifier &= KBQUAL_MASK;
+
   if (data->NList_Keys && (!(Code & 0x80) || force))
   {
     for (i = 0 ; data->NList_Keys[i].kb_KeyTag > 0 ; i++)
     {
-      if ((data->NList_Keys[i].kb_KeyTag == KeyTag) &&
+      if ((data->NList_Keys[i].kb_KeyTag == (ULONG)KeyTag) &&
           ((Code == data->NList_Keys[i].kb_Code) ||
            ((data->NList_Keys[i].kb_Code == (UWORD)~0) && data->NList_Keys[i].kb_Qualifier)))
       {
@@ -1123,7 +1125,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
         data->mouse_x = msg->imsg->MouseX;
         data->mouse_y = msg->imsg->MouseY;
 
-        if ((data->ContextMenu == MUIV_NList_ContextMenu_TopOnly) /*&& (data->numcols > 1)*/) /* sba: Contextmenu problem: Disabled */
+        if ((data->ContextMenu == (LONG)MUIV_NList_ContextMenu_TopOnly) /*&& (data->numcols > 1)*/) /* sba: Contextmenu problem: Disabled */
         { if ((data->NList_Title && (msg->imsg->MouseY >= data->vpos)) || (!data->NList_Title && (msg->imsg->MouseY > data->vpos + data->vinc/3)))
           { if (data->ContextMenuOn)
               notdoset(obj,MUIA_ContextMenu,NULL);
@@ -1816,7 +1818,7 @@ BOOL NL_Prop_First_Adjust(Object *obj,struct NLData *data)
 }
 
 
-ULONG mNL_Trigger(struct IClass *cl,Object *obj,Msg msg)
+ULONG mNL_Trigger(struct IClass *cl, UNUSED Object *obj, UNUSED Msg msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   /* attention, can be called with msg = NULL */

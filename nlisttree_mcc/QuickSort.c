@@ -40,7 +40,7 @@
 #include "NListtree.h"
 
 #define SWAP(a,b)     temp=(a);(a)=(b);(b)=temp
-#define COMPARE(a,b)  CallHook(chook, data->Obj, MUIA_NListtree_CompareHook, (a), (b))
+#define COMPARE(a,b)  (LONG)CallHook(chook, data->Obj, MUIA_NListtree_CompareHook, (a), (b))
 
 void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct Hook *chook, struct NListtree_Data *data)
 {

@@ -408,13 +408,19 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
 
       case MUIA_ContextMenu :
         if (do_things)
-        { data->NList_ContextMenu = data->ContextMenu = (LONG) tag->ti_Data;
-          if (data->SETUP && (data->NList_ContextMenu == MUIV_NList_ContextMenu_Default))
-          { LONG *ptrd;
+        {
+          data->NList_ContextMenu = data->ContextMenu = (LONG)tag->ti_Data;
+
+          if (data->SETUP && (data->NList_ContextMenu == (LONG)MUIV_NList_ContextMenu_Default))
+          {
+            LONG *ptrd;
             data->ContextMenu = MUIV_NList_ContextMenu_Always;
+
             if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Menu, &ptrd))
-            { switch (*ptrd)
-              { case MUIV_NList_ContextMenu_TopOnly :
+            {
+              switch (*ptrd)
+              {
+                case MUIV_NList_ContextMenu_TopOnly :
                 case MUIV_NList_ContextMenu_Always :
                 case MUIV_NList_ContextMenu_Never :
                   data->ContextMenu = *ptrd;
@@ -422,9 +428,10 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
               }
             }
           }
-          if ((data->ContextMenu == MUIV_NList_ContextMenu_TopOnly) || (data->ContextMenu == MUIV_NList_ContextMenu_Never))
+          if ((data->ContextMenu == (LONG)MUIV_NList_ContextMenu_TopOnly) ||
+              (data->ContextMenu == (LONG)MUIV_NList_ContextMenu_Never))
             tag->ti_Data = 0;
-          else if (data->ContextMenu == MUIV_NList_ContextMenu_Always)
+          else if (data->ContextMenu == (LONG)MUIV_NList_ContextMenu_Always)
             tag->ti_Data = MUIV_NList_ContextMenu_Always;
           else if (((data->ContextMenu & 0x9d510030) == 0x9d510030) && (data->numcols <= 1))
             tag->ti_Data = 0;
@@ -461,7 +468,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_Quiet :
         data->display_ptr = NULL;
         data->parse_column = -1;
-        if (tag->ti_Data == MUIV_NList_Quiet_Visual)
+        if (tag->ti_Data == (ULONG)MUIV_NList_Quiet_Visual)
           VISUALQUIET;
         else if (tag->ti_Data)
           FULLQUIET;
@@ -483,8 +490,8 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_Prop_First :
         if (!WANTED_NOTIFY(NTF_VSB))
           tag->ti_Tag = TAG_IGNORE;
-        else if (((tag->ti_Data / data->vinc) != (data->NList_Prop_First / data->vinc)) ||
-                 (data->NList_Smooth && (tag->ti_Data != data->NList_Prop_First_Prec)))
+        else if (((tag->ti_Data / data->vinc) != (ULONG)(data->NList_Prop_First / data->vinc)) ||
+                 (data->NList_Smooth && (tag->ti_Data != (ULONG)data->NList_Prop_First_Prec)))
         { LONG dobit = tag->ti_Data - data->old_prop_first;
           LONG Prop_FirstReal = -100;
           data->old_prop_first = tag->ti_Data;
@@ -502,8 +509,8 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
           }
           data->NList_Prop_First_Real = tag->ti_Data;
           if ((!data->NList_Smooth) || ((!data->NList_First_Incr) && (!data->NList_AffFirst_Incr) &&
-                                        ((data->NList_Prop_First_Prec - tag->ti_Data == data->vinc) ||
-                                         (data->NList_Prop_First_Prec - tag->ti_Data == -data->vinc) ||
+                                        ((data->NList_Prop_First_Prec - (LONG)tag->ti_Data == data->vinc) ||
+                                         (data->NList_Prop_First_Prec - (LONG)tag->ti_Data == -data->vinc) ||
                                          (Prop_FirstReal == data->NList_Prop_First_Real))))
           { LONG lpfirst;
             lpfirst = (data->NList_Prop_First_Real / data->vinc) * data->vinc;
@@ -755,7 +762,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_List_ConstructHook :
       case MUIA_NList_ConstructHook :
 /*D(bug("%lx|set_ConstructHook=0x%lx \n",obj,tag->ti_Data));*/
-        if (tag->ti_Data == MUIV_NList_ConstructHook_String)
+        if (tag->ti_Data == (ULONG)MUIV_NList_ConstructHook_String)
           data->NList_ConstructHook = (struct Hook *) &NL_ConstructHook_String;
         else
           data->NList_ConstructHook = (struct Hook *) tag->ti_Data;
@@ -772,7 +779,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_List_DestructHook :
       case MUIA_NList_DestructHook :
 /*D(bug("%lx|set_DestructHook=0x%lx \n",obj,tag->ti_Data));*/
-        if (tag->ti_Data == MUIV_NList_DestructHook_String)
+        if (tag->ti_Data == (ULONG)MUIV_NList_DestructHook_String)
           data->NList_DestructHook = (struct Hook *) &NL_DestructHook_String;
         else
           data->NList_DestructHook = (struct Hook *) tag->ti_Data;
@@ -1008,7 +1015,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         data->NList_Exports = tag->ti_Data;
         break;
       case MUIA_NList_TitleMark :
-        if (data->NList_TitleMark != tag->ti_Data)
+        if (data->NList_TitleMark != (LONG)tag->ti_Data)
         { if (((data->NList_TitleMark & MUIV_NList_TitleMark_TypeMask) == MUIV_NList_TitleMark_None) &&
               ((data->NList_TitleMark2 & MUIV_NList_TitleMark2_TypeMask) == MUIV_NList_TitleMark2_None) &&
               ((tag->ti_Data & MUIV_NList_TitleMark_TypeMask) != MUIV_NList_TitleMark_None))
@@ -1030,7 +1037,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         }
         break;
       case MUIA_NList_TitleMark2 :
-        if (data->NList_TitleMark2 != tag->ti_Data)
+        if (data->NList_TitleMark2 != (LONG)tag->ti_Data)
         { if (((data->NList_TitleMark & MUIV_NList_TitleMark_TypeMask) == MUIV_NList_TitleMark_None) &&
               ((data->NList_TitleMark2 & MUIV_NList_TitleMark2_TypeMask) == MUIV_NList_TitleMark2_None) &&
               ((tag->ti_Data & MUIV_NList_TitleMark2_TypeMask) != MUIV_NList_TitleMark2_None))
