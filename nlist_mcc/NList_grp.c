@@ -84,11 +84,11 @@ static ULONG mNGR_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax 
 /*D(bug("%lx|grp_AskMinMax() 1 \n",obj));*/
   DoSuperMethodA(cl,obj,(Msg) msg);
 /*D(bug("%lx|grp_AskMinMax() 2 \n",obj));*/
-  msg->MinMaxInfo->MinWidth  = MUI_MAXMAX+100;
-  msg->MinMaxInfo->DefWidth  = MUI_MAXMAX+100;
+  msg->MinMaxInfo->MinWidth  = 2;
+  msg->MinMaxInfo->DefWidth  = 20;
   msg->MinMaxInfo->MaxWidth  = MUI_MAXMAX+100;
-  msg->MinMaxInfo->MinHeight = MUI_MAXMAX+100;
-  msg->MinMaxInfo->DefHeight = MUI_MAXMAX+100;
+  msg->MinMaxInfo->MinHeight = 3;
+  msg->MinMaxInfo->DefHeight = 20+100;
   msg->MinMaxInfo->MaxHeight = MUI_MAXMAX+100;
 /*
  *   msg->MinMaxInfo->MinWidth  += MUI_MAXMAX;

@@ -163,13 +163,6 @@ HOOKPROTONHNO(NL_LayoutFuncGroup, ULONG, struct MUI_LayoutMsg *lm)
   {
     case MUILM_MINMAX:
     {
-      lm->lm_MinMax.MinWidth  = MUI_MAXMAX+100;
-      lm->lm_MinMax.DefWidth  = MUI_MAXMAX+100;
-      lm->lm_MinMax.MaxWidth  = MUI_MAXMAX+100;
-      lm->lm_MinMax.MinHeight = MUI_MAXMAX+100;
-      lm->lm_MinMax.DefHeight = MUI_MAXMAX+100;
-      lm->lm_MinMax.MaxHeight = MUI_MAXMAX+100;
-
       lm->lm_MinMax.MinWidth  = 2;
       lm->lm_MinMax.DefWidth  = 20;
       lm->lm_MinMax.MaxWidth  = MUI_MAXMAX+100;
