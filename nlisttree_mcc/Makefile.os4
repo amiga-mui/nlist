@@ -101,10 +101,10 @@ distclean: clean
 
 ## MAIN DEPENDENCIES ###################
 
-$(OBJDIR)/NListtree.o: NListtree.c NListtree.h NListtree_mcc.h \
+$(OBJDIR)/NListtree.o: NListtree.c NListtree.h ../includes/mui/NListtree_mcc.h \
   private.h rev.h
 
-$(OBJDIR)/QuickSort.o: QuickSort.c NListtree.h NListtree_mcc.h \
+$(OBJDIR)/QuickSort.o: QuickSort.c NListtree.h ../includes/mui/NListtree_mcc.h \
   private.h
 
 #######################################
