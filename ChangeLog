@@ -5,6 +5,9 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-12-14  Sebastian Bauer <mail@sebastianbauer.info>
+    * NList_mcc: Fixed insert refresh problem
+
 2004-12-13  Sebastian Bauer <mail@sebastianbauer.info>
     * NList_mcc:  Fixed offset refresh bug
     * NList_mcc, NListviews_mcp: Added new prefs option to disable
