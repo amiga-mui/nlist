@@ -29,20 +29,13 @@
 
 ***************************************************************************/
 
-extern UWORD LIBVER;
-#define LIBVER(lib)          ((struct Library *)lib)->lib_Version
-
 #ifndef MUI_MUI_H
   #include "mui.h"
 #endif
 
-#if defined(__PPC__)
-  #pragma pack(2)
-  #include "NListviews_mcp.h"
-  #pragma pack()
-#else
-  #include "NListviews_mcp.h"
-#endif
+#include "amiga-align.h"
+#include "NListviews_mcp.h"
+#include "default-align.h"
 
 #include <mcc_common.h>
 #include <mcc_debug.h>
@@ -131,6 +124,8 @@ struct NListviews_MCP_Data
 
   WORD pad1,pad2;
 };
+
+#define LIBVER(lib) ((struct Library *)lib)->lib_Version
 
 #endif /* MUI_NLISTVIEWS_priv_MCP_H */
 

@@ -85,8 +85,6 @@
 #ifndef MUI_NList_priv_MCC_H
 #define MUI_NList_priv_MCC_H
 
-extern UWORD LIBVER;
-
 #ifndef MUI_MUI_H
 #include "mui.h"
 #endif

@@ -221,8 +221,9 @@ static struct MUI_CustomClass *ThisClassP;
 #endif
 
 #ifdef __GNUC__
-  struct Library *__DOSBase;     // required by libnix
+  #ifdef USE_UTILITYBASE
   struct Library *__UtilityBase; // required by libnix & clib2
+  #endif
   #ifdef __libnix__
     /* these one are needed copies for libnix.a */
     #ifdef USE_MATHIEEEDOUBBASBASE
@@ -294,11 +295,7 @@ ULONG                    LIBFUNC MCC_Query (REG(d0, LONG which));
 /* Dummy entry point and LibNull() function all in one                        */
 /******************************************************************************/
 
-#if defined(__amigaos4__)
 int _start(void)
-#else
-int Main(void)
-#endif
 {
   return RETURN_FAIL;
 }
@@ -515,9 +512,6 @@ struct LibraryHeader * ASM SAVEDS LibInit(REG(a0, BPTR Segment), REG(a6, struct 
   #endif
 
   SysBase = sb;
-  #if defined(__amigaos4__)
-  IExec = (struct ExecIFace *)((*(struct ExecBase **)4L)->MainInterface);
-  #endif
 
   D(bug( "Start...\n" ) );
 
@@ -783,10 +777,9 @@ BOOL UserLibOpen(struct Library *base)
         GfxBase       = (APTR)THISCLASS->mcc_GfxBase;
         IntuitionBase = (APTR)THISCLASS->mcc_IntuitionBase;
 
-        #if defined(__GNUC__)
-        __DOSBase     = (APTR)DOSBase;
+        #ifdef USE_UTILITYBASE
         __UtilityBase = (APTR)UtilityBase;
-        #endif /* __GNUC__ */
+        #endif
 
         if(UtilityBase && DOSBase && GfxBase && IntuitionBase &&
            GETINTERFACE(IUtility, UtilityBase) &&

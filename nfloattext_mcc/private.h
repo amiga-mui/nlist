@@ -32,13 +32,9 @@
 #include "mui.h"
 #endif
 
-#if defined(__PPC__)
-  #pragma pack(2)
-  #include "NFloattext_mcc.h"
-  #pragma pack()
-#else
-  #include "NFloattext_mcc.h"
-#endif
+#include "amiga-align.h"
+#include "NFloattext_mcc.h"
+#include "default-align.h"
 
 #include <mcc_common.h>
 #include <mcc_debug.h>

@@ -28,13 +28,9 @@
   #include "mui.h"
 #endif
 
-#if defined(__PPC__)
-  #pragma pack(2)
-  #include "../nlisttree_mcc/private.h"
-  #pragma pack()
-#else
-  #include "../nlisttree_mcc/private.h"
-#endif
+#include "amiga-align.h"
+#include "../nlisttree_mcc/private.h"
+#include "default-align.h"
 
 #include <mcc_common.h>
 #include <mcc_debug.h>

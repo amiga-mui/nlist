@@ -28,13 +28,6 @@
 /******************************************************************************/
 
 #include <exec/types.h>
-#include <exec/resident.h>
-#include <exec/execbase.h>
-#include <dos/dosextens.h>
-#include <libraries/mui.h>
-#include <exec/libraries.h>
-#include <proto/exec.h>
-#include <proto/muimaster.h>
 
 /******************************************************************************/
 /*                                                                            */
@@ -44,13 +37,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-#if defined(__PPC__)
- #pragma pack(2)
- #include "private.h"
- #pragma pack()
-#else
- #include "private.h"
-#endif
+#include "private.h"
 
 #include "NListtree.h"
 #include "rev.h"
