@@ -37,7 +37,7 @@ WARN     = -W -Wall
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DWITH_DEBUG -g -O0
 CFLAGS   = -noixemul -I. -I../includes -c $(CPU) $(WARN) $(OPTFLAGS) $(DEBUG)
-LDFLAGS  = -noixemul -nostartfiles
+LDFLAGS  = -noixemul -nostartfiles $(CPU)
 LDLIBS   = -ldebug
 
 # CPU and DEBUG can be defined outside, defaults to above

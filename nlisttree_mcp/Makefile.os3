@@ -43,7 +43,7 @@ DEBUG    = -DWITH_DEBUG -g -O0
 REDEFINE =
 CFLAGS   = -noixemul -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
            $(DEBUG) $(REDEFINE) -c
-LDFLAGS  = -noixemul -nostartfiles
+LDFLAGS  = -noixemul -nostartfiles $(CPU)
 LDLIBS   = -lmui -ldebug
 
 # CPU and DEBUG can be defined outside, defaults to above
