@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-08-25  Sebastian Bauer <mail@sebastianbauer.info>
+    * NList4_func4.c: Fixed wrong disposion of mouse pointer
+      objects. Bug found by Georg Steger.
+
 2004-08-25  Nicolas Sallin <henes@morphos.de>
     * All: Changes for morphos.
 
