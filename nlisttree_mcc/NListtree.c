@@ -1452,24 +1452,21 @@ BOOL GetEntryPos( struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNo
 }
 
 
-
-INLINE LONG GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
+/*************************************************************************
+ Return the visual position (i.e. the position within the plain list)
+ of the given TreeNode
+**************************************************************************/
+static int GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
 {
 	LONG pos;
-	D(bug("GetVisualPos()\n"));
 
-	if(tn == CTN(&data->RootList))
+	if (tn == CTN(&data->RootList))
+		return -1;
+
+	if ((data->Flags & NLTF_NLIST_DIRECT_ENTRY_SUPPORT ) && tn)
 	{
-		//D(bug( "   GetVisualPos() has returned pos -1 (RootList) for entry '%s'.\n", tn->tn_Name ) );
-		return( -1 );
-	}
-	else if ( ( data->Flags & NLTF_NLIST_DIRECT_ENTRY_SUPPORT ) && tn )
-	{
-		if ( tn->tn_NListEntry )
-		{
-			//D(bug( "   GetVisualPos() has returned pos %ld (NListEntry) for entry '%s'.\n", (LONG)tn->tn_NListEntry->entpos, tn->tn_Name ) );
-			return( (LONG)tn->tn_NListEntry->entpos );
-		}
+		if (tn->tn_NListEntry)
+			return (int)tn->tn_NListEntry->entpos;
 	}
 
 	/*
@@ -1477,68 +1474,51 @@ INLINE LONG GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_Tree
 	*/
 	pos = MUIV_NList_GetPos_Start;
 	DoMethod( data->Obj, MUIM_NList_GetPos, tn, &pos );
-
-	D(bug( "GetVisualPos() has returns pos %ld (GetPos) for entry 0x%lx.\n", pos, tn ) );
-
-	return( pos );
+	return (int)pos;
 }
 
-
-/*
-**	Count the number of visual entries in a tree node.
-*/
-BOOL GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG pos, LONG *ent )
+/*************************************************************************
+ Count the number of visual entries in a tree node (excluding the
+ node itself). A invisible has also 0 entries. Returns also 0 if the
+ entry is no list.
+**************************************************************************/
+static int GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn)
 {
-	D(bug("tn=0x%lx pos=%ld  *ent %ld\n",tn,pos,ent?(*ent):0));
-	if ( tn->tn_Flags & TNF_LIST )
+	/* Easy case */
+	if (tn == CTN(&data->RootList))
+		return xget(data->Obj, MUIA_NList_Entries);
+
+	if ((tn->tn_Flags & TNF_LIST) && (tn->tn_Flags & TNF_OPEN) &&
+	    (tn->tn_IFlags & TNIF_VISIBLE))
 	{
 		struct MUI_NListtree_TreeNode *tn2;
 
-		if(tn == CTN(&data->RootList))
+		tn2 = CTN(Node_Next((struct Node *)tn));
+		if (tn2 && (tn2->tn_IFlags & TNIF_VISIBLE))
 		{
-			D(bug( "RootList\n" ) );
-			*ent += xget( data->Obj, MUIA_NList_Entries );
-
-			return( TRUE );
-		}
-
-		else if ( ( tn2 = CTN( Node_Next( (struct Node *)tn ) ) ) && ( tn2->tn_IFlags & TNIF_VISIBLE ) )
-		{
-			D(bug( "Node_Next()\n" ) );
-			*ent += ( GetVisualPos( data, tn2 ) - pos - 1 );
-
-			return( TRUE );
+			return GetVisualPos(data,tn2) - GetVisualPos(data,tn) - 1;
 		}
 		else
 		{
-			if (tn->tn_Flags & TNF_OPEN)
+			/* Number of entries is number of the entries directly in this
+			** list and the number of the entries within the open nodes
+			 */ 
+
+			struct Table *tb = &CLN( tn )->ln_Table;
+			int i, entries;
+
+			entries = tb->tb_Entries;
+
+			for( i = 0; i < tb->tb_Entries; i++ )
 			{
-				LONG i;
-				struct Table *tb = &CLN( tn )->ln_Table;
-
-				/* Number of entries is number of the entries directly in this
-				** list and the number of the entries within the open nodes
-				*/ 
-
-				*ent += tb->tb_Entries;
-
-				for( i = 0; i < tb->tb_Entries; i++ )
-				{
-					if ( tb->tb_Table[i]->tn_Flags & TNF_OPEN )
-					{
-//						if ( GetVisualEntries( data, tb->tb_Table[i], pos, ent ) )
-//							return( TRUE );
-						if ( !GetVisualEntries( data, tb->tb_Table[i], pos, ent ) )
-							break;
-					}
-				}
+				entries += GetVisualEntries(data, tb->tb_Table[i]);
 			}
+			return entries;
 		}
 	}
 
-	return( FALSE );
+	return 0;
 }
-
 
 /*
 **	Count the number of visual entries in a tree node until a maximum of max.
@@ -1563,38 +1543,23 @@ BOOL GetVisualEntriesMax( struct NListtree_Data *data, struct MUI_NListtree_Tree
 }
 
 
-LONG GetVisualInsertPos( struct NListtree_Data *data, struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNode *prevtn )
+/*************************************************************************
+ Determine the visual position a node would have, if inserted after
+ prevtn inside ln
+**************************************************************************/
+static int GetVisualInsertPos( struct NListtree_Data *data, struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNode *prevtn )
 {
-	LONG ent = 0, temppos = 0;
+	int ent;
 
-	if ( (LONG)prevtn == INSERT_POS_HEAD )
-	{
-		temppos = GetVisualPos( data, CTN( ln ) );
-
-		D(bug( "GetVisualInsertPos: 0x%08lx - list: %s after: %s, pos: %ld\n", ln, ln->ln_Name, "HEAD", temppos ) );
-	}
+	if ((LONG)prevtn == INSERT_POS_HEAD)
+		ent = GetVisualPos(data, CTN(ln)) + 1;
 	else if ( (LONG)prevtn == INSERT_POS_TAIL )
-	{
-		temppos = GetVisualPos( data, CTN( ln ) );
-		GetVisualEntries( data, CTN(ln), temppos, &ent );
-
-		D(bug( "GetVisualInsertPos: 0x%08lx - %s after: %s, pos: %ld, ent: %ld\n", ln, ln->ln_Name?ln->ln_Name:"", "TAIL", temppos, ent ) );
-	}
+		ent = GetVisualPos(data, CTN(ln)) + GetVisualEntries(data, CTN(ln)) + 1;
 	else
-	{
-		temppos = GetVisualPos( data, prevtn );
-		GetVisualEntries( data, prevtn, temppos, &ent );
+		ent = GetVisualPos(data, CTN(prevtn)) + GetVisualEntries(data,CTN(prevtn)) + 1;
 
-		D(bug( "GetVisualInsertPos: 0x%08lx - %s after: %s, pos: %ld, ent: %ld\n", ln, ln->ln_Name?ln->ln_Name:"", prevtn->tn_Name, temppos, ent ) );
-	}
-
-	if ( ( temppos == -1 ) && ( ln != &data->RootList ) )
-		return( -1 );
-
-	return( temppos + ent + 1 );
+	return ent;
 }
-
-
 
 struct MUI_NListtree_TreeNode *TreeNodeSelectAdd( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
 {
@@ -5629,8 +5594,8 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 					{
 						struct EasyStruct es;
 
+						memset(&es,0,sizeof(es));
             es.es_StructSize = sizeof(struct EasyStruct);
-            es.es_Flags      = 0;
             es.es_Title      = "Update information...";
 						es.es_TextFormat = "NListtree.mcc has detected that your version of\n"
 							                 "NList.mcc which is used by task `%s'\n"
@@ -5640,23 +5605,13 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 							                 "NListtree will terminate now to avoid problems...\n";
             es.es_GadgetFormat = "Terminate";
 
-            #if defined(__amigaos4__)
-            es.es_Screen  = 0;
-            es.es_TagList = 0;
-            #endif
-
 						EasyRequest( NULL, &es, NULL, (LONG)taskname, ver, rev );
 
 						//CoerceMethod( cl, obj, OM_DISPOSE );
 						return( 0 );
 					}
 
-//					if ( ( ver > 19 ) || ( ( ver == 19 ) && ( rev >= 101 ) ) )
-					{
-						data->Flags |= NLTF_NLIST_DIRECT_ENTRY_SUPPORT;
-					}
-
-					D(bug( "3\n" ) );
+				  data->Flags |= NLTF_NLIST_DIRECT_ENTRY_SUPPORT;
 
 					/*
 					**	Save instance data in private NList data field.
@@ -7371,6 +7326,7 @@ ULONG _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_I
 
 				default:
 					li = CLN( msg->ListNode );
+					D(bug("li = %p\n",li));
 					break;
 			}
 
