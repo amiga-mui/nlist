@@ -43,13 +43,7 @@
 
 #include <string.h>
 
-#if defined(__PPC__)
- #pragma pack(2)
- #include "private.h"
- #pragma pack()
-#else
- #include "private.h"
-#endif
+#include "private.h"
 
 #include <mui/NList_mcc.h>
 
