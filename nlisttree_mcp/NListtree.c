@@ -53,15 +53,15 @@
 #define MSG_DRAW2_KEY	MSG_DUMMY
 
 #if defined(__amigaos4__) || defined(__MORPHOS__)
-struct Library *LocaleBase = NULL;
+struct Library *LocaleBase;
 #else
-struct LocaleBase *LocaleBase = NULL;
+struct LocaleBase *LocaleBase;
 #endif
 
 #if defined(__amigaos4__)
-struct LocaleIFace *ILocale = NULL;
+struct LocaleIFace *ILocale;
 #endif
-struct Locale *Locale = NULL;
+struct Locale *Locale;
 
 #ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
@@ -85,7 +85,7 @@ int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
 	return(strlen(buf));
 }
 #elif defined(__MORPHOS__)
-int STDARGS MySPrintf(char *buf, char *fmt,...)
+int VARARGS68K MySPrintf(char *buf, char *fmt,...)
 {
 	va_list args;
 	va_start(args, fmt);

@@ -39,7 +39,7 @@ CPUFLAGS = -mmultiple
 CDEFS    = -D__NLTP_VERDATE=\"`date +%d.%m.%Y`\" -D__NLTP_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
 WARN     = -Wall
 OPTFLAGS = -O3 -finline-functions -fomit-frame-pointer -funroll-loops
-DEBUG    = -DWITH_DEBUG -g -O0
+DEBUG    = #-DWITH_DEBUG -g -O0
 REDEFINE =
 CFLAGS   = -noixemul -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
            $(DEBUG) $(REDEFINE) -c
@@ -86,13 +86,18 @@ $(OBJDIR)/%.o: %.c
 $(TARGET): $(OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
-	@$(STRIP) -o $@ $@.debug
+	@$(STRIP) -o $@  --remove-section=.comment $@.debug
 
 $(OBJDIR)/library.o: library.c ../includes/mccheader.c ../nlisttree_mcc/NListtree.h \
   private.h icon.bh rev.h
 
 $(OBJDIR)/NListtree.o: NListtree.c private.h \
   ../includes/mcc_common.h rev.h
+
+#
+
+dump:
+	ppc-morphos-objdump --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
 
 #
 

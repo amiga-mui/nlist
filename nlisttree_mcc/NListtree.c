@@ -152,7 +152,8 @@ int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
 	return(strlen(buf));
 }
 #elif defined(__MORPHOS__)
-int STDARGS MySPrintf(char *buf, char *fmt,...)
+int VARARGS68K MySPrintf(char *buf, char *fmt,...);
+int MySPrintf(char *buf, char *fmt,...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -3316,8 +3317,8 @@ VOID SortList( struct MUI_NListtree_ListNode *ln, struct Hook *chook, struct NLi
 		struct MUI_NListtree_TreeNode **localtable;
 		LONG i;
 
-      // let`s start the quicksort algorithm to sort our entries.
-      qsort2(ln->ln_Table.tb_Table, ln->ln_Table.tb_Entries, chook, data);
+		// let's start the quicksort algorithm to sort our entries.
+		qsort2(ln->ln_Table.tb_Table, ln->ln_Table.tb_Entries, chook, data);
 
 		localtable = ln->ln_Table.tb_Table;
 

@@ -629,7 +629,9 @@ extern struct TextFont *Topaz_8;
 #define	MUIV_NList_PoolPuddleSize_Default	2048
 #define	MUIV_NList_PoolThreshSize_Default	1024
 
+#if !defined(__MORPHOS__)
 extern char *stpcpy(char *to, char *from);
+#endif
 
 #endif /* MUI_NList_priv_MCC_H */
 

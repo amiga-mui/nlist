@@ -36,7 +36,7 @@ CPUFLAGS = -mmultiple
 CDEFS    = -D__NFT_VERDATE=\"`date +%d.%m.%Y`\" -D__NFT_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
 WARN     = -Wall
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
-DEBUG    = -DWITH_DEBUG -g -O0
+DEBUG    = #-DWITH_DEBUG -g -O0
 CFLAGS   = -noixemul -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
            $(DEBUG) -c
 LDFLAGS  = -noixemul -nostartfiles
@@ -81,11 +81,16 @@ $(OBJDIR)/%.o: %.c
 $(TARGET): $(OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
-	@$(STRIP) -o $@ $@.debug
+	@$(STRIP) -o $@  --remove-section=.comment $@.debug
 
 library.o: library.c ../includes/mccheader.c NFloattext_mcc.h private.h rev.h
 
 NFloattext.o: NFloattext.c NFloattext_mcc.h private.h ../includes/mcc_common.h rev.h
+
+#
+
+dump:
+	ppc-morphos-objdump --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
 
 #
 

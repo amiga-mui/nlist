@@ -475,7 +475,7 @@ static STRPTR STRING(enum StringsID id,STRPTR defstr)
 #define STRING(a,b) b
 
 
-#if !defined(__SASC)
+#if !defined(__SASC) && !defined(__MORPHOS__)
 static char *stpcpy(char *to,char *from)
 {
   register char *to2 = to;

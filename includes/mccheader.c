@@ -191,25 +191,25 @@ static const char UserLibName[] = CLASS;
 /* Here's our global data, described above. */
 
 #if defined(__amigaos4__)
-struct Library *MUIMasterBase = NULL;
-struct Library *SysBase       = NULL;
-struct Library *UtilityBase   = NULL;
-struct Library *DOSBase       = NULL;
-struct Library *GfxBase       = NULL;
-struct Library *IntuitionBase = NULL;
-struct MUIMasterIFace *IMUIMaster = NULL;
-struct ExecIFace *IExec           = NULL;
-struct UtilityIFace *IUtility     = NULL;
-struct DOSIFace *IDOS             = NULL;
-struct GraphicsIFace *IGraphics   = NULL;
-struct IntuitionIFace *IIntuition = NULL;
+struct Library *MUIMasterBase;
+struct Library *SysBase;
+struct Library *UtilityBase;
+struct Library *DOSBase;
+struct Library *GfxBase;
+struct Library *IntuitionBase;
+struct MUIMasterIFace *IMUIMaster;
+struct ExecIFace *IExec;
+struct UtilityIFace *IUtility;
+struct DOSIFace *IDOS;
+struct GraphicsIFace *IGraphics;
+struct IntuitionIFace *IIntuition;
 #else
-struct Library        *MUIMasterBase = NULL;
-struct ExecBase       *SysBase       = NULL;
-struct Library        *UtilityBase   = NULL;
-struct DosLibrary     *DOSBase       = NULL;
-struct GfxBase        *GfxBase       = NULL;
-struct IntuitionBase  *IntuitionBase = NULL;
+struct Library        *MUIMasterBase;
+struct ExecBase       *SysBase;
+struct Library        *UtilityBase;
+struct DosLibrary     *DOSBase;
+struct GfxBase        *GfxBase;
+struct IntuitionBase  *IntuitionBase;
 #endif
 
 #ifdef SUPERCLASS
@@ -221,15 +221,15 @@ static struct MUI_CustomClass *ThisClassP;
 #endif
 
 #ifdef __GNUC__
-  struct Library *__DOSBase = NULL;     // required by libnix
-  struct Library *__UtilityBase = NULL; // required by libnix & clib2
+  struct Library *__DOSBase;     // required by libnix
+  struct Library *__UtilityBase; // required by libnix & clib2
   #ifdef __libnix__
     /* these one are needed copies for libnix.a */
     #ifdef USE_MATHIEEEDOUBBASBASE
-    struct Library *__MathIeeeDoubBasBase = NULL;
+    struct Library *__MathIeeeDoubBasBase;
     #endif
     #ifdef USE_MATHIEEEDOUBTRANSBASE
-    struct Library *__MathIeeeDoubTransBase = NULL;
+    struct Library *__MathIeeeDoubTransBase;
     #endif
   #endif
 #endif /* __GNUC__ */
@@ -272,7 +272,7 @@ ULONG                    LIBFUNC MCC_Query (UNUSED struct Interface *self, REG(d
 
 #elif defined(__MORPHOS__)
 
-struct LibraryHeader *   LIBFUNC LibInit   (BPTR Segment, struct ExecBase *SysBase);
+struct LibraryHeader *   LIBFUNC LibInit   (struct LibraryHeader *base, BPTR Segment, struct ExecBase *SysBase);
 BPTR                     LIBFUNC LibExpunge(void);
 struct LibraryHeader *   LIBFUNC LibOpen   (void);
 BPTR                     LIBFUNC LibClose  (void);
@@ -442,8 +442,8 @@ static const USED_VAR struct Resident ROMTag =
  * one for the ppc.library.
  * ** IMPORTANT **
  */
-const USED_VAR ULONG __amigappc__=1;
-const USED_VAR ULONG __abox__=1;
+const USED_VAR ULONG __amigappc__ = 1;
+const USED_VAR ULONG __abox__ = 1;
 
 #undef USE_SEMAPHORE
 
@@ -500,7 +500,7 @@ struct LibraryHeader * ASM SAVEDS LibInit(struct LibraryHeader *base, BPTR libra
 
 #ifdef __MORPHOS__
 #undef CLASS_STACKSWAP
-struct LibraryHeader *LibInit(BPTR Segment, struct ExecBase *sb)
+struct LibraryHeader *LibInit(struct LibraryHeader *base, BPTR Segment, struct ExecBase *sb)
 {
 #else
 struct LibraryHeader * ASM SAVEDS LibInit(REG(a0, BPTR Segment), REG(a6, struct ExecBase *sb))
@@ -510,7 +510,9 @@ struct LibraryHeader * ASM SAVEDS LibInit(REG(a0, BPTR Segment), REG(a6, struct 
   #if defined(CLASS_STACKSWAP)
   static struct StackSwapStruct *stack;
   #endif
+  #if !defined(__MORPHOS__)
   struct LibraryHeader *base;
+  #endif
 
   SysBase = sb;
   #if defined(__amigaos4__)

@@ -164,7 +164,7 @@ char *ltoa(ULONG val, char *buf, int len)
 
 
 /*char *stpcpy(char *to,const char *from)*/
-#if !defined(__SASC) || !defined(__MORPHOS__)
+#if !defined(__SASC) && !defined(__MORPHOS__)
 char *stpcpy(char *to,char *from)
 {
   register char *to2 = to;
