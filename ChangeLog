@@ -5,8 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2004-10-24  Jens Langner <Jens.Langner@light-speed.de>
+
+    * include/mccclass_68k.S: updated mcc 68k->PPC cross call stubs to
+      latest version created by fdtrans 51.1
+    
 2004-10-03  Jens Langner <Jens.Langner@light-speed.de>,
-			Sebastian Bauer <mail@sebastianbauer.info>
+            Sebastian Bauer <mail@sebastianbauer.info>
 
     * mccheader.c: Special Fun of Computing fix. Return value of
       PreClassInitFunc() was not evaluated.
