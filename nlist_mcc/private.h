@@ -63,13 +63,8 @@
 #include <clib/alib_protos.h>
 
 #include "NList_grp.h"
-#if defined(__PPC__)
-  #pragma pack(2)
-  #include "NList_mcc.h"
-  #pragma pack()
-#else
-  #include "NList_mcc.h"
-#endif
+#include "../includes/MUI/NList_mcc.h"
+
 #include "NList_func.h"
 #include "NList_img.h"
 #include "NList_img2.h"
@@ -209,6 +204,11 @@ struct affinfo
 #define TE_Wrap_TmpLine       0x80
 #define TE_Wrap_TmpMask       0x7F
 
+#include "amiga-align.h"
+
+/* The Type entry is exported to NListtree (sigh), so this have to be amiga
+ * aligned */
+
 struct TypeEntry {
   APTR  Entry;
   BYTE  Select;
@@ -220,6 +220,8 @@ struct TypeEntry {
   UWORD dnum;
   ULONG entpos;
 };
+
+#include "default-align.h"
 
 struct UseImage {
   Object *imgobj;

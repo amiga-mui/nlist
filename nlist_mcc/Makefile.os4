@@ -106,7 +106,7 @@ $(TARGET): $(M68KSTUBS) $(OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(M68KSTUBS) $(LDLIBS)
 	@$(STRIP) -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../includes/mccheader.c NList_mcc.h private.h
+$(OBJDIR)/library.o: library.c ../includes/mccheader.c ../includes/MUI/NList_mcc.h private.h
 
 #
 
