@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-01-01  Nicolas Sallin <henes@biclodon.com>
+
+    * NList_mcc: Fixed wrong usage of MUI_MAXMAX
+
 2004-12-15  Jens Langner <Jens.Langner@light-speed.de>
 
     * made sure all revisions/dates are bumped of all Nlist classes
