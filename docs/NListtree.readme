@@ -1,0 +1,234 @@
+Short:      MUI list tree class for NList
+Uploader:   cs@aphaso.de (Carsten Scholling)
+Author:     cs@aphaso.de (Carsten Scholling)
+Type:       dev/mui
+Requires:   OS2.x, MUI3.8, NList19.98
+Version:    18.9
+Replaces:	MCC_NListtree.lha
+
+
+Description:
+¯¯¯¯¯¯¯¯¯¯¯
+  This  MUI  custom  class provides you with an easy way of displaying list
+entries  in  a  sorted  form, a so called tree-structure.  A Tree-structure
+will be selected, when data should be optical seperated from each other.
+
+  NListtree is intresting for programmers and the end-user also and easy to
+use.   So  far  as  implemented  by  the  programmer  and  needfull  in the
+application environment, this class allows the fully free recreation of the
+list using drag&drop (short d&d) with support of multiselection.
+
+  First  time  in  a  list  tree  class  it  is  possible  to move complete
+structures.  That means, that the complete tree of the moved entry, back to
+the  root-list,  is  recreated  at the destination if the programmer allows
+this.  The same for copying entries, which is also implemented.
+
+
+
+Requirements:
+¯¯¯¯¯¯¯¯¯¯¯¯
+ - OS2.x
+ - MUI3.8
+ - MCC_NList 0.90 (NList.mcc 19.98). For maximum speed use NList 0.91
+   (NList.mcc 19.101).
+
+
+Installation:
+¯¯¯¯¯¯¯¯¯¯¯¯
+ - Simply use the supplied installer script.
+
+
+
+History:
+¯¯¯¯¯¯¯
+
+  V18.8 - Public release
+
+     FIXED: Drag 'n Drop function drop type  rework for errors  which  occured
+            when overloading the drop type method.
+     ADDED: MUIM_NListtree_DropType, MUIM_NListtree_DropDraw.
+     FIXED: Sometimes drag 'n drop didn't work (no drop operation possible).
+     FIXED: Version string.
+
+
+  V18.7 - Public release
+
+     ADDED: Now, ...Select_Active with ...Select_Ask returns the  active entry
+            instead of 0.
+     FIXED: A selected entry  in a list node does not  memory its state over 2
+            or more close/open on this list node (Thx to Andrija Antonijevic)
+     FIXED: ...Select_Active ...Select_Toggle  caused an alert  without active
+            entry (Thx to Andrija Antonijevic)
+     FIXED: After a  MUIA_NListtree_Quiet,  sometimes the  tree was  refreshed
+            twice.  This is a very old bug i've forgotten for some weeks. (Thx
+            to Sebastian Bauer for reporting it again)
+     ADDED: MUIM_NListtree_Clear
+     ADDED: Check for outdated NList.mcc.  If version is lower than 19.97, NLt
+            aborts.
+     REWR:  Rewritten  selection code for  new NList feature.  Attention! With
+            a lower  NList version than 19.98,  NListtree disables  his multi-
+            selection feature now!
+
+
+  V18.6 - Public Beta release 5
+
+     FIXED: Fixed bug introduced  with multiselection that  allows dragging of
+            entries to  their children  what ends up in a  crash  (reported by
+            Sebastian Bauer, thx)
+     FIXED: Rewritten entry position calculation code. Never  more  accidently
+            deleted entries!
+     FIXED: Drop type "Sorted" never occured. Fixed!
+     FIXED: Renaming the user field was not possible. Fixed.
+     ADDED: Added MUIV_NListtree_Insert_ListNode_ActiveFallback  (see autodocs
+            for more details) (suggested by Sebastian Bauer)
+     ADDED: Added a  second  find method and  the corresponding hook  for user
+            data. This is meant as a backup if  searching for different fields
+            and/or values (MUIA_NListtree_FindUserDataHook,
+            MUIM_NListtree_FindUserData).
+     ADDED: Added  MUIA_NListtree_ShowTree for  enabling/disabling  the  tree.
+            This is usefull for lists which can be sorted in different cols.
+     ADDED: Added spanish catalog (Thx to Javier de las Rivas).
+     ADDED: Added trigger attribute MUIA_NListtree_SelectChange.
+     FIXED: Inserting open  nodes into a closed node  caused NListtree to mis-
+            calculate the positions (reported by Luca 'Hexaae' Longone, thx).
+
+
+  V18.6 - Beta release 4
+
+     On the fly-release for some persons.
+
+
+  V18.6 - Beta release 3
+
+     - Added   MUIA_NListtree_DropType,   MUIA_NListtree_DropTarget   and
+       MUIA_NListtree_DropTargetPos.
+     - Now, MinLineHeight will only be set when image is heigher than the
+       current minimum.
+     - When using Next/PrevSelected method and deleting selected entries,
+       machine crashes. Fixed.
+     - Added   MUIV_NListtree_FindName_Flag_Reverse  (suggested by Thomas
+       Igracki)
+     - Added MUIV_NListtree_FindName_Flag_StartNode  (suggested by Thomas
+       Igracki)
+     - Added italian catalog.  Thanks to Andrea Zanellato  for the trans-
+       lation.
+     - Added NULL pointer check to internal construct/destruct hooks.
+     - Added MUIV_NListtree_Remove_TreeNode_Selected.
+
+
+  V18.6 - Beta release 2
+
+     - Changed look and feel of the mcp.
+     - mcc was not closed in mcp. Fixed!
+     - Source cleanup.
+     - Modifications to the tree drawing functions.  Should look a little
+       bit nicer now.
+     - Added MUIA_NListtree_CopyToClipHook and MUIM_NListtree_CopyToClip.
+       Suggested by Harald Frank.
+     - Added an own context menu for copying  strings to clipboard units.
+     - Added a  translation  package  for easy  translation of  NListtree
+       catalogs.
+
+
+  V18.6 - Beta release 1
+
+     - MUIV_NListtree_MultiSelect_Shifted now works as expected
+     - Crashs/hits on exit (dispose) finally removed!
+     - Sorting a closed  node forced entries to  show up. Fixed!  (Thx to
+       Thomas Igracki)
+     - Reimplemented (oups!)  MUIV_NListtree_GetEntry_Flag_SameLevel  and
+       MUIV_NListtree_GetEntry_Flag_Visible (Thx to Thomas Igracki)
+     - DoubleClick again: Removed  silly bug  that causes  double notify-
+       cation on double click. Hey Matthias: Remove workaround ;-)
+     - Added some ball images from Henning Thielmann, thx a lot.
+     - Fixed  DropType bug  which caused an eight bit  left shift  of the
+       original values.
+     - Special image in .mcp was not  ghosted when starting MUI without a
+       saved configuration. Fixed. Bumped to V18.6.
+     - Without  configuration,  no or a  wrong image  was shown  in tree.
+       Fixed! Reported by Harald Frank, thx.
+
+
+  V18.5 - Public release
+
+     - Added  preparse  string  pointer to  MUIP_NListtree_DisplayMessage
+       (suggested by Andrija Antonijevic)
+     - Made   drop  types  public  (same  values  as  NList  drop  types)
+       (suggested by Sebastian Bauer)
+     - MUIA_NListtree_Doubleclick  is now  triggered  if  return  key  is
+       pressed (reported by Sebastian Bauer)
+     - NULL pointer  will  be  replaced  with "*** NULL POINTER ***" text
+       now.
+     - Multi test  hook will  now be  launched in  all cases  when  multi
+       selecting (reported by Thomas Igracki)
+     - Removed bug  in NextSelected  function which  caused returning  of
+       trash (reported by Thomas Igracki, thx).
+     - Added MUIM_NListtree_PrevSelected (suggested by Thomas Igracki)
+     - Added MUIV_NListtree_FindName_Flag_Selected to  only find selected
+       entries in MUIM_NListtree_FindName (suggested by Thomas Igracki)
+     - Fixed bug in DoubleClick: Setting  DoubleClick to  any other  than
+       All has no effect (reported by Mark Harman, thx)
+     - Added new DoubleClick value: MUIV_NListtree_DoubleClick_NoTrigger.
+       This means, that double clicking  an entry  is disabled  including
+       disabled trigger (attribute and method).
+
+
+  V18.4 - Broken public release, sorry :((
+
+     - Added MUIM_NListtree_InsertStruct
+     - Added some new internal attributes and methods ;-)
+     - Fixed autodocs a litte bit (reported by Allan Odgaard)
+     - Added nesting count to MUIA_NListtree_Quiet (suggested by Allan
+       Odgaard)
+     - Fixed Enforcer hit when deleting the last list entry in root node
+       (reported by Matthias Böcker)
+     - Fixed Enforcer  hits when listview  is the active object, no entry
+       is active and using cursor left/right
+     - Added MUIM_NListtree_Active and MUIM_NListtree_DoubleClick methods
+     - Removed PoolWatch-hits (reported by Andrija Antonijevic. Thx!) and
+       written the book "Do Not Assume That Making Only Two Small Changes
+       In A Function Does Not Affect The Functionality"
+     - Removed (hopefully) crash on exit (dispose)
+
+
+  V18.3 - Public release
+
+     - MUA_NListtree_Quiet  does not work as  expected  (reported by Thomas
+       Igracki, Thx!)
+     - User defined compare- and findname-hooks crash! Fixed!  (reported by
+       Thomas Igracki, Thx!)
+     - Now, NListtree is really quiet if MUIA_NListtree_Quiet is set!
+     - Reactivation of copied, moved and exchanged entries works better now.
+     - OpenAutoScroll now  works as expected,  added  new config  item Open
+       scroll (Thx to Matthias Bethke).
+
+
+  V18.2 - Public release
+
+     - Added multiselection feature
+     - Fixed some small cosmetical problems
+     - Implemented arrows as MUI images
+     - Implemented Copy method
+     - Implemented KeepStructure flag for recreation of the complete
+       structure in Move and Copy
+
+
+  V18.1 - Internal release
+
+     - Completely rewritten graphics stuff. Now in all cases predefined and
+       precreated images  where used.  This fixes many graphic bugs occured
+       in the old 18.0.
+     - After deleting an entry,  the old entry  remains internally  active.
+       Using this entry crashed the machine. Fixed!
+     - Moving   marker   with    the   cursor   keys   did    not   trigger
+       MUIA_NListtree_Active. Fixed!
+     - When deleting entries, MUIA_NListtree_Active was triggered two times.
+       Fixed
+     - Deleting  an  entry without  entries  in  the list  caused recursive
+       function calling and stack overflow ;-) Fixed!
+     - Insertion  had some bugs which  caused the machine to hang or crash.
+       Fixed!
+
+
+  V18.0 - Initial public beta release
+

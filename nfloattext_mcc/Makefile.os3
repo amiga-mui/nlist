@@ -1,0 +1,98 @@
+#/***************************************************************************
+#
+# NFloattext MCC - MUI Custom Class for Floattext handling
+#
+# Copyright (C) 1996-2004 by Gilles Masson,
+#                            Carsten Scholling <aphaso@aphaso.de>,
+#                            Przemyslaw Grunchala,
+#                            Sebastian Bauer <sebauer@t-online.de>,
+#                            Jens Langner <Jens.Langner@light-speed.de>
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# NList classes Support Site :  http://www.sf.net/projects/nlist-classes
+#
+# $Id$
+#
+#***************************************************************************/
+
+# Programs
+CC    = m68k-amigaos-gcc
+STRIP = m68k-amigaos-strip
+RM    = rm -f
+RMDIR = rm -rf
+MKDIR	= mkdir
+CP    = cp
+
+# Directories
+OBJDIR    = .obj_os3
+BINDIR    = bin_os3
+
+# Compiler/Linker flags
+CPU      = -m68020-60 -msoft-float
+CDEFS    = -D__NFT_VERDATE=\"`date +%d.%m.%Y`\" -D__NFT_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
+WARN     = -Wall
+OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
+DEBUG    = -DWITH_DEBUG -g -O0
+CFLAGS   = -noixemul -I. -I../includes -c $(CPU) $(WARN) $(OPTFLAGS) $(DEBUG)
+LDFLAGS  = -noixemul -nostartfiles
+LDLIBS   = -ldebug
+
+# CPU and DEBUG can be defined outside, defaults to above
+# using e.g. "make DEBUG= CPU=-m68060" produces optimized non-debug 68060 version
+#
+# OPTFLAGS are disabled by DEBUG normally!
+#
+# ignored warnings are:
+# none - because we want to compile with -Wall all the time
+#
+
+TARGET = $(BINDIR)/NFloattext.mcc
+
+OBJS = $(OBJDIR)/library.o \
+       $(OBJDIR)/NFloattext.o
+
+#
+
+all: $(BINDIR) $(OBJDIR) $(TARGET)
+
+# make the object directories
+$(OBJDIR):
+	@printf '\033[33mGenerating $@ directory\033[0m\n'
+	@$(MKDIR) $(OBJDIR)
+
+# make the binary directories
+$(BINDIR):
+	@printf '\033[33mGenerating $@ directory\033[0m\n'
+	@$(MKDIR) $(BINDIR)
+
+#
+
+$(OBJDIR)/%.o: %.c
+	@printf '\033[32mCompiling $<\033[0m\n'
+	@$(CC) $(CFLAGS) $< -o $@ -DNO_INLINE_STDARG
+
+#
+
+$(TARGET): $(OBJS)
+	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
+	@$(STRIP) -o $@ $@.debug
+
+library.o: library.c ../includes/mccheader.c NFloattext_mcc.h private.h rev.h
+
+NFloattext.o: NFloattext.c NFloattext_mcc.h private.h ../includes/mcc_common.h rev.h
+
+#
+
+.PHONY: clean
+clean:
+	-$(RM) $(TARGET) $(TARGET).debug $(OBJS)
+
+.PHONY: distclean
+distclean: clean
+	-$(RMDIR) $(OBJDIR)
+	-$(RMDIR) $(BINDIR)
+
