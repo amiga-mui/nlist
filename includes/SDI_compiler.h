@@ -4,8 +4,8 @@
 /* Includeheader
 
         Name:           SDI_compiler.h
-        Versionstring:  $VER: SDI_compiler.h 1.18 (04.07.2004)
-        Author:         SDI
+        Versionstring:  $VER: SDI_compiler.h 1.21 (28.02.2005)
+        Author:         SDI & Jens Langner
         Distribution:   PD
         Description:    defines to hide compiler stuff
 
@@ -14,7 +14,7 @@
  1.3   29.02.00 : fixed VBCC REG define
  1.4   30.03.00 : fixed SAVEDS for VBCC
  1.5   29.07.00 : added #undef statements (needed e.g. for AmiTCP together
-        with vbcc)
+                  with vbcc)
  1.6   19.05.01 : added STACKEXT and Dice stuff
  1.7   16.06.01 : added MorphOS specials and VARARGS68K
  1.8   21.09.02 : added MorphOS register stuff
@@ -33,6 +33,8 @@
                   different compiler versions.
  1.19  04.07.04 : register specification for variables is not supported on MorphOS,
                   so we modified the REG() macro accordingly.
+ 1.20  28.02.05 : correct INLINE for VBCC.
+ 1.21  28.02.05 : cleanup __GCC__ case.
 */
 
 /*
@@ -44,54 +46,25 @@
 ** above history list and indicate that the change was not made by myself
 ** (e.g. add your name or nick name).
 **
+** Jens Langner <Jens.Langner@light-speed.de> and
 ** Dirk Stöcker <stoecker@epost.de>
 */
 
-#ifdef ASM
 #undef ASM
-#endif
-#ifdef REG
 #undef REG
-#endif
-#ifdef LREG
 #undef LREG
-#endif
-#ifdef CONST
 #undef CONST
-#endif
-#ifdef SAVEDS
 #undef SAVEDS
-#endif
-#ifdef INLINE
 #undef INLINE
-#endif
-#ifdef REGARGS
 #undef REGARGS
-#endif
-#ifdef STDARGS
 #undef STDARGS
-#endif
-#ifdef OFFSET
 #undef OFFSET
-#endif
-#ifdef INTERRUPT
 #undef INTERRUPT
-#endif
-#ifdef CHIP
 #undef CHIP
-#endif
-#ifdef FAR
 #undef FAR
-#endif
-#ifdef UNUSED
 #undef UNUSED
-#endif
-#ifdef USED
 #undef USED
-#endif
-#ifdef USED_VAR
 #undef USED_VAR
-#endif
 
 /* first "exceptions" */
 
@@ -105,7 +78,11 @@
   #define STDARGS
   #define STACKEXT
   #define REGARGS
-  #define INLINE
+  #if (__STDC__ == 1L) && (__STDC_VERSION__ >= 199901L)
+    #define INLINE inline
+  #else
+    #define INLINE static
+  #endif
   #define OFFSET(p,m) __offsetof(struct p,m)
   #if defined(__MORPHOS__)
     #define REG(reg,arg) __reg(MOS__##reg) arg
@@ -142,37 +119,26 @@
   #define UNUSED __attribute__((unused)) /* for functions, variables and types */
   #define USED   __attribute__((used))   /* for functions only! */
   #if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 0)
+    #define USED_VAR USED /* for variables only! */
     #define INLINE static __inline __attribute__((always_inline))
-    #define USED_VAR __attribute__((used)) /* for variables only! */
-  #else
-    #define INLINE static __inline__
-    #define USED_VAR                       /* no support for used with variables */
   #endif
-  /* we have do distinguish between AmigaOS4 and MorphOS */
-  #if defined(__amigaos4__)
+  /* we have to distinguish between AmigaOS4 and MorphOS */
+  #if defined(__PPC__)
     #define REG(reg,arg) arg
-    #define LREG(reg,arg) register REG(reg,arg)
-    #define STDARGS
-    #define STACKEXT
-    #define REGARGS
     #define SAVEDS
-    #define FAR
-    #define CHIP
-    #define INTERRUPT
-  #elif defined(__MORPHOS__)
-    #define REG(reg,arg) arg
-    #define LREG(reg,arg) register REG(reg,arg)
     #define STDARGS
-    #define STACKEXT
     #define REGARGS
-    #define VARARGS68K  __attribute__((varargs68k))
-    #define FAR
-    #define CHIP
+    #define STACKEXT
+    #if defined(__MORPHOS__)
+      #define VARARGS68K  __attribute__((varargs68k))
+    #endif
     #define INTERRUPT
+    #define CHIP
   #else
     #define REG(reg,arg) arg __asm(#reg)
     #define LREG(reg,arg) register REG(reg,arg)
   #endif
+  #define FAR
 #elif defined(_DCC)
   #define REG(reg,arg) __##reg arg
   #define STACKEXT __stkcheck
