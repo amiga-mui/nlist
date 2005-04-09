@@ -63,7 +63,7 @@
 #include <clib/alib_protos.h>
 
 #include "NList_grp.h"
-#include "../includes/MUI/NList_mcc.h"
+#include "../includes/mui/NList_mcc.h"
 
 #include "NList_func.h"
 #include "NList_img.h"

@@ -5,15 +5,25 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
-2005-03-21  Gunther Nikl
+2005-04-09  Jens Langner <Jens.Langner@light-speed.de>
+
+    * all: fixed case sensitive #include statements which broke the
+      build on systems with a case sensistive filesystem.
+    * includes/SDI*: updated the common SDI headers with latest
+      version taken from the YAM repository.
+
+2005-03-21  Gunther Nikl <gni@gecko.de>
+
     * all: Minor source cleanup.
 
 2005-03-17  Sebastian Bauer <mail@sebastianbauer.info>
+
     * NListtree_mcc: Addressed bug 1095158 by rewritting the
       responsible parts. This might introduce other problems and
       needs proper testings.
 
 2005-03-16  Sebastian Bauer <mail@sebastianbauer.info>
+
     * NList_mcc: Fixed base page access which happened when no entry
       was selected and the keyboard was used (bug 1156362)
 

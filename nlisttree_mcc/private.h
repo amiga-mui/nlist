@@ -30,7 +30,7 @@
 #include "libraries/mui.h"
 #endif
 
-#include "../includes/MUI/NList_mcc.h"
+#include "../includes/mui/NList_mcc.h"
 
 #include <mcc_common.h>
 #include <mcc_debug.h>
