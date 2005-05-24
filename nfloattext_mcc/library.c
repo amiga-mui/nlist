@@ -64,4 +64,5 @@ static const STRPTR used_classesP[] = { "NListviews.mcp", NULL };
 /*                                                                            */
 /******************************************************************************/
 
+#define USE_UTILITYBASE
 #include "mccheader.c"

@@ -150,4 +150,5 @@ VOID PostClassExitFunc( void )
 /*                                                                            */
 /******************************************************************************/
 
+#define USE_UTILITYBASE
 #include "mccheader.c"

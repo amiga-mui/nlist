@@ -58,7 +58,6 @@
 #define	ClassInit
 #define	ClassExit
 
-
 struct Library *CxBase = NULL;
 struct Library *LocaleBase = NULL;
 struct Device *ConsoleDevice = NULL;
@@ -145,5 +144,6 @@ VOID ClassExitFunc( UNUSED struct Library *base )
 #define USE_LIST_COLORS 1
 #include "icon.bh"
 
+#define USE_UTILITYBASE
 #include "mccheader.c"
 

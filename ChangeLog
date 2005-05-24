@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-05-25  Jens Langner <Jens.Langner@light-speed.de>
+
+    * library.c: added missing USE_UTILITYBASE define which in fact was the reason
+      why the last two previous releases crashed on OS3 machines.
+
 2005-04-10  Jens Langner <Jens.Langner@light-speed.de>
 
     * includes/mccclass_68k: replaced the assembler based OS4/68k stub by a

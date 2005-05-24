@@ -61,5 +61,6 @@
 #define USE_IM_PREFS_COLORS 1
 #include "icon.bh"
 
+#define USE_UTILITYBASE
 #include "mccheader.c"
 

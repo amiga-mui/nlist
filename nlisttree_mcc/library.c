@@ -64,4 +64,5 @@ static const STRPTR used_classes[]  = { "NList.mcc", NULL };
 /*                                                                            */
 /******************************************************************************/
 
+#define USE_UTILITYBASE
 #include "mccheader.c"
