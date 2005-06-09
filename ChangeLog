@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-06-09  Jens Langner <Jens.Langner@light-speed.de>
+
+    * includes/SDI: updated SDI headers to latest incarnation.
+	 
 2005-05-25  Jens Langner <Jens.Langner@light-speed.de>
 
     * library.c: added missing USE_UTILITYBASE define which may have caused

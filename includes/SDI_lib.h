@@ -4,9 +4,10 @@
 /* Includeheader
 
         Name:           SDI_lib.h
-        Versionstring:  $VER: SDI_lib.h 1.4 (05.10.2004)
+        Versionstring:  $VER: SDI_lib.h 1.6 (08.06.2005)
         Author:         Jens Langner
         Distribution:   PD
+        Project page:   http://www.sf.net/projects/sditools/
         Description:    defines to hide OS specific library function definitions
 
  1.0   09.05.04 : initial version which allows to hide OS specific shared
@@ -21,6 +22,12 @@
                   can be used in there (which should be the default).
  1.3   04.07.04 : added empty LIBFUNC define for MorphOS which was missing.
  1.4   05.10.04 : added missing LIBFUNC call to OS3/MOS interface
+ 1.5   19.05.05 : fixed some documentation glitches (Guido Mersmann)
+ 1.6   08.06.06 : swapped LIBFUNC and ret within the prototype, because
+                  c standard says attributes first and vbcc want them like
+                  this. (Guido Mersmann)
+                  changed the documentation to explain that LIBFUNC must be
+                  set first. (Guido Mersmann)
 
 */
 
@@ -33,8 +40,11 @@
 ** above history list and indicate that the change was not made by myself
 ** (e.g. add your name or nick name).
 **
+** Find the latest version of this file at:
+** http://cvs.sourceforge.net/viewcvs.py/sditools/sditools/headers/
+**
 ** Jens Langner <Jens.Langner@light-speed.de> and
-** Dirk Stöcker <stoecker@epost.de>
+** Dirk Stöcker <soft@dstoecker.de>
 */
 
 #include "SDI_compiler.h"
@@ -50,7 +60,7 @@
 ** Defines a library jump function "TestFunc" with a ULONG return value and
 ** which is called by the corresponding library vector of a shared library.
 **
-** ULONG LIBFUNC TestFunc(REG(d0, text))
+** LIBFUNC ULONG TestFunc(REG(d0, text))
 ** {
 **   Printf(text);
 **   return 0;
@@ -58,7 +68,9 @@
 **
 ** Please note the use of the LIBFUNC macro which defines this function
 ** automatically as a function which is directly called from within a shared
-** library.
+** library. Since this macro contains compiler attributes it must be
+** called first, even if some compiler allow attributes and result type
+** mixed, other do not and we want to keep the stuff compiler independent.
 **
 ** If you now require to have some OS/compiler independent prototype
 ** definition please use the following statement:
@@ -71,12 +83,12 @@
 ** OS4 shared library which should also be backward compatible to OS3.
 **
 ** So if you then want to add this function to a library interface please
-** use the LIBFUNC_* macros to generate your library function vector
+** use the LFUNC_* macros to generate your library function vector
 ** like this example one:
 **
-** #define libvector LIBFUNC_FAS(SomeFunc)    \
-**                   LIBFUNC_FA_(TestFunc)    \
-**                   LIBFUNC_VA_(VarargsFunc)
+** #define libvector LFUNC_FAS(SomeFunc)    \
+**                   LFUNC_FA_(TestFunc)    \
+**                   LFUNC_VA_(VarargsFunc)
 **
 ** This way you can then easily put the "libvector" define in your real
 ** library function vector of your shared library instead of having to
@@ -112,11 +124,11 @@
     (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 ||                         \
     (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
     #define LIBPROTO(name, ret, ...)                                         \
-      ret LIBFUNC name(__VA_ARGS__);                                         \
-      ret LIBFUNC libstub_##name(struct Interface *self UNUSED , ## __VA_ARGS__)
+      LIBFUNC ret name(__VA_ARGS__);                                         \
+      LIBFUNC ret libstub_##name(struct Interface *self UNUSED , ## __VA_ARGS__)
     #define LIBPROTOVA(name, ret, ...)                                       \
-      ret LIBFUNC VARARGS68K name(__VA_ARGS__);                              \
-      ret LIBFUNC VARARGS68K                                                 \
+      LIBFUNC ret VARARGS68K name(__VA_ARGS__);                              \
+      LIBFUNC ret VARARGS68K                                                 \
       libstub_##name(struct Interface *self UNUSED , ## __VA_ARGS__)
   #endif
   #define LFUNC_FAS(name) libstub_##name
@@ -126,7 +138,7 @@
   #define LFUNC(name)     libstub_##name
 #else
   #if defined(__MORPHOS__)
-    #define LIBFUNC
+    #define LIBFUNC SAVEDS ASM
   #else
     #define LIBFUNC SAVEDS ASM
   #endif
@@ -134,9 +146,9 @@
     (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 ||                         \
     (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
     #define LIBPROTO(name, ret, ...)                                         \
-      ret LIBFUNC name(__VA_ARGS__)
+      LIBFUNC ret name(__VA_ARGS__)
     #define LIBPROTOVA(name, ret, ...)                                       \
-      ret LIBFUNC STDARGS name(__VA_ARGS__)
+      LIBFUNC ret STDARGS name(__VA_ARGS__)
   #endif
   #define LFUNC_FAS(name) name
   #define LFUNC_VAS(name)
