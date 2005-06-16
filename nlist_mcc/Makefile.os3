@@ -23,7 +23,7 @@ CC    = m68k-amigaos-gcc
 STRIP = m68k-amigaos-strip
 RM    = rm -f
 RMDIR = rm -rf
-MKDIR	= mkdir
+MKDIR = mkdir
 CP    = cp
 
 # Directories
@@ -97,7 +97,7 @@ $(TARGET): $(OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
 	@$(STRIP) -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../includes/mccheader.c NList_mcc.h private.h
+$(OBJDIR)/library.o: library.c ../includes/mccheader.c ../includes/mui/NList_mcc.h private.h
 
 #
 
