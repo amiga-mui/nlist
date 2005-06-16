@@ -174,7 +174,7 @@ UBYTE GetChar( APTR CatStr )
 
 LONG xget( Object *obj, ULONG attribute )
 {
-	LONG x;
+	LONG x = 0;
 
 	get( obj, attribute, &x );
 	return( x );
