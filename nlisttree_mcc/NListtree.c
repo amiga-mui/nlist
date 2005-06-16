@@ -168,7 +168,7 @@ static int STDARGS MySPrintf(char *buf, char *fmt, ...)
 #define sprintf MySPrintf
 
 /*
-**	Small helpfull macros...
+**	Small helpful macros...
 */
 #define	DIFF(a,b)			  (MAX((a),(b))-MIN((a),(b)))
 #define LIBVER(lib)			((struct Library *)(lib))->lib_Version
@@ -690,7 +690,7 @@ DISPATCHERPROTO(NodeImage_Dispatcher)
 /*****************************************************************************\
 *******************************************************************************
 **
-**	Helpfull handling functions.
+**	Helpful handling functions.
 **
 *******************************************************************************
 \*****************************************************************************/
@@ -796,7 +796,7 @@ BOOL DoClipCmd( ULONG cmd, struct IOClipReq *req, LONG *ldata, LONG len )
 /*****************************************************************************\
 *******************************************************************************
 **
-**	Helpfull object related functions.
+**	Helpful object related functions.
 **
 *******************************************************************************
 \*****************************************************************************/
@@ -1339,7 +1339,7 @@ struct MUI_NListtree_TreeNode *IsXChildOfListMember( struct MUI_NListtree_TreeNo
 /*****************************************************************************\
 *******************************************************************************
 **
-**	Helpfull tree handling functions.
+**	Helpful tree handling functions.
 **
 *******************************************************************************
 \*****************************************************************************/
