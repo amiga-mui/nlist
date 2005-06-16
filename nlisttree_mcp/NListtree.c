@@ -26,18 +26,14 @@
 */
 #include <stdlib.h>
 #include <string.h>
-#include <proto/intuition.h>
-#include <proto/graphics.h>
-#include <proto/locale.h>
-#include <proto/exec.h>
-#include <proto/muimaster.h>
 
 #include <libraries/mui.h>
-
 #include <utility/hooks.h>
-#include <exec/types.h>
-
-#include "locale.h"
+#include <clib/alib_protos.h>
+#include <proto/muimaster.h>
+#include <proto/intuition.h>
+#include <proto/locale.h>
+#include <proto/exec.h>
 
 #include <mui/NFloattext_mcc.h>
 #include <mui/NListview_mcc.h>
@@ -48,7 +44,7 @@
 #include "rev.h"
 #include "private.h"
 
-#include <clib/alib_protos.h>
+#include "locale.h"
 
 #define MSG_DRAW2		  MSG_DUMMY
 #define MSG_DRAW2_KEY	MSG_DUMMY
@@ -1229,5 +1225,3 @@ DISPATCHERPROTO(_DispatcherP)
 
 	return( DoSuperMethodA( cl, obj, msg ) );
 }
-
-

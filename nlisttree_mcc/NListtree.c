@@ -117,13 +117,12 @@
 /*
 **	Includes
 */
+#include <clib/alib_protos.h>
 #include <proto/muimaster.h>
 #include <proto/intuition.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
-#include <proto/timer.h>
 #include <proto/exec.h>
-#include <clib/alib_protos.h>
 
 #include "SDI_stdarg.h"
 
@@ -10882,4 +10881,3 @@ DISPATCHERPROTO(_Dispatcher)
 
 	return( DoSuperMethodA( cl, obj, msg ) );
 }
-
