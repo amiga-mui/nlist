@@ -5,6 +5,15 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-06-16  Gunther Nikl <gni@gecko.de>
+
+    * nlisttree_mcc/NListtree.c, nlisttree_mcp/NListtree.c: Unify MySPrintf
+      for OS4 and MOS using SDI_starg.h as done by other projects.
+      Fix OS3 MySPrintf for GCC 3.4.x or newer (has to use stdarg.h macros!)
+      Initialize variable passed to GetAttr() with Zero.
+      Includes cleanup.
+      Fixed typos.
+
 2005-06-09  Jens Langner <Jens.Langner@light-speed.de>
 
     * includes/SDI: updated SDI headers to latest incarnation.
