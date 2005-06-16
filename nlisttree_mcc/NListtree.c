@@ -125,8 +125,7 @@
 #include <proto/exec.h>
 #include <clib/alib_protos.h>
 
-#include <stdarg.h>
-#include <stdio.h>
+#include "SDI_stdarg.h"
 
 #include "NListtree.h"
 #include "rev.h"
@@ -137,45 +136,36 @@
 
 /*********************************************************************************************/
 
-// add a replacemnet define for the standard sprintf
-#define sprintf MySPrintf
-
-#if defined(__amigaos4__)
-int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
+#if defined(__amigaos4__) || defined(__MORPHOS__)
+static int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
 {
-	va_list args;
-	va_startlinear(args, fmt);
+	VA_LIST args;
 
-	RawDoFmt(fmt, va_getlinearva(args, void *), NULL, buf);
+	VA_START(args, fmt);
+	RawDoFmt(fmt, VA_ARG(args, void *), NULL, buf);
+	VA_END(args);
 
-	va_end(args);
-	return(strlen(buf));
-}
-#elif defined(__MORPHOS__)
-int VARARGS68K MySPrintf(char *buf, char *fmt,...);
-int MySPrintf(char *buf, char *fmt,...)
-{
-	va_list args;
-	va_start(args, fmt);
-
-	RawDoFmt(fmt, args->overflow_arg_area, NULL, buf);
-
-	va_end(args);
 	return(strlen(buf));
 }
 #else
-int STDARGS MySPrintf(char *buf, char *fmt,...)
+static int STDARGS MySPrintf(char *buf, char *fmt, ...)
 {
 	static const UWORD PutCharProc[2] = {0x16C0,0x4E75};
 	/* dirty hack to avoid assembler part :-)
-   	16C0: move.b d0,(a3)+
+	   16C0: move.b d0,(a3)+
 	   4E75: rts */
-	RawDoFmt(fmt, (APTR)(((ULONG)&fmt)+4), (APTR)PutCharProc, buf);
+	va_list args;
+
+	va_start(args, fmt);
+	RawDoFmt(fmt, args, (void (*)(void))PutCharProc, buf);
+	va_end(args);
 
 	return(strlen(buf));
 }
 #endif
 
+// replacement define for the standard sprintf
+#define sprintf MySPrintf
 
 /*
 **	Small helpfull macros...

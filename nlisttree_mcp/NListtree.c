@@ -24,7 +24,6 @@
 /*
 **	Includes
 */
-#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <proto/intuition.h>
@@ -43,6 +42,8 @@
 #include <mui/NFloattext_mcc.h>
 #include <mui/NListview_mcc.h>
 #include <mui/NList_mcc.h>
+
+#include "SDI_stdarg.h"
 
 #include "rev.h"
 #include "private.h"
@@ -69,44 +70,6 @@ struct Locale *Locale;
 
 // some undocumented MUI tags we are going to use
 #define MUIA_Imagedisplay_UseDefSize  0x8042186d /* V11 i.. BOOL */
-
-// add a replacemnet define for the standard sprintf
-#define sprintf MySPrintf
-
-#if defined(__amigaos4__)
-int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
-{
-	va_list args;
-	va_startlinear(args, fmt);
-
-	RawDoFmt(fmt, va_getlinearva(args, void *), NULL, buf);
-
-	va_end(args);
-	return(strlen(buf));
-}
-#elif defined(__MORPHOS__)
-int VARARGS68K MySPrintf(char *buf, char *fmt,...)
-{
-	va_list args;
-	va_start(args, fmt);
-
-	RawDoFmt(fmt, args->overflow_arg_area, NULL, buf);
-
-	va_end(args);
-	return(strlen(buf));
-}
-#else
-int STDARGS MySPrintf(char *buf, char *fmt,...)
-{
-	static const UWORD PutCharProc[2] = {0x16C0,0x4E75};
-	/* dirty hack to avoid assembler part :-)
-   	16C0: move.b d0,(a3)+
-	   4E75: rts */
-	RawDoFmt(fmt, (APTR)(((ULONG)&fmt)+4), (APTR)PutCharProc, buf);
-
-	return(strlen(buf));
-}
-#endif
 
 struct SampleArray
 {
@@ -157,9 +120,38 @@ static const struct SampleArray sa[] =
 	{ NULL, 0 }
 };
 
+/*********************************************************************************************/
 
+#if defined(__amigaos4__) || defined(__MORPHOS__)
+static int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
+{
+	VA_LIST args;
 
-#define LSC(a,b) GetChar(a)
+	VA_START(args, fmt);
+	RawDoFmt(fmt, VA_ARG(args, void *), NULL, buf);
+	VA_END(args);
+
+	return(strlen(buf));
+}
+#else
+static int STDARGS MySPrintf(char *buf, char *fmt, ...)
+{
+	static const UWORD PutCharProc[2] = {0x16C0,0x4E75};
+	/* dirty hack to avoid assembler part :-)
+	   16C0: move.b d0,(a3)+
+	   4E75: rts */
+	va_list args;
+
+	va_start(args, fmt);
+	RawDoFmt(fmt, args, (void (*)(void))PutCharProc, buf);
+	va_end(args);
+
+	return(strlen(buf));
+}
+#endif
+
+// replacement define for the standard sprintf
+#define sprintf MySPrintf
 
 UBYTE GetChar( APTR CatStr )
 {
@@ -170,6 +162,7 @@ UBYTE GetChar( APTR CatStr )
 	return( *Str );
 }
 
+#define LSC(a,b) GetChar(a)
 
 /*****************************************************************************\
 *******************************************************************************
