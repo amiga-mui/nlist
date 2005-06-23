@@ -25,7 +25,13 @@
 
 ***************************************************************************/
 
+#include <stdlib.h>
+
+#include <clib/alib_protos.h>
+
 #include "private.h"
+
+#include "NList_func.h"
 
 LONG NL_GetSelects(struct NLData *data, UNUSED Object *obj, LONG ent)
 {

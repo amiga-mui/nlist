@@ -25,7 +25,13 @@
 
 ***************************************************************************/
 
+#include <clib/alib_protos.h>
+#include <proto/graphics.h>
+#include <proto/utility.h>
+
 #include "private.h"
+
+#include "NList_func.h"
 
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 

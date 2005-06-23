@@ -43,6 +43,7 @@
 
 #include "private.h"
 #include "rev.h"
+#include "NList_grp.h"
 
 #define VERSION       LIB_VERSION
 #define REVISION      LIB_REVISION

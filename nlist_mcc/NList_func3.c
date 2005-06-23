@@ -25,7 +25,19 @@
 
 ***************************************************************************/
 
+#include <string.h>
+
+#include <dos/dos.h>
+#include <exec/memory.h>
+#include <proto/console.h>
+#include <proto/utility.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+
 #include "private.h"
+
+#include "NList_func.h"
+#include "cbio.h"
 
 ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message)
 {

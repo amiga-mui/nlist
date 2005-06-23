@@ -25,7 +25,13 @@
 
 ***************************************************************************/
 
+#include <clib/alib_protos.h>
+#include <proto/muimaster.h>
+#include <proto/utility.h>
+
 #include "private.h"
+
+#include "NList_img.h"
 
 struct MUI_CustomClass *NLI_Class = NULL;
 

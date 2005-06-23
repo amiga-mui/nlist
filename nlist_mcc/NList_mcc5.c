@@ -25,7 +25,18 @@
 
 ***************************************************************************/
 
+#include <dos/dosextens.h>
+#include <graphics/gfxmacros.h>
+#include <libraries/gadtools.h>
+#include <clib/alib_protos.h>
+#include <proto/muimaster.h>
+#include <proto/graphics.h>
+#include <proto/layers.h>
+
 #include "private.h"
+
+#include "NList_func.h"
+#include "nlistview_mcc/NListview_mcc.h"
 
 #ifdef __SASC
 #include <dos.h>

@@ -25,7 +25,14 @@
 
 ***************************************************************************/
 
+#include <stdlib.h>
+
+#include <clib/alib_protos.h>
+
 #include "private.h"
+
+#include "NList_func.h"
+#include "nlistviews_mcp/NListviews_mcp.h"
 
 #define MAX_INTUITICKS_WAIT 3
 

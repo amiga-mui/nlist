@@ -25,7 +25,12 @@
 
 ***************************************************************************/
 
+#include <clib/alib_protos.h>
+#include <proto/muimaster.h>
+
 #include "private.h"
+
+#include "NList_grp.h"
 
 #define MUIA_NList_Visible                  0x9d510063 /* GM  ..g  LONG              */
 

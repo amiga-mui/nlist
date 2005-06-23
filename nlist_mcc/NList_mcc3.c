@@ -25,7 +25,18 @@
 
 ***************************************************************************/
 
+#include <stdlib.h>
+
+#include <graphics/gfxmacros.h>
+#include <clib/alib_protos.h>
+#include <proto/muimaster.h>
+#include <proto/graphics.h>
+#include <proto/layers.h>
+
 #include "private.h"
+
+#include "NList_func.h"
+#include "nlistviews_mcp/NListviews_mcp.h"
 
 LONG xget(Object *obj,ULONG attribute)
 {

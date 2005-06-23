@@ -25,6 +25,8 @@
 
 ***************************************************************************/
 
+#include <exec/types.h>
+
 #define NO_PROTOS
 #include "private.h"
 

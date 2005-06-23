@@ -25,7 +25,23 @@
 
 ***************************************************************************/
 
+#include <string.h>
+#include <stdlib.h>
+
+#include <dos/dosextens.h>
+#include <clib/alib_protos.h>
+#include <proto/muimaster.h>
+#include <proto/diskfont.h>
+#include <proto/graphics.h>
+#include <proto/utility.h>
+#include <proto/exec.h>
+
 #include "private.h"
+
+#include "NList_func.h"
+#include "NList_grp.h"
+
+#include "nlistviews_mcp/NListviews_mcp.h"
 
 /* IO macros */
 /*
@@ -1524,4 +1540,3 @@ ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 
   return (retval);
 }
-

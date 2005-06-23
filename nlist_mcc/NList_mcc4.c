@@ -25,9 +25,15 @@
 
 ***************************************************************************/
 
+#include <stdlib.h>
+
+#include <clib/alib_protos.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
+
 #include "private.h"
 
-#include <proto/intuition.h>
+#include "NList_func.h"
 
 /* DRI's draw pens */
 /* #define DETAILPEN         (0x0000)    // compatible Intuition rendering pens    */

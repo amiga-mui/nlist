@@ -25,7 +25,17 @@
 
 ***************************************************************************/
 
+#include <string.h>
+
+#include <graphics/gfxmacros.h>
+#include <intuition/imageclass.h>
+#include <clib/alib_protos.h>
+#include <proto/muimaster.h>
+#include <proto/graphics.h>
+
 #include "private.h"
+
+#include "NList_func.h"
 
 WORD DrawTitle(Object *obj,struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
 {

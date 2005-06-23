@@ -25,13 +25,19 @@
 
 ***************************************************************************/
 
-#include <proto/graphics.h>
-#include <proto/intuition.h>
+#include <string.h>
+
+#include <exec/memory.h>
 #include <intuition/pointerclass.h>
 #include <datatypes/pictureclass.h>
+#include <proto/muimaster.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
+#include <proto/exec.h>
+
 #include "private.h"
 
-extern struct IClass *ThisClass;
+#include "NList_func.h"
 
 static UWORD size_pointer[] = {
   0x0000,   0x0000,

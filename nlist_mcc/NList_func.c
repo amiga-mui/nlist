@@ -25,7 +25,11 @@
 
 ***************************************************************************/
 
+#include <clib/alib_protos.h>
+
 #include "private.h"
+
+#include "NList_func.h"
 
 /* Extent the selection between ent1 and ent2. 
    Make the first_change and last_change optimal for redrawing optimiztion */

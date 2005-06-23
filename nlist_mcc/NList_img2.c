@@ -1,3 +1,4 @@
+#if 0 /* unused? */
 /***************************************************************************
 
  NList.mcc - New List MUI Custom Class
@@ -25,7 +26,14 @@
 
 ***************************************************************************/
 
+#include <clib/alib_protos.h>
+#include <proto/muimaster.h>
+#include <proto/utility.h>
+
 #include "private.h"
+
+#include "NList_img.h"
+#include "NList_img2.h"
 
 struct MUI_CustomClass *NLI2_Class = NULL;
 
@@ -103,3 +111,4 @@ void NLI2_Delete(void)
     MUI_DeleteCustomClass(NLI2_Class);
   NLI2_Class = NULL;
 }
+#endif /* 0 */

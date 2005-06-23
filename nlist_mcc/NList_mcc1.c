@@ -25,11 +25,22 @@
 
 ***************************************************************************/
 
+#include <stdlib.h>
+
+#include <clib/alib_protos.h>
+#include <proto/graphics.h>
+#include <proto/utility.h>
+#include <proto/exec.h>
+
 #include "private.h"
+
+#include "NList_func.h"
+#include "rev.h"
+#include "nlistviews_mcp/NListviews_mcp.h"
+#include "nlistview_mcc/NListview_mcc.h"
 
 extern const struct Hook NL_ConstructHook_String;
 extern const struct Hook NL_DestructHook_String;
-extern const struct Hook LayoutHookNList;
 
 #define SET_PEN(var_dest,test_init) \
   { \
