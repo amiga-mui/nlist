@@ -42,10 +42,7 @@
 #include <dos.h>
 #endif
 
-extern LONG xget(Object *obj,ULONG attribute);
-
 /*#define DO_CLIPBLIT    TRUE*/
-
 
 static struct NewMenu MenuData[] =
 {
