@@ -49,16 +49,7 @@
 #define MSG_DRAW2		  MSG_DUMMY
 #define MSG_DRAW2_KEY	MSG_DUMMY
 
-#if defined(__amigaos4__) || defined(__MORPHOS__)
-struct Library *LocaleBase;
-#else
-struct LocaleBase *LocaleBase;
-#endif
-
-#if defined(__amigaos4__)
-struct LocaleIFace *ILocale;
-#endif
-struct Locale *Locale;
+static struct Locale *Locale;
 
 #ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
@@ -783,13 +774,13 @@ ULONG _DisposeP( struct IClass *cl, Object *obj, Msg msg )
 
 	D(bug( "\n" ) );
 
-	CloseCat();
-
-	if ( Locale )
-		CloseLocale( Locale );
-
 	if(LocaleBase)
   {
+		CloseCat();
+
+		if ( Locale )
+			CloseLocale( Locale );
+
     DROPINTERFACE(ILocale);
 		CloseLibrary((struct Library *)LocaleBase);
   }
