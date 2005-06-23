@@ -40,15 +40,10 @@
 
 LONG xget(Object *obj,ULONG attribute)
 {
-  LONG x;
+  LONG x=0;
   get(obj,attribute,&x);
   return(x);
 }
-
-
-
-#define MUIA_Group_Forward  0x80421422
-
 
 void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
 {
