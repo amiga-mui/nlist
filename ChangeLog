@@ -5,6 +5,36 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-06-23  Gunther Nikl <gni@gecko.de>
+
+    * nlisttree_mcc/NListtree.c: Removed LocaleBase and its interface
+      definition.
+      (_DisposeP): moved CloseCat() and CloseLocale() inside the
+      "if (LocaleBase)" block.
+    * nlisttree_mcc/library.c: Added LocaleBase defintions.
+    * nfloattext_mcc/private.h, nlist_mcc/private.h, nlisttree_mcc/private.h,
+      nlisttree_mcp/private.h, nlistview_mcc/private.h, nlistviews_mcp/private.h:
+      Remove some unnessecary "../includes/". Use "" for private includes.
+    * nlist_mcc/Makefile.os3, nlist_mcc/Makefile.os4, nlist_mcc/Makefile.mos:
+      Added -I.. to get rid of ".." in #include statements.
+    * nlist_mcc/NList_grp.h, nlist_mcc/NList_img.h, nlist_mcc/NList_img2.h:
+      Minor cleanups.
+    * nlist_mcc/NList_mcc.c, nlist_mcc/NList_mcc0.c, nlist_mcc/NList_mcc1.c,
+      nlist_mcc/NList_mcc2.c, nlist_mcc/NList_mcc3.c, nlist_mcc/NList4_mcc.c,
+      nlist_mcc/NList_mcc5.c, nlist_mcc/NList_mcc6.c, nlist_mcc/NList_func.c,
+      nlist_mcc/NList_func2.c, nlist_mcc/NList_func3.c, nlist_mcc/NList_func4.c,
+      nlist_mcc/NList_grp.c, nlist_mcc/NList_img.c, nlist_mcc/NList_img2.c,
+      nlist_mcc/move.c, nlist_mcc/library.c: Add #include statements for used
+      headers.
+    * nlist_mcc/private.h: Removed excessive header inclusion.
+    * nlist_mcc/NList_mcc3.c (xget): Initialize local variable. Remove unused
+      MUIA_ #define.
+    * nlist_mcc/NList_mcc5.c: Removed xget() prototype.
+    * nlist_mcc/protos.h: Added xget() prototype.
+    * nlist_mcc/NList_func3.c (MyCallHookPktA): use SDI_stdarg.h.
+    * nlist_mcc/NList_mcc.c (DoSuperNew): Likewise.
+    * nlist_mcc/library.c: Make ioreq static.
+
 2005-06-16  Gunther Nikl <gni@gecko.de>
 
     * nlisttree_mcc/NListtree.c, nlisttree_mcp/NListtree.c: Unify MySPrintf
