@@ -27,13 +27,13 @@
 /*** Include stuff ***/
 
 #ifndef LIBRARIES_MUI_H
-#include "libraries/mui.h"
+#include <libraries/mui.h>
 #endif
 
-#include "../includes/mui/NList_mcc.h"
+#include "mui/NList_mcc.h"
 
-#include <mcc_common.h>
-#include <mcc_debug.h>
+#include "mcc_common.h"
+#include "mcc_debug.h"
 
 #include "amiga-align.h"
 

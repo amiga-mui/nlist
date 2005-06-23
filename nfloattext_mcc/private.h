@@ -36,8 +36,8 @@
 #include "NFloattext_mcc.h"
 #include "default-align.h"
 
-#include <mcc_common.h>
-#include <mcc_debug.h>
+#include "mcc_common.h"
+#include "mcc_debug.h"
 
 #define ALIGN_MASK      (0x0700)
 

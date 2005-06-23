@@ -32,8 +32,8 @@
 #include "../nlisttree_mcc/private.h"
 #include "default-align.h"
 
-#include <mcc_common.h>
-#include <mcc_debug.h>
+#include "mcc_common.h"
+#include "mcc_debug.h"
 
 #define PREFSIMAGEOBJECT \
   BodychunkObject,\
@@ -87,4 +87,3 @@ struct NListtreeP_Data
 };
 
 #endif /* MUI_NLISTTREE_priv_MCP_H */
-

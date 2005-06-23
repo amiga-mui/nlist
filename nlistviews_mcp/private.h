@@ -37,8 +37,8 @@
 #include "NListviews_mcp.h"
 #include "default-align.h"
 
-#include <mcc_common.h>
-#include <mcc_debug.h>
+#include "mcc_common.h"
+#include "mcc_debug.h"
 
 #define PREFSIMAGEOBJECT \
   BodychunkObject,\
@@ -128,4 +128,3 @@ struct NListviews_MCP_Data
 #define LIBVER(lib) ((struct Library *)lib)->lib_Version
 
 #endif /* MUI_NLISTVIEWS_priv_MCP_H */
-

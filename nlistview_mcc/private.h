@@ -36,8 +36,8 @@
 #include "NListview_mcc.h"
 #include "default-align.h"
 
-#include <mcc_common.h>
-#include <mcc_debug.h>
+#include "mcc_common.h"
+#include "mcc_debug.h"
 
 struct NLVData
 {

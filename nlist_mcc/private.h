@@ -63,7 +63,7 @@
 #include <clib/alib_protos.h>
 
 #include "NList_grp.h"
-#include "../includes/mui/NList_mcc.h"
+#include "mui/NList_mcc.h"
 
 #include "NList_func.h"
 #include "NList_img.h"
@@ -78,8 +78,8 @@
   #include "/nlistview_mcc/NListview_mcc.h"
 #endif
 
-#include <mcc_common.h>
-#include <mcc_debug.h>
+#include "mcc_common.h"
+#include "mcc_debug.h"
 
 
 #ifndef MUI_NList_priv_MCC_H
@@ -635,4 +635,3 @@ extern char *stpcpy(char *to, char *from);
 #endif
 
 #endif /* MUI_NList_priv_MCC_H */
-
