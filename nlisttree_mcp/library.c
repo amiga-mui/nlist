@@ -51,6 +51,11 @@
 #define UserLibID			"$VER: NListtree.mcp " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	19
 
+struct Library *LocaleBase;
+#if defined(__amigaos4__)
+struct LocaleIFace *ILocale;
+#endif
+
 /******************************************************************************/
 /*                                                                            */
 /* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
@@ -63,4 +68,3 @@
 
 #define USE_UTILITYBASE
 #include "mccheader.c"
-
