@@ -38,10 +38,6 @@
 #include "NList_func.h"
 #include "nlistview_mcc/NListview_mcc.h"
 
-#ifdef __SASC
-#include <dos.h>
-#endif
-
 /*#define DO_CLIPBLIT    TRUE*/
 
 static struct NewMenu MenuData[] =
@@ -1368,36 +1364,34 @@ ULONG mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMen
  *        data->do_draw_all = TRUE;
  */
 
-
-
-
-
-
+#if defined(__GNUC__)
+#define stackPtr() ({register char *sp __asm("sp");sp;})
+#elif defined(__SASC)
+#include <dos.h>
+#define stackPtr() ((char *)getreg(REG_A7))
+#elif defined(__VBCC__)
+static char *stackPtr(void)="\tmove.l\tsp,d0";
+#else
+#define stackPtr NULL
+#endif
 
 void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
 {
+  struct Window *w;
   char *taskname;
-  struct Window *w = NULL;
+
   if (why < 0)
   {
-#ifdef __SASC
-    register char *spa7 = (char *)getreg(REG_A7); \
-    if (spa7 < data->NList_SPLowest) \
-      data->NList_SPLowest = spa7; \
-    STACK_ALERT;
+    char *sp = stackPtr();
+    if (sp != NULL)
+    {
+      if (sp < data->NList_SPLowest)
+        data->NList_SPLowest = sp;
+      STACK_ALERT;
+    }
     return;
-#else
- #ifdef __GNUC__
-    register char *spa7 __asm("sp"); \
-    if (spa7 < data->NList_SPLowest) \
-      data->NList_SPLowest = spa7; \
-    STACK_ALERT;
-    return;
- #else
-    return;
- #endif
-#endif
   }
+
   if (data->NList_SPLower && (data->NList_SPLowest < (data->NList_SPLower - 8000)))
     data->NList_SPLower = NULL;
   if (!data->NList_SPLower)
@@ -1428,11 +1422,14 @@ void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
     stackES.es_TagList      = 0;
     #endif
 
-    if (data->SHOW)
-      w = _window(obj);
     data->NList_SPmin = data->NList_SPLowest - 200;
     if (data->NList_SPmin < data->NList_SPLower+100)
       data->NList_SPmin = data->NList_SPLower+100;
+
+    if (data->SHOW)
+      w = _window(obj);
+    else
+      w = NULL;
     EasyRequest(w,&stackES,NULL,(LONG)obj,(LONG)taskname,data->NList_SPUpper - data->NList_SPLower,data->NList_SPUpper - data->NList_SPLowest);
     data->NList_SPLower = NULL;
   }
@@ -1460,7 +1457,8 @@ void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
 
     if (data->SHOW)
       w = _window(obj);
+    else
+      w = NULL;
     EasyRequest(w,&stackES,NULL,(LONG)obj,(LONG)taskname,data->NList_SPUpper - data->NList_SPLower);
   }
 }
-
