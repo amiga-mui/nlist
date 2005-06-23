@@ -25,14 +25,12 @@
 
 ***************************************************************************/
 
-#include <mcc_common.h>
-
-extern struct MUI_CustomClass *NGR_Class;
-
 struct NGRData
 {
   LONG DoDraw;
 };
 
-extern struct MUI_CustomClass *NGR_Create(void);
-extern void NGR_Delete(void);
+extern struct MUI_CustomClass *NGR_Class;
+
+struct MUI_CustomClass *NGR_Create(void);
+void NGR_Delete(void);

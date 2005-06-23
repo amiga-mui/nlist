@@ -25,10 +25,6 @@
 
 ***************************************************************************/
 
-#include <mcc_common.h>
-
-extern struct MUI_CustomClass *NLI2_Class;
-
 #define NImage2Object NewObject(NLI2_Class->mcc_Class,NULL
 
 struct NLI2Data
@@ -37,6 +33,7 @@ struct NLI2Data
   LONG DoDraw;
 };
 
-extern struct MUI_CustomClass *NLI2_Create(void);
-extern void NLI2_Delete(void);
+extern struct MUI_CustomClass *NLI2_Class;
 
+struct MUI_CustomClass *NLI2_Create(void);
+void NLI2_Delete(void);
