@@ -1,3 +1,6 @@
+#ifndef MUI_NList_priv_MCC_H
+#define MUI_NList_priv_MCC_H
+
 /***************************************************************************
 
  NList.mcc - New List MUI Custom Class
@@ -26,69 +29,16 @@
 
 ***************************************************************************/
 
-#include "rev.h"
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-#include <exec/types.h>
-#include <exec/memory.h>
-#include <dos/dos.h>
-#include <libraries/dos.h>
-#include <libraries/dosextens.h>
-#include <intuition/imageclass.h>
-#include <devices/timer.h>
-#include <exec/ports.h>
-#include <exec/io.h>
-#include <devices/clipboard.h>
-#include <workbench/workbench.h>
-#include <intuition/intuition.h>
-#include <intuition/classusr.h>
-#include <graphics/gfxmacros.h>
-#include <hardware/blit.h>
-
-#include <proto/exec.h>
-#include <proto/dos.h>
-#include <proto/utility.h>
-#include <proto/diskfont.h>
-#include <proto/graphics.h>
-#include <proto/gadtools.h>
-#include <proto/asl.h>
-#include <proto/layers.h>
-#include <proto/muimaster.h>
-#include <proto/console.h>
-#include <proto/intuition.h>
-
-#include <clib/alib_protos.h>
-
-#include "NList_grp.h"
-#include "mui/NList_mcc.h"
-
-#include "NList_func.h"
-#include "NList_img.h"
-#include "NList_img2.h"
-#include "cbio.h"
-
-#ifdef __GNUC__
-  #include "../nlistviews_mcp/NListviews_mcp.h"
-  #include "../nlistview_mcc/NListview_mcc.h"
-#else
-  #include "/nlistviews_mcp/NListviews_mcp.h"
-  #include "/nlistview_mcc/NListview_mcc.h"
-#endif
-
-#include "mcc_common.h"
-#include "mcc_debug.h"
-
-
-#ifndef MUI_NList_priv_MCC_H
-#define MUI_NList_priv_MCC_H
+#include <libraries/mui.h>
 
 #ifndef MUI_MUI_H
 #include "mui.h"
 #endif
 
+#include "mui/NList_mcc.h"
+
+#include "mcc_common.h"
+#include "mcc_debug.h"
 
 #define MUIM_NList_Trigger            0x9d510090 /* GM */
 //#define MUIA_NList_Pause              0x9d5100c0  /* GM  isg  LONG              */
