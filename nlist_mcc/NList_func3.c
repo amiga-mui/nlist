@@ -58,21 +58,12 @@ ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR me
 
 ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
 {
-	va_list va;
   ULONG ret;
+  VA_LIST va;
 
-  #if defined(__amigaos4__)
-  va_startlinear(va, hook);
-  ret = MyCallHookPkt(obj, FALSE, hook, obj, va_getlinearva(va, APTR));
-  #elif defined(__MORPHOS__)
-	va_start(va, hook);
-  ret = MyCallHookPkt(obj, FALSE, hook, obj, va->overflow_arg_area);
-  #else
-  va_start(va, hook);
-  ret = MyCallHookPkt(obj, FALSE, hook, obj, va);
-  #endif
-
-  va_end(va);
+  VA_START(va, hook);
+  ret = MyCallHookPkt(obj, FALSE, hook, obj, VA_ARG(va, APTR));
+  VA_END(va);
 
   return ret;
 }
