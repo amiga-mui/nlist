@@ -78,7 +78,7 @@ struct DiskfontIFace *IDiskfont = NULL;
 struct ConsoleIFace *IConsole = NULL;
 #endif
 
-struct IOStdReq ioreq;
+static struct IOStdReq ioreq;
 
 BOOL PreClassInitFunc(void)
 {
