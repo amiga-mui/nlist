@@ -798,10 +798,12 @@ BOOL DoClipCmd( ULONG cmd, struct IOClipReq *req, LONG *ldata, LONG len )
 *******************************************************************************
 \*****************************************************************************/
 
-INLINE ASM ULONG MyCallHookA(REG(a0, struct Hook *hook), REG(a2, struct NListtree_Data *data), REG(a1, struct NListtree_HookMessage *msg))
+#if 0 /* unused */
+INLINE ULONG MyCallHookA(struct Hook *hook, struct NListtree_Data *data, struct NListtree_HookMessage *msg)
 {
 	return(CallHookPkt(hook, data->Obj, msg));
 }
+#endif
 
 static ULONG STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
