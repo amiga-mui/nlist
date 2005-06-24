@@ -23,7 +23,7 @@ CC    = ppc-amigaos-gcc
 STRIP = ppc-amigaos-strip
 RM    = rm -f
 RMDIR = rm -rf
-MKDIR	= mkdir
+MKDIR = mkdir
 CP    = cp
 
 # Directories
@@ -38,7 +38,7 @@ WARN     = -W -Wall
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DWITH_DEBUG -g -O0
 REDEFINE =
-CFLAGS   = -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS) $(DEBUG)\
+CFLAGS   = -I. -I../includes -I.. $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS) $(DEBUG)\
            -D__USE_INLINE__ $(REDEFINE) -c
 LDFLAGS  = -nostartfiles
 LDLIBS   =

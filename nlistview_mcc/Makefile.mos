@@ -23,7 +23,7 @@ CC    = ppc-morphos-gcc
 STRIP = ppc-morphos-strip
 RM    = rm -f
 RMDIR = rm -rf
-MKDIR	= mkdir
+MKDIR = mkdir
 CP    = cp
 
 # Directories
@@ -37,7 +37,7 @@ CDEFS    = -D__NLV_VERDATE=\"`date +%d.%m.%Y`\" -D__NLV_VERDAYS="`expr \`date +%
 WARN     = -W -Wall
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DWITH_DEBUG -g -O0
-CFLAGS   = -noixemul -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) \
+CFLAGS   = -noixemul -I. -I../includes -I.. $(CPU) $(CPUFLAGS) $(WARN) \
            $(OPTFLAGS) $(DEBUG) -c
 LDFLAGS  = -noixemul -nostartfiles
 LDLIBS   = -ldebug
