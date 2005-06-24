@@ -5,6 +5,29 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-06-24  Gunther Nikl <gni@gecko.de>
+
+    * nfloattext_mcc/NFloattext.c: Cleanup #include statements.
+      (DoSuperNew): use SDI_stdarg.h.
+      (CopyText, mNFT_GetEntry): Use MEMF_ANY when allocating memory.
+      (mNFT_Set, mNFT_GetEntry): Remove superfluous casts.
+      (mNFT_GetEntry): Use CopyMem().
+      (CopyText): Use strcpy().
+    * nlisttree_mcc/NListtree.c (OpenClipboard/CloseClipboard): Fixed.
+      (DoSuperNew, MyCallHook): Use SDI_stdarg.h.
+      (MyCallHookA: Disabled since its unused.
+      Use stdlib.h
+    * nlisttree_mcc/NListtree.c, nlisttree_mcc/QuickSort.c: Cleanup
+      #include statements.
+    * nlisttree_mcc/NListtree.h: Removed excessive header inclusion.
+    * nlisttree_mcp/NListtree.c: minor cleanup.
+    * nlistview_mcc/NListview.c: Cleanup #include statements.
+      (DoSuperNew): Use SDI_stdarg.h.
+    * nlistview_mcc/Makefile.os3, nlistview_mcc/Makefile.os4,
+      nlistview_mcc/Makefile.mos (CFLAGS): Added -I.. to get rid of ".."
+      in #include statement.
+    * nlistviews_mcp/NListviews.c: Cleanup #include statements.
+
 2005-06-23  Gunther Nikl <gni@gecko.de>
 
     * nlisttree_mcc/NListtree.c: Removed LocaleBase and its interface
