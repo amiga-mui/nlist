@@ -68,17 +68,11 @@ static char *CopyText(char *textin)
 Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
-  va_list args;
+  VA_LIST args;
 
-  #if defined(__amigaos4__)
-  va_startlinear(args, obj);
-  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, va_getlinearva(args, ULONG), NULL);
-  #else
-  va_start(args, obj);
-  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, args, NULL);
-  #endif
-
-  va_end(args);
+  VA_START(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  VA_END(args);
 
   return rc;
 }
