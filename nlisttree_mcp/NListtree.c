@@ -39,10 +39,8 @@
 #include <mui/NListview_mcc.h>
 #include <mui/NList_mcc.h>
 
-#include "SDI_stdarg.h"
-
-#include "rev.h"
 #include "private.h"
+#include "rev.h"
 
 #include "locale.h"
 
@@ -401,6 +399,7 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 		STR_GR_Prefs[1]		= LS( MSG_STR_PREFS_STYLE, "Style" );
 		STR_GR_Prefs[2]		= NULL;
 
+		/* FIXME: this seems unnecessary! */
 		sprintf(copytext,
       "\033c\033bNListtree.mcp " LIB_REV_STRING " (" LIB_DATE ") \033n\n"
       "\033c" LIB_COPYRIGHT "\n"
