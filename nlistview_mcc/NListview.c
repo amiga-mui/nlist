@@ -25,58 +25,29 @@
 
 ***************************************************************************/
 
-#include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <dos/dos.h>
-#include <exec/types.h>
-#include <exec/memory.h>
-#include <exec/ports.h>
-#include <exec/io.h>
-#include <libraries/dos.h>
-#include <libraries/dosextens.h>
-#include <libraries/mui.h>
-#include <devices/clipboard.h>
-#include <workbench/workbench.h>
-#include <intuition/intuition.h>
-#include <intuition/classusr.h>
 
-#include <proto/exec.h>
-#include <proto/dos.h>
-#include <proto/gadtools.h>
-#include <proto/asl.h>
-#include <proto/layers.h>
-#include <proto/graphics.h>
+#include <clib/alib_protos.h>
+#include <proto/muimaster.h>
+#include <proto/intuition.h>
 #include <proto/utility.h>
 #include <proto/keymap.h>
-#include <proto/intuition.h>
-#include <clib/alib_protos.h>
-
-#include <proto/muimaster.h>
 
 #include "private.h"
 #include "rev.h"
 
 #ifdef __GNUC__
-  #if defined(__PPC__)
-    #pragma pack(2)
-    #include "../nlistviews_mcp/NListviews_mcp.h"
-    #pragma pack()
-  #else
-    #include "../nlistviews_mcp/NListviews_mcp.h"
-  #endif
+  #include "amiga-align.h"
+  #include "../nlistviews_mcp/NListviews_mcp.h"
+  #include "default-align.h"
 #else
   #include "/nlistviews_mcp/NListviews_mcp.h"
 #endif
-
-#include "mcc_common.h"
 
 #ifndef MUI_EHF_GUIMODE
 #define MUI_EHF_GUIMODE     (1<<1)  /* set this if you dont want your handler to be called */
                                     /* when your object is disabled or invisible */
 #endif
-
-#include <mui/NList_mcc.h>
 
 #define imgbt(nr)\
   ImageObject,\
@@ -734,4 +705,3 @@ DISPATCHERPROTO(_Dispatcher)
   }
   return(DoSuperMethodA(cl,obj,msg));
 }
-
