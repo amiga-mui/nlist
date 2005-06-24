@@ -24,28 +24,7 @@
 
 ***************************************************************************/
 
-#include <clib/macros.h>
-
-#include <datatypes/pictureclass.h>
-#include <graphics/gfxmacros.h>
-#include <libraries/gadtools.h>
-#include <libraries/mui.h>
-#include <devices/clipboard.h>
-#include <devices/timer.h>
-#include <utility/utility.h>
-#include <utility/tagitem.h>
-#include <utility/hooks.h>
-#include <exec/libraries.h>
-#include <exec/memory.h>
-#include <exec/ports.h>
-#include <exec/types.h>
-#include <exec/io.h>
-
-#include <string.h>
-
 #include "private.h"
-
-#include <mui/NList_mcc.h>
 
 #define MUIA_TI_Spec		0xfedc
 #define	MUIA_TI_MaxWidth	0xfedb
@@ -59,11 +38,6 @@ struct MUI_ImageSpec
   char buf[64];
 };
 
-//extern struct Library *MUIMasterBase;
-
-#ifndef MAKE_ID
-#define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
-#endif
 
 struct NListtree_HookMessage
 {
@@ -83,10 +57,11 @@ struct MyImage
 struct MyContextMenuChoice
 {
 	LONG unit;
-  LONG pos;
+	LONG pos;
 	LONG col;
 	LONG ontop;
 };
+
 
 struct NListtree_Data
 {
@@ -116,7 +91,7 @@ struct NListtree_Data
 
 	struct MUI_NListtree_TreeNode	*ActiveNode;			  // ***	Current active tree node
 	struct MUI_NListtree_TreeNode	*OpenCloseEntry;		// ***	Entry to open/close in handler.
-  struct MUI_NListtree_TreeNode	*TempActiveNode;		// ***	New active node after Remove for example.
+	struct MUI_NListtree_TreeNode	*TempActiveNode;		// ***	New active node after Remove for example.
 
 	struct Table SelectedTable;			                  // ***	Table of selected entries.
 	struct MUI_NListtree_TreeNode *TempSelected;		  // ***	Temporary selected entry.
@@ -286,4 +261,3 @@ struct NListtree_Data
 LONG xget( Object *obj, ULONG attribute );
 
 #endif /* NLISTTREE_H */
-
