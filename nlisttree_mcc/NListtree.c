@@ -736,18 +736,16 @@ INLINE VOID FreeVecPooled( APTR mempool, APTR mem )
 	FreePooled( mempool, &m[-1], m[-1] + 4 );
 }
 
-#endif /* __MORPHOS__ */
+#endif /* !__MORPHOS__ && !__amigaos4__ */
 
 
 VOID CloseClipboard( struct IOClipReq *req )
 {
-	struct MsgPort *mp;
-
 	if ( req )
 	{
-		mp = req->io_Message.mn_ReplyPort;
-
-		CloseDevice( (struct IORequest *)req );
+		struct MsgPort *mp = req->io_Message.mn_ReplyPort;
+		if (req->io_Device != NULL)
+			CloseDevice( (struct IORequest *)req );
 		DeleteIORequest( (struct IORequest *)req );
 		DeleteMsgPort(mp);
 	}
@@ -756,20 +754,20 @@ VOID CloseClipboard( struct IOClipReq *req )
 struct IOClipReq *OpenClipboard( LONG unit )
 {
 	struct MsgPort *mp;
-	struct IOClipReq *req = NULL;
-
 	if((mp = CreateMsgPort()))
 	{
+		struct IOClipReq *req;
 		if((req = (struct IOClipReq *)CreateIORequest(mp, sizeof(struct IOClipReq))))
 		{
 			if(!(OpenDevice("clipboard.device", unit, (struct IORequest *)req, 0L)))
 			{
 				return( req );
 			}
+			CloseClipboard( req );
 		}
+		else
+			DeleteMsgPort(mp);
 	}
-
-	CloseClipboard( req );
 
 	return( NULL );
 }
