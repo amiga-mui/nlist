@@ -118,6 +118,7 @@
 **	Includes
 */
 #include <string.h>
+#include <stdlib.h>
 
 #include <devices/clipboard.h>
 #include <graphics/gfxmacros.h>
@@ -140,6 +141,9 @@
 #define MUIA_Imagedisplay_Spec 0x8042a547
 
 /*********************************************************************************************/
+
+// stack definition (where is this used!?)
+LONG __stack = 16384;
 
 #if defined(__amigaos4__) || defined(__MORPHOS__)
 static int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
@@ -184,16 +188,12 @@ static int STDARGS MySPrintf(char *buf, char *fmt, ...)
 **	Type definition for compare function.
 */
 
-extern void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct Hook *chook, struct NListtree_Data *data);
+void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct Hook *chook, struct NListtree_Data *data);
 
 /*
 **	Some prototypes.
 */
-extern int atoi(const char *);
 ULONG MultiTestFunc( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG seltype, LONG selflags );
-
-// stack definition
-LONG __stack = 16384;
 
 struct TreeImage_Data
 {
