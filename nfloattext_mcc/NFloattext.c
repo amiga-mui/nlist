@@ -50,15 +50,7 @@ static char *CopyText(char *textin)
   if (textin)
   {
     if((textout = AllocVec(strlen(textin)+2,MEMF_ANY)))
-    {
-      LONG pos = 0;
-      while (textin[pos] != '\0')
-      {
-        textout[pos] = textin[pos];
-        pos++;
-      }
-      textout[pos] = '\0';
-    }
+      strcpy(textout, textin);
   }
 
   return (textout);
