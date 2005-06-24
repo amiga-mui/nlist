@@ -207,17 +207,11 @@ LONG xget(Object *obj, ULONG attribute)
 Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
-  va_list args;
+  VA_LIST args;
 
-  #if defined(__amigaos4__)
-  va_startlinear(args, obj);
-  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, va_getlinearva(args, ULONG), NULL);
-  #else
-  va_start(args, obj);
-  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, args, NULL);
-  #endif
-
-  va_end(args);
+  VA_START(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  VA_END(args);
 
   return rc;
 }
@@ -805,22 +799,13 @@ INLINE ASM ULONG MyCallHookA(REG(a0, struct Hook *hook), REG(a2, struct NListtre
 
 static ULONG STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
-  va_list va;
-  ULONG ret;
+	ULONG ret;
+	VA_LIST va;
 
-  #if defined(__amigaos4__)
-	va_startlinear(va, data);
-  ret = CallHookPkt(hook, data->Obj, va_getlinearva(va, APTR));
-  #elif defined(__MORPHOS__)
-  va_start(va, data);
-  ret = CallHookPkt(hook, data->Obj, va->overflow_arg_area);
-  #else
-  va_start(va, data);
-  ret = CallHookPkt(hook, data->Obj, va);
-  #endif
+	VA_START(va, data);
+	ret = CallHookPkt(hook, data->Obj, VA_ARG(va, APTR));
+	VA_END(va);
 
-  va_end(va);
-   
 	return(ret);
 }
 
