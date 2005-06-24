@@ -49,7 +49,7 @@ static char *CopyText(char *textin)
 
   if (textin)
   {
-    if((textout = AllocVec(strlen(textin)+2,0L)))
+    if((textout = AllocVec(strlen(textin)+2,MEMF_ANY)))
     {
       LONG pos = 0;
       while (textin[pos] != '\0')
@@ -300,7 +300,7 @@ static ULONG mNFT_GetEntry(struct IClass *cl,Object *obj,struct MUIP_NFloattext_
       { if (data->NFloattext_entry)
           FreeVec(data->NFloattext_entry);
         data->NFloattext_entry_len = gei.charlen+18;
-        data->NFloattext_entry = (char *) AllocVec(gei.charlen+20,0L);
+        data->NFloattext_entry = (char *) AllocVec(gei.charlen+20,MEMF_ANY);
       }
       if (data->NFloattext_entry)
       { LONG pos = 0;
