@@ -31,11 +31,7 @@
 ** Jens Langner <jens.langner@light-speed.de>, 2003
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <clib/alib_protos.h>
-#include <proto/utility.h>
 
 #include "NListtree.h"
 
