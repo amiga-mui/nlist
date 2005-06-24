@@ -295,13 +295,10 @@ static ULONG mNFT_GetEntry(struct IClass *cl,Object *obj,struct MUIP_NFloattext_
         data->NFloattext_entry = (char *) AllocVec(gei.charlen+20,MEMF_ANY);
       }
       if (data->NFloattext_entry)
-      { LONG pos = 0;
-        while (pos < gei.charlen)
-        { data->NFloattext_entry[pos] = entry[gei.charpos+pos];
-          pos++;
-        }
-        data->NFloattext_entry[pos] = '\0';
-        *msg->entry = data->NFloattext_entry;
+      { char *nft_entry = data->NFloattext_entry;
+        CopyMem(&entry[gei.charpos], nft_entry, gei.charlen);
+        nft_entry[gei.charlen] = '\0';
+        *msg->entry = nft_entry;
       }
       else
         *msg->entry = &entry[gei.charpos];
