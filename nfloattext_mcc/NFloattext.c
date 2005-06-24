@@ -25,29 +25,15 @@
 
 ***************************************************************************/
 
-#include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <dos/dos.h>
-#include <exec/types.h>
-#include <exec/io.h>
 
-#include <proto/exec.h>
-#include <proto/dos.h>
-#include <proto/gadtools.h>
-#include <proto/asl.h>
-#include <proto/layers.h>
-#include <proto/graphics.h>
-#include <proto/utility.h>
-#include <proto/intuition.h>
+#include <exec/memory.h>
 #include <clib/alib_protos.h>
-
-#include <proto/muimaster.h>
+#include <proto/utility.h>
+#include <proto/exec.h>
 
 #include "private.h"
 #include "rev.h"
-
-#include "mcc_common.h"
 
 #define imgbt(nr)\
   ImageObject,\
@@ -356,4 +342,3 @@ DISPATCHERPROTO(_Dispatcher)
   }
   return(DoSuperMethodA(cl,obj,msg));
 }
-
