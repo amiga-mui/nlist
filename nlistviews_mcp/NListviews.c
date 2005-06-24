@@ -25,33 +25,24 @@
 
 ***************************************************************************/
 
-#include <stdarg.h>
 #include <string.h>
 
-#include <exec/types.h>
-#include <exec/execbase.h>
-#include <exec/libraries.h>
-#include <dos/dosextens.h>
-#include <proto/exec.h>
-#include <libraries/commodities.h>
-#include <libraries/locale.h>
 #include <devices/inputevent.h>
 #include <libraries/asl.h>
+#include <libraries/locale.h>
+#include <libraries/commodities.h>
 #include <mui/HotkeyString_mcc.h>
 
-#include <proto/locale.h>
-#include <proto/console.h>
-#include <proto/commodities.h>
-#include <proto/intuition.h>
 #include <clib/alib_protos.h>
-
+#include <proto/commodities.h>
 #include <proto/muimaster.h>
+#include <proto/intuition.h>
+#include <proto/console.h>
+#include <proto/locale.h>
+#include <proto/exec.h>
 
 #include "private.h"
 #include "rev.h"
-#include "mcc_common.h"
-
-#include "mui/NListview_mcc.h"
 
 #define INTUIBASEMIN 39
 
@@ -83,6 +74,7 @@
     MUIA_Disabled     , disable,\
     MUIA_ShortHelp, helpstring, \
   TAG_DONE)
+
 /*
     MUIA_ShowSelState , FALSE,\
 */
@@ -1995,4 +1987,3 @@ DISPATCHERPROTO(_DispatcherP)
 
   return(DoSuperMethodA(cl,obj,msg));
 }
-
