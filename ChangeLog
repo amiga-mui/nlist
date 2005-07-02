@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-07-02  Jens Langner <Jens.Langner@light-speed.de>
+
+    * nlisttree_mcc/QuickSort.c: added removed <proto/utility.h> include
+      back as the OS4 SDK requires it for resolving CallHook() properly.
+
 2005-06-24  Gunther Nikl <gni@gecko.de>
 
     * nfloattext_mcc/NFloattext.c: Cleanup #include statements.
