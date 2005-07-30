@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2005-07-30  Jens Langner <Jens.Langner@light-speed.de>
+
+    * nlist_mcc/NList_mcc.c,NList_mcc2.c: modified wheelmouse aware source
+      code to take respect of the new AmigaOS4 specific IDCMP_EXTENDEDMOUSE
+      events supported since intuition.library v51.28+.
+
 2005-07-02  Jens Langner <Jens.Langner@light-speed.de>
 
     * nlisttree_mcc/QuickSort.c: added removed <proto/utility.h> include

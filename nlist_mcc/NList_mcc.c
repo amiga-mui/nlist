@@ -1460,6 +1460,11 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   data->ehnode.ehn_Object = obj;
   data->ehnode.ehn_Class  = cl;
 
+  // add IDCMP_EXTENDEDMOUSE for OS4 wheelmouse support
+  #if defined(__amigaos4__)
+  data->ehnode.ehn_Events |= IDCMP_EXTENDEDMOUSE;
+  #endif
+
   DoMethod(_win(obj),MUIM_Window_AddEventHandler, &data->ehnode);
 
   DoMethod(_app(obj),MUIM_Application_AddInputHandler,&data->ihnode);

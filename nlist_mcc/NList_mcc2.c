@@ -31,6 +31,10 @@
 
 #include "private.h"
 
+#if !defined(__amigaos4__)
+#include "newmouse.h"
+#endif
+
 #include "NList_func.h"
 #include "nlistviews_mcp/NListviews_mcp.h"
 
@@ -41,8 +45,6 @@
 #define _between(a,x,b) ((x)>=(a) && (x)<=(b))
 #define _isinobject(x,y) (_between(_mleft(obj),(x),_mright(obj)) && _between(_mtop(obj),(y),_mbottom(obj)))
 #define _isinobject2(x,y) (_between(_left(obj),(x),_right(obj)) && _between(_top(obj),(y),_bottom(obj)))
-
-
 
 static LONG NL_TestKey(UNUSED Object *obj,struct NLData *data,LONG KeyTag,UWORD Code,UWORD Qualifier, BOOL force)
 {
@@ -370,45 +372,73 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
         }
         mNL_Trigger(cl,obj,NULL);
         return (MUI_EventHandlerRC_Eat);
-        break;
+      break;
+
       case IDCMP_RAWKEY:
+
         data->ScrollBarsTime = SCROLLBARSTIME;
-        if (_isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
-        { if      (msg->imsg->Code == 0x7A)  /* MOUSE_WHEEL_UP */
-          { if      (WheelHorizQual && WheelFastQual)
+
+        #if !defined(__amigaos4__)
+        // check for wheelmouse events first
+        if(_isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
+        {
+          if(msg->imsg->Code == NM_WHEEL_UP)  /* MOUSE_WHEEL_UP */
+          {
+            if(WheelHorizQual && WheelFastQual)
               NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left4,NULL);
-            else if (WheelHorizQual)
+            else if(WheelHorizQual)
               NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
-            else if (WheelFastQual)
-            { int i;
-              for (i=0; i < data->NList_WheelFast; i++)
+            else if(WheelFastQual)
+            {
+              int i;
+              for(i=0; i < data->NList_WheelFast; i++)
                 NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
             }
             else
-            { int i;
-              for (i=0; i < data->NList_WheelStep; i++)
+            {
+              int i;
+              for(i=0; i < data->NList_WheelStep; i++)
                 NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
             }
+
             retval = MUI_EventHandlerRC_Eat;
           }
-          else if (msg->imsg->Code == 0x7B)  /* MOUSE_WHEEL_DOWN */
-          { if      (WheelHorizQual && WheelFastQual)
+          else if(msg->imsg->Code == NM_WHEEL_DOWN)  /* MOUSE_WHEEL_DOWN */
+          {
+            if(WheelHorizQual && WheelFastQual)
               NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right4,NULL);
-            else if (WheelHorizQual)
+            else if(WheelHorizQual)
               NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
-            else if (WheelFastQual)
-            { int i;
-              for (i=0; i < data->NList_WheelFast; i++)
+            else if(WheelFastQual)
+            {
+              int i;
+              for(i=0; i < data->NList_WheelFast; i++)
                 NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
             }
             else
-            { int i;
-              for (i=0; i < data->NList_WheelStep; i++)
+            {
+              int i;
+              for(i=0; i < data->NList_WheelStep; i++)
                 NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
             }
+
+            retval = MUI_EventHandlerRC_Eat;
+          }
+          else if(msg->imsg->Code == NM_WHEEL_LEFT)  /* MOUSE_WHEEL_LEFT */
+          {
+            NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Left4 : MUIV_NList_Horiz_First_Left, NULL);
+
+            retval = MUI_EventHandlerRC_Eat;
+          }
+          else if(msg->imsg->Code == NM_WHEEL_RIGHT)  /* MOUSE_WHEEL_RIGHT */
+          {
+            NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Right4 : MUIV_NList_Horiz_First_Right, NULL);
+
             retval = MUI_EventHandlerRC_Eat;
           }
         }
+        #endif
+
         if (get(_win(obj), MUIA_Window_ActiveObject, &tagval) &&
             ((tagval == (LONG) obj) ||
              (tagval && get((Object *) tagval,MUIA_Listview_List,&tagval2) && (tagval2 == (LONG) obj)) ||
@@ -550,6 +580,75 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
  */
         }
         break;
+
+      #if defined(__amigaos4__)
+      case IDCMP_EXTENDEDMOUSE:
+      {
+        if(msg->imsg->Code & IMSGCODE_INTUIWHEELDATA &&
+           _isinobject(msg->imsg->MouseX, msg->imsg->MouseY))
+        {
+      		struct IntuiWheelData *iwd = (struct IntuiWheelData *)msg->imsg->IAddress;
+
+          if(iwd->WheelY < 0) // WHEEL_UP
+          {
+            if(WheelHorizQual && WheelFastQual)
+              NL_List_Horiz_First(obj, data, MUIV_NList_Horiz_First_Left4, NULL);
+            else if(WheelHorizQual)
+              NL_List_Horiz_First(obj, data, MUIV_NList_Horiz_First_Left, NULL);
+            else if(WheelFastQual)
+            {
+              int i;
+              for(i=0; i < data->NList_WheelFast; i++)
+                NL_List_First(obj, data, MUIV_NList_First_Up, NULL);
+            }
+            else
+            {
+              int i;
+              for(i=0; i < data->NList_WheelStep; i++)
+                NL_List_First(obj, data, MUIV_NList_First_Up, NULL);
+            }
+
+            retval = MUI_EventHandlerRC_Eat;
+          }
+          else if(iwd->WheelY > 0) // WHEEL_DOWN
+          {
+            if(WheelHorizQual && WheelFastQual)
+              NL_List_Horiz_First(obj, data, MUIV_NList_Horiz_First_Right4, NULL);
+            else if(WheelHorizQual)
+              NL_List_Horiz_First(obj, data, MUIV_NList_Horiz_First_Right, NULL);
+            else if(WheelFastQual)
+            {
+              int i;
+              for(i=0; i < data->NList_WheelFast; i++)
+                NL_List_First(obj, data, MUIV_NList_First_Down, NULL);
+            }
+            else
+            {
+              int i;
+              for(i=0; i < data->NList_WheelStep; i++)
+                NL_List_First(obj, data, MUIV_NList_First_Down, NULL);
+            }
+
+            retval = MUI_EventHandlerRC_Eat;
+          }
+
+          if(iwd->WheelX < 0)  // WHEEL_LEFT
+          {
+            NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Left4 : MUIV_NList_Horiz_First_Left, NULL);
+
+            retval = MUI_EventHandlerRC_Eat;
+          }
+          else if(iwd->WheelX > 0)  // WHEEL_RIGHT
+          {
+            NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Right4 : MUIV_NList_Horiz_First_Right, NULL);
+
+            retval = MUI_EventHandlerRC_Eat;
+          }
+        }
+      }
+      break;
+      #endif
+
       case IDCMP_MOUSEBUTTONS:
         data->ScrollBarsTime = SCROLLBARSTIME;
         {
