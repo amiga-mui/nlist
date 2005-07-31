@@ -100,7 +100,7 @@ $(OBJDIR)/%.o: %.c
 $(TARGET): $(OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
-	@$(STRIP) -o $@ $@.debug
+	@$(CC) $(LDFLAGS) -o $@ -s $(OBJS) $(LDLIBS)
 
 $(OBJDIR)/library.o: library.c ../includes/mccheader.c ../includes/mui/NList_mcc.h private.h
 
