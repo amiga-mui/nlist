@@ -4,11 +4,8 @@
  Registered MUI class, Serial Number: 1d51 0x9d510030 to 0x9d5100A0
                                            0x9d5100C0 to 0x9d5100FF
 
- Copyright (C) 1996-2004 by Gilles Masson,
-                            Carsten Scholling <aphaso@aphaso.de>,
-                            Przemyslaw Grunchala,
-                            Sebastian Bauer <sebauer@t-online.de>,
-                            Jens Langner <Jens.Langner@light-speed.de>
+ Copyright (C) 1996-2001 by Gilles Masson
+ Copyright (C) 2001-2005 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -27,10 +24,10 @@
 ***************************************************************************/
 
 #define LIB_VERSION    20
-#define LIB_REVISION   115
+#define LIB_REVISION   116
 
-#define LIB_REV_STRING "20.115"
-#define LIB_DATE       "16.12.2004"
+#define LIB_REV_STRING "20.116"
+#define LIB_DATE       "31.07.2005"
 
 #if defined(__PPC__)
   #if defined(__MORPHOS__)
@@ -50,4 +47,4 @@
   #define CPU ""
 #endif
 
-#define LIB_COPYRIGHT  "Copyright (c) 1996-2004 G.Masson, C.Scholling, P.Gruchala, S.Bauer and J.Langner"
+#define LIB_COPYRIGHT  "Copyright (c) 2001-2005 NList Open Source Team"

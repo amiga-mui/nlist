@@ -1,12 +1,9 @@
-#ifndef MUI_NFloattext_priv_MCC_H
-#define MUI_NFloattext_priv_MCC_H
-
 /***************************************************************************
 
- NFloattext.mcc - New Floattext MUI Custom Class
- Registered MUI class, Serial Number: 1d51 (0x9d5100a1 to 0x9d5100aF)
+ NList MUI custom classes
 
- Copyright (C) 1996-2001 by Gilles Masson
+ Copyright (C) 1996-2001 by Gilles Masson (NList.mcc)
+ Copyright (C) 1999-2001 by Carsten Scholling (NListtree.mcc)
  Copyright (C) 2001-2005 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
@@ -25,28 +22,18 @@
 
 ***************************************************************************/
 
-#ifndef MUI_MUI_H
-#include "mui.h"
-#endif
+The NList classes are an Open Source development effort with the code base
+and design provided by the following people (alphabetical order):
 
-#include "amiga-align.h"
-#include "NFloattext_mcc.h"
-#include "default-align.h"
+Carsten Scholling     <cs@aphaso.de>
+Gilles Masson
+Gunther Nikl          <gnikl@users.sourceforge.net>
+Jens Langner          <damato@users.sourceforge.net>
+Przemyslaw Grunchala  <sensei@box43.gnet.pl>
+Richard Poser         <whomiga@missingpiece.com>
+Sebastian Bauer       <sba@users.sourceforge.net>
 
-#include "mcc_common.h"
-#include "mcc_debug.h"
+The development of the NList classes are hosted by
+SourceForge http://www.sf.net/
 
-#define ALIGN_MASK      (0x0700)
-
-struct NFTData
-{
-  char *NFloattext_Text;
-  LONG NFloattext_Align;
-  LONG NFloattext_entry_len;
-  char *NFloattext_entry;
-  BOOL NFloattext_Justify;
-  BOOL NFloattext_Copied;
-};
-
-#endif /* MUI_NFloattext_priv_MCC_H */
 

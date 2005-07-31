@@ -1,9 +1,8 @@
 /***************************************************************************
 
  NListtree.mcc - New Listtree MUI Custom Class
- Copyright (C) 1999-2004 by Carsten Scholling <aphaso@aphaso.de>,
-                            Sebastian Bauer <sebauer@t-online.de>,
-                            Jens Langner <Jens.Langner@light-speed.de>
+ Copyright (C) 1999-2001 by Carsten Scholling
+ Copyright (C) 2001-2005 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,10 +21,10 @@
 ***************************************************************************/
 
 #define LIB_VERSION    18
-#define LIB_REVISION   22
+#define LIB_REVISION   23
 
-#define LIB_REV_STRING "18.22"
-#define LIB_DATE       "16.12.2004"
+#define LIB_REV_STRING "18.23"
+#define LIB_DATE       "31.07.2005"
 
 #if defined(__PPC__)
   #if defined(__MORPHOS__)
@@ -45,4 +44,4 @@
   #define CPU ""
 #endif
 
-#define LIB_COPYRIGHT  "Copyright (c) 1999-2004 C.Scholling, S.Bauer and J.Langner"
+#define LIB_COPYRIGHT  "Copyright (c) 2001-2005 NList Open Source Team"

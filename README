@@ -22,27 +22,18 @@
 
 ***************************************************************************/
 
-* Stack check can be activated again
+With full permission of the previous authors (Gilles Masson and Carsten Scholling)
+the NList#? MUI custom classes are hereby released as free software under the GNU
+Lesser General Public License. Please read this license (COPYING) and make sure you
+understand the terms and conditions of this license.
 
-see NList_func.h for STACK_CHECK and STACK_ALERT macros
-    NList_mcc.c for Calc_Stack
+The NList classes are compiled with GCC compilers. All required third party header
+files should already be included in the CVS repository. However, please note that
+you might need some more third party tools/utilities not included/listed here.
 
-* move.c (replacement functions for memory copying)
+If you want to contribute to the development of the NList classes please register
+with SourceForge.net and notify one of the project admins of the NList classes
+project available at http://www.sf.net/projects/nlist-classes
 
-change them with memmove, etc
-
-* porting of other parts
-
-nlist_demo (in demo/ dir) and other test apps and rarely used
-classes (in misc/ dir) can be ported too.
-
-* cleaning up warnings
-
-there are many pointer to int without cast warnings.
-they are mostly harmless...
-
-* add preferences import/export to the mcp's
-  Implement the MUIM_Settingsgroup_ConfigToGadgets
-  and MUIM_Settingsgroup_GadgetsToConfig methods.
-
-* anything else? :)
+Sebastian Bauer & Jens Langner
+June, 2004

@@ -5,6 +5,8 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+#### v0.97 RELEASE ############################################################
+
 2005-07-30  Jens Langner <Jens.Langner@light-speed.de>
 
     * nlist_mcc/NList_mcc.c,NList_mcc2.c: modified wheelmouse aware source
@@ -117,6 +119,8 @@ $Source$
 2005-01-01  Nicolas Sallin <henes@biclodon.com>
 
     * NList_mcc: Fixed wrong usage of MUI_MAXMAX
+
+#### v0.96 RELEASE ############################################################
 
 2004-12-15  Jens Langner <Jens.Langner@light-speed.de>
 

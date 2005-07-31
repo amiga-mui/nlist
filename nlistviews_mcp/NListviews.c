@@ -1,13 +1,11 @@
 /***************************************************************************
 
  NListviews.mcp - New Listview MUI Custom Class Preferences
- Registered MUI class, Serial Number: 1d51
+ Registered MUI class, Serial Number: 1d51 (0x9d510001 to 0x9d51001F
+                                            and 0x9d510101 to 0x9d51013F)
 
- Copyright (C) 1996-2004 by Gilles Masson,
-                            Carsten Scholling <aphaso@aphaso.de>,
-                            Przemyslaw Grunchala,
-                            Sebastian Bauer <sebauer@t-online.de>,
-                            Jens Langner <Jens.Langner@light-speed.de>
+ Copyright (C) 1996-2001 by Gilles Masson
+ Copyright (C) 2001-2005 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
