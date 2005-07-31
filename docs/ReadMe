@@ -51,6 +51,26 @@ NListviews.mcp    19.67     31.07.2005
 NListtree.mcc     18.23     31.07.2005
 NListtree.mcp     18.11     31.07.2005
 
+Manual Installation
+~~~~~~~~~~~~~~~~~~~
+1) Extract the archive to a temporary directory.
+
+   > cd RAM:
+   > lha x MCC_NList.lha
+
+2) Go to the "MCC_NList/Libs/MUI/<OS>" directory where <OS> is the directory
+   matching the operating system you want to install the NList classes for.
+
+   > cd MCC_NList/Libs/MUI/AmigaOS4
+
+3) copy all #?.mcc and #?.mcp files found in that <OS> directory to the
+   global "MUI:libs/mui/" directory on your system partition.
+
+   > copy #?.mcc MUI:Libs/mui/
+   > copy #?.mcp MUI:Libs/mui/
+
+4) reboot and enjoy the new version ;)
+
 History
 ~~~~~~~
 The detailed change log can be found in the ChangeLog file.
