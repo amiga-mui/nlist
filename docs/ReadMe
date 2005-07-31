@@ -1,9 +1,9 @@
-Short:    NList custom classes for MUI (v0.96)
+Short:    NList custom classes for MUI (v0.97)
 Author:   NList Open Source Team
-Uploader: Sebastian Bauer <mail@sebastianbauer.info>
+Uploader: Jens Langner <Jens.Langner@light-speed.de>
 Type:     dev/mui
 Requires: MUI 3.6+, OS 2.x (V37+), HotkeyString.mcc from Allan Odgaard
-Version:  0.96
+Version:  0.97
 Replaces: dev/mui/MCC_NList.lha
 
 Introduction
@@ -21,7 +21,8 @@ The NList classes project is hosted on SourceForge. Its project
 name is "nlist-classes".
 
 To report bugs use the bug tracker at
- http://www.sf.net/projects/nlist-classes
+
+http://www.sf.net/projects/nlist-classes
 
 Features
 ~~~~~~~~
@@ -43,22 +44,15 @@ Versions
 ~~~~~~~~
 Current MCC_NList classes versions are :
 
-NList.mcc         20.115    16.12.2004
-NListview.mcc     19.70     16.12.2004
-NFloattext.mcc    19.51     16.12.2004
-NListviews.mcp    19.66     16.12.2004
-NListtree.mcc     18.22     16.12.2004
-NListtree.mcp     18.10     16.12.2004
+NList.mcc         20.116    31.07.2005
+NListview.mcc     19.71     31.07.2005
+NFloattext.mcc    19.52     31.07.2005
+NListviews.mcp    19.67     31.07.2005
+NListtree.mcc     18.23     31.07.2005
+NListtree.mcp     18.11     31.07.2005
 
-
-Overview of changes since NList 0.95
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- Merged NList and NListtree into one package
-- Ported to OS4
-- Added new NList option to disallow centering of the list lines.
-  This looks better if you have enabled solid window sizing.
-- Some bug fixes
-
+History
+~~~~~~~
 The detailed change log can be found in the ChangeLog file.
 
          __
