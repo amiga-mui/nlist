@@ -4,7 +4,7 @@
 /* Includeheader
 
         Name:           SDI_lib.h
-        Versionstring:  $VER: SDI_lib.h 1.6 (08.06.2005)
+        Versionstring:  $VER: SDI_lib.h 1.8 (28.02.2006)
         Author:         Jens Langner
         Distribution:   PD
         Project page:   http://www.sf.net/projects/sditools/
@@ -23,11 +23,16 @@
  1.3   04.07.04 : added empty LIBFUNC define for MorphOS which was missing.
  1.4   05.10.04 : added missing LIBFUNC call to OS3/MOS interface
  1.5   19.05.05 : fixed some documentation glitches (Guido Mersmann)
- 1.6   08.06.06 : swapped LIBFUNC and ret within the prototype, because
+ 1.6   08.06.05 : swapped LIBFUNC and ret within the prototype, because
                   c standard says attributes first and vbcc want them like
                   this. (Guido Mersmann)
                   changed the documentation to explain that LIBFUNC must be
                   set first. (Guido Mersmann)
+ 1.7   11.12.05 : adapted all macros to be somewhat more compatible to also
+                  OS3 and MorphOS. Now in the real use case (codesets.library)
+                  it required a fundamental rework of the macros. (Jens Langner)
+ 1.8   28.02.06 : removed "##" in front of the OS3 __VARARGS__ usage as they
+                  causing errors on GCC >= 3.x.
 
 */
 
@@ -38,7 +43,7 @@
 **
 ** To keep confusion level low: When changing this file, please note it in
 ** above history list and indicate that the change was not made by myself
-** (e.g. add your name or nick name).
+** (e.g. add your name or nick name).
 **
 ** Find the latest version of this file at:
 ** http://cvs.sourceforge.net/viewcvs.py/sditools/sditools/headers/
@@ -120,35 +125,62 @@
 
 #if defined(__amigaos4__)
   #define LIBFUNC
-  #if !defined(__cplusplus) &&                                               \
-    (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 ||                         \
+  #if !defined(__cplusplus) &&                                        \
+    (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 ||                  \
     (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-    #define LIBPROTO(name, ret, ...)                                         \
-      LIBFUNC ret name(__VA_ARGS__);                                         \
-      LIBFUNC ret libstub_##name(struct Interface *self UNUSED , ## __VA_ARGS__)
-    #define LIBPROTOVA(name, ret, ...)                                       \
-      LIBFUNC ret VARARGS68K name(__VA_ARGS__);                              \
-      LIBFUNC ret VARARGS68K                                                 \
-      libstub_##name(struct Interface *self UNUSED , ## __VA_ARGS__)
+    #define LIBPROTO(name, ret, ...)                                  \
+      LIBFUNC ret name(__VA_ARGS__);                                  \
+      LIBFUNC ret libstub_##name(struct Interface *self UNUSED,       \
+      ## __VA_ARGS__)
+    #define LIBPROTOVA(name, ret, ...)                                \
+      LIBFUNC ret VARARGS68K                                          \
+      libstub_##name(struct Interface *self UNUSED, ## __VA_ARGS__)
+    #define LIBSTUB(name, ret, ...)                                   \
+      LIBFUNC ret name(__VA_ARGS__);                                  \
+      LIBFUNC ret libstub_##name(struct Interface *self UNUSED,       \
+      ## __VA_ARGS__)
+    #define LIBSTUBVA(name, ret, ...)                                 \
+      LIBFUNC ret VARARGS68K                                          \
+      libstub_##name(struct Interface *self UNUSED, ## __VA_ARGS__)
   #endif
   #define LFUNC_FAS(name) libstub_##name
   #define LFUNC_VAS(name) libstub_##name
   #define LFUNC_FA_(name) ,libstub_##name
   #define LFUNC_VA_(name) ,libstub_##name
   #define LFUNC(name)     libstub_##name
-#else
-  #if defined(__MORPHOS__)
-    #define LIBFUNC SAVEDS ASM
-  #else
-    #define LIBFUNC SAVEDS ASM
-  #endif
-  #if !defined(__cplusplus) &&                                               \
-    (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 ||                         \
+#elif defined(__MORPHOS__)
+  #define LIBFUNC
+  #if !defined(__cplusplus) &&                                        \
+    (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 ||                  \
     (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-    #define LIBPROTO(name, ret, ...)                                         \
+    #define LIBPROTO(name, ret, ...)                                  \
+      LIBFUNC ret name(__VA_ARGS__);                                  \
+      LIBFUNC ret libstub_##name(void)
+    #define LIBPROTOVA(name, ret, ...)
+    #define LIBSTUB(name, ret, ...)                                   \
+      LIBFUNC ret name(__VA_ARGS__);                                  \
+      LIBFUNC ret libstub_##name(void)
+    #define LIBSTUBVA(name, ret, ...)                                 \
+      LIBFUNC UNUSED ret VARARGS68K libstub_##name(void)
+  #endif
+  #define LFUNC_FAS(name) libstub_##name
+  #define LFUNC_VAS(name)
+  #define LFUNC_FA_(name) ,libstub_##name
+  #define LFUNC_VA_(name)
+  #define LFUNC(name)     libstub_##name
+#else
+  #define LIBFUNC SAVEDS ASM
+  #if !defined(__cplusplus) &&                                        \
+    (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 ||                  \
+    (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
+    #define LIBPROTO(name, ret, ...)                                  \
       LIBFUNC ret name(__VA_ARGS__)
-    #define LIBPROTOVA(name, ret, ...)                                       \
-      LIBFUNC ret STDARGS name(__VA_ARGS__)
+    #define LIBPROTOVA(name, ret, ...)
+    #define LIBSTUB(name, ret, ...)                                   \
+      LIBFUNC ret name(__VA_ARGS__);                                  \
+      LIBFUNC ret libstub_##name(__VA_ARGS__)
+    #define LIBSTUBVA(name, ret, ...)                                 \
+      LIBFUNC UNUSED ret STDARGS libstub_##name(__VA_ARGS__)
   #endif
   #define LFUNC_FAS(name) name
   #define LFUNC_VAS(name)
@@ -158,7 +190,7 @@
 #endif
 
 #if !defined(LIBPROTO) || !defined(LIBPROTOVA)
-  #error "OS or compiler are not yet supported by SDI_lib.h"
+  #error "OS or compiler is not yet supported by SDI_lib.h"
 #endif
 
 #endif /* SDI_LIB_H */

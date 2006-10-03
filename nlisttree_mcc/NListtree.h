@@ -160,11 +160,11 @@ struct NListtree_Data
 	BYTE							DoubleClick;			// ***	Holds specified double click value
 	UWORD							TreeColumn;				// ***	Holds specified tree column
 
-	struct	timeval					LDClickTime;			// ***	Left mouse button click handling
+	struct	TimeVal					LDClickTime;			// ***	Left mouse button click handling
 	LONG							LDClickEntry;
 	WORD							LDClickColumn;
 
-	struct	timeval					MDClickTime;			// ***	Middle mouse button click handling
+	struct	TimeVal					MDClickTime;			// ***	Middle mouse button click handling
 	LONG							MDClickEntry;
 	WORD							MDClickColumn;
 

@@ -7,6 +7,16 @@ $Source$
 
 2006-10-03  Thore Böckelmann <tboeckel@gmx.de>
 
+    * nlisttree_mcc/Makefile.os4: added -D__NEW_TIMEVAL_DEFINITION_USED__ to
+      CFLAGS
+    * nlisttree_mcc/NListtree.c,h, nlistview_mcc/NListview.c: changed all
+      usages of "struct timeval" to new "struct TimeVal" and all usages of
+      "tv_secs" and "tv_micro" to "Seconds" and "Microseconds".
+    * include/SDI_#?: updated SDI headers to very latest available versions
+      which should fix compilation issues with VBCC and the VARARGS68K
+      definition.
+    * include/#?mui#?: updated MUI heards to very latest available versions
+      which don't include any <clib/#?> directly anymore.
     * nlist_mcc/NList_mcc6.c: the code to return the current pixel length of a
       line didn't check for -1 as an invalid index and therefore caused crashes
       if the list was contained in a virtual group and was scrolled into view

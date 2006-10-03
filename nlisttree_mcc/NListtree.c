@@ -6125,7 +6125,7 @@ D(bug("mousebutton\n"));
 				{
 					struct MUI_NListtree_TreeNode *tn;
 					struct MUI_NList_TestPos_Result tpres;
-					struct timeval tv;
+					struct TimeVal tv;
 D(bug("inobject\n"));
 					switch( msg->imsg->Code )
 					{
@@ -6185,9 +6185,9 @@ D(bug("inobject\n"));
 									**	click. If double click, reset time values,
 									**	if not, set values to current time.
 									*/
-									CurrentTime( &tv.tv_secs, &tv.tv_micro );
+									CurrentTime( &tv.Seconds, &tv.Microseconds );
 
-									if	( DoubleClick( data->LDClickTime.tv_secs, data->LDClickTime.tv_micro, tv.tv_secs, tv.tv_micro ) &&
+									if	( DoubleClick( data->LDClickTime.Seconds, data->LDClickTime.Microseconds, tv.Seconds, tv.Microseconds ) &&
 										( tpres.entry == lastclickentry ) )
 									{
 										/*
@@ -6220,13 +6220,13 @@ D(bug("inobject\n"));
 											data->LDClickColumn			= -1;
 										}
 
-										data->LDClickTime.tv_secs	= 0;
-										data->LDClickTime.tv_micro	= 0;
+										data->LDClickTime.Seconds	= 0;
+										data->LDClickTime.Microseconds	= 0;
 									}
 									else
 									{
-										data->LDClickTime.tv_secs	= tv.tv_secs;
-										data->LDClickTime.tv_micro	= tv.tv_micro;
+										data->LDClickTime.Seconds	= tv.Seconds;
+										data->LDClickTime.Microseconds	= tv.Microseconds;
 									}
 
 									lastclickentry = tpres.entry;
@@ -6280,7 +6280,7 @@ D(bug("inobject\n"));
                         case MIDDLEDOWN:
 						{
 							struct MUI_NList_TestPos_Result tpres;
-							struct timeval tv;
+							struct TimeVal tv;
 
 							DoMethod( obj, MUIM_NList_TestPos, mx, my, &tpres );
 
@@ -6290,20 +6290,20 @@ D(bug("inobject\n"));
 
 								DoMethod( obj, MUIM_NList_GetEntry, tpres.entry, &tn );
 
-								CurrentTime( &tv.tv_secs, &tv.tv_micro );
+								CurrentTime( &tv.Seconds, &tv.Microseconds );
 
-								if ( DoubleClick( data->MDClickTime.tv_secs, data->MDClickTime.tv_micro, tv.tv_secs, tv.tv_micro ) &&
+								if ( DoubleClick( data->MDClickTime.Seconds, data->MDClickTime.Microseconds, tv.Seconds, tv.Microseconds ) &&
 									( tpres.entry == data->MDClickEntry ) )
 								{
-									data->MDClickTime.tv_secs	= 0;
-									data->MDClickTime.tv_micro	= 0;
+									data->MDClickTime.Seconds	= 0;
+									data->MDClickTime.Microseconds	= 0;
 									data->MDClickEntry			= -1;
 									data->MDClickColumn			= -1;
 								}
 								else
 								{
-									data->MDClickTime.tv_secs	= tv.tv_secs;
-									data->MDClickTime.tv_micro	= tv.tv_micro;
+									data->MDClickTime.Seconds	= tv.Seconds;
+									data->MDClickTime.Microseconds	= tv.Microseconds;
 									data->MDClickEntry			= tpres.entry;
 									data->MDClickColumn			= tpres.column;
 								}

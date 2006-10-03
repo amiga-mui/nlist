@@ -63,7 +63,7 @@ static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
 		ie.ie_Code         = imsg->Code & ~dccode;
 		ie.ie_Qualifier    = imsg->Qualifier & ~dcquali;
 		ie.ie_EventAddress = (APTR *)*((ULONG *)imsg->IAddress);
-		ie.ie_TimeStamp    = *((struct timeval *)&imsg->Seconds);
+		ie.ie_TimeStamp    = *((struct TimeVal *)&imsg->Seconds);
 
 		if ((MapRawKey(&ie,buf,3,0)>0))
 			return((LONG)buf[0]);
