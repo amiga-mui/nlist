@@ -654,7 +654,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
   LONG linelen, next_x=0, x2, x2s, x2e, minx2, maxx2, minx3, maxx3, cmaxx;
   WORD xbar,xbar2,ybar,ybar2;
   ULONG pen;
-  UBYTE *ptr1;
+  STRPTR ptr1;
   struct TextExtent te;
   WORD column, curclen, dcurclen, ni;
   STACK_CHECK;
@@ -1272,7 +1272,7 @@ static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *r
   struct affinfo *afinfo;
   LONG next_x, x2, x2e,column;
   ULONG pen;
-  UBYTE *ptr1;
+  STRPTR ptr1;
   struct TextExtent te;
   WORD curclen, dcurclen, ni;
 

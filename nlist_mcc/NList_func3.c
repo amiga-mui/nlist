@@ -67,10 +67,10 @@ ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
 }
 
 
-LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,UBYTE *buf,LONG bufsize,struct KeyMap *kmap)
+LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG bufsize,struct KeyMap *kmap)
 {
   int posraw,pos,postext = 0;
-  UBYTE *text = buf;
+  STRPTR text = buf;
 
   if (msg->Class != IDCMP_RAWKEY)
     return (-2);

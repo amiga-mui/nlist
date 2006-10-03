@@ -241,7 +241,7 @@ static ULONG mNFT_Set(struct IClass *cl,Object *obj,Msg msg)
 static ULONG mNFT_Get(struct IClass *cl,Object *obj,Msg msg)
 {
   struct NFTData *data = INST_DATA(cl,obj);
-  LONG  *store = ((struct opGet *)msg)->opg_Storage;
+  ULONG *store = ((struct opGet *)msg)->opg_Storage;
 
   switch (((struct opGet *)msg)->opg_AttrID)
   {

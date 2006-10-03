@@ -276,7 +276,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
 {
   register struct colinfo *cinfo = data->cols[column].c;
   register struct affinfo *afinfo;
-  UBYTE *ptr1,*ptr2,*ptro,*ptrs;
+  char *ptr1,*ptr2,*ptro,*ptrs;
   char **display_array = &data->DisplayArray[2];
   ULONG pen;
   LONG col,ent = data->parse_ent,maxlen = 300;
@@ -375,7 +375,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
     while (ptr1 && (ptr1<ptr2) && (ptr1[0] != '\0') && (ptr1[0] != '\n') && (ptr1[0] != '\r') && (good = NeedAffInfo(obj,data,ni+2)))
     {
       if (data->NList_SkipChars)
-      { UBYTE *sc = data->NList_SkipChars;
+      { char *sc = data->NList_SkipChars;
         while (sc[0] && (sc[0] != ptr1[0]))
           sc++;
         if (sc[0])

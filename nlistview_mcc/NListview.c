@@ -52,7 +52,7 @@
 
 static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
 {
-	UBYTE buf[4];
+	TEXT buf[4];
 	struct InputEvent ie;
 
   memset(&ie, 0, sizeof(struct InputEvent));
@@ -583,7 +583,7 @@ static ULONG mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
 static ULONG mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
 {
   struct NLVData *data = INST_DATA(cl,obj);
-  LONG  *store = ((struct opGet *)msg)->opg_Storage;
+  ULONG *store = ((struct opGet *)msg)->opg_Storage;
 
   switch (((struct opGet *)msg)->opg_AttrID)
   {

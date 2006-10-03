@@ -489,14 +489,14 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
     {
     	is_string = TRUE;
       count = 1;
-      string = (UBYTE *) entries;
+      string = (char *) entries;
       while (string[0] != '\0')
       {
       	if ((string[0] == '\n') || (string[0] == '\r')) count++;
         if ((string[0] == '\r') && (string[1] == '\n')) string++;
         string++;
       }
-      string = (UBYTE *) entries;
+      string = (char *) entries;
     } else if (count > 0)
     {
     	newpos = 0;

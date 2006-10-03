@@ -360,7 +360,7 @@ MakeStaticHook(TransferHook, TransferFunc);
 ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 {
 	struct NListtreeP_Data *data;
-	STATIC UBYTE copytext[512];
+	STATIC TEXT copytext[512];
 	STATIC STRPTR CY_Style_Entries[9], STR_GR_Prefs[3];
 	STATIC UBYTE	msg_bt_expand_key, msg_bt_collapse_key, msg_closed_key, msg_open_key, msg_special_key, msg_lines_key,
 					msg_shadow_key, msg_draw_key, msg_draw2_key, msg_style_key, msg_space_key, msg_remember_status_key, msg_open_autoscroll_key,
