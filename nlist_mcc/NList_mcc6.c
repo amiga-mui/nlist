@@ -663,8 +663,12 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     return (0);
 
   if (((y - data->voff + data->vinc) < data->vtop) || ((y - data->voff) > data->vbottom))
-  { linelen = (LONG) data->EntriesArray[ent]->PixLen;
-    return (linelen);
+  {
+    if (ent > -1)
+    {
+      linelen = (LONG) data->EntriesArray[ent]->PixLen;
+      return (linelen);
+    }
   }
 
   if (LIBVER(GfxBase) >= 39)

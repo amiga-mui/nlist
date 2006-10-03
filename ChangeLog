@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2006-10-03  Thore Böckelmann <tboeckel@gmx.de>
+
+    * nlist_mcc/NList_mcc6.c: the code to return the current pixel length of a
+      line didn't check for -1 as an invalid index and therefore caused crashes
+      if the list was contained in a virtual group and was scrolled into view
+      very slowly. -1 is the index of the title bar. This fixes bug #1568047.
+
 #### v0.97 RELEASE ############################################################
 
 2005-07-30  Jens Langner <Jens.Langner@light-speed.de>
