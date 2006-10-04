@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2006-10-04  Thore Böckelmann <tboeckel@gmx.de>
+
+    * includes/mccheader.c, #?/Makefile.os4: switched to newlib compilation and
+      linkage per default.
+
 2006-10-03  Thore Böckelmann <tboeckel@gmx.de>
 
     * misc: removed several signedness issues

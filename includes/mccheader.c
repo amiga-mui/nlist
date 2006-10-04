@@ -203,6 +203,10 @@ struct UtilityIFace *IUtility     = NULL;
 struct DOSIFace *IDOS             = NULL;
 struct GraphicsIFace *IGraphics   = NULL;
 struct IntuitionIFace *IIntuition = NULL;
+#if defined(__NEWLIB__)
+struct Library *NewlibBase = NULL;
+struct NewlibIFace* INewlib = NULL;
+#endif
 #else
 struct Library        *MUIMasterBase = NULL;
 struct ExecBase       *SysBase       = NULL;
@@ -468,6 +472,11 @@ struct LibraryHeader * ASM SAVEDS LibInit(struct LibraryHeader *base, BPTR libra
   IExec = pIExec;
   SysBase = (struct Library *)sb;
 
+  #if defined(__amigaos4__) && defined(__NEWLIB__)
+  if((NewlibBase = OpenLibrary("newlib.library", 3)) &&
+     GETINTERFACE(INewlib, NewlibBase))
+  #endif
+  {
   base->lh_Library.lib_Node.ln_Type = NT_LIBRARY;
   base->lh_Library.lib_Node.ln_Pri  = 0;
   base->lh_Library.lib_Node.ln_Name = (char *)UserLibName;
@@ -487,6 +496,7 @@ struct LibraryHeader * ASM SAVEDS LibInit(struct LibraryHeader *base, BPTR libra
     return(NULL);
   }
   */
+  }
 
   return(base);
 }
@@ -598,6 +608,15 @@ BPTR ASM SAVEDS LibExpunge(REG(a6, struct LibraryHeader *base))
     return(0);
   }
   */
+
+  #if defined(__amigaos4__) && defined(__NEWLIB__)
+  if(NewlibBase)
+  {
+    DROPINTERFACE(INewlib);
+    CloseLibrary(NewlibBase);
+    NewlibBase = NULL;
+  }
+  #endif
 
   Remove((struct Node *)base);
   rc = base->lh_Segment;
