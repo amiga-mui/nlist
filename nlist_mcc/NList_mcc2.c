@@ -152,7 +152,8 @@ ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
   if ((msg->muikey != MUIKEY_NONE) && !data->NList_Quiet && !data->NList_Disabled)
   {
     data->ScrollBarsTime = SCROLLBARSTIME;
-    D(bug("%ld\n",msg->muikey));
+
+    SHOWVALUE(DBF_ALWAYS, msg->muikey);
     switch (msg->muikey)
     {
       case MUIKEY_UP       :

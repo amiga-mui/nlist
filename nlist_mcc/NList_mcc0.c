@@ -38,8 +38,9 @@ static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
   ULONG retval;
   register struct NLData *data = INST_DATA(cl,obj);
 
+  ENTER();
+
   STACK_CHECK;
-  D(bug("NL: mNL_Show() \n"));
 
   data->rp = _rp(obj);
 
@@ -90,6 +91,7 @@ static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
   GetNImage_Sizes(obj,data);
   data->do_images = TRUE;
 
+  RETURN(retval);
   return (retval);
 }
 
@@ -98,9 +100,11 @@ static ULONG mNL_Hide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 {
   register struct NLData *data = INST_DATA(cl,obj);
   ULONG retval;
+
+  ENTER();
+
   STACK_CHECK;
-  D(bug("NL: mNL_Hide() \n"));
-/*D(bug("%lx|mNL_Hide() 1 \n",obj));*/
+
   data->badrport = FALSE;
 
   NL_ClearPointer(obj,data);
@@ -111,6 +115,7 @@ static ULONG mNL_Hide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
   data->SHOW = FALSE;
   data->moves = FALSE;
 
+  RETURN(retval);
   return (retval);
 }
 

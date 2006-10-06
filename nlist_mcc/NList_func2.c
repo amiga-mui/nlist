@@ -296,7 +296,9 @@ static ULONG NL_List_SortPart(Object *obj,struct NLData *data,LONG fent,LONG len
   struct sort_entry  *entry = NULL;
   struct TypeEntry *newentry;
 
-D(bug("NL_List_SortPart(%lx)\n", data));
+  ENTER();
+
+  SHOWVALUE(DBF_ALWAYS, data);
 
   data->display_ptr = NULL;
   has_changed = FALSE;
@@ -311,9 +313,9 @@ D(bug("NL_List_SortPart(%lx)\n", data));
       entry[ent-fent].data = data;
     }
 
-D(bug("qsort started.\n"));
+D(DBF_ALWAYS, "qsort started.\n");
     qsort(entry, (size_t) (lent-fent), (size_t) sizeof(struct sort_entry), (int (*)()) &sort_compar);
-D(bug("qsort ended.\n"));
+D(DBF_ALWAYS, "qsort ended.\n");
 
     ent1 = numfollow = numexch = 0;
 
@@ -362,10 +364,12 @@ D(bug("qsort ended.\n"));
       }
     }
 
-D(bug("qsort stat: %ld exchanges, %ld follows.\n",numexch,numfollow));
+D(DBF_ALWAYS, "qsort stat: %ld exchanges, %ld follows.\n",numexch,numfollow);
 
     NL_Free(data,entry,"SortPart");
   }
+
+  RETURN(has_changed);
   return ((ULONG)has_changed);
 }
 

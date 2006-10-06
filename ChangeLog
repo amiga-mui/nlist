@@ -7,6 +7,7 @@ $Source$
 
 2006-10-06  Thore Böckelmann <tboeckel@gmx.de>
 
+    * misc: converted some left over old D(bug())'s.
     * misc: added new debugging scheme, as known from YAM and TextEditor.mcc.
       Therefore the now obsolete file includes/mcc_debug.h is gone. The
       debugging facility is far from perfect and yet just covers the absolute

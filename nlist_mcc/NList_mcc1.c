@@ -454,7 +454,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         DONE_NOTIFY(NTF_L_Active);
         break;
       case MUIA_NList_Active :
-      	D(bug("MUIA_NList_Active %ld was %ld %ld %ld\n",tag->ti_Data,data->NList_Active,NOTIFYING(NTF_Active),WANTED_NOTIFY(NTF_Active)));
+      	D(DBF_ALWAYS, "MUIA_NList_Active %ld was %ld %ld %ld\n",tag->ti_Data,data->NList_Active,NOTIFYING(NTF_Active),WANTED_NOTIFY(NTF_Active));
         if (!NOTIFYING(NTF_Active))
           NL_List_Active(obj,data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE);
         NOTIFY_END(NTF_Active);
@@ -1145,7 +1145,7 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_List_Entries:
     case MUIA_NList_Entries:					*msg->opg_Storage	= (ULONG) data->NList_Entries;			return( TRUE );
     case MUIA_List_Active:
-    case MUIA_NList_Active:					D(bug("GET: MUIA_NList_Active = %ld\n",data->NList_Active));*msg->opg_Storage	= (ULONG) data->NList_Active;				return( TRUE );
+    case MUIA_NList_Active:					D(DBF_ALWAYS, "GET: MUIA_NList_Active = %ld\n",data->NList_Active);*msg->opg_Storage   = (ULONG) data->NList_Active;			   return( TRUE );
     case MUIA_NList_Horiz_First:				*msg->opg_Storage	= (ULONG) data->NList_Horiz_First;		return( TRUE );
     case MUIA_NList_Horiz_Visible:			*msg->opg_Storage	= (ULONG) data->NList_Horiz_Visible;	return( TRUE );
     case MUIA_NList_Horiz_Entries:			*msg->opg_Storage	= (ULONG) data->NList_Horiz_Entries;	return( TRUE );
