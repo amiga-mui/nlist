@@ -30,9 +30,9 @@
 #include "amiga-align.h"
 #include "../nlisttree_mcc/private.h"
 #include "default-align.h"
+#include "Debug.h"
 
-#include "mcc_common.h"
-#include "mcc_debug.h"
+#include <mcc_common.h>
 
 #define PREFSIMAGEOBJECT \
   BodychunkObject,\

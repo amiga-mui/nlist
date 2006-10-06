@@ -25,16 +25,17 @@
 
 ***************************************************************************/
 
-#ifndef MUI_MUI_H
-#include "mui.h"
-#endif
+#include <dos/exall.h>
+#include <exec/types.h>
+#include <proto/intuition.h>
+#include <intuition/classusr.h>
+#include <libraries/mui.h>
 
-#include "amiga-align.h"
+#include <mui.h>
+#include <mcc_common.h>
+
 #include "NFloattext_mcc.h"
-#include "default-align.h"
-
-#include "mcc_common.h"
-#include "mcc_debug.h"
+#include "Debug.h"
 
 #define ALIGN_MASK      (0x0700)
 

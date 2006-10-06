@@ -34,8 +34,9 @@
 #include "NListviews_mcp.h"
 #include "default-align.h"
 
-#include "mcc_common.h"
-#include "mcc_debug.h"
+#include "Debug.h"
+
+#include <mcc_common.h>
 
 #define PREFSIMAGEOBJECT \
   BodychunkObject,\

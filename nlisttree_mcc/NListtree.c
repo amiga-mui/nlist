@@ -290,7 +290,7 @@ INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WO
 	struct RastPort *rp = (struct RastPort *)_rp( data->obj );
 	register UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2;
 
-	//D(bug( "\n" ) );
+	ENTER();
 
 	switch( im->nltdata->Style )
 	{
@@ -341,6 +341,8 @@ INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WO
 			*/
 			break;
 	}
+
+    LEAVE();
 }
 
 
@@ -352,7 +354,7 @@ INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, W
 	struct RastPort *rp = (struct RastPort *)_rp( data->obj );
 	register UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2, h = t + ( b - t ) / 2;
 
-	//D(bug( "\n" ) );
+	ENTER();
 
 	switch( im->nltdata->Style )
 	{
@@ -417,6 +419,8 @@ INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, W
 
 			break;
 	}
+
+    LEAVE();
 }
 
 
@@ -429,7 +433,7 @@ INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im,
 	struct RastPort *rp = (struct RastPort *)_rp( data->obj );
 	register UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2, h = t + ( b - t ) / 2;
 
-	//D(bug( "\n" ) );
+	ENTER();
 
 	switch( im->nltdata->Style )
 	{
@@ -494,6 +498,8 @@ INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im,
 
 			break;
 	}
+
+    LEAVE();
 }
 
 
@@ -505,7 +511,7 @@ INLINE VOID DrawTreeHorBar( struct TreeImage_Data *data, struct MyImage *im, WOR
 	struct RastPort *rp = (struct RastPort *)_rp( data->obj );
 	register UWORD h = t + ( b - t ) / 2;
 
-	//D(bug( "\n" ) );
+	ENTER();
 
 	switch( im->nltdata->Style )
 	{
@@ -525,6 +531,8 @@ INLINE VOID DrawTreeHorBar( struct TreeImage_Data *data, struct MyImage *im, WOR
 
 			break;
 	}
+
+    LEAVE();
 }
 
 
@@ -551,7 +559,7 @@ ULONG TreeImage_Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
 		struct MyImage *im;
 		register WORD l, t, r, b;
 
-		//D(bug( "DRAW SPEC: %ld\n", data->spec ) );
+		D(DBF_ALWAYS, "DRAW SPEC: %ld\n", data->spec);
 
 		im = (struct MyImage *)xget( obj, MUIA_UserData );
 
@@ -601,14 +609,15 @@ ULONG TreeImage_New( struct IClass *cl, Object *obj, struct opSet *msg )
 	if ( !( obj = (Object *)DoSuperMethodA( cl, obj, (Msg)msg ) ) )
 		return( 0 );
 
-	//D(bug( "\n" ) );
+	ENTER();
 
 	data = INST_DATA( cl, obj );
 
 	data->obj = obj;
 	data->spec = 0;
 
-	return( (ULONG)obj );
+	RETURN(obj);
+    return( (ULONG)obj );
 }
 
 
@@ -630,7 +639,7 @@ ULONG TreeImage_Set( struct IClass *cl, Object *obj, Msg msg )
 		}
 	}
 
-	//D(bug( "SET SPEC: %ld\n", data->spec ) );
+	D(DBF_ALWAYS, "SET SPEC: %ld\n", data->spec);
 
 	return( 0 );
 }
@@ -679,7 +688,7 @@ DISPATCHERPROTO(NodeImage_Dispatcher)
 				nnset( im->nltdata->Obj, MUIA_NList_MinLineHeight, h );
 		}
 
-		D(bug( "=====> DefWidth: %ld, DefHeight: %ld, MaxWidth: %ld\n", w, h, im->nltdata->MaxImageWidth ) );
+		D(DBF_ALWAYS, "=====> DefWidth: %ld, DefHeight: %ld, MaxWidth: %ld\n", w, h, im->nltdata->MaxImageWidth);
 	}
 
 	return( DoSuperMethodA( cl, obj, (Msg)msg ) );
@@ -710,7 +719,7 @@ INLINE APTR AllocVecPooled( APTR mempool, ULONG size )
 	{
 #ifdef MYDEBUG
 		totalmem += size;
-		//D(bug( "0x%08lx = AllocPooled( mempool, %ld ) ==> total: %ld\n", mem, size + 4, totalmem ) );
+		D(DBF_ALWAYS, "0x%08lx = AllocPooled( mempool, %ld ) ==> total: %ld\n", mem, size + 4, totalmem);
 #endif
 
 		*mem++	= size;
@@ -729,7 +738,7 @@ INLINE VOID FreeVecPooled( APTR mempool, APTR mem )
 
 #ifdef MYDEBUG
 	totalmem -= m[-1];
-	//D(bug( "           FreePooled( mempool, 0x%08lx, %ld ) ==> total: %ld\n", &m[-1], m[-1] + 4, totalmem ) );
+	D(DBF_ALWAYS, "           FreePooled( mempool, 0x%08lx, %ld ) ==> total: %ld\n", &m[-1], m[-1] + 4, totalmem);
 #endif
 
 	FreePooled( mempool, &m[-1], m[-1] + 4 );
@@ -876,11 +885,11 @@ VOID DisposeImage( struct NListtree_Data *data, ULONG nr )
 */
 VOID SetupImage( struct NListtree_Data *data, struct MUI_ImageSpec *is, ULONG nr )
 {
+	ENTER();
+
 	if ( is )
 	{
 		Object *rim;
-
-		//D(bug( "\n" ) );
 
 		data->Image[nr].nltdata = data;
 		data->MaxImageWidth = 0;
@@ -903,6 +912,8 @@ VOID SetupImage( struct NListtree_Data *data, struct MUI_ImageSpec *is, ULONG nr
 			return;
 		}
 	}
+
+    LEAVE();
 }
 
 
@@ -911,7 +922,7 @@ VOID SetupImage( struct NListtree_Data *data, struct MUI_ImageSpec *is, ULONG nr
 */
 INLINE VOID ActivateNotify( struct NListtree_Data *data )
 {
-	D(bug("Activenotify: %lx\n",data));
+	D(DBF_ALWAYS, "Activenotify: %lx\n",data);
 	if ( !( data->Flags & NLTF_ACTIVENOTIFY ) )
 	{
 		DoMethod( data->Obj, MUIM_Notify, MUIA_NList_Active, MUIV_EveryTime,
@@ -930,7 +941,7 @@ INLINE VOID ActivateNotify( struct NListtree_Data *data )
 */
 INLINE VOID DeactivateNotify( struct NListtree_Data *data )
 {
-	D(bug("Deactivenotify: %lx\n",data));
+	D(DBF_ALWAYS, "Deactivenotify: %lx\n",data);
 	if ( data->Flags & NLTF_ACTIVENOTIFY )
 	{
 		/*
@@ -1335,7 +1346,7 @@ struct MUI_NListtree_TreeNode *IsXChildOfListMember( struct MUI_NListtree_TreeNo
 
 INLINE VOID RemoveNListEntry( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, ULONG pos )
 {
-	D(bug( "Removed entry '%s' from pos %ld.\n", tn->tn_Name, tn->tn_NListEntry ? tn->tn_NListEntry->entpos : 999999 ) );
+	D(DBF_ALWAYS,  "Removed entry '%s' from pos %ld.\n", tn->tn_Name, tn->tn_NListEntry ? tn->tn_NListEntry->entpos : 999999);
 
 	DoMethod( data->Obj, MUIM_NList_Remove, pos );
 	tn->tn_NListEntry = NULL;
@@ -1354,7 +1365,7 @@ INLINE VOID InsertNListEntry( struct NListtree_Data *data, struct MUI_NListtree_
 		DoMethod( data->Obj, MUIM_NList_GetEntryInfo, &ei );
 		tn->tn_NListEntry = (struct NListEntry *)ei.entry;
 
-		//D(bug( "Inserted entry '%s' at pos %ld.\n", tn->tn_Name, tn->tn_NListEntry->entpos ) );
+		D(DBF_ALWAYS, "Inserted entry '%s' at pos %ld.\n", tn->tn_Name, tn->tn_NListEntry->entpos);
 	}
 }
 
@@ -1370,7 +1381,7 @@ INLINE VOID ReplaceNListEntry( struct NListtree_Data *data, struct MUI_NListtree
 		DoMethod( data->Obj, MUIM_NList_GetEntryInfo, &ei );
 		tn->tn_NListEntry = (struct NListEntry *)ei.entry;
 
-		//D(bug( "Replaced entry '%s' at pos %ld.\n", tn->tn_Name, tn->tn_NListEntry->entpos ) );
+		D(DBF_ALWAYS, "Replaced entry '%s' at pos %ld.\n", tn->tn_Name, tn->tn_NListEntry->entpos);
 	}
 }
 
@@ -1544,7 +1555,7 @@ struct MUI_NListtree_TreeNode *TreeNodeSelectAdd( struct NListtree_Data *data, s
 {
 	NLAddToTable( data, &data->SelectedTable, tn );
 
-	D(bug( "Node 0x%08lx - %s selected (%ld nodes selected), Current: %ld\n", tn, tn->tn_Name, data->SelectedTable.tb_Entries, data->SelectedTable.tb_Current ) );
+	D(DBF_ALWAYS, "Node 0x%08lx - %s selected (%ld nodes selected), Current: %ld\n", tn, tn->tn_Name, data->SelectedTable.tb_Entries, data->SelectedTable.tb_Current);
 
 	return( tn );
 }
@@ -1554,7 +1565,7 @@ VOID TreeNodeSelectRemove( struct NListtree_Data *data, struct MUI_NListtree_Tre
 {
 	NLRemoveFromTable( data, &data->SelectedTable, tn );
 
-	D(bug( "Node 0x%08lx - %s DEselected (%ld nodes selected), Current: %ld\n", tn, tn->tn_Name, data->SelectedTable.tb_Entries, data->SelectedTable.tb_Current ) );
+	D(DBF_ALWAYS, "Node 0x%08lx - %s DEselected (%ld nodes selected), Current: %ld\n", tn, tn->tn_Name, data->SelectedTable.tb_Entries, data->SelectedTable.tb_Current);
 }
 
 
@@ -1713,11 +1724,11 @@ VOID RemoveTreeVisible( struct NListtree_Data *data, struct MUI_NListtree_TreeNo
 		{
 			if ( tn->tn_IFlags & TNIF_VISIBLE )
 			{
-				D(bug( "Visible removing node \"%s\" at pos %ld ( %s | %s )\n", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
+				D(DBF_ALWAYS, "Visible removing node \"%s\" at pos %ld ( %s | %s )\n", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
 
 				if ( tn->tn_Flags & TNF_SELECTED )
 				{
-					//D(bug( "Unselecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
+					D(DBF_ALWAYS, "Unselecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
 
 					DoMethod( data->Obj, MUIM_NList_Select, pos, MUIV_NList_Select_Off, NULL );
 
@@ -1813,11 +1824,11 @@ VOID RemoveTreeNodeVisible( struct NListtree_Data *data, struct MUI_NListtree_Tr
 	{
 		pos = GetVisualPos( data, tn );
 
-		//D(bug( "Visible removing node \"%s\" at pos %ld ( %s | %s )\n", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
+		D(DBF_ALWAYS, "Visible removing node \"%s\" at pos %ld ( %s | %s )\n", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
 
 		if ( tn->tn_Flags & TNF_SELECTED )
 		{
-			//D(bug( "Unselecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
+			D(DBF_ALWAYS, "Unselecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
 
 			DoMethod( data->Obj, MUIM_NList_Select, pos, MUIV_NList_Select_Off, NULL );
 
@@ -1855,14 +1866,14 @@ VOID InsertTreeVisible( struct NListtree_Data *data, struct MUI_NListtree_TreeNo
 			{
 				if ( !( tn->tn_IFlags & TNIF_VISIBLE ) )
 				{
-					D(bug( "Visible inserting  node \"%s\" at pos %ld ( %s | %s )\n", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
+					D(DBF_ALWAYS, "Visible inserting  node \"%s\" at pos %ld ( %s | %s )\n", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
 
 					tn->tn_IFlags |= TNIF_VISIBLE;
 					InsertNListEntry( data, tn, *pos );
 
 					if ( tn->tn_Flags & TNF_SELECTED )
 					{
-						//D(bug( "  Selecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
+						D(DBF_ALWAYS, "  Selecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
 
 						DoMethod( data->Obj, MUIM_NList_Select, *pos, MUIV_NList_Select_On, NULL );
 					}
@@ -1921,13 +1932,13 @@ LONG InsertTreeNodeVisible( struct NListtree_Data *data, struct MUI_NListtree_Tr
 	{
 		tn->tn_IFlags |= TNIF_VISIBLE;
 
-		D(bug( "Visible inserting node 0x%lx into list 0x%lx after 0x%lx at pos %ld\n", tn, ln, prevtn, pos ) );
+		D(DBF_ALWAYS, "Visible inserting node 0x%lx into list 0x%lx after 0x%lx at pos %ld\n", tn, ln, prevtn, pos);
 
 		InsertNListEntry( data, tn, pos );
 
 		if ( tn->tn_Flags & TNF_SELECTED )
 		{
-			//D(bug( "  Selecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
+			D(DBF_ALWAYS, "  Selecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
 
 			DoMethod( data->Obj, MUIM_NList_Select, pos, MUIV_NList_Select_On, NULL );
 		}
@@ -1969,8 +1980,8 @@ VOID ShowTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
 		max	= a + b;
 		jmp	= pos + MIN( max, treeentries );
 
-		D(bug( "first: %ld, visible: %ld, pos: %ld, treeentries: %ld, a: %ld, b: %ld, max: %ld, jmp: %ld\n",
-			first, visible, pos, treeentries, a, b, max, jmp ) );
+		D(DBF_ALWAYS, "first: %ld, visible: %ld, pos: %ld, treeentries: %ld, a: %ld, b: %ld, max: %ld, jmp: %ld\n",
+			first, visible, pos, treeentries, a, b, max, jmp);
 
 		DoMethod( data->Obj, MUIM_NList_Jump, jmp );
 	}
@@ -2001,7 +2012,7 @@ VOID ExpandTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn 
 					MyCallHook( data->OpenHook, data, MUIA_NListtree_OpenHook, tb->tb_Table[i] );
 				}
 
-				//D(bug( "Expanding node \"%s\"\n", tb->tb_Table[i]->tn_Name ) );
+				D(DBF_ALWAYS, "Expanding node \"%s\"\n", tb->tb_Table[i]->tn_Name);
 
 				tb->tb_Table[i]->tn_Flags |= TNF_OPEN;
 			}
@@ -2089,7 +2100,7 @@ VOID OpenTreeNodeExpand( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 			MyCallHook( data->OpenHook, data, MUIA_NListtree_OpenHook, tn );
 		}
 
-		//D(bug( "Expanding node \"%s\"\n", tn->tn_Name ) );
+		D(DBF_ALWAYS, "Expanding node \"%s\"\n", tn->tn_Name);
 
 		tn->tn_Flags |= TNF_OPEN;
 	}
@@ -2159,7 +2170,7 @@ VOID CollapseTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *t
 					MyCallHook( data->CloseHook, data, MUIA_NListtree_CloseHook, tb->tb_Table[i] );
 				}
 
-				//D(bug( "Collapsing node \"%s\"\n", tb->tb_Table[i]->tn_Name ) );
+				D(DBF_ALWAYS, "Collapsing node \"%s\"\n", tb->tb_Table[i]->tn_Name);
 
 				tb->tb_Table[i]->tn_Flags &= ~TNF_OPEN;
 			}
@@ -2231,7 +2242,7 @@ VOID CloseTreeNodeCollapse( struct NListtree_Data *data, struct MUI_NListtree_Tr
 			MyCallHook( data->CloseHook, data, MUIA_NListtree_CloseHook, tn );
 		}
 
-		//D(bug( "Collapsing node \"%s\"\n", tn->tn_Name ) );
+		D(DBF_ALWAYS, "Collapsing node \"%s\"\n", tn->tn_Name);
 
 		tn->tn_Flags &= ~TNF_OPEN;
 	}
@@ -2336,7 +2347,7 @@ VOID ActivateTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNod
 
 	/* sba: set the new entry only if it really changes, otherwise we lose some
      MUIA_NList_Active notifications */
-  D(bug("ActivateTreeNode: %ld %ld\n",newact,xget(data->Obj,MUIA_NList_Active)));
+    D(DBF_ALWAYS, "ActivateTreeNode: %ld %ld\n",newact,xget(data->Obj,MUIA_NList_Active));
 	if (newact != xget(data->Obj,MUIA_NList_Active))
 	{
 		set(data->Obj, MUIA_NList_Active, newact);
@@ -2359,10 +2370,10 @@ VOID RemoveNode1( struct NListtree_Data *data, UNUSED struct MUI_NListtree_ListN
 			if ( !( data->TempActiveNode = CTN( Node_Prev( (struct Node *)&tn->tn_Node ) ) ) )
 				data->TempActiveNode = GetParentNotRoot( tn );
 
-		D(bug( "Would set active node to: %s - 0x%08lx\n", data->TempActiveNode ? data->TempActiveNode->tn_Name : "NULL", data->TempActiveNode ) );
+		D(DBF_ALWAYS, "Would set active node to: %s - 0x%08lx\n", data->TempActiveNode ? data->TempActiveNode->tn_Name : "NULL", data->TempActiveNode);
 	}
 
-	D(bug( "Removing node: %s - 0x%08lx, pos: %ld\n", tn->tn_Name, tn, pos ) );
+	D(DBF_ALWAYS, "Removing node: %s - 0x%08lx, pos: %ld\n", tn->tn_Name, tn, pos);
 
 	/*
 	**	Prevent calculating positions with practical
@@ -2430,7 +2441,7 @@ VOID RemoveChildNodes( struct NListtree_Data *data, struct MUI_NListtree_TreeNod
 	{
 		while((tn = CTN(List_First((struct List *)&ln->ln_List))))
 		{
-			//D(bug( "Removing node \"%s\", pos %ld\n", tn->tn_Name, pos ) );
+			D(DBF_ALWAYS, "Removing node \"%s\", pos %ld\n", tn->tn_Name, pos);
 
 			RemoveChildNodes( data, tn, pos + 1 );
 			RemoveNode1( data, CLN( GetParent( tn ) ), tn, pos );
@@ -2748,7 +2759,7 @@ struct MUI_NListtree_TreeNode *CreateParentStructure( struct NListtree_Data *dat
 	if((prevnode = CLN(GetParentNotRoot(nodetodup))))
 		*destlist = CLN( CreateParentStructure( data, method, destlist, destentry, CTN(prevnode), cnt + 1 ) );
 
-	//D(bug( "Adding node 0x%08lx - %s to node 0x%08lx - %s\n", nodetodup, nodetodup->tn_Name, *destlist, (*destlist)->ln_Name ) );
+	D(DBF_ALWAYS, "Adding node 0x%08lx - %s to node 0x%08lx - %s\n", nodetodup, nodetodup->tn_Name, *destlist, (*destlist)->ln_Name);
 
 	/*
 	**	Allocate memory for the new entry and
@@ -3113,7 +3124,7 @@ ULONG MultiTestFunc( struct NListtree_Data *data, struct MUI_NListtree_TreeNode 
 
 	/*
 	if ( doselect )
-		D(bug( "MULTITEST: 0x%08lx - %s\n", tn, tn->tn_Name ) );
+		D(DBF_ALWAYS, "MULTITEST: 0x%08lx - %s\n", tn, tn->tn_Name);
 	*/
 
 	return( doselect );
@@ -3161,7 +3172,7 @@ HOOKPROTONHNO(_ConstructFunc, APTR, struct MUIP_NListtree_ConstructMessage *msg)
 				strcpy( (STRPTR)retdata, (STRPTR)msg->UserData );
 			}
 
-			//D(bug( "Internal CostructHook ==> Data: %s\n", (STRPTR)msg->UserData ) );
+			D(DBF_ALWAYS, "Internal CostructHook ==> Data: %s\n", (STRPTR)msg->UserData);
 
 			return( retdata );
 		}
@@ -3173,7 +3184,7 @@ MakeStaticHook(_ConstructHook, _ConstructFunc);
 
 HOOKPROTONHNO(_DestructFunc, ULONG, struct MUIP_NListtree_DestructMessage *msg)
 {
-	//D(bug( "Internal DestructHook ==> Data: %s\n", (STRPTR)msg->UserData ) );
+	D(DBF_ALWAYS, "Internal DestructHook ==> Data: %s\n", (STRPTR)msg->UserData);
 
 	/*
 	**	Free the string memory.
@@ -3374,7 +3385,7 @@ HOOKPROTONO(NList_DispFunc, ULONG, struct NList_DisplayMessage *msg)
 
 	if ( tn )
 	{
-//		D(bug("render flags=%lx %s %s\n",tn->tn_Flags,(tn->tn_Flags & TNF_LIST)?" list":"",msg->strings[1]));
+  		D(DBF_ALWAYS, "render flags=%lx %s %s\n",tn->tn_Flags,(tn->tn_Flags & TNF_LIST)?" list":"",msg->strings[1]);
 
 		if ( !data->DisplayHook || !msg->strings[data->TreeColumn] )
 		{
@@ -3398,7 +3409,7 @@ HOOKPROTONO(NList_DispFunc, ULONG, struct NList_DisplayMessage *msg)
 
 		strncat( data->buf, msg->strings[data->TreeColumn], 999 - strlen( data->buf ) );
 
-		//D(bug( "%s - %s\n", ( data->Flags & NLTF_QUIET ) ? "QUIET" : "RUN", data->buf ) );
+		D(DBF_ALWAYS, "%s - %s\n", ( data->Flags & NLTF_QUIET ) ? "QUIET" : "RUN", data->buf);
 
 		msg->strings[data->TreeColumn] = data->buf;
 	}
@@ -4657,7 +4668,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				SetupImage( data, (struct MUI_ImageSpec *)tag->ti_Data, IMAGE_Closed );
 				DoRefresh( data );
 
-				D(bug( "SET MUICFG_NListtree_ImageSpecClosed: '%s'\n", (STRPTR)tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUICFG_NListtree_ImageSpecClosed: '%s'\n", (STRPTR)tag->ti_Data);
 				break;
 
 			case MUICFG_NListtree_ImageSpecOpen:
@@ -4666,7 +4677,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				SetupImage( data, (struct MUI_ImageSpec *)tag->ti_Data, IMAGE_Open );
 				DoRefresh( data );
 
-				D(bug( "SET MUICFG_NListtree_ImageSpecOpen: '%s'\n", (STRPTR)tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUICFG_NListtree_ImageSpecOpen: '%s'\n", (STRPTR)tag->ti_Data);
 				break;
 
 			case MUICFG_NListtree_ImageSpecSpecial:
@@ -4675,7 +4686,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				SetupImage( data, (struct MUI_ImageSpec *)tag->ti_Data, IMAGE_Special );
 				DoRefresh( data );
 
-				D(bug( "SET MUICFG_NListtree_ImageSpecSpecial: '%s'\n", (STRPTR)tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUICFG_NListtree_ImageSpecSpecial: '%s'\n", (STRPTR)tag->ti_Data);
 				break;
 
 			case MUICFG_NListtree_PenSpecLines:
@@ -4685,7 +4696,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					ObtPen( data->MRI, &data->Pen[PEN_Line], (struct MUI_PenSpec *)tag->ti_Data );
 					DoRefresh( data );
 
-					D(bug( "SET MUICFG_NListtree_PenSpecLines: %s\n", (STRPTR)tag->ti_Data ) );
+					D(DBF_ALWAYS, "SET MUICFG_NListtree_PenSpecLines: %s\n", (STRPTR)tag->ti_Data);
 				}
 				break;
 
@@ -4696,7 +4707,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					ObtPen( data->MRI, &data->Pen[PEN_Shadow], (struct MUI_PenSpec *)tag->ti_Data );
 					DoRefresh( data );
 
-					D(bug( "SET MUICFG_NListtree_PenSpecShadow: %s\n", (STRPTR)tag->ti_Data ) );
+					D(DBF_ALWAYS, "SET MUICFG_NListtree_PenSpecShadow: %s\n", (STRPTR)tag->ti_Data);
 				}
 				break;
 
@@ -4707,7 +4718,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					ObtPen( data->MRI, &data->Pen[PEN_Draw], (struct MUI_PenSpec *)tag->ti_Data );
 					DoRefresh( data );
 
-					D(bug( "SET MUICFG_NListtree_PenSpecDraw: %s\n", (STRPTR)tag->ti_Data ) );
+					D(DBF_ALWAYS, "SET MUICFG_NListtree_PenSpecDraw: %s\n", (STRPTR)tag->ti_Data);
 				}
 				break;
 
@@ -4718,7 +4729,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					ObtPen( data->MRI, &data->Pen[PEN_Draw2], (struct MUI_PenSpec *)tag->ti_Data );
 					DoRefresh( data );
 
-					D(bug( "SET MUICFG_NListtree_PenSpecDraw2: %s\n", (STRPTR)tag->ti_Data ) );
+					D(DBF_ALWAYS, "SET MUICFG_NListtree_PenSpecDraw2: %s\n", (STRPTR)tag->ti_Data);
 				}
 				break;
 
@@ -4727,7 +4738,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				data->Space = (BYTE)tag->ti_Data;
 				DoRefresh( data );
 
-				D(bug( "SET MUICFG_NListtree_Space: %ld\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUICFG_NListtree_Space: %ld\n", tag->ti_Data);
 				break;
 
 			case MUICFG_NListtree_Style:
@@ -4735,7 +4746,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				data->Style = (BYTE)tag->ti_Data;
 				DoRefresh( data );
 
-				D(bug( "SET MUICFG_NListtree_Style: %ld\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUICFG_NListtree_Style: %ld\n", tag->ti_Data);
 				break;
 
 			case MUICFG_NListtree_OpenAutoScroll:
@@ -4745,7 +4756,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				else
 					data->Flags &= ~NLTF_OPENAUTOSCROLL;
 
-				D(bug( "SET MUICFG_NListtree_OpenAutoScroll: %ld\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUICFG_NListtree_OpenAutoScroll: %ld\n", tag->ti_Data);
 				break;
 
 			/*
@@ -4753,15 +4764,15 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 			*/
 			case MUIA_NListtree_OnlyTrigger:
 				onlytrigger = TRUE;
-				D(bug( "SET MUIA_NListtree_OnlyTrigger\n" ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_OnlyTrigger\n");
 				break;
 
 			case MUIA_NList_Active:
-				D(bug( "SET MUIA_NList_Active  %ld%s\n",tag->ti_Data,(data->Flags & NLTF_ACTIVENOTIFY)?" notify activation set":"no notify set") );
+				D(DBF_ALWAYS, "SET MUIA_NList_Active  %ld%s\n",tag->ti_Data,(data->Flags & NLTF_ACTIVENOTIFY)?" notify activation set":"no notify set");
 				break;
 
 			case MUIA_NListtree_Active:
-				D(bug("SET MUIA_NListtree_Active\n") );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_Active\n");
 				if((tag->ti_Data == (ULONG)MUIV_NListtree_Active_Off) ||
            (tag->ti_Data == (ULONG)&data->RootList) ||
            ((tag->ti_Data == (ULONG)MUIV_NListtree_Active_Parent) &&
@@ -4853,11 +4864,11 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					ActivateTreeNode( data, actnode );
 					DoMethod( data->Obj, MUIM_NListtree_Active, data->ActiveNodeNum, data->ActiveNode );
 
-					D(bug( "SET MUIA_NListtree_Active: %s - 0x%08lx - list: 0x%08lx  rootlist: 0x%lx\n", actnode ? actnode->tn_Name : "NULL", actnode, data->ActiveList, &data->RootList) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_Active: %s - 0x%08lx - list: 0x%08lx  rootlist: 0x%lx\n", actnode ? actnode->tn_Name : "NULL", actnode, data->ActiveList, &data->RootList);
 				}
 				else
 				{
-					D(bug( "SET MUIA_NListtree_Active: TRIGGER: %s - 0x%08lx\n", actnode ? actnode->tn_Name : "NULL", actnode ) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_Active: TRIGGER: %s - 0x%08lx\n", actnode ? actnode->tn_Name : "NULL", actnode);
 				}
 				break;
 
@@ -4866,21 +4877,21 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 			**	Dummy for notification.
 			*/
 			case MUIA_NListtree_ActiveList:
-				D(bug("SET MUIA_NListtree_ActiveList (dummy)\n") );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_ActiveList (dummy)\n");
 				break;
 
 			case MUIA_NListtree_AutoVisible:
 
 				data->AutoVisible = (UBYTE)tag->ti_Data;
 
-				D(bug( "SET MUIA_NListtree_AutoVisible: %ld\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_AutoVisible: %ld\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_CloseHook:
 
 				data->CloseHook				= (struct Hook *)tag->ti_Data;
 
-				D(bug( "SET MUIA_NListtree_CloseHook: 0x%08lx\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_CloseHook: 0x%08lx\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_CompareHook:
@@ -4890,35 +4901,35 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					case MUIV_NListtree_CompareHook_Head:
           {
             orgHook = &_CompareHook_Head;
-						D(bug( "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_Head\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_Head\n");
 					}
           break;
 
 					case MUIV_NListtree_CompareHook_Tail:
           {
             orgHook = &_CompareHook_Tail;
-						D(bug( "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_Tail\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_Tail\n");
 					}
           break;
 
 					case MUIV_NListtree_CompareHook_LeavesTop:
           {
             orgHook = &_CompareHook_LeavesTop;
-						D(bug( "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_LeavesTop\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_LeavesTop\n");
 					}
           break;
 
 					case MUIV_NListtree_CompareHook_LeavesMixed:
           {
             orgHook = &_CompareHook_LeavesMixed;
-						D(bug( "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_LeavesMixed\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_LeavesMixed\n");
 					}
           break;
 
 					case MUIV_NListtree_CompareHook_LeavesBottom:
           {
             orgHook = &_CompareHook_LeavesBottom;
-						D(bug( "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_LeavesBottom\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_CompareHook: MUIV_NListtree_CompareHook_LeavesBottom\n");
 					}
           break;
 
@@ -4928,7 +4939,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 
 						data->CompareHook = (struct Hook*)tag->ti_Data;
 
-						D(bug( "SET MUIA_NListtree_CompareHook: 0x%08lx\n", tag->ti_Data ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_CompareHook: 0x%08lx\n", tag->ti_Data);
 					}
           break;
 				}
@@ -4961,7 +4972,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 
 				if(tag->ti_Data == (ULONG)MUIV_NListtree_ConstructHook_String)
 				{
-					D(bug( "SET MUIA_NListtree_ConstructHook: MUIV_NListtree_ConstructHook_String\n" ) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_ConstructHook: MUIV_NListtree_ConstructHook_String\n");
 
 					if((data->ConstructHook = AllocVecPooled(data->MemoryPool, sizeof(struct Hook))))
 					{
@@ -4975,7 +4986,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				{
 					data->ConstructHook = (struct Hook *)tag->ti_Data;
 
-					D(bug( "SET MUIA_NListtree_ConstructHook: 0x%08lx\n", tag->ti_Data ) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_ConstructHook: 0x%08lx\n", tag->ti_Data);
 				}
 				break;
 
@@ -4996,7 +5007,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 
 				if(tag->ti_Data == (ULONG)MUIV_NListtree_DestructHook_String)
 				{
-					D(bug( "SET MUIA_NListtree_DestructHook: MUIV_NListtree_DestructHook_String\n" ) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_DestructHook: MUIV_NListtree_DestructHook_String\n");
 
 					if((data->DestructHook = AllocVecPooled(data->MemoryPool, sizeof(struct Hook))))
 					{
@@ -5010,7 +5021,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				{
 					data->DestructHook			= (struct Hook *)tag->ti_Data;
 
-					D(bug( "SET MUIA_NListtree_DestructHook: 0x%08lx\n", tag->ti_Data ) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_DestructHook: 0x%08lx\n", tag->ti_Data);
 				}
 				break;
 
@@ -5023,14 +5034,14 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				else
 					data->DisplayHook = NULL;
 
-				D(bug( "SET MUIA_NListtree_DisplayHook: 0x%08lx\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_DisplayHook: 0x%08lx\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_CopyToClipHook:
 
 				if ( tag->ti_Data == MUIV_NListtree_CopyToClipHook_Default )
 				{
-					D(bug( "SET MUIA_NListtree_CopyToClipHook: MUIV_NListtree_CopyToClipHook_Default\n" ) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_CopyToClipHook: MUIV_NListtree_CopyToClipHook_Default\n");
 
 					data->CopyToClipHook = NULL;
 				}
@@ -5038,7 +5049,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				{
 					data->CopyToClipHook			= (struct Hook *)tag->ti_Data;
 
-					D(bug( "SET MUIA_NListtree_CopyToClipHook: 0x%08lx\n", tag->ti_Data ) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_CopyToClipHook: 0x%08lx\n", tag->ti_Data);
 				}
 				break;
 
@@ -5047,7 +5058,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				if ( !onlytrigger )
 				{
 					data->DoubleClick = (BYTE)tag->ti_Data;
-					D(bug( "SET MUIA_NListtree_DoubleClick: 0x%08lx\n", tag->ti_Data ) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_DoubleClick: 0x%08lx\n", tag->ti_Data);
 				}
 				break;
 
@@ -5058,7 +5069,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				else
 					data->Flags &= ~NLTF_DRAGDROPSORT;
 
-				D(bug( "SET MUIA_NListtree_DragDropSort: %ld\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_DragDropSort: %ld\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_DupNodeName:
@@ -5068,7 +5079,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				else
 					data->Flags &= ~NLTF_DUPNODENAMES;
 
-				D(bug( "SET MUIA_NListtree_DupNodeName: %ld\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_DupNodeName: %ld\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_EmptyNodes:
@@ -5081,7 +5092,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				if ( !initial )
 					DoRefresh( data );
 
-				D(bug( "SET MUIA_NListtree_EmptyNodes: %ld\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_EmptyNodes: %ld\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_FindNameHook:
@@ -5103,35 +5114,35 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					case MUIV_NListtree_FindNameHook_CaseSensitive:
           {
             orgHook = &_FindNameHook_CaseSensitive;
-						D(bug( "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_CaseSensitive\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_CaseSensitive\n");
 					}
           break;
 
 					case MUIV_NListtree_FindNameHook_CaseInsensitive:
           {
             orgHook = &_FindNameHook_CaseInsensitive;
-						D(bug( "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_CaseInsensitive\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_CaseInsensitive\n");
 					}
           break;
 
 					case MUIV_NListtree_FindNameHook_Part:
           {
             orgHook = &_FindNameHook_Part;
-						D(bug( "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_Part\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_Part\n");
 					}
           break;
 
 					case MUIV_NListtree_FindNameHook_PartCaseInsensitive:
           {
             orgHook = &_FindNameHook_PartCaseInsensitive;
-						D(bug( "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_PartCaseInsensitive\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_PartCaseInsensitive\n");
 					}
           break;
 
 					case MUIV_NListtree_FindNameHook_PointerCompare:
           {
             orgHook = &_FindNameHook_PointerCompare;
-						D(bug( "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_PointerCompare\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindNameHook: MUIV_NListtree_FindNameHook_PointerCompare\n");
 					}
           break;
 
@@ -5141,7 +5152,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 
 						CopyMem( (APTR)tag->ti_Data, data->FindNameHook, sizeof( struct Hook ) );
 
-						D(bug( "SET MUIA_NListtree_FindNameHook: 0x%08lx\n", tag->ti_Data ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindNameHook: 0x%08lx\n", tag->ti_Data);
 					}
           break;
 				}
@@ -5172,35 +5183,35 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					case MUIV_NListtree_FindUserDataHook_CaseSensitive:
           {
             orgHook = &_FindUserDataHook_CaseSensitive;
-						D(bug( "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_CaseSensitive\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_CaseSensitive\n");
 				  }
           break;
 
 					case MUIV_NListtree_FindUserDataHook_CaseInsensitive:
           {
             orgHook = &_FindUserDataHook_CaseInsensitive;
-						D(bug( "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_CaseInsensitive\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_CaseInsensitive\n");
 					}
           break;
 
 					case MUIV_NListtree_FindUserDataHook_Part:
           {
             orgHook = &_FindUserDataHook_Part;
-						D(bug( "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_Part\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_Part\n");
 					}
           break;
 
 					case MUIV_NListtree_FindUserDataHook_PartCaseInsensitive:
           {
             orgHook = &_FindUserDataHook_PartCaseInsensitive;
-						D(bug( "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_PartCaseInsensitive\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_PartCaseInsensitive\n");
 					}
           break;
 
 					case MUIV_NListtree_FindUserDataHook_PointerCompare:
           {
             orgHook = &_FindUserDataHook_PointerCompare;
-						D(bug( "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_PointerCompare\n" ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindUserDataHook: MUIV_NListtree_FindUserDataHook_PointerCompare\n");
 					}
           break;
 
@@ -5210,7 +5221,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 
 						CopyMem( (APTR)tag->ti_Data, data->FindUserDataHook, sizeof( struct Hook ) );
 
-						D(bug( "SET MUIA_NListtree_FindUserDataHook: 0x%08lx\n", tag->ti_Data ) );
+						D(DBF_ALWAYS, "SET MUIA_NListtree_FindUserDataHook: 0x%08lx\n", tag->ti_Data);
 					}
           break;
 				}
@@ -5243,7 +5254,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					if ( !initial )
 						nnset( data->Obj, MUIA_NList_Format, data->Format );
 
-					D(bug( "SET MUIA_NListtree_Format: %s\n", (STRPTR)tag->ti_Data ) );
+					D(DBF_ALWAYS, "SET MUIA_NListtree_Format: %s\n", (STRPTR)tag->ti_Data);
 				}
 				break;
 
@@ -5256,21 +5267,21 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					data->Flags |= NLTF_AUTOSELECT_CHILDS;
 				*/
 
-				D(bug( "SET MUIA_NListtree_MultiSelect: 0x%08lx\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_MultiSelect: 0x%08lx\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_MultiTestHook:
 
 				data->MultiTestHook			= (struct Hook *)tag->ti_Data;
 
-				D(bug( "SET MUIA_NListtree_MultiTestHook: 0x%08lx\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_MultiTestHook: 0x%08lx\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_OpenHook:
 
 				data->OpenHook				= (struct Hook *)tag->ti_Data;
 
-				D(bug( "SET MUIA_NListtree_OpenHook: 0x%08lx\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_OpenHook: 0x%08lx\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_Quiet:
@@ -5286,7 +5297,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 					}
 				}
 
-				D(bug( "SET MUIA_NListtree_Quiet: %ld - Counter = %ld\n", tag->ti_Data, data->QuietCounter ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_Quiet: %ld - Counter = %ld\n", tag->ti_Data, data->QuietCounter);
 				break;
 
 			case MUICFG_NListtree_RememberStatus:
@@ -5296,7 +5307,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				else
 					data->Flags &= ~NLTF_REMEMBER_STATUS;
 
-				D(bug( "SET MUICFG_NListtree_RememberStatus: %ld\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUICFG_NListtree_RememberStatus: %ld\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_Title:
@@ -5309,7 +5320,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				if ( !initial )
 					nnset( data->Obj, MUIA_NList_Title, tag->ti_Data );
 
-				D(bug( "SET MUIA_NListtree_Title: %ld\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_Title: %ld\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_TreeColumn:
@@ -5319,7 +5330,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				if ( !initial )
 					DoRefresh( data );
 
-				D(bug( "SET MUIA_NListtree_TreeColumn: 0x%08lx\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_TreeColumn: 0x%08lx\n", tag->ti_Data);
 				break;
 
 
@@ -5340,7 +5351,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				if ( !initial )
 					DoRefresh( data );
 
-				D(bug( "SET MUIA_NListtree_ShowTree: 0x%08lx\n", tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET MUIA_NListtree_ShowTree: 0x%08lx\n", tag->ti_Data);
 				break;
 
 			case MUIA_NListtree_NoRootTree:
@@ -5356,7 +5367,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 				break;
 
 			default:
-				//D(bug( "SET attribute 0x%08lx to 0x%08lx\n", tag->ti_Tag, tag->ti_Data ) );
+				D(DBF_ALWAYS, "SET attribute 0x%08lx to 0x%08lx\n", tag->ti_Tag, tag->ti_Data);
 				break;
 		}
 	}
@@ -5382,7 +5393,7 @@ BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
 		case MUIA_NListtree_Active:
 
 			*store = (ULONG)data->ActiveNode;
-			//D(bug( "GET MUIA_NListtree_Active: 0x%08lx\n", *store ) );
+			D(DBF_ALWAYS, "GET MUIA_NListtree_Active: 0x%08lx\n", *store);
 			return( TRUE );
 
 		case MUIA_NListtree_ActiveList:
@@ -5391,31 +5402,31 @@ BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
 				*store = (ULONG)MUIV_NListtree_ActiveList_Off;
 			else
 				*store = (ULONG)data->ActiveList;
-			D(bug("GET MUIA_NListtree_ActiveList: 0x%08lx\n",*store));
+			D(DBF_ALWAYS, "GET MUIA_NListtree_ActiveList: 0x%08lx\n",*store);
 			return( TRUE );
 
 		case MUIA_NListtree_DoubleClick:
 
 			*store = (ULONG)data->LDClickColumn;
-			//D(bug( "GET MUIA_NListtree_DoubleClick: 0x%08lx\n", *store ) );
+			D(DBF_ALWAYS, "GET MUIA_NListtree_DoubleClick: 0x%08lx\n", *store);
 			return( TRUE );
 
 		case MUIA_NListtree_TreeColumn:
 
 			*store = (ULONG)data->TreeColumn;
-			//D(bug( "GET MUIA_NListtree_TreeColumn: 0x%08lx\n", *store ) );
+			D(DBF_ALWAYS, "GET MUIA_NListtree_TreeColumn: 0x%08lx\n", *store);
 			return( TRUE );
 
 		case MUIA_NListtree_ShowTree:
 
 			*store = (ULONG)!( data->Flags & NLTF_NO_TREE );
-			//D(bug( "GET MUIA_NListtree_ShowTree: 0x%08lx\n", *store ) );
+			D(DBF_ALWAYS, "GET MUIA_NListtree_ShowTree: 0x%08lx\n", *store);
 			return( TRUE );
 
 		case MUIA_NListtree_AutoVisible:
 
 			*store = (ULONG)data->AutoVisible;
-			//D(bug( "GET MUIA_NListtree_AutoVisible: 0x%08lx\n", *store ) );
+			D(DBF_ALWAYS, "GET MUIA_NListtree_AutoVisible: 0x%08lx\n", *store);
 			return( TRUE );
 
 		case MUIA_NListtree_DropType:
@@ -5435,7 +5446,7 @@ BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
 
 		case MUIA_NListtree_SelectChange:
 
-			//D(bug( "GET MUIA_NListtree_SelectChange\n" ) );
+			D(DBF_ALWAYS, "GET MUIA_NListtree_SelectChange\n");
 			return( TRUE );
 
 		/*
@@ -5460,7 +5471,7 @@ BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
 			break;
 
 		default:
-			//D(bug( "GET 0x%08lx\n", ( (struct opGet *)msg )->opg_AttrID ) );
+			D(DBF_ALWAYS, "GET 0x%08lx\n", ( (struct opGet *)msg )->opg_AttrID);
 			break;
 	}
 
@@ -5544,7 +5555,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 					char *taskname;
 					ULONG ver, rev;
 
-					D(bug( "1\n" ) );
+					D(DBF_ALWAYS, "1\n");
 
 					CopyMem( &ld, data, sizeof( struct NListtree_Data ) );
 
@@ -5558,7 +5569,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 					get( obj, MUIA_Revision, &rev );
 					data->Flags &= ~NLTF_GET_PARENT_ATTR;
 
-					//D(bug( "NList version: %ld.%ld\n", ver, rev ) );
+					D(DBF_ALWAYS, "NList version: %ld.%ld\n", ver, rev);
 
 					mytask = FindTask( NULL );
 
@@ -5567,7 +5578,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 					else
 						taskname = "MUI Application";
 
-					D(bug( "2\n" ) );
+					D(DBF_ALWAYS, "2\n");
 
 					if ( ( ver < 20 ) || ( ( ver == 20 ) && ( rev <= 104 ) ) )
 					{
@@ -5636,7 +5647,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 					*/
 					data->SelectedTable.tb_Current = -2;
 
-					D(bug( "4\n" ) );
+					D(DBF_ALWAYS, "4\n");
 
 					/*
 					**	Setup spacial image class and tree image.
@@ -5645,7 +5656,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 					{
 						if((data->CL_NodeImage = MUI_CreateCustomClass(NULL, MUIC_Image, NULL, sizeof(struct TreeImage_Data), ENTRY(NodeImage_Dispatcher))))
 						{
-							D(bug( "5\n" ) );
+							D(DBF_ALWAYS, "5\n");
 
 							ActivateNotify( data );
 
@@ -5670,7 +5681,7 @@ ULONG _Dispose( struct IClass *cl, Object *obj, Msg msg )
 	struct MUI_CustomClass *im1, *im2;
 	APTR mempool, treepool;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 	DeactivateNotify( data );
 
@@ -5701,7 +5712,8 @@ ULONG _Dispose( struct IClass *cl, Object *obj, Msg msg )
 	if ( im2 )
 		MUI_DeleteCustomClass( im2 );
 
-	return( ret );
+	RETURN(ret);
+    return( ret );
 }
 
 
@@ -5737,13 +5749,13 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 	LONG d;
 	BOOL x;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 
 	if ( !( DoSuperMethodA( cl, obj, (Msg)msg ) ) )
 		return( FALSE );
 
-	D(bug( "Before: cl_SubclassCount = %ld, cl_ObjectCount = %ld\n", cl->cl_SubclassCount, cl->cl_ObjectCount ) );
+	D(DBF_ALWAYS, "Before: cl_SubclassCount = %ld, cl_ObjectCount = %ld\n", cl->cl_SubclassCount, cl->cl_ObjectCount);
 
 	/*
 	**	Obtain pens (render info is valid after Setup()!
@@ -5775,7 +5787,7 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 		{
 			SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Closed );
 
-			D(bug( "C-Closed node image: '%s'\n", (STRPTR)d ) );
+			D(DBF_ALWAYS, "C-Closed node image: '%s'\n", (STRPTR)d);
 		}
 		else if ( idobj )
 		{
@@ -5784,7 +5796,7 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 
 			SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Closed );
 
-			D(bug( "Closed node image: '%s'\n", (STRPTR)d ) );
+			D(DBF_ALWAYS, "Closed node image: '%s'\n", (STRPTR)d);
 		}
 
 
@@ -5792,7 +5804,7 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 		{
 			SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Open );
 
-			D(bug( "C-Open node image: '%s'\n", (STRPTR)d ) );
+			D(DBF_ALWAYS, "C-Open node image: '%s'\n", (STRPTR)d);
 		}
 		else if ( idobj )
 		{
@@ -5801,7 +5813,7 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 
 			SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Open );
 
-			D(bug( "Open node image: '%s'\n", (STRPTR)d ) );
+			D(DBF_ALWAYS, "Open node image: '%s'\n", (STRPTR)d);
 		}
 
 
@@ -5809,7 +5821,7 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 		{
 			SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Special );
 
-			D(bug( "C-Special image: '%s'\n", (STRPTR)d ) );
+			D(DBF_ALWAYS, "C-Special image: '%s'\n", (STRPTR)d);
 		}
 		else if ( idobj )
 		{
@@ -5818,7 +5830,7 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 
 			SetupImage( data, (struct MUI_ImageSpec *)d, IMAGE_Special );
 
-			D(bug( "Special image: '%s'\n", (STRPTR)d ) );
+			D(DBF_ALWAYS, "Special image: '%s'\n", (STRPTR)d);
 		}
 
 
@@ -5930,11 +5942,12 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 	}
 
 
-	D(bug( "After: cl_SubclassCount = %ld, cl_ObjectCount = %ld\n", cl->cl_SubclassCount, cl->cl_ObjectCount ) );
+	D(DBF_ALWAYS, "After: cl_SubclassCount = %ld, cl_ObjectCount = %ld\n", cl->cl_SubclassCount, cl->cl_ObjectCount);
 
 	DoRefresh( data );
 
-	return( TRUE );
+	RETURN(TRUE);
+    return( TRUE );
 }
 
 
@@ -5943,7 +5956,7 @@ ULONG _Cleanup( struct IClass *cl, Object *obj, Msg msg )
 	struct NListtree_Data *data = INST_DATA( cl, obj );
 	UBYTE i;
 
-	D(bug( "Before: cl_SubclassCount = %ld, cl_ObjectCount = %ld\n", cl->cl_SubclassCount, cl->cl_ObjectCount ) );
+	D(DBF_ALWAYS, "Before: cl_SubclassCount = %ld, cl_ObjectCount = %ld\n", cl->cl_SubclassCount, cl->cl_ObjectCount);
 
 	/*
 	**	Dispose images.
@@ -5960,7 +5973,7 @@ ULONG _Cleanup( struct IClass *cl, Object *obj, Msg msg )
 
 	data->MRI	= NULL;
 
-	D(bug( "After: cl_SubclassCount = %ld, cl_ObjectCount = %ld\n", cl->cl_SubclassCount, cl->cl_ObjectCount ) );
+	D(DBF_ALWAYS, "After: cl_SubclassCount = %ld, cl_ObjectCount = %ld\n", cl->cl_SubclassCount, cl->cl_ObjectCount);
 
 	return( DoSuperMethodA( cl, obj, msg ) );
 }
@@ -6120,13 +6133,13 @@ ULONG _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg
 		{
 			case IDCMP_MOUSEBUTTONS:
 			{
-D(bug("mousebutton\n"));
+D(DBF_ALWAYS, "mousebutton\n");
 				if ( _isinobject( mx, my ) )
 				{
 					struct MUI_NListtree_TreeNode *tn;
 					struct MUI_NList_TestPos_Result tpres;
 					struct TimeVal tv;
-D(bug("inobject\n"));
+D(DBF_ALWAYS, "inobject\n");
 					switch( msg->imsg->Code )
 					{
 						case SELECTDOWN:
@@ -6255,7 +6268,7 @@ D(bug("inobject\n"));
 
 								DoMethod( obj, MUIM_NList_GetEntry, tpres.entry, &tn );
 
-								D(bug( "Clicked on xoffset = %ld, col: %ld, impos = %ld, arrowwidth = %ld\n", tpres.xoffset, tpres.column, tn->tn_ImagePos, data->MaxImageWidth ) );
+								D(DBF_ALWAYS, "Clicked on xoffset = %ld, col: %ld, impos = %ld, arrowwidth = %ld\n", tpres.xoffset, tpres.column, tn->tn_ImagePos, data->MaxImageWidth);
 
 								if ( data->OpenCloseEntry )
 								{
@@ -6339,8 +6352,9 @@ ULONG _DragNDrop_DragQuery( struct IClass *cl, Object *obj, Msg msg )
 {
 	struct NListtree_Data *data = INST_DATA( cl, obj );
 	struct MUIP_DragQuery *d = (struct MUIP_DragQuery *)msg;
+    ULONG result;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 	if ( d->obj == obj )
 	{
@@ -6355,15 +6369,19 @@ ULONG _DragNDrop_DragQuery( struct IClass *cl, Object *obj, Msg msg )
 		}
 	}
 
-	return( DoSuperMethodA( cl, obj, msg ) );
+	result = DoSuperMethodA( cl, obj, msg );
+
+    RETURN(result);
+    return result;
 }
 
 
 ULONG _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
 {
 	struct NListtree_Data *data = INST_DATA( cl, obj );
+    ULONG result;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 	/*
 	**	If active entry is the only selected one, use it
@@ -6378,7 +6396,10 @@ ULONG _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
 
 	data->Flags |= NLTF_DRAGDROP;
 
-	return( DoSuperMethodA( cl, obj, msg ) );
+	result = DoSuperMethodA( cl, obj, msg );
+
+    RETURN(result);
+    return result;
 }
 
 
@@ -6387,13 +6408,17 @@ ULONG _DragNDrop_DragReport( struct IClass *cl, Object *obj, Msg msg )
 	#define	_between( a, x, b ) ( ( x ) >= ( a ) && ( x ) <= ( b ) )
 	#define _isinobject( x, y ) ( _between( _mleft( obj ), ( x ), _mright( obj ) ) && _between( _mtop( obj ), ( y ), _mbottom( obj ) ) )
 	struct MUIP_DragReport *d = (struct MUIP_DragReport *)msg;
+    ULONG result;
 
-	//D(bug( "\n" ) );
+	ENTER();
 
 	if ( !_isinobject( d->x, d->y ) )
 		return( MUIV_DragReport_Abort );
 
-	return( DoSuperMethodA( cl, obj, msg ) );
+	result = DoSuperMethodA( cl, obj, msg );
+
+    RETURN(result);
+    return result;
 }
 
 
@@ -6437,8 +6462,8 @@ ULONG _DragNDrop_DropType( struct IClass *cl, Object *obj, struct MUIP_NList_Dro
 	else
 		*msg->type = data->DropType;
 
-	D(bug( "OPos: %ld, OType: %ld, Pos: %ld, Type: %ld\n", *msg->pos, *msg->type,
-		data->DropTargetPos, data->DropType ) );
+	D(DBF_ALWAYS, "OPos: %ld, OType: %ld, Pos: %ld, Type: %ld\n", *msg->pos, *msg->type,
+		data->DropTargetPos, data->DropType);
 
 	return( 0 );
 }
@@ -6452,8 +6477,8 @@ ULONG _DragNDrop_NDropDraw( struct IClass *cl, Object *obj, struct MUIP_NListtre
 	UWORD *pens = _pens( obj );
 
 	/*
-	D(bug( "OPos: %ld, OType: %ld, Pos: %ld, Type: %ld\n", msg->pos, msg->type,
-		data->DropTargetPos, data->DropType ) );
+	D(DBF_ALWAYS, "OPos: %ld, OType: %ld, Pos: %ld, Type: %ld\n", msg->pos, msg->type,
+		data->DropTargetPos, data->DropType);
 	*/
 
 	apen = GetAPen( rp );
@@ -6526,7 +6551,7 @@ ULONG _DragNDrop_DropDraw( struct IClass *cl, Object *obj, struct MUIP_NList_Dro
 	struct NListtree_Data *data = INST_DATA( cl, obj );
 	struct MUI_NListtree_TreeNode *drawtarget;
 
-	D(bug( "DropType: %ld, DropPos: %ld\n", msg->type, msg->pos ) );
+	D(DBF_ALWAYS, "DropType: %ld, DropPos: %ld\n", msg->type, msg->pos);
 
 	DoMethod( obj, MUIM_NList_GetEntry, msg->pos, &drawtarget );
 
@@ -6539,12 +6564,16 @@ ULONG _DragNDrop_DropDraw( struct IClass *cl, Object *obj, struct MUIP_NList_Dro
 ULONG _DragNDrop_DragFinish( struct IClass *cl, Object *obj, Msg msg )
 {
 	struct NListtree_Data *data = INST_DATA( cl, obj );
+    ULONG result;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 	data->Flags &= ~NLTF_DRAGDROP;
 
-	return( DoSuperMethodA( cl, obj, msg ) );
+	result = DoSuperMethodA( cl, obj, msg );
+
+    RETURN(result);
+    return result;
 }
 
 
@@ -6556,7 +6585,7 @@ ULONG _DragNDrop_DragDrop( struct IClass *cl, Object *obj, UNUSED Msg msg )
 
 	dtn = data->DropTarget;
 
-  D(bug("MUIM_DragDrop\n"));
+  D(DBF_ALWAYS, "MUIM_DragDrop\n");
 
 	if ( data->SelectedTable.tb_Entries > 0 )
 	{
@@ -6577,14 +6606,14 @@ ULONG _DragNDrop_DragDrop( struct IClass *cl, Object *obj, UNUSED Msg msg )
 
 			if((rettn = IsXChildOfListMemberNotSelf(tn, &data->SelectedTable)))
 			{
-				D(bug( "Entry 0x%08lx - %s  already inserted through node 0x%08lx - %s\n", tn, tn->tn_Name, rettn, rettn->tn_Name ) );
+				D(DBF_ALWAYS, "Entry 0x%08lx - %s  already inserted through node 0x%08lx - %s\n", tn, tn->tn_Name, rettn, rettn->tn_Name);
 			}
 			else
 			{
 				switch( data->DropType )
 				{
 					case MUIV_NListtree_DropType_Above:
-						D(bug( "Inserting entry 0x%08lx - %s above L: %s, N: %s\n", tn, tn->tn_Name, dtn->tn_Parent->tn_Name, dtn->tn_Name ) );
+						D(DBF_ALWAYS, "Inserting entry 0x%08lx - %s above L: %s, N: %s\n", tn, tn->tn_Name, dtn->tn_Parent->tn_Name, dtn->tn_Name);
 
 						ln = CLN( GetParent( dtn ) );
 
@@ -6597,7 +6626,7 @@ ULONG _DragNDrop_DragDrop( struct IClass *cl, Object *obj, UNUSED Msg msg )
 
 
 					case MUIV_NListtree_DropType_Below:
-						D(bug( "Inserting entry 0x%08lx below L: 0x%lx, N: 0x%lx\n", tn, dtn->tn_Parent, dtn ) );
+						D(DBF_ALWAYS, "Inserting entry 0x%08lx below L: 0x%lx, N: 0x%lx\n", tn, dtn->tn_Parent, dtn);
 
 						if ( !nexttn )
 						{
@@ -6624,7 +6653,7 @@ ULONG _DragNDrop_DragDrop( struct IClass *cl, Object *obj, UNUSED Msg msg )
 
 					case MUIV_NListtree_DropType_Onto:
 					case MUIV_NListtree_DropType_Sorted:
-						D(bug( "Inserting entry 0x%08lx onto L: 0x%lx, N: 0x%lx\n", tn, dtn->tn_Parent, dtn ) );
+						D(DBF_ALWAYS, "Inserting entry 0x%08lx onto L: 0x%lx, N: 0x%lx\n", tn, dtn->tn_Parent, dtn);
 
 						if ( dtn->tn_Flags & TNF_LIST )
 							ln = CLN( dtn );
@@ -7224,7 +7253,7 @@ ULONG _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_I
 	APTR user;
 	STATIC STRPTR np = "*** NULL POINTER ***";
 
-	D(bug("MUIM_NListtree_Insert: name=%s flags=0x%lx listnode:0x%lx prevnode:0x%lx  %ld\n",msg->Name,msg->Flags,msg->ListNode,msg->PrevNode,data->NumEntries));
+	D(DBF_ALWAYS, "MUIM_NListtree_Insert: name=%s flags=0x%lx listnode:0x%lx prevnode:0x%lx  %ld\n",msg->Name,msg->Flags,msg->ListNode,msg->PrevNode,data->NumEntries);
 
 	/*
 	**	Check for internal/user supplied construct
@@ -7305,7 +7334,7 @@ ULONG _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_I
 
 				default:
 					li = CLN( msg->ListNode );
-					D(bug("li = %p\n",li));
+					D(DBF_ALWAYS, "li = %p\n",li);
 					break;
 			}
 
@@ -7443,7 +7472,7 @@ ULONG _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_I
 				//ActivateNotify( data );
 				//DoQuiet( data, FALSE );
 
-				D(bug("Result: 0x%lx  %ld\n\n",tn,data->NumEntries));
+				D(DBF_ALWAYS, "Result: 0x%lx  %ld\n\n",tn,data->NumEntries);
 
 				return( (ULONG)tn );
 			}
@@ -7703,7 +7732,7 @@ ULONG _NListtree_Remove( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
 	struct MUI_NListtree_TreeNode *tn;
 	LONG pos;
 
-	D(bug("NList Remove listnode: 0x%lx  treenode: 0x%lx\n",msg->ListNode,msg->TreeNode));
+	D(DBF_ALWAYS, "NList Remove listnode: 0x%lx  treenode: 0x%lx\n",msg->ListNode,msg->TreeNode);
 
 	DeactivateNotify( data );
 
@@ -7792,7 +7821,7 @@ ULONG _NListtree_Remove( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
 
 			pos = GetVisualPos( data, tn );
 
-			D(bug( "Node: 0x%08lx - Name: %s - pos: %ld\n", tn, tn->tn_Name, pos ) );
+			D(DBF_ALWAYS, "Node: 0x%08lx - Name: %s - pos: %ld\n", tn, tn->tn_Name, pos);
 
 			if ( tn->tn_IFlags & TNIF_VISIBLE )
 				dorefresh = TRUE;
@@ -7802,7 +7831,7 @@ ULONG _NListtree_Remove( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
 			if ( dorefresh )
 				DoRefresh( data );
 
-			D(bug("Activenode: 0x%lx   Trmpactivenode: 0x%lx\n",data->ActiveNode,data->TempActiveNode));
+			D(DBF_ALWAYS, "Activenode: 0x%lx   Trmpactivenode: 0x%lx\n",data->ActiveNode,data->TempActiveNode);
 
 			/* sba: Notification is deactivated so we get not informed if the active node changed,
 			** do this by hand now
@@ -7895,7 +7924,7 @@ ULONG _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NList
 	struct NListtree_Data *data = INST_DATA( cl, obj );
 	struct MUI_NListtree_ListNode *ln = NULL;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 	ln = &data->RootList;
 
@@ -7949,7 +7978,8 @@ ULONG _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NList
 
 	}
 
-	return( 0 );
+	RETURN(0);
+    return( 0 );
 }
 
 
@@ -8355,7 +8385,7 @@ ULONG _NListtree_Move( struct IClass *cl, Object *obj, struct MUIP_NListtree_Mov
 	struct MUI_NListtree_ListNode *ln1, *ln2;
 	struct MUI_NListtree_TreeNode *tn1, *tn2;
 
-  D(bug("MUIM_NListtree_Move\n"));
+  D(DBF_ALWAYS, "MUIM_NListtree_Move\n");
 
 	/*
 	**	Handle all special events.
@@ -8479,7 +8509,7 @@ ULONG _NListtree_Move( struct IClass *cl, Object *obj, struct MUIP_NListtree_Mov
 		DoQuiet( data, FALSE );
 	}
 
-  D(bug("MUIM_NListtree_Move End\n"));
+  D(DBF_ALWAYS, "MUIM_NListtree_Move End\n");
 
 	return( 0 );
 }
@@ -9374,7 +9404,7 @@ ULONG _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_Ge
 	ULONG ret = 0;
 	LONG pos = 0;
 
-  D(bug("GetNr: NListtree entries %ld\n",data->NumEntries));
+  D(DBF_ALWAYS, "GetNr: NListtree entries %ld\n",data->NumEntries);
 
 	/*
 	**	Handle special events.
@@ -9729,7 +9759,7 @@ ULONG _NListtree_Redraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
 	}
 	else
 	{
-		D(bug( "EXTERNAL REDRAW REQUESTED!\n" ) );
+		D(DBF_ALWAYS, "EXTERNAL REDRAW REQUESTED!\n");
 		DoMethod( obj, MUIM_NList_Redraw, (LONG)msg->TreeNode );
 	}
 
@@ -9832,7 +9862,7 @@ ULONG _NListtree_Select( struct IClass *cl, Object *obj, struct MUIP_NListtree_S
 	struct NListtree_Data *data = INST_DATA( cl, obj );
 	LONG state = 0;
 
-	//D(bug( "\n" ) );
+	ENTER();
 
 	data->Flags |= NLTF_SELECT_METHOD;
 
@@ -9883,7 +9913,8 @@ ULONG _NListtree_Select( struct IClass *cl, Object *obj, struct MUIP_NListtree_S
 
 	data->Flags &= ~NLTF_SELECT_METHOD;
 
-	return( (ULONG)state );
+	RETURN(state);
+    return( (ULONG)state );
 }
 
 
@@ -10536,7 +10567,7 @@ ULONG _NListtree_GetListActive( struct IClass *cl, Object *obj, UNUSED struct MU
 	*/
 	DoMethod( obj, MUIM_NList_GetEntry, MUIV_NList_GetEntry_Active, &tn );
 
-	D(bug( "Got Active notify from NList 0x%08lx - %s (0x%08lx - Name: %s) force=%ld\n", tn, tn->tn_Name, data->ActiveNode, data->ActiveNode->tn_Name, data->ForceActiveNotify ) );
+	D(DBF_ALWAYS, "Got Active notify from NList 0x%08lx - %s (0x%08lx - Name: %s) force=%ld\n", tn, tn->tn_Name, data->ActiveNode, data->ActiveNode->tn_Name, data->ForceActiveNotify);
 
 	if ( tn != data->ActiveNode || data->ForceActiveNotify)
 	{
@@ -10555,11 +10586,11 @@ ULONG _NListtree_GetDoubleClick( struct IClass *cl, Object *obj, UNUSED struct M
 {
 	struct NListtree_Data *data = INST_DATA( cl, obj );
 
+	ENTER();
+
 	if ( data->DoubleClick != MUIV_NListtree_DoubleClick_NoTrigger )
 	{
 		struct MUI_NListtree_TreeNode *tn;
-
-		//D(bug( "\n" ) );
 
 		/*
 		**	Get pointer to the selected node.
@@ -10574,7 +10605,8 @@ ULONG _NListtree_GetDoubleClick( struct IClass *cl, Object *obj, UNUSED struct M
 		}
 	}
 
-	return( 0 );
+	RETURN(0);
+    return( 0 );
 }
 
 
@@ -10649,12 +10681,12 @@ ULONG _NListtree_SelectChange( struct IClass *cl, Object *obj, struct MUIP_NList
 	struct NListtree_Data *data = INST_DATA( cl, obj );
 	struct MUI_NListtree_TreeNode *tn;
 
-	D(bug( "NList selection change: Entry %ld changed to %ld%s\n", msg->pos, msg->state,
-		( msg->flags & MUIV_NList_SelectChange_Flag_Multi ) ? " while holding down mouse button" : "" ) );
+	D(DBF_ALWAYS, "NList selection change: Entry %ld changed to %ld%s\n", msg->pos, msg->state,
+		( msg->flags & MUIV_NList_SelectChange_Flag_Multi ) ? " while holding down mouse button" : "");
 
   if (data->IgnoreSelectionChange)
   {
-  	D(bug("  which is ignored\n"));
+  	D(DBF_ALWAYS, "  which is ignored\n");
   	return 0;
   }
 
@@ -10836,9 +10868,9 @@ DISPATCHERPROTO(_Dispatcher)
 		case MUIM_NList_Remove:
 		{
 			ULONG rc;
-			D(bug("MUIM_NList_Remove\n"));
+			D(DBF_ALWAYS, "MUIM_NList_Remove\n");
 			rc = DoSuperMethodA( cl, obj, msg );
-			D(bug("MUIM_NList_Remove_End\n"));
+			D(DBF_ALWAYS, "MUIM_NList_Remove_End\n");
 			return rc;
 		}
     #endif

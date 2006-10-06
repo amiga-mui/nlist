@@ -40,7 +40,7 @@ CPUFLAGS = -mmultiple
 CDEFS    = -D__NFT_VERDATE=\"`date +%d.%m.%Y`\" -D__NFT_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
 WARN     = -W -Wall
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
-DEBUG    = -DWITH_DEBUG -g -O0
+DEBUG    = -DDEBUG -g -O0
 CFLAGS   = -noixemul -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
            $(DEBUG) -c
 LDFLAGS  = -noixemul -nostartfiles
@@ -58,7 +58,8 @@ LDLIBS   = -ldebug
 TARGET = $(BINDIR)/NFloattext.mcc
 
 OBJS = $(OBJDIR)/library.o \
-       $(OBJDIR)/NFloattext.o
+       $(OBJDIR)/NFloattext.o \
+       $(OBJDIR)/Debug.o
 
 #
 

@@ -29,10 +29,11 @@
 #include <libraries/mui.h>
 #endif
 
+#include <mcc_common.h>
 #include "mui/NList_mcc.h"
 
-#include "mcc_common.h"
-#include "mcc_debug.h"
+//#include "NListtree.h"
+#include "Debug.h"
 
 #include "amiga-align.h"
 

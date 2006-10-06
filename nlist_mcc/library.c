@@ -43,16 +43,16 @@
 #include "rev.h"
 #include "NList_grp.h"
 
-#define VERSION       LIB_VERSION
-#define REVISION      LIB_REVISION
+#define VERSION             LIB_VERSION
+#define REVISION            LIB_REVISION
 
-#define CLASS         MUIC_NList
-#define SUPERCLASS    MUIC_Group
+#define CLASS               MUIC_NList
+#define SUPERCLASS          MUIC_Group
 
-#define	INSTDATA      NLData
+#define	INSTDATA            NLData
 
 #define UserLibID			"$VER: NList.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	19
+#define MASTERVERSION	    19
 
 #define USEDCLASSESP  used_classesP
 static const STRPTR used_classesP[] = { "NListviews.mcp", NULL };

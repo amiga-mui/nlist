@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2006-10-06  Thore Böckelmann <tboeckel@gmx.de>
+
+    * misc: added new debugging scheme, as known from YAM and TextEditor.mcc.
+      Therefore the now obsolete file includes/mcc_debug.h is gone. The
+      debugging facility is far from perfect and yet just covers the absolute
+      minimum of debugging. That means one cannot yet define precise debugging
+      classes.
+
 2006-10-04  Thore Böckelmann <tboeckel@gmx.de>
 
     * includes/mccheader.c, #?/Makefile.os4: switched to newlib compilation and

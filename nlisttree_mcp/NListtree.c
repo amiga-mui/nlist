@@ -366,11 +366,13 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 					msg_shadow_key, msg_draw_key, msg_draw2_key, msg_style_key, msg_space_key, msg_remember_status_key, msg_open_autoscroll_key,
 					msg_bt_opensample_key, msg_bt_opencopyright_key, msg_bt_close_key;
 
-	if ( !( obj = (Object *)DoSuperMethodA( cl, obj, msg ) ) )
+	ENTER();
+
+    if ( !( obj = (Object *)DoSuperMethodA( cl, obj, msg ) ) )
+    {
+        RETURN(0);
 		return( 0 );
-
-	D(bug( "\n" ) );
-
+    }
 
 	/*
 	**	Init data.
@@ -769,8 +771,9 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 ULONG _DisposeP( struct IClass *cl, Object *obj, Msg msg )
 {
 	struct NListtreeP_Data *data = INST_DATA( cl, obj );
+    ULONG result;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 	if(LocaleBase)
   {
@@ -794,7 +797,10 @@ ULONG _DisposeP( struct IClass *cl, Object *obj, Msg msg )
 	if ( data->GR_Prefs )
 		MUI_DisposeObject( data->GR_Prefs );
 
-	return( DoSuperMethodA( cl, obj, msg ) );
+	result = DoSuperMethodA( cl, obj, msg );
+
+    RETURN(result);
+    return result;
 }
 
 
@@ -802,10 +808,13 @@ ULONG _SetupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 {
 	struct NListtreeP_Data *data = INST_DATA( cl, obj );
 
-	if ( !( DoSuperMethodA( cl, obj, (Msg)msg ) ) )
-		return( FALSE );
+    ENTER();
 
-	D(bug( "\n" ) );
+	if ( !( DoSuperMethodA( cl, obj, (Msg)msg ) ) )
+    {
+        RETURN(FALSE);
+		return( FALSE );
+    }
 
 	DoMethod( _app( obj ), OM_ADDMEMBER, data->WI_Sample );
 	DoMethod( _app( obj ), OM_ADDMEMBER, data->WI_Copyright );
@@ -826,15 +835,17 @@ ULONG _SetupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 	*/
 	TransferValues( data );
 
-	return( TRUE );
+	RETURN(TRUE);
+    return( TRUE );
 }
 
 
 ULONG _CleanupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 {
 	struct NListtreeP_Data *data = INST_DATA(cl, obj);
+    ULONG result;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 	if((data->SampleWasOpen = xget(data->WI_Sample, MUIA_Window_Open)))
 	{
@@ -849,7 +860,10 @@ ULONG _CleanupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 	DoMethod( _app( obj ), OM_REMMEMBER, data->WI_Sample );
 	DoMethod( _app( obj ), OM_REMMEMBER, data->WI_Copyright );
 
-	return( DoSuperMethodA( cl, obj, (Msg)msg ) );
+	result = DoSuperMethodA( cl, obj, (Msg)msg );
+
+    RETURN(result);
+    return result;
 }
 
 
@@ -861,7 +875,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	struct MUI_PenSpec *pen;
 	ULONG d;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 	/*
 	**	Create objects
@@ -869,7 +883,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	pdobj = MUI_NewObject( MUIC_Pendisplay,		TAG_DONE );
 	idobj = MUI_NewObject( MUIC_Imagedisplay,	TAG_DONE );
 
-	D(bug( "pdobj: 0x%08lx, idobj: 0x%08lx\n", pdobj, idobj ) );
+	D(DBF_ALWAYS, "pdobj: 0x%08lx, idobj: 0x%08lx\n", pdobj, idobj);
 
 
 	/*
@@ -879,7 +893,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	{
 		set( data->PI_ImageClosed, MUIA_Imagedisplay_Spec, is );
 
-		D(bug( "Closed node image: '%s'\n", (STRPTR)is ) );
+		D(DBF_ALWAYS, "Closed node image: '%s'\n", (STRPTR)is);
 	}
 	else
 	{
@@ -890,7 +904,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 			get( idobj, MUIA_Imagedisplay_Spec, &is );
 			set( data->PI_ImageClosed, MUIA_Imagedisplay_Spec, is );
 
-			D(bug( "Closed node image: '%s'\n", (STRPTR)is ) );
+			D(DBF_ALWAYS, "Closed node image: '%s'\n", (STRPTR)is);
 		}
 	}
 
@@ -899,7 +913,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	{
 		set( data->PI_ImageOpen, MUIA_Imagedisplay_Spec, is );
 
-		D(bug( "Open node image: '%s'\n", (STRPTR)is ) );
+		D(DBF_ALWAYS, "Open node image: '%s'\n", (STRPTR)is);
 	}
 	else
 	{
@@ -910,7 +924,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 			get( idobj, MUIA_Imagedisplay_Spec, &is );
 			set( data->PI_ImageOpen, MUIA_Imagedisplay_Spec, is );
 
-			D(bug( "Open node image: '%s'\n", (STRPTR)is ) );
+			D(DBF_ALWAYS, "Open node image: '%s'\n", (STRPTR)is);
 		}
 	}
 
@@ -919,7 +933,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	{
 		set( data->PI_ImageSpecial, MUIA_Imagedisplay_Spec, is );
 
-		D(bug( "Special node image: '%s'\n", (STRPTR)is ) );
+		D(DBF_ALWAYS, "Special node image: '%s'\n", (STRPTR)is);
 	}
 	else
 	{
@@ -930,7 +944,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 			get( idobj, MUIA_Imagedisplay_Spec, &is );
 			set( data->PI_ImageSpecial, MUIA_Imagedisplay_Spec, is );
 
-			D(bug( "Special node image: '%s'\n", (STRPTR)is ) );
+			D(DBF_ALWAYS, "Special node image: '%s'\n", (STRPTR)is);
 		}
 	}
 
@@ -942,7 +956,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	{
 		set( data->PP_LinePen, MUIA_Pendisplay_Spec, d );
 
-		D(bug( "Line color: '%s'\n", (STRPTR)d ) );
+		D(DBF_ALWAYS, "Line color: '%s'\n", (STRPTR)d);
 	}
 	else
 	{
@@ -953,7 +967,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 			get( pdobj, MUIA_Pendisplay_Spec, &pen );
 			set( data->PP_LinePen, MUIA_Pendisplay_Spec, pen );
 
-			D(bug( "Line color: '%s'\n", pen ) );
+			D(DBF_ALWAYS, "Line color: '%s'\n", pen);
 		}
 	}
 
@@ -961,7 +975,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	{
 		set( data->PP_ShadowPen, MUIA_Pendisplay_Spec, d );
 
-		D(bug( "Shadow color: '%s'\n", (STRPTR)d ) );
+		D(DBF_ALWAYS, "Shadow color: '%s'\n", (STRPTR)d);
 	}
 	else
 	{
@@ -972,7 +986,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 			get( pdobj, MUIA_Pendisplay_Spec, &pen );
 			set( data->PP_ShadowPen, MUIA_Pendisplay_Spec, pen );
 
-			D(bug( "Shadow color: '%s'\n", pen ) );
+			D(DBF_ALWAYS, "Shadow color: '%s'\n", pen);
 		}
 	}
 
@@ -980,7 +994,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	{
 		set( data->PP_DrawPen, MUIA_Pendisplay_Spec, d );
 
-		D(bug( "Draw color: '%s'\n", (STRPTR)d ) );
+		D(DBF_ALWAYS, "Draw color: '%s'\n", (STRPTR)d);
 	}
 	else
 	{
@@ -991,7 +1005,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 			get( pdobj, MUIA_Pendisplay_Spec, &pen );
 			set( data->PP_DrawPen, MUIA_Pendisplay_Spec, pen );
 
-			D(bug( "Draw color: '%s'\n", pen ) );
+			D(DBF_ALWAYS, "Draw color: '%s'\n", pen);
 		}
 	}
 
@@ -1000,7 +1014,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	{
 		set( data->PP_Draw2Pen, MUIA_Pendisplay_Spec, d );
 
-		D(bug( "Draw color 2: '%s'\n", (STRPTR)d ) );
+		D(DBF_ALWAYS, "Draw color 2: '%s'\n", (STRPTR)d);
 	}
 	else
 	{
@@ -1011,7 +1025,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 			get( pdobj, MUIA_Pendisplay_Spec, &pen );
 			set( data->PP_Draw2Pen, MUIA_Pendisplay_Spec, pen );
 
-			D(bug( "Draw color 2: '%s'\n", pen ) );
+			D(DBF_ALWAYS, "Draw color 2: '%s'\n", pen);
 		}
 	}
 
@@ -1024,27 +1038,27 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 		set( data->CY_Style, MUIA_Cycle_Active, atoi( (STRPTR)d ) );
 		StyleChanged( data, atoi( (STRPTR)d ) );
 
-		D(bug( "Style: %ld\n", atoi( (STRPTR)d ) ) );
+		D(DBF_ALWAYS, "Style: %ld\n", atoi( (STRPTR)d ));
 	}
 	else
 	{
 		set( data->CY_Style, MUIA_Cycle_Active, MUICFGV_NListtree_Style_Lines3D );
 		StyleChanged( data, MUICFGV_NListtree_Style_Lines3D );
 
-		D(bug( "Style: %ld\n", 0 ) );
+		D(DBF_ALWAYS, "Style: %ld\n", 0);
 	}
 
 	if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_Space)))
 	{
 		set( data->SL_Space, MUIA_Slider_Level, atoi( (STRPTR)d ) );
 
-		D(bug( "Space: %ld\n", atoi( (STRPTR)d ) ) );
+		D(DBF_ALWAYS, "Space: %ld\n", atoi( (STRPTR)d ));
 	}
 	else
 	{
 		set( data->SL_Space, MUIA_Slider_Level, MUICFGV_NListtree_Space_Default );
 
-		D(bug( "Space: %ld\n", MUICFGV_NListtree_Space_Default ) );
+		D(DBF_ALWAYS, "Space: %ld\n", MUICFGV_NListtree_Space_Default);
 	}
 
 
@@ -1052,13 +1066,13 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	{
 		set( data->CH_RememberStatus, MUIA_Selected, atoi( (STRPTR)d ) );
 
-		D(bug( "RememberStatus: %ld\n", atoi( (STRPTR)d ) ) );
+		D(DBF_ALWAYS, "RememberStatus: %ld\n", atoi( (STRPTR)d ));
 	}
 	else
 	{
 		set( data->CH_RememberStatus, MUIA_Selected, TRUE );
 
-		D(bug( "RememberStatus: 1\n" ) );
+		D(DBF_ALWAYS, "RememberStatus: 1\n");
 	}
 
 
@@ -1066,13 +1080,13 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	{
 		set( data->CH_OpenAutoScroll, MUIA_Selected, atoi( (STRPTR)d ) );
 
-		D(bug( "OpenAutoScroll: %ld\n", atoi( (STRPTR)d ) ) );
+		D(DBF_ALWAYS, "OpenAutoScroll: %ld\n", atoi( (STRPTR)d ));
 	}
 	else
 	{
 		set( data->CH_OpenAutoScroll, MUIA_Selected, TRUE );
 
-		D(bug( "OpenAutoScroll: 1\n" ) );
+		D(DBF_ALWAYS, "OpenAutoScroll: 1\n");
 	}
 
 	/*
@@ -1081,6 +1095,7 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	if( pdobj )
 		MUI_DisposeObject( pdobj );
 
+    RETURN(0);
 	return( 0 );
 }
 
@@ -1091,7 +1106,7 @@ ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	char buf[5];
 	ULONG d;
 
-	D(bug( "\n" ) );
+	ENTER();
 
 	/*
 	**	Images
@@ -1100,21 +1115,21 @@ ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	if( d != 0)
 		DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_ImageSpec ), MUICFG_NListtree_ImageSpecClosed );
 
-	D(bug( "Image closed: '%s'\n", (STRPTR)d ) );
+	D(DBF_ALWAYS, "Image closed: '%s'\n", (STRPTR)d);
 
 
 	get( data->PI_ImageOpen,	MUIA_Imagedisplay_Spec,	&d );
 	if(d != 0)
 		DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_ImageSpec ), MUICFG_NListtree_ImageSpecOpen );
 
-	D(bug( "Image open: '%s'\n", (STRPTR)d ) );
+	D(DBF_ALWAYS, "Image open: '%s'\n", (STRPTR)d);
 
 
 	get( data->PI_ImageSpecial,	MUIA_Imagedisplay_Spec,	&d );
 	if(d != 0)
 		DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_ImageSpec ), MUICFG_NListtree_ImageSpecSpecial );
 
-	D(bug( "Image special: '%s'\n", (STRPTR)d ) );
+	D(DBF_ALWAYS, "Image special: '%s'\n", (STRPTR)d);
 
 
 	/*
@@ -1124,28 +1139,28 @@ ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	if(d != 0)
 		DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecLines );
 
-	D(bug( "Line color: '%s'\n", (STRPTR)d ) );
+	D(DBF_ALWAYS, "Line color: '%s'\n", (STRPTR)d);
 
 
 	get( data->PP_ShadowPen, MUIA_Pendisplay_Spec, &d );
 	if(d != 0)
 		DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecShadow );
 
-	D(bug( "Shadow color: '%s'\n", (STRPTR)d ) );
+	D(DBF_ALWAYS, "Shadow color: '%s'\n", (STRPTR)d);
 
 
 	get( data->PP_DrawPen, MUIA_Pendisplay_Spec, &d );
 	if(d != 0)
 		DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecDraw );
 
-	D(bug( "Draw color: '%s'\n", (STRPTR)d ) );
+	D(DBF_ALWAYS, "Draw color: '%s'\n", (STRPTR)d);
 
 
 	get( data->PP_Draw2Pen, MUIA_Pendisplay_Spec, &d );
 	if(d != 0)
 		DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecDraw2 );
 
-	D(bug( "Draw color 2: '%s'\n", (STRPTR)d ) );
+	D(DBF_ALWAYS, "Draw color 2: '%s'\n", (STRPTR)d);
 
 
 	/*
@@ -1155,29 +1170,30 @@ ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 	sprintf( buf, "%ld", d );
 	DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_Style );
 
-	D(bug( "Style: %ld\n", d ) );
+	D(DBF_ALWAYS, "Style: %ld\n", d);
 
 
 	get( data->SL_Space, MUIA_Slider_Level, &d );
 	sprintf( buf, "%ld", d );
 	DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_Space );
 
-	D(bug( "Space: %ld\n", d ) );
+	D(DBF_ALWAYS, "Space: %ld\n", d);
 
 
 	get( data->CH_RememberStatus, MUIA_Selected, &d );
 	sprintf( buf, "%ld", d );
 	DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_RememberStatus );
 
-	D(bug( "RememberStatus: %ld\n", d ) );
+	D(DBF_ALWAYS, "RememberStatus: %ld\n", d);
 
 
 	get( data->CH_OpenAutoScroll, MUIA_Selected, &d );
 	sprintf( buf, "%ld", d );
 	DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_OpenAutoScroll );
 
-	D(bug( "OpenAutoScroll: %ld\n", d ) );
+	D(DBF_ALWAYS, "OpenAutoScroll: %ld\n", d);
 
+    RETURN(0);
 	return( 0 );
 }
 

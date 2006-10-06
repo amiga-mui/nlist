@@ -26,7 +26,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-#include <exec/types.h>
+#include <proto/exec.h>
 
 /******************************************************************************/
 /*                                                                            */
@@ -36,21 +36,20 @@
 /*                                                                            */
 /******************************************************************************/
 
-#include "private.h"
-
 #include "NListtree.h"
+#include "private.h"
 #include "rev.h"
 
-#define VERSION       LIB_VERSION
-#define REVISION      LIB_REVISION
+#define VERSION             LIB_VERSION
+#define REVISION            LIB_REVISION
 
-#define CLASS         MUIC_NListtree
-#define SUPERCLASS    MUIC_NList
+#define CLASS               MUIC_NListtree
+#define SUPERCLASS          MUIC_NList
 
 #define INSTDATA			NListtree_Data
 
 #define UserLibID			"$VER: NListtree.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	19
+#define MASTERVERSION	    19
 
 #define USEDCLASSESP  used_classesP
 #define USEDCLASSES   used_classes
@@ -64,4 +63,5 @@ static const STRPTR used_classes[]  = { "NList.mcc", NULL };
 /******************************************************************************/
 
 #define USE_UTILITYBASE
+
 #include "mccheader.c"

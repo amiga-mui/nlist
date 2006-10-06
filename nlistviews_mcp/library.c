@@ -45,13 +45,13 @@
 #define	VERSION				LIB_VERSION
 #define	REVISION			LIB_REVISION
 
-#define CLASS				  MUIC_NListviews_mcp
-#define SUPERCLASSP		MUIC_Mccprefs
+#define CLASS				MUIC_NListviews_mcp
+#define SUPERCLASSP		    MUIC_Mccprefs
 
-#define	INSTDATAP     NListviews_MCP_Data
+#define	INSTDATAP           NListviews_MCP_Data
 
 #define UserLibID			"$VER: NListviews.mcp " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	19
+#define MASTERVERSION	    19
 
 #define	ClassInit
 #define	ClassExit

@@ -33,9 +33,9 @@
 #endif
 
 #include "mui/NList_mcc.h"
+#include "Debug.h"
 
-#include "mcc_common.h"
-#include "mcc_debug.h"
+#include <mcc_common.h>
 
 #define MUIM_NList_Trigger            0x9d510090 /* GM */
 //#define MUIA_NList_Pause              0x9d5100c0  /* GM  isg  LONG              */

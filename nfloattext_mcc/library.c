@@ -22,13 +22,7 @@
 
 ***************************************************************************/
 
-/******************************************************************************/
-/*                                                                            */
-/* includes                                                                   */
-/*                                                                            */
-/******************************************************************************/
-
-#include <exec/types.h>
+#include <proto/exec.h>
 
 /******************************************************************************/
 /*                                                                            */
@@ -44,13 +38,13 @@
 #define	VERSION				LIB_VERSION
 #define	REVISION			LIB_REVISION
 
-#define CLASS				  MUIC_NFloattext
-#define SUPERCLASS		MUIC_NList
+#define CLASS				MUIC_NFloattext
+#define SUPERCLASS          MUIC_NList
 
-#define	INSTDATA      NFTData
+#define	INSTDATA            NFTData
 
 #define UserLibID			"$VER: NFloattext.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	19
+#define MASTERVERSION	    19
 
 #define USEDCLASSESP  used_classesP
 static const STRPTR used_classesP[] = { "NListviews.mcp", NULL };
@@ -62,4 +56,5 @@ static const STRPTR used_classesP[] = { "NListviews.mcp", NULL };
 /******************************************************************************/
 
 #define USE_UTILITYBASE
+
 #include "mccheader.c"
