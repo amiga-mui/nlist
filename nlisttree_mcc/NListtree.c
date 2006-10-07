@@ -649,7 +649,7 @@ ULONG TreeImage_Set( struct IClass *cl, Object *obj, Msg msg )
 **	Dispatcher for the special tree image class.
 */
 
-DISPATCHERPROTO(TreeImage_Dispatcher)
+DISPATCHER(TreeImage_Dispatcher)
 {
 	switch( msg->MethodID )
 	{
@@ -665,7 +665,7 @@ DISPATCHERPROTO(TreeImage_Dispatcher)
 **	Dispatcher for the special tree image class no. 2.
 **	Get the maximum width of images.
 */
-DISPATCHERPROTO(NodeImage_Dispatcher)
+DISPATCHER(NodeImage_Dispatcher)
 {
 	if ( msg->MethodID == MUIM_Show )
 	{
@@ -6138,9 +6138,10 @@ D(DBF_ALWAYS, "mousebutton\n");
 				{
 					struct MUI_NListtree_TreeNode *tn;
 					struct MUI_NList_TestPos_Result tpres;
-					struct TimeVal tv;
-D(DBF_ALWAYS, "inobject\n");
-					switch( msg->imsg->Code )
+
+          D(DBF_ALWAYS, "inobject\n");
+					
+          switch( msg->imsg->Code )
 					{
 						case SELECTDOWN:
 
@@ -6194,14 +6195,11 @@ D(DBF_ALWAYS, "inobject\n");
 									}
 
 									/*
-									**	Get the current time and check for double-
-									**	click. If double click, reset time values,
-									**	if not, set values to current time.
+									**	We get the click time out of the intuimessage
+									**	If double click, reset time values, if not, set values to current time.
 									*/
-									CurrentTime( &tv.Seconds, &tv.Microseconds );
-
-									if	( DoubleClick( data->LDClickTime.Seconds, data->LDClickTime.Microseconds, tv.Seconds, tv.Microseconds ) &&
-										( tpres.entry == lastclickentry ) )
+									if(DoubleClick(data->LDClickTimeSecs, data->LDClickTimeMicros, msg->imsg->Seconds, msg->imsg->Micros) &&
+										 (tpres.entry == lastclickentry))
 									{
 										/*
 										**	Do not start dragging if user double clicked on an entry.
@@ -6233,13 +6231,13 @@ D(DBF_ALWAYS, "inobject\n");
 											data->LDClickColumn			= -1;
 										}
 
-										data->LDClickTime.Seconds	= 0;
-										data->LDClickTime.Microseconds	= 0;
+										data->LDClickTimeSecs	  = 0;
+										data->LDClickTimeMicros = 0;
 									}
 									else
 									{
-										data->LDClickTime.Seconds	= tv.Seconds;
-										data->LDClickTime.Microseconds	= tv.Microseconds;
+										data->LDClickTimeSecs	  = msg->imsg->Seconds;
+										data->LDClickTimeMicros = msg->imsg->Micros;
 									}
 
 									lastclickentry = tpres.entry;
@@ -10770,7 +10768,7 @@ ULONG _NListtree_SelectChange( struct IClass *cl, Object *obj, struct MUIP_NList
 *
 */
 
-DISPATCHERPROTO(_Dispatcher)
+DISPATCHER(_Dispatcher)
 {
 	switch( msg->MethodID )
 	{

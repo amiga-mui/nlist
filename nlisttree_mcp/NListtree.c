@@ -1212,7 +1212,7 @@ ULONG _HandleInputP( struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 	return( DoSuperMethodA( cl, obj, (Msg)msg ) );
 }
 
-DISPATCHERPROTO(_DispatcherP)
+DISPATCHER(_DispatcherP)
 {
 	switch( msg->MethodID )
 	{

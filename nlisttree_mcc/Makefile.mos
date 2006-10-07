@@ -41,7 +41,7 @@ DEBUG    = -DDEBUG -g -O0
 CFLAGS   = -noixemul -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) \
            $(OPTFLAGS) $(DEBUG) -c
 LDFLAGS  = -noixemul -nostartfiles
-LDLIBS   =
+LDLIBS   = -ldebug
 
 # CPU and DEBUG can be defined outside, defaults to above
 # using e.g. "make DEBUG= CPU=-mcpu=603e" produces optimized non-debug PPC-603e version

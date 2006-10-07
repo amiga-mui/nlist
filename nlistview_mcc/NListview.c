@@ -63,7 +63,14 @@ static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
 		ie.ie_Code         = imsg->Code & ~dccode;
 		ie.ie_Qualifier    = imsg->Qualifier & ~dcquali;
 		ie.ie_EventAddress = (APTR *)*((ULONG *)imsg->IAddress);
-		ie.ie_TimeStamp    = *((struct TimeVal *)&imsg->Seconds);
+
+    #if defined(__amigaos4__)
+		ie.ie_TimeStamp.Seconds = imsg->Seconds;
+		ie.ie_TimeStamp.Microseconds = imsg->Micros;
+    #else
+		ie.ie_TimeStamp.tv_secs = imsg->Seconds;
+		ie.ie_TimeStamp.tv_micro = imsg->Micros;
+    #endif
 
 		if ((MapRawKey(&ie,buf,3,0)>0))
 			return((LONG)buf[0]);
@@ -621,7 +628,7 @@ static ULONG mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
   return (DoSuperMethodA(cl,obj,msg));
 }
 
-DISPATCHERPROTO(_Dispatcher)
+DISPATCHER(_Dispatcher)
 {
   switch (msg->MethodID)
   {

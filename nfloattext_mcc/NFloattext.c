@@ -309,7 +309,7 @@ static ULONG mNFT_GetEntry(struct IClass *cl,Object *obj,struct MUIP_NFloattext_
 }
 
 
-DISPATCHERPROTO(_Dispatcher)
+DISPATCHER(_Dispatcher)
 {
   switch (msg->MethodID)
   {

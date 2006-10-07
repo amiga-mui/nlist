@@ -41,7 +41,7 @@ OPTFLAGS = -O3 -finline-functions -fomit-frame-pointer -funroll-loops
 DEBUG    = -g -O0 #-DDEBUG
 REDEFINE =
 CFLAGS   = -I. -I../includes -mcrt=$(CRT) $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS) $(DEBUG)\
-           -D__USE_INLINE__ -D__NEW_TIMEVAL_DEFINITION_USED__ $(REDEFINE) -c
+           -D__USE_INLINE__ $(REDEFINE) -c
 LDFLAGS  = -nostartfiles -mcrt=$(CRT)
 LDLIBS   =
 

@@ -111,7 +111,7 @@ static ULONG mNGR_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax 
   return(0);
 }
 
-DISPATCHERPROTO(NGR_Dispatcher)
+DISPATCHER(NGR_Dispatcher)
 {
   switch (msg->MethodID)
   {

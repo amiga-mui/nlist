@@ -3,505 +3,513 @@ MUI NList MCC classes - ChangeLog
 ---------------------------------
 
 $Id$
-$Source$
+
+2006-10-07  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcc: transformed all "struct TimeVal" definitions into separate
+    ULONG values as a real timeval structure is not really required. Also
+    adapted the HandleEvent method to use the current time supplied by the
+    intuimessage instead which should be more accurate.
+  * includes/SDI_hook.h: updated to latest version and adapted our sources
+    accordingly.
 
 2006-10-07  Thore Böckelmann <tboeckel@gmx.de>
 
-    * #?/Debug.c/h: Ooops. Forgot to check in the debug sources... :(
+  * #?/Debug.c/h: Ooops. Forgot to check in the debug sources... :(
 
 2006-10-06  Thore Böckelmann <tboeckel@gmx.de>
 
-    * misc: converted some left over old D(bug())'s.
-    * misc: added new debugging scheme, as known from YAM and TextEditor.mcc.
-      Therefore the now obsolete file includes/mcc_debug.h is gone. The
-      debugging facility is far from perfect and yet just covers the absolute
-      minimum of debugging. That means one cannot yet define precise debugging
-      classes.
+  * misc: converted some left over old D(bug())'s.
+  * misc: added new debugging scheme, as known from YAM and TextEditor.mcc.
+    Therefore the now obsolete file includes/mcc_debug.h is gone. The
+    debugging facility is far from perfect and yet just covers the absolute
+    minimum of debugging. That means one cannot yet define precise debugging
+    classes.
 
 2006-10-04  Thore Böckelmann <tboeckel@gmx.de>
 
-    * includes/mccheader.c, #?/Makefile.os4: switched to newlib compilation and
-      linkage per default.
+  * includes/mccheader.c, #?/Makefile.os4: switched to newlib compilation and
+    linkage per default.
 
 2006-10-03  Thore Böckelmann <tboeckel@gmx.de>
 
-    * misc: removed several signedness issues
-    * nlisttree_mcc/Makefile.os4: added -D__NEW_TIMEVAL_DEFINITION_USED__ to
-      CFLAGS
-    * nlisttree_mcc/NListtree.c,h, nlistview_mcc/NListview.c: changed all
-      usages of "struct timeval" to new "struct TimeVal" and all usages of
-      "tv_secs" and "tv_micro" to "Seconds" and "Microseconds".
-    * include/SDI_#?: updated SDI headers to very latest available versions
-      which should fix compilation issues with VBCC and the VARARGS68K
-      definition.
-    * include/#?mui#?: updated MUI heards to very latest available versions
-      which don't include any <clib/#?> directly anymore.
-    * nlist_mcc/NList_mcc6.c: the code to return the current pixel length of a
-      line didn't check for -1 as an invalid index and therefore caused crashes
-      if the list was contained in a virtual group and was scrolled into view
-      very slowly. -1 is the index of the title bar. This fixes bug #1568047.
+  * misc: removed several signedness issues
+  * nlisttree_mcc/Makefile.os4: added -D__NEW_TIMEVAL_DEFINITION_USED__ to
+    CFLAGS
+  * nlisttree_mcc/NListtree.c,h, nlistview_mcc/NListview.c: changed all
+    usages of "struct timeval" to new "struct TimeVal" and all usages of
+    "tv_secs" and "tv_micro" to "Seconds" and "Microseconds".
+  * include/SDI_#?: updated SDI headers to very latest available versions
+    which should fix compilation issues with VBCC and the VARARGS68K
+    definition.
+  * include/#?mui#?: updated MUI heards to very latest available versions
+    which don't include any <clib/#?> directly anymore.
+  * nlist_mcc/NList_mcc6.c: the code to return the current pixel length of a
+    line didn't check for -1 as an invalid index and therefore caused crashes
+    if the list was contained in a virtual group and was scrolled into view
+    very slowly. -1 is the index of the title bar. This fixes bug #1568047.
 
 #### v0.97 RELEASE ############################################################
 
 2005-07-30  Jens Langner <Jens.Langner@light-speed.de>
 
-    * nlist_mcc/NList_mcc.c,NList_mcc2.c: modified wheelmouse aware source
-      code to take respect of the new AmigaOS4 specific IDCMP_EXTENDEDMOUSE
-      events supported since intuition.library v51.28+.
+  * nlist_mcc/NList_mcc.c,NList_mcc2.c: modified wheelmouse aware source
+    code to take respect of the new AmigaOS4 specific IDCMP_EXTENDEDMOUSE
+    events supported since intuition.library v51.28+.
 
 2005-07-02  Jens Langner <Jens.Langner@light-speed.de>
 
-    * nlisttree_mcc/QuickSort.c: added removed <proto/utility.h> include
-      back as the OS4 SDK requires it for resolving CallHook() properly.
+  * nlisttree_mcc/QuickSort.c: added removed <proto/utility.h> include
+    back as the OS4 SDK requires it for resolving CallHook() properly.
 
 2005-06-24  Gunther Nikl <gni@gecko.de>
 
-    * nfloattext_mcc/NFloattext.c: Cleanup #include statements.
-      (DoSuperNew): use SDI_stdarg.h.
-      (CopyText, mNFT_GetEntry): Use MEMF_ANY when allocating memory.
-      (mNFT_Set, mNFT_GetEntry): Remove superfluous casts.
-      (mNFT_GetEntry): Use CopyMem().
-      (CopyText): Use strcpy().
-    * nlisttree_mcc/NListtree.c (OpenClipboard/CloseClipboard): Fixed.
-      (DoSuperNew, MyCallHook): Use SDI_stdarg.h.
-      (MyCallHookA: Disabled since its unused.
-      Use stdlib.h
-    * nlisttree_mcc/NListtree.c, nlisttree_mcc/QuickSort.c: Cleanup
-      #include statements.
-    * nlisttree_mcc/NListtree.h: Removed excessive header inclusion.
-    * nlisttree_mcp/NListtree.c: minor cleanup.
-    * nlistview_mcc/NListview.c: Cleanup #include statements.
-      (DoSuperNew): Use SDI_stdarg.h.
-    * nlistview_mcc/Makefile.os3, nlistview_mcc/Makefile.os4,
-      nlistview_mcc/Makefile.mos (CFLAGS): Added -I.. to get rid of ".."
-      in #include statement.
-    * nlistviews_mcp/NListviews.c: Cleanup #include statements.
+  * nfloattext_mcc/NFloattext.c: Cleanup #include statements.
+    (DoSuperNew): use SDI_stdarg.h.
+    (CopyText, mNFT_GetEntry): Use MEMF_ANY when allocating memory.
+    (mNFT_Set, mNFT_GetEntry): Remove superfluous casts.
+    (mNFT_GetEntry): Use CopyMem().
+    (CopyText): Use strcpy().
+  * nlisttree_mcc/NListtree.c (OpenClipboard/CloseClipboard): Fixed.
+    (DoSuperNew, MyCallHook): Use SDI_stdarg.h.
+    (MyCallHookA: Disabled since its unused.
+    Use stdlib.h
+  * nlisttree_mcc/NListtree.c, nlisttree_mcc/QuickSort.c: Cleanup
+    #include statements.
+  * nlisttree_mcc/NListtree.h: Removed excessive header inclusion.
+  * nlisttree_mcp/NListtree.c: minor cleanup.
+  * nlistview_mcc/NListview.c: Cleanup #include statements.
+    (DoSuperNew): Use SDI_stdarg.h.
+  * nlistview_mcc/Makefile.os3, nlistview_mcc/Makefile.os4,
+    nlistview_mcc/Makefile.mos (CFLAGS): Added -I.. to get rid of ".."
+    in #include statement.
+  * nlistviews_mcp/NListviews.c: Cleanup #include statements.
 
 2005-06-23  Gunther Nikl <gni@gecko.de>
 
-    * nlisttree_mcc/NListtree.c: Removed LocaleBase and its interface
-      definition.
-      (_DisposeP): moved CloseCat() and CloseLocale() inside the
-      "if (LocaleBase)" block.
-    * nlisttree_mcc/library.c: Added LocaleBase defintions.
-    * nfloattext_mcc/private.h, nlist_mcc/private.h, nlisttree_mcc/private.h,
-      nlisttree_mcp/private.h, nlistview_mcc/private.h, nlistviews_mcp/private.h:
-      Remove some unnessecary "../includes/". Use "" for private includes.
-    * nlist_mcc/Makefile.os3, nlist_mcc/Makefile.os4, nlist_mcc/Makefile.mos:
-      Added -I.. to get rid of ".." in #include statements.
-    * nlist_mcc/NList_grp.h, nlist_mcc/NList_img.h, nlist_mcc/NList_img2.h:
-      Minor cleanups.
-    * nlist_mcc/NList_mcc.c, nlist_mcc/NList_mcc0.c, nlist_mcc/NList_mcc1.c,
-      nlist_mcc/NList_mcc2.c, nlist_mcc/NList_mcc3.c, nlist_mcc/NList4_mcc.c,
-      nlist_mcc/NList_mcc5.c, nlist_mcc/NList_mcc6.c, nlist_mcc/NList_func.c,
-      nlist_mcc/NList_func2.c, nlist_mcc/NList_func3.c, nlist_mcc/NList_func4.c,
-      nlist_mcc/NList_grp.c, nlist_mcc/NList_img.c, nlist_mcc/NList_img2.c,
-      nlist_mcc/move.c, nlist_mcc/library.c: Add #include statements for used
-      headers.
-    * nlist_mcc/private.h: Removed excessive header inclusion.
-    * nlist_mcc/NList_mcc3.c (xget): Initialize local variable. Remove unused
-      MUIA_ #define.
-    * nlist_mcc/NList_mcc5.c: Removed xget() prototype.
-    * nlist_mcc/protos.h: Added xget() prototype.
-    * nlist_mcc/NList_func3.c (MyCallHookPktA): use SDI_stdarg.h.
-    * nlist_mcc/NList_mcc.c (DoSuperNew): Likewise.
-    * nlist_mcc/library.c: Make ioreq static.
+  * nlisttree_mcc/NListtree.c: Removed LocaleBase and its interface
+    definition.
+    (_DisposeP): moved CloseCat() and CloseLocale() inside the
+    "if (LocaleBase)" block.
+  * nlisttree_mcc/library.c: Added LocaleBase defintions.
+  * nfloattext_mcc/private.h, nlist_mcc/private.h, nlisttree_mcc/private.h,
+    nlisttree_mcp/private.h, nlistview_mcc/private.h, nlistviews_mcp/private.h:
+    Remove some unnessecary "../includes/". Use "" for private includes.
+  * nlist_mcc/Makefile.os3, nlist_mcc/Makefile.os4, nlist_mcc/Makefile.mos:
+    Added -I.. to get rid of ".." in #include statements.
+  * nlist_mcc/NList_grp.h, nlist_mcc/NList_img.h, nlist_mcc/NList_img2.h:
+    Minor cleanups.
+  * nlist_mcc/NList_mcc.c, nlist_mcc/NList_mcc0.c, nlist_mcc/NList_mcc1.c,
+    nlist_mcc/NList_mcc2.c, nlist_mcc/NList_mcc3.c, nlist_mcc/NList4_mcc.c,
+    nlist_mcc/NList_mcc5.c, nlist_mcc/NList_mcc6.c, nlist_mcc/NList_func.c,
+    nlist_mcc/NList_func2.c, nlist_mcc/NList_func3.c, nlist_mcc/NList_func4.c,
+    nlist_mcc/NList_grp.c, nlist_mcc/NList_img.c, nlist_mcc/NList_img2.c,
+    nlist_mcc/move.c, nlist_mcc/library.c: Add #include statements for used
+    headers.
+  * nlist_mcc/private.h: Removed excessive header inclusion.
+  * nlist_mcc/NList_mcc3.c (xget): Initialize local variable. Remove unused
+    MUIA_ #define.
+  * nlist_mcc/NList_mcc5.c: Removed xget() prototype.
+  * nlist_mcc/protos.h: Added xget() prototype.
+  * nlist_mcc/NList_func3.c (MyCallHookPktA): use SDI_stdarg.h.
+  * nlist_mcc/NList_mcc.c (DoSuperNew): Likewise.
+  * nlist_mcc/library.c: Make ioreq static.
 
 2005-06-16  Gunther Nikl <gni@gecko.de>
 
-    * nlisttree_mcc/NListtree.c, nlisttree_mcp/NListtree.c: Unify MySPrintf
-      for OS4 and MOS using SDI_starg.h as done by other projects.
-      Fix OS3 MySPrintf for GCC 3.4.x or newer (has to use stdarg.h macros!)
-      Initialize variable passed to GetAttr() with Zero.
-      Includes cleanup.
-      Fixed typos.
+  * nlisttree_mcc/NListtree.c, nlisttree_mcp/NListtree.c: Unify MySPrintf
+    for OS4 and MOS using SDI_starg.h as done by other projects.
+    Fix OS3 MySPrintf for GCC 3.4.x or newer (has to use stdarg.h macros!)
+    Initialize variable passed to GetAttr() with Zero.
+    Includes cleanup.
+    Fixed typos.
 
 2005-06-09  Jens Langner <Jens.Langner@light-speed.de>
 
-    * includes/SDI: updated SDI headers to latest incarnation.
+  * includes/SDI: updated SDI headers to latest incarnation.
 	 
 2005-05-25  Jens Langner <Jens.Langner@light-speed.de>
 
-    * library.c: added missing USE_UTILITYBASE define which may have caused
-      problems on OS3 machines.
+  * library.c: added missing USE_UTILITYBASE define which may have caused
+    problems on OS3 machines.
 
 2005-04-10  Jens Langner <Jens.Langner@light-speed.de>
 
-    * includes/mccclass_68k: replaced the assembler based OS4/68k stub by a
-      easier manageable C-based variant.
+  * includes/mccclass_68k: replaced the assembler based OS4/68k stub by a
+    easier manageable C-based variant.
 
 2005-04-09  Jens Langner <Jens.Langner@light-speed.de>
 
-    * all: fixed case sensitive #include statements which broke the
-      build on systems with a case sensistive filesystem.
-    * includes/SDI*: updated the common SDI headers with latest
-      version taken from the YAM repository.
+  * all: fixed case sensitive #include statements which broke the
+    build on systems with a case sensistive filesystem.
+  * includes/SDI*: updated the common SDI headers with latest
+    version taken from the YAM repository.
 
 2005-03-21  Gunther Nikl <gni@gecko.de>
 
-    * all: Minor source cleanup.
+  * all: Minor source cleanup.
 
 2005-03-17  Sebastian Bauer <mail@sebastianbauer.info>
 
-    * NListtree_mcc: Addressed bug 1095158 by rewritting the
-      responsible parts. This might introduce other problems and
-      needs proper testings.
+  * NListtree_mcc: Addressed bug 1095158 by rewritting the
+    responsible parts. This might introduce other problems and
+    needs proper testings.
 
 2005-03-16  Sebastian Bauer <mail@sebastianbauer.info>
 
-    * NList_mcc: Fixed base page access which happened when no entry
-      was selected and the keyboard was used (bug 1156362)
+  * NList_mcc: Fixed base page access which happened when no entry
+    was selected and the keyboard was used (bug 1156362)
 
 2005-01-01  Nicolas Sallin <henes@biclodon.com>
 
-    * NList_mcc: Fixed wrong usage of MUI_MAXMAX
+  * NList_mcc: Fixed wrong usage of MUI_MAXMAX
 
 #### v0.96 RELEASE ############################################################
 
 2004-12-15  Jens Langner <Jens.Langner@light-speed.de>
 
-    * made sure all revisions/dates are bumped of all NList classes
-      for upcoming new NList release.
+  * made sure all revisions/dates are bumped of all NList classes
+    for upcoming new NList release.
 
 2004-12-15  Sebastian Bauer <mail@sebastianbauer.info>
 
-    * NList_mcc: On some circumstances MUIA_NList_InsertPositions was not
-      set correctly if the element has been inserted via 
-      MUIV_NList_Insert_Sorted. Hopfully fixed now.
+  * NList_mcc: On some circumstances MUIA_NList_InsertPositions was not
+    set correctly if the element has been inserted via 
+    MUIV_NList_Insert_Sorted. Hopfully fixed now.
 
 2004-12-14  Sebastian Bauer <mail@sebastianbauer.info>
 
-    * NList_mcc: Fixed insert refresh problem
+  * NList_mcc: Fixed insert refresh problem
 
 2004-12-13  Sebastian Bauer <mail@sebastianbauer.info>
 
-    * NList_mcc:  Fixed offset refresh bug
-    * NList_mcc, NListviews_mcp: Added new prefs option to disable
-      the vertical centering of the text lines (can be found on the
-      misc2 sub page)
-    * NListviews_mcp: Eliminated a misc sub page. In the future the
-      rest should be eliminated as well.
+  * NList_mcc:  Fixed offset refresh bug
+  * NList_mcc, NListviews_mcp: Added new prefs option to disable
+    the vertical centering of the text lines (can be found on the
+    misc2 sub page)
+  * NListviews_mcp: Eliminated a misc sub page. In the future the
+    rest should be eliminated as well.
 
 2004-10-24  Jens Langner <Jens.Langner@light-speed.de>
 
-    * include/mccclass_68k.S: updated mcc 68k->PPC cross call stubs to
-      latest version created by fdtrans 51.1
+  * include/mccclass_68k.S: updated mcc 68k->PPC cross call stubs to
+    latest version created by fdtrans 51.1
     
 2004-10-03  Jens Langner <Jens.Langner@light-speed.de>,
             Sebastian Bauer <mail@sebastianbauer.info>
 
-    * mccheader.c: Special Fun of Computing fix. Return value of
-      PreClassInitFunc() was not evaluated.
+  * mccheader.c: Special Fun of Computing fix. Return value of
+    PreClassInitFunc() was not evaluated.
 
 2004-09-12  Jens Langner <Jens.Langner@light-speed.de>
 
-    * all: modified all makefiles to use "-W -Wall" as the warning
-      level and adapted all source files accordingly. Reactivated
-      the DEBUG options in all morphos makefiles aswell as the
-      debugging options can be dynamically disabled on the
-      commandline by "make DEBUG=" anyway.
+  * all: modified all makefiles to use "-W -Wall" as the warning
+    level and adapted all source files accordingly. Reactivated
+    the DEBUG options in all morphos makefiles aswell as the
+    debugging options can be dynamically disabled on the
+    commandline by "make DEBUG=" anyway.
 
 2004-08-26  Nicolas Sallin <henes@morphos.de>
 
-    * All: More changes for morphos.
+  * All: More changes for morphos.
 
 2004-08-25  Sebastian Bauer <mail@sebastianbauer.info>
 
-    * NList4_func4.c: Fixed wrong disposion of mouse pointer
-      objects. Bug found by Georg Steger.
+  * NList4_func4.c: Fixed wrong disposion of mouse pointer
+    objects. Bug found by Georg Steger.
 
 2004-08-25  Nicolas Sallin <henes@morphos.de>
 
-    * All: Changes for morphos.
+  * All: Changes for morphos.
 
 2004-08-24  Sebastian Bauer <mail@sebastianbauer.info>
 
-    * NListtree: Fixed alignment problems (the alignment enforcement
-      surrounding include statements was discarded by subincludes).
-      The events are now only subscribed between MUIM_Show/MUIM_Hide
-      rather than MUIM_Setup/MUIM_Cleanup as otherwise MUI sends
-      them even if the object is not showed (e.g. within a page).
-      Frozen version 18.20 of NListtree.
+  * NListtree: Fixed alignment problems (the alignment enforcement
+    surrounding include statements was discarded by subincludes).
+    The events are now only subscribed between MUIM_Show/MUIM_Hide
+    rather than MUIM_Setup/MUIM_Cleanup as otherwise MUI sends
+    them even if the object is not showed (e.g. within a page).
+    Frozen version 18.20 of NListtree.
 
 2004-08-07  Jens Langner <Jens.Langner@light-speed.de>
 
-    * nlist_mcc: fixed a rather annoying drawing bug where the
-      NList class wasn't calculating the correct vertical start
-      position on drawing the listview. This causes a very annoying
-      "stutterting" when instantly resizing the NList surrounding
-      group. However, this seems to trigger now another hided minor
-      drawing bug where not all of the vertical space of the NList
-      object is used. So this is something we have to look after
-      aswell.
+  * nlist_mcc: fixed a rather annoying drawing bug where the
+    NList class wasn't calculating the correct vertical start
+    position on drawing the listview. This causes a very annoying
+    "stutterting" when instantly resizing the NList surrounding
+    group. However, this seems to trigger now another hided minor
+    drawing bug where not all of the vertical space of the NList
+    object is used. So this is something we have to look after
+    aswell.
 
 2004-07-27  Jens Langner <Jens.Langner@light-speed.de>
 
-    * mccheader.c: updated the general mcc source file to the
-      latest version also used with other .mcc's out there. Also
-      adapted all library.c files to define the USEDCLASSES stuff
-      correctly.
+  * mccheader.c: updated the general mcc source file to the
+    latest version also used with other .mcc's out there. Also
+    adapted all library.c files to define the USEDCLASSES stuff
+    correctly.
 
 2004-07-16  Jens Langner <Jens.Langner@light-speed.de>
 
-    * gcc3: adapted all sources to be more gcc3 compliant. Removed
-      all remaining warnings in -Wall mode. Please note that at
-      least for the AmigaOS4 port of the classes gcc 3.4.1 should
-      be considered the default compiler now.
+  * gcc3: adapted all sources to be more gcc3 compliant. Removed
+    all remaining warnings in -Wall mode. Please note that at
+    least for the AmigaOS4 port of the classes gcc 3.4.1 should
+    be considered the default compiler now.
 
 2004-07-03  Jens Langner <Jens.Langner@light-speed.de>
 
-    * nlisttree_mcp: added the missing mcp class of the nlisttree
-      class and ported it to native OS4 aswell.
+  * nlisttree_mcp: added the missing mcp class of the nlisttree
+    class and ported it to native OS4 aswell.
 
 2004-07-01  Jens Langner <Jens.Langner@light-speed.de>
 
-    * all: built some first OS4/PPC native versions of all classes
-      and added makefiles for it accordingly.
-    * all: fixed all remaining compiler warnings which occurred
-      with -Wall.
-    * all: updated and reorganized all NList classes to use the
-      SDI_*.h header files to make it way easier to maintain the
-      source code for different operating systems like OS4 and MOS.
+  * all: built some first OS4/PPC native versions of all classes
+    and added makefiles for it accordingly.
+  * all: fixed all remaining compiler warnings which occurred
+    with -Wall.
+  * all: updated and reorganized all NList classes to use the
+    SDI_*.h header files to make it way easier to maintain the
+    source code for different operating systems like OS4 and MOS.
 
 2003-02-25  Jens Langner <Jens.Langner@light-speed.de>
 
-    * NList.mcc: fixed bug in the Draw method were it could have
-      happened that on a LAYERSREFRESH request the object wasn`t
-      correctly refreshed.
+  * NList.mcc: fixed bug in the Draw method were it could have
+    happened that on a LAYERSREFRESH request the object wasn`t
+    correctly refreshed.
 
 2003-02-24  Jens Langner <Jens.Langner@light-speed.de>
 
-    * added USEDCLASSES and USEDCLASSESP to all NList related
-      classes so that the preferences/superclass ordering is
-      a bit more accurate.
+  * added USEDCLASSES and USEDCLASSESP to all NList related
+    classes so that the preferences/superclass ordering is
+    a bit more accurate.
 
 2003-02-12  Jens Langner <Jens.Langner@light-speed.de>
 
-    * NList.mcc: added new MUIV_NList_Insert_Flag_Raw flag to
-      the MUIM_NList_Insert method. With this special flag the
-      developer is able to insert a bunch of data into a NList
-      without recalculating/reordering the columns width. As tests
-      pointed out the most significant speed loss while inserting
-      entries to a NList is the recalculating of the width of
-      each column. So, if  a developer is sure that he doesn`t need
-      to recalculate the columns width each time he inserts something,
-      he can now specify this flag and those entries will be inserted
-      with higher performance.
-      Tests have shown that ~8000 elements can be inserted now within
-      1-2 seconds instead of 8-9 seconds.
-    * NListtree.mcc: replaced Insert/RemoveTreeNodeVisibleSort()
-      functions by one ReplaceTreeNodeVisibleSort() function
-      that calls MUIM_NList_ReplaceSingle instead. That speeds up
-      the sorting of a treenode to a factor of ~170%.
-    * NListtree.mcc: removed broken flashsort implementation
-      as it anyway didn`t work correctly and wasn`t also
-      the best one for that sorting purpose. Replaced it with
-      a own Quicksort implementation and also use the same
-      algorithm now for the 68k version. As some test showed
-      the C implementation is as fast as the former ASM one and
-      in addition we have more flexibility now.
+  * NList.mcc: added new MUIV_NList_Insert_Flag_Raw flag to
+    the MUIM_NList_Insert method. With this special flag the
+    developer is able to insert a bunch of data into a NList
+    without recalculating/reordering the columns width. As tests
+    pointed out the most significant speed loss while inserting
+    entries to a NList is the recalculating of the width of
+    each column. So, if  a developer is sure that he doesn`t need
+    to recalculate the columns width each time he inserts something,
+    he can now specify this flag and those entries will be inserted
+    with higher performance.
+    Tests have shown that ~8000 elements can be inserted now within
+    1-2 seconds instead of 8-9 seconds.
+  * NListtree.mcc: replaced Insert/RemoveTreeNodeVisibleSort()
+    functions by one ReplaceTreeNodeVisibleSort() function
+    that calls MUIM_NList_ReplaceSingle instead. That speeds up
+    the sorting of a treenode to a factor of ~170%.
+  * NListtree.mcc: removed broken flashsort implementation
+    as it anyway didn`t work correctly and wasn`t also
+    the best one for that sorting purpose. Replaced it with
+    a own Quicksort implementation and also use the same
+    algorithm now for the 68k version. As some test showed
+    the C implementation is as fast as the former ASM one and
+    in addition we have more flexibility now.
 
 2003-02-08  Jens Langner <Jens.Langner@light-speed.de>
 
-    * NListview.mcc: implemented similar MUIA_ControlChar support
-      like the original Listview.mui supports it since ages.
-      By specifying a MUIA_ControlChar for a NListview object it
-      is now possible to specify a hotkey to control the active
-      entry of the corresponding NList.
+  * NListview.mcc: implemented similar MUIA_ControlChar support
+    like the original Listview.mui supports it since ages.
+    By specifying a MUIA_ControlChar for a NListview object it
+    is now possible to specify a hotkey to control the active
+    entry of the corresponding NList.
 
 2003-01-07  Sebastian Bauer <sebauer@t-online.de>
 
-    * NListtree: No default Compare Hook was set.
+  * NListtree: No default Compare Hook was set.
 
 2002-12-31  Jens Langner <Jens.Langner@light-speed.de>
 
-    * nlisttree/nlisttree.c: if a own ConstructHook was
-      set via SetAttributes, the whole flags were deleted.
-      Instead of a unset bit operation a masking operation
-      was used which caused that whole flags screwup. Fixed.
+  * nlisttree/nlisttree.c: if a own ConstructHook was
+    set via SetAttributes, the whole flags were deleted.
+    Instead of a unset bit operation a masking operation
+    was used which caused that whole flags screwup. Fixed.
 
 2002-11-21  Jens Langner <Jens.Langner@light-speed.de>
 
-    * nlisttree: updated sources to conform better with newest
-      morphos SDK.
+  * nlisttree: updated sources to conform better with newest
+    morphos SDK.
 
 2002-11-02  Sebastian Bauer <sebauer@t-online.de>
 
-    * NListtree: No longer copies the compare hook, instead
-      it uses the pointer directly
+  * NListtree: No longer copies the compare hook, instead
+    it uses the pointer directly
 
 2002-10-12  Jens Langner <Jens.Langner@light-speed.de>
 
-    * nlist_mcc/nlist_mcc.c: fixed bug in the internal
-      ConstructHook_String where Sensei forgot to terminate
-      the copied string with a \0.
+  * nlist_mcc/nlist_mcc.c: fixed bug in the internal
+    ConstructHook_String where Sensei forgot to terminate
+    the copied string with a \0.
 
 2002-09-13  Sebastian Bauer <sebauer@t-online.de>
 
-    * NListtree: MUIM_NListtree_Remove had problems when no entry
-      was active. Fixed.
+  * NListtree: MUIM_NListtree_Remove had problems when no entry
+    was active. Fixed.
 
 2002-07-15  Jens Langner <Jens.Langner@light-speed.de>
 
-    * nlist_mcc/nlist_mcc2.c: fixed a tiny, but extremly nasty
-      bug that caused unnecessary refreshs of nlist objects
-      if we had more than one nlist#? object within a group.
+  * nlist_mcc/nlist_mcc2.c: fixed a tiny, but extremly nasty
+    bug that caused unnecessary refreshs of nlist objects
+    if we had more than one nlist#? object within a group.
 
 2002-07-01  Sebastian Bauer <sebauer@t-online.de>
 
-    * The internal pool problem wasn't really fixed. Now it is (I hope)
+  * The internal pool problem wasn't really fixed. Now it is (I hope)
 
 2002-06-23  Sebastian Bauer <sebauer@t-online.de>
 
-    * Fixed a bug that the images weren't displayed in single
-      columned lists
+  * Fixed a bug that the images weren't displayed in single
+    columned lists
 
 2002-06-22  Sebastian Bauer <sebauer@t-online.de>
 
-    * Create also an Internal Pool if user pool was specified
-      as some functions require this
+  * Create also an Internal Pool if user pool was specified
+    as some functions require this
 
 2002-06-19  Jens Langner <Jens.Langner@htw-dresden.de>
 
-    * obviously turned this ChangeLog upside down because it
-      makes more sense :)
-    * removed common/mcc_debug.c as we use dprintf() for MorphOS
-      now for debugging purposes.
-    * removed the need of creating own ppc headerfiles with
-      geninclude.pl, because we can use #pragma pack(2) instead.
-    * Updated the MorphOS stuff in all classes to use varargs68k
-      stuff instead of this outdated varargs hacks.
-    * Did lots of effort to get the whole NList* stuff
-      up and running under MorphOS again. Somehow the builds
-      where broken.
-    * tagged all classes within the CVS with their respect
-      release version, so that they can be identified later.
+  * obviously turned this ChangeLog upside down because it
+    makes more sense :)
+  * removed common/mcc_debug.c as we use dprintf() for MorphOS
+    now for debugging purposes.
+  * removed the need of creating own ppc headerfiles with
+    geninclude.pl, because we can use #pragma pack(2) instead.
+  * Updated the MorphOS stuff in all classes to use varargs68k
+    stuff instead of this outdated varargs hacks.
+  * Did lots of effort to get the whole NList* stuff
+    up and running under MorphOS again. Somehow the builds
+    where broken.
+  * tagged all classes within the CVS with their respect
+    release version, so that they can be identified later.
 
 2002-04-02 Richard Poser <whomiga@missingpiece.com>
 
-    * Minor Modifications for the Include files/CPU I have
-      * Modified lines 256 and 687 in common/mccheader.h
-      * Modified lines 52 and 64 in NList_mcc/library.c
-      * Modified line 49 in NList_mcc/smakefile for CPU=68030
-      * Modified line 44 in NListviews_mcp/NListviews.c
-    * Major Additions/Changes for Special Shorthelp (NList_mcc)
-      * private.h:
-        * Added lines 489 and 490
-        * Changed line 165
-      * NList_mcc.c:
-        * Added lines 373, 377, 378, 503 and 649
-      * NList_mcc1.c
-        * Added lines 375-379
-      * NList_mcc2.c
-        * Added lines 220-224, 319-326, 986-1035 and 1040
-      * NList_mcc4.c
-        * Added lines 261, 344, 369, 570, 691, 753, 781, 799, 826, 851, 1200 and 1219
-        * Changed line 678
-    * Special ShortHelp Notes...
-      * When an Button Image Object is given a ShortHelp and the Mouse is positioned over the button,
-        the ShortHelp for that object will be shown, otherwise the Default ShortHelp for the full
-        NList object itself will be shown
-    * Not really much of a change - but made CPU=68030 in NList_mcc/smakefile due to my own requirements
-    * Bumped version of NList.mcc to 20.104
-    * Obviously added info to ChangeLog :-)
+  * Minor Modifications for the Include files/CPU I have
+    * Modified lines 256 and 687 in common/mccheader.h
+    * Modified lines 52 and 64 in NList_mcc/library.c
+    * Modified line 49 in NList_mcc/smakefile for CPU=68030
+    * Modified line 44 in NListviews_mcp/NListviews.c
+  * Major Additions/Changes for Special Shorthelp (NList_mcc)
+    * private.h:
+      * Added lines 489 and 490
+      * Changed line 165
+    * NList_mcc.c:
+      * Added lines 373, 377, 378, 503 and 649
+    * NList_mcc1.c
+      * Added lines 375-379
+    * NList_mcc2.c
+      * Added lines 220-224, 319-326, 986-1035 and 1040
+    * NList_mcc4.c
+      * Added lines 261, 344, 369, 570, 691, 753, 781, 799, 826, 851, 1200 and 1219
+      * Changed line 678
+  * Special ShortHelp Notes...
+    * When an Button Image Object is given a ShortHelp and the Mouse is positioned over the button,
+      the ShortHelp for that object will be shown, otherwise the Default ShortHelp for the full
+      NList object itself will be shown
+  * Not really much of a change - but made CPU=68030 in NList_mcc/smakefile due to my own requirements
+  * Bumped version of NList.mcc to 20.104
+  * Obviously added info to ChangeLog :-)
 
 2002-03-05 Sebastian Bauer <sebauer@t-online.de>
 
-    * Added a define MUIV_NList_UseImage_All for MUIM_NList_UseImage
-      which stands now for -1
+  * Added a define MUIV_NList_UseImage_All for MUIM_NList_UseImage
+    which stands now for -1
 
 2001-12-24 Sebastian Bauer <sebauer@t-online.de>
 
-    * Merged aphaso and sensei changes and commited all files to the
-      cvs (only tried the SAS compile)
-    * small smakefile changes
+  * Merged aphaso and sensei changes and commited all files to the
+    cvs (only tried the SAS compile)
+  * small smakefile changes
 
 2001-07-01  sensei <sensei@box43.gnet.pl>
 
-    * Added new methods MUIM_NList_Construct and MUIM_NList_Destruct.  Now
-      every internal method is calling these methods instead of playing
-      with hooks directly.  In NList subclass you can override them to your
-      own version.
-    * Fixed IdStrings again...  MUI dislikes MCC which haven't $VER:  at
-      the beggining of IdString and AboutMUI wasn't showing such MCC (but
-      MCC is working correctly!) in the list...
-    * Fixed global and local SMakefiles (dependency tree was broken (by me)
-      and "sometimes" project wasn't rebuilded...) In global smakefile
-      'all' was missing and it cauesed some troubles with objects/
-      directories (this's not my fault).
-    * Added useful scripts to make and clean objects/ directories.
-    * Bumped version of NList.mcc to 20.103
+  * Added new methods MUIM_NList_Construct and MUIM_NList_Destruct.  Now
+    every internal method is calling these methods instead of playing
+    with hooks directly.  In NList subclass you can override them to your
+    own version.
+  * Fixed IdStrings again...  MUI dislikes MCC which haven't $VER:  at
+    the beggining of IdString and AboutMUI wasn't showing such MCC (but
+    MCC is working correctly!) in the list...
+  * Fixed global and local SMakefiles (dependency tree was broken (by me)
+    and "sometimes" project wasn't rebuilded...) In global smakefile
+    'all' was missing and it cauesed some troubles with objects/
+    directories (this's not my fault).
+  * Added useful scripts to make and clean objects/ directories.
+  * Bumped version of NList.mcc to 20.103
 
 2001-06-27  sensei <sensei@box43.gnet.pl>
 
-    * Changed memory handling routines in NList_func3.c and NList_mcc.c
-    * Changed common/mccheader.h to support SAS/C.
-    * Changed NList_mcc/NList_mcc.c OM_NEW attributes handling, minor speedup.
-    * Fixed every library.c of each MCC, first function of library based
-      executable MUST do nothing and return 0.  Executing old MCC causes
-      unexpected crashes.
-    * Fixed and cleanuped OM_GET method of NList.mcc getting
-      MUIA_NList_DragColOnly attribute could cause unexpected results!
-    * Fixed library id string. It's not equal to version string!
-    * Added missed names of authors in id string.
-    * Bumped version of NList.mcc to 19.102
+  * Changed memory handling routines in NList_func3.c and NList_mcc.c
+  * Changed common/mccheader.h to support SAS/C.
+  * Changed NList_mcc/NList_mcc.c OM_NEW attributes handling, minor speedup.
+  * Fixed every library.c of each MCC, first function of library based
+    executable MUST do nothing and return 0.  Executing old MCC causes
+    unexpected crashes.
+  * Fixed and cleanuped OM_GET method of NList.mcc getting
+    MUIA_NList_DragColOnly attribute could cause unexpected results!
+  * Fixed library id string. It's not equal to version string!
+  * Added missed names of authors in id string.
+  * Bumped version of NList.mcc to 19.102
 
 2001-06-23  aphaso <cs@aphaso.de>
 
-    * Added MorphOS DoSuperMethod() to NFloattext.c
-    * Added common/mcc_debug.h for better debugging ;)
-    * Changed common/mcc_debug.c
-    * Changed common/mcc_common.h to support GNU/SAS...
-    * Changed some internal handling and added tree class support
-      in NList ;-)
-    * Changed version strings to NList#?.mcc ...
-    * Bumped version of NList.mcc to 19.101
-    * Fixed wrong MorphOS hooks...
+  * Added MorphOS DoSuperMethod() to NFloattext.c
+  * Added common/mcc_debug.h for better debugging ;)
+  * Changed common/mcc_debug.c
+  * Changed common/mcc_common.h to support GNU/SAS...
+  * Changed some internal handling and added tree class support
+    in NList ;-)
+  * Changed version strings to NList#?.mcc ...
+  * Bumped version of NList.mcc to 19.101
+  * Fixed wrong MorphOS hooks...
 
 2001-06-20  aphaso <cs@aphaso.de>
 
-    * Enforcer hit on dispose removed.
-    * Now omits column width calculation code if numcols == 1.
-      With only one column, NList is now faster than List. Yeahh!
-    * Shrink of entries array is now omitted. Same as List does i
-      think.
+  * Enforcer hit on dispose removed.
+  * Now omits column width calculation code if numcols == 1.
+    With only one column, NList is now faster than List. Yeahh!
+  * Shrink of entries array is now omitted. Same as List does i
+    think.
 
 2001-06-18  aphaso <cs@aphaso.de>
 
-    * Added experimental value MUIV_NList_Redraw_ColsVisible for
-      width calc of only the visible lines.
+  * Added experimental value MUIV_NList_Redraw_ColsVisible for
+    width calc of only the visible lines.
 
 2001-06-16  aphaso <cs@aphaso.de>
 
-    * Reworked entry manangement to use pointers insted of full
-      structures. This makes NList much faster (factor 3-4) in
-      some cases, but slows down a bit when inserting entries at
-      the bottom. Not much...
+  * Reworked entry manangement to use pointers insted of full
+    structures. This makes NList much faster (factor 3-4) in
+    some cases, but slows down a bit when inserting entries at
+    the bottom. Not much...
 
 2001-06-14  aphaso <cs@aphaso.de>
 
-    * Tracked back the floattext wrap bug and fixed it (*_mcc4.c).
-      All important lines which were changed between 0.89 and 0.89+
-      by Gilles and caused the wrap bug are marked with $$$WRAP for
-      future reference.
+  * Tracked back the floattext wrap bug and fixed it (*_mcc4.c).
+    All important lines which were changed between 0.89 and 0.89+
+    by Gilles and caused the wrap bug are marked with $$$WRAP for
+    future reference.
 
 2001-02-27  aphaso <cs@aphaso.de>
 
-    * Moved Floattext to own directory and added MorphOS changes
+  * Moved Floattext to own directory and added MorphOS changes
 
 2001-02-18  aphaso <cs@aphaso.de>
 
-    * Re-added makefiles for m68k ;)
-    * Added method MUIM_NList_SelectChange
-    * Automatic conversion of NList_mcc.h in
-      NList_mcc/makefile.ppc
-    * Bumped version to 19.98
+  * Re-added makefiles for m68k ;)
+  * Added method MUIM_NList_SelectChange
+  * Automatic conversion of NList_mcc.h in
+    NList_mcc/makefile.ppc
+  * Bumped version to 19.98
 
 2000-12-17  Gürer <madcat@linuxfan.com>
 
-    * initial cvs commit
-    * mui classes moved to their own directories
-    * ppc makefiles added
-    * stack check disabled (wasn't compatible with morphos)
-    * nlist, nlistview, nlistviews, nfloattext ported to morphos
-      (varius hook, vararg, etc patches)
+  * initial cvs commit
+  * mui classes moved to their own directories
+  * ppc makefiles added
+  * stack check disabled (wasn't compatible with morphos)
+  * nlist, nlistview, nlistviews, nfloattext ported to morphos
+    (varius hook, vararg, etc patches)

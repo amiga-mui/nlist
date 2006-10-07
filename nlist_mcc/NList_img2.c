@@ -84,7 +84,7 @@ static ULONG mNLI2_Set(struct IClass *cl,Object *obj,Msg msg)
   return (DoSuperMethodA(cl,obj,msg));
 }
 
-DISPATCHERPROTO(NLI2_Dispatcher)
+DISPATCHER(NLI2_Dispatcher)
 {
   switch (msg->MethodID)
   {

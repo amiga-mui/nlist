@@ -1973,7 +1973,7 @@ static ULONG mNL_MCP_Get(struct IClass *cl,Object *obj,Msg msg)
   return (DoSuperMethodA(cl,obj,msg));
 }
 
-DISPATCHERPROTO(_DispatcherP)
+DISPATCHER(_DispatcherP)
 {
   switch (msg->MethodID)
   {

@@ -460,7 +460,7 @@ static ULONG mNL_List_Display( struct IClass *cl, Object *obj, UNUSED struct MUI
  
 #define FS       (data = INST_DATA(cl,obj)); (NotNotify = data->DoNotify)
 
-DISPATCHERPROTO(_Dispatcher)
+DISPATCHER(_Dispatcher)
 {
   register struct NLData *data = NULL;
   ULONG retval = 0;
