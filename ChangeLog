@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $Source$
 
+2006-10-07  Thore Böckelmann <tboeckel@gmx.de>
+
+    * #?/Debug.c/h: Ooops. Forgot to check in the debug sources... :(
+
 2006-10-06  Thore Böckelmann <tboeckel@gmx.de>
 
     * misc: converted some left over old D(bug())'s.
