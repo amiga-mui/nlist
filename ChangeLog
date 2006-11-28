@@ -4,6 +4,11 @@ MUI NList MCC classes - ChangeLog
 
 $Id$
 
+2006-11-28  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcp: moved the "locale" directory to here because each mcp
+    should have its own directory instead of accessing a global one
+
 2006-10-07  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcc: transformed all "struct TimeVal" definitions into separate
