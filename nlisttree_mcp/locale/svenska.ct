@@ -1,0 +1,251 @@
+## chunk AUTH Pär Boberg
+## language svenska
+## version $VER: NListtree.mcp.ct 18.11 (28.11.06)
+MSG_BT_COLLAPSE
+Kollapsa
+;#DEF Collapse
+;#SET (//)
+MSG_BT_COLLAPSE_KEY
+e
+;#DEF e
+;#SET (//)
+MSG_BT_EXPAND
+Expandera
+;#DEF Expand
+;#SET (//)
+MSG_BT_EXPAND_KEY
+n
+;#DEF n
+;#SET (//)
+MSG_BT_OPENCOPYRIGHT
+Kopieringsrätt
+;#DEF Copyright
+;#SET (//)
+MSG_BT_OPENCOPYRIGHT_KEY
+r
+;#DEF r
+;#SET (//)
+MSG_BT_OPENSAMPLE
+Förhandsvisning (b)
+;#DEF Sample (b)
+;#SET (//)
+MSG_BT_OPENSAMPLE_KEY
+b
+;#DEF b
+;#SET (//)
+MSG_CLOSED
+Stängd:
+;#DEF Closed:
+;#SET (//)
+MSG_CLOSED_KEY
+c
+;#DEF c
+;#SET (//)
+MSG_COPYRIGHT
+Kopieringsrätt
+;#DEF Copyright
+;#SET (//)
+MSG_COPYRIGHTTEXT
+\033c\033bNListtree.mcc %s\033n\n\033cKopieringsrätt © 1999-2000 Carsten Scholling\nAlla rättigheter reserverade.\n\nFör utvecklar information, bugg rapporter och förslag, skicka epost till:\n\n\033c\033bcs@aphaso.de\033n\n\nKolla in min hemsida också:\n\033bhttp://www.aphaso.de\n
+;#DEF \033c\033bNListtree.mcc %s\033n\n\033cCopyright ©1999-2000 by Carsten Scholling\nAll rights reserved.\n\n\nFor developer information, bug reports and suggestions please send an email to:\n\n\033c\033bcs@aphaso.de\033n\n\nAlso check out my homepage:\n\033bhttp://www.aphaso.de\n
+;#SET (//)
+MSG_DRAW
+Rita:
+;#DEF Draw:
+;#SET (//)
+MSG_DRAW_KEY
+d
+;#DEF d
+;#SET (//)
+MSG_LINES
+Linjer:
+;#DEF Lines:
+;#SET (//)
+MSG_LINES_KEY
+l
+;#DEF l
+;#SET (//)
+MSG_LV_SHORTHELP
+Detta NListtree objekt reagerar på\nändrade inställningar.
+;#DEF This NListtree object reacts on\nthe preferences changes.
+;#SET (//)
+MSG_OPEN
+Öppen:
+;#DEF Open:
+;#SET (//)
+MSG_OPEN_AUTOSCROLL
+Öppna scroll:
+;#DEF Open scroll:
+;#SET (//)
+MSG_OPEN_AUTOSCROLL_KEY
+s
+;#DEF s
+;#SET (//)
+MSG_OPEN_KEY
+o
+;#DEF o
+;#SET (//)
+MSG_PREFS
+Inställningar
+;#DEF Preferences
+;#SET (//)
+MSG_REMEMBER_STATUS
+Kom ihåg:
+;#DEF Remember:
+;#SET (//)
+MSG_REMEMBER_STATUS_KEY
+m
+;#DEF m
+;#SET (//)
+MSG_SAMPLE
+Förhandsvisning
+;#DEF NListtree sample
+;#SET (//)
+MSG_SHADOW
+Skugga:
+;#DEF Shadow:
+;#SET (//)
+MSG_SHADOW_KEY
+w
+;#DEF w
+;#SET (//)
+MSG_SHORTHELP_CLOSED_IMAGE
+Bild för stängd nod.
+;#DEF Image for a closed node.
+;#SET (//)
+MSG_SHORTHELP_DRAWPEN
+Egen rit färg.
+;#DEF Custom draw color.
+;#SET (//)
+MSG_SHORTHELP_LINEPEN
+Egen linje färg.
+;#DEF Custom line color.
+;#SET (//)
+MSG_SHORTHELP_OPEN_AUTOSCROLL
+Auto scrolla listvyn vid öppning\nav noder för inpassning.
+;#DEF Auto scroll listview when opening\nnodes to fit in visible area.
+;#SET (//)
+MSG_SHORTHELP_OPEN_IMAGE
+Bild för öppen nod.
+;#DEF Image for an opened node.
+;#SET (//)
+MSG_SHORTHELP_REMEMBER_STATUS
+Kom ihåg status för noder\nefter stängning.
+;#DEF Remember status of nodes\nafter closing.
+;#SET (//)
+MSG_SHORTHELP_SHADOWPEN
+Egen skugg färg.
+;#DEF Custom shadow color.
+;#SET (//)
+MSG_SHORTHELP_SPACE
+Mellanrum i pixlar.
+;#DEF Number of space pixels.
+;#SET (//)
+MSG_SHORTHELP_SPECIAL_IMAGE
+Special bild.
+;#DEF Special image.
+;#SET (//)
+MSG_SHORTHELP_STYLE
+Listträdets globala stil.
+;#DEF Global style of the tree.
+;#SET (//)
+MSG_SPACE
+Mellanrum:
+;#DEF Space:
+;#SET (//)
+MSG_SPACE_KEY
+p
+;#DEF p
+;#SET (//)
+MSG_SPECIAL
+Special:
+;#DEF Special:
+;#SET (//)
+MSG_SPECIAL_KEY
+a
+;#DEF a
+;#SET (//)
+MSG_STR_PREFS_IMAGESLINES
+Bilder/linjer
+;#DEF Images/Lines
+;#SET (//)
+MSG_STR_PREFS_STYLE
+Stil
+;#DEF Style
+;#SET (//)
+MSG_STYLE
+Stil:
+;#DEF Style:
+;#SET (//)
+MSG_STYLE_INSERTED
+Inmatad
+;#DEF Inserted
+;#SET (//)
+MSG_STYLE_KEY
+y
+;#DEF y
+;#SET (//)
+MSG_STYLE_LINES
+Linjer
+;#DEF Lines
+;#SET (//)
+MSG_STYLE_LINES3D
+Linjer 3D
+;#DEF Lines 3D
+;#SET (//)
+MSG_STYLE_MAC
+Mac
+;#DEF Mac
+;#SET (//)
+MSG_STYLE_NORMAL
+Normal
+;#DEF Normal
+;#SET (//)
+MSG_STYLE_WIN98
+Win98
+;#DEF Win98
+;#SET (//)
+MSG_STYLE_WIN98PLUS
+Win98+
+;#DEF Win98+
+;#SET (//)
+MSG_WIN_TITLE_CLOSED_IMAGE
+Justera 'stängd nod' bild
+;#DEF Adjust 'closed node' image
+;#SET (//)
+MSG_WIN_TITLE_DRAWPEN
+Justera 'rit' penna
+;#DEF Adjust `Draw' pen
+;#SET (//)
+MSG_WIN_TITLE_LINEPEN
+Justera 'linje' penna
+;#DEF Adjust `Lines' pen
+;#SET (//)
+MSG_WIN_TITLE_OPEN_IMAGE
+Justera 'öppen nod' bild
+;#DEF Adjust 'opened node' image
+;#SET (//)
+MSG_WIN_TITLE_SHADOWPEN
+Justera 'skugg' penna
+;#DEF Adjust `Shadow' pen
+;#SET (//)
+MSG_WIN_TITLE_SPECIAL_IMAGE
+Justera special bild
+;#DEF Adjust special image
+;#SET (//)
+MSG_BT_CLOSE
+Stäng
+;#DEF Close
+;#SET (//)
+MSG_BT_CLOSE_KEY
+c
+;#DEF c
+;#SET (//)
+MSG_STYLE_GLOW
+Glöd
+;#DEF Glow
+;#SET (//)
+MSG_DUMMY
+
+;#DEF  
+;#SET (//)

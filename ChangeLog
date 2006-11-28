@@ -6,6 +6,8 @@ $Id$
 
 2006-11-28  Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlisttree_mcp/local/svenska.ct: added swedish catalog translation kindly
+    provided by PÃr Boberg.
   * nlisttree_mcp: moved the "locale" directory to here because each mcp
     should have its own directory instead of accessing a global one
 
