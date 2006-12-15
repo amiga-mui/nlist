@@ -247,14 +247,20 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
   if (scrollers & MUIV_NListview_VSB_On)
   { if (!data->SETUP || DoMethod(obj,MUIM_Group_InitChange))
     { if ((scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_On)
-      { data->Vert_Attached = TRUE;
+      {
+        D(DBF_STARTUP, "adding vertical scrollbar: %08lx", data->PR_Vert);
+
+        data->Vert_Attached = TRUE;
         DoMethod(obj,OM_ADDMEMBER,data->PR_Vert);
 
         if (data->VertSB == MUIV_NListview_VSB_Left)
           DoMethod(obj,MUIM_Group_Sort,data->PR_Vert ,data->Group, NULL);
       }
       else
-      { data->Vert_Attached = FALSE;
+      {
+        D(DBF_STARTUP, "removing vertical scrollbar: %08lx", data->PR_Vert);
+
+        data->Vert_Attached = FALSE;
         DoMethod(obj,OM_REMMEMBER,data->PR_Vert);
       }
       if (scrollers & MUIV_NListview_HSB_On)
@@ -279,11 +285,17 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
   { if (!data->SETUP || DoMethod(data->Group,MUIM_Group_InitChange))
     {
       if ((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)
-      { data->Horiz_Attached = TRUE;
+      {
+        D(DBF_STARTUP, "adding horizontal scrollbar: %08lx", data->PR_Horiz);
+
+        data->Horiz_Attached = TRUE;
         DoMethod(data->Group,OM_ADDMEMBER,data->PR_Horiz);
       }
       else
-      { data->Horiz_Attached = FALSE;
+      {
+        D(DBF_STARTUP, "removing horizontal scrollbar: %08lx", data->PR_Horiz);
+
+        data->Horiz_Attached = FALSE;
         DoMethod(data->Group,OM_REMMEMBER,data->PR_Horiz);
       }
       if (data->SETUP)
