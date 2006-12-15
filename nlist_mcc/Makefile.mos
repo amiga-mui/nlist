@@ -41,8 +41,8 @@ CPUFLAGS = -mmultiple
 CDEFS    = -D__NL_VERDATE=\"`date +%d.%m.%Y`\" -D__NL_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
 WARN     = -W -Wall
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
-DEBUG    = -DDEBUG -g -O0
-CFLAGS   = -noixemul -I. -I../includes -I.. $(CPU) $(CPUFLAGS) $(WARN)\
+DEBUG    = -O0 -DDEBUG
+CFLAGS   = -noixemul -g -I. -I../includes -I.. $(CPU) $(CPUFLAGS) $(WARN)\
            $(OPTFLAGS) $(DEBUG) -c
 LDFLAGS  = -noixemul -nostartfiles
 LDLIBS   = -ldebug
@@ -103,7 +103,7 @@ $(OBJDIR)/%.o: %.c
 $(TARGET): $(OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
-	@$(STRIP) -o $@  --remove-section=.comment $@.debug
+	@$(STRIP) -R ".comment" -S -o $@ $@.debug
 
 $(OBJDIR)/library.o: library.c ../includes/mccheader.c private.h
 

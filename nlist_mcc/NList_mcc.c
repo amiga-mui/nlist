@@ -1205,19 +1205,27 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   }
 
   data->listobj = NULL;
-  { Object *tagobj,*o = obj;
-    if (!get(o,MUIA_Parent,&o))
-      o = NULL;
-    while (o)
-    { if (get(o,MUIA_Listview_List,&tagobj))
-      { if ((tagobj == obj) && !get(o,MUIA_NListview_NList,&tagobj))
-        { LONG tagval;
+  {
+    Object *o = obj;
+
+    while((o = (Object *)xget(o, MUIA_Parent)))
+    {
+      Object *tagobj;
+
+      if((tagobj = (Object *)xget(o, MUIA_Listview_List)))
+      {
+        if((tagobj == obj) && xget(o, MUIA_NListview_NList) == 0)
+        {
+          LONG tagval;
+
           data->listobj = o;
           WANT_NOTIFY(NTF_LV_Select);
           WANT_NOTIFY(NTF_LV_Doubleclick);
           WANT_NOTIFY(NTF_L_Active);
           WANT_NOTIFY(NTF_Entries);
-          if (get(data->listobj,MUIA_Listview_DragType,&tagval))
+
+          // check if we have a DragType attribute or not
+          if(GetAttr(MUIA_Listview_DragType, data->listobj, (ULONG *)&tagval) != FALSE)
             data->NList_DragType = tagval;
 
           if (data->pad2)
@@ -1242,8 +1250,6 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
         }
         break;
       }
-      if (!get(o,MUIA_Parent,&o))
-        o = NULL;
     }
   }
 
@@ -1424,25 +1430,33 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   {
     Object *o = obj;
-    LONG virtleft,virttop;
+
     data->VirtGroup = NULL;
     data->VirtGroup2 = NULL;
-    if (!get(o,MUIA_Parent,&o))
-      o = NULL;
-    while (o)
-    { if (get(o,MUIA_Virtgroup_Left,&virtleft) && get(o,MUIA_Virtgroup_Top,&virttop))
-      { data->VirtGroup = o;
+
+    while((o = (Object *)xget(o, MUIA_Parent)))
+    {
+      ULONG val;
+
+      // check if the class "knows" the Virtgroup_Left and
+      // Virtgroup_Top attributes
+      if(GetAttr(MUIA_Virtgroup_Left, o, &val) != FALSE &&
+         GetAttr(MUIA_Virtgroup_Top, o, &val) != FALSE)
+      {
+        data->VirtGroup = o;
+
         if (!data->VirtClass)
-        { o = MUI_NewObject(MUIC_Virtgroup,Child, MUI_NewObject(MUIC_Rectangle, TAG_DONE), TAG_DONE);
+        {
+          o = MUI_NewObject(MUIC_Virtgroup,Child, MUI_NewObject(MUIC_Rectangle, TAG_DONE), TAG_DONE);
+
           if (o)
-          { data->VirtClass = OCLASS(o);
+          {
+            data->VirtClass = OCLASS(o);
             MUI_DisposeObject(o);
           }
         }
         break;
       }
-      if (!get(o,MUIA_Parent,&o))
-        o = NULL;
     }
     data->VirtGroup2 = data->VirtGroup;
   }

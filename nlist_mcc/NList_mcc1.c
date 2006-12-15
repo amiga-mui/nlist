@@ -267,10 +267,14 @@ ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
     case MUIA_NList_Prop_First :
       WANT_NOTIFY(NTF_VSB);
       if (msg->DestObj && !data->VertPropObject)
-      { LONG first;
-        if (get(msg->DestObj,MUIA_Prop_First,&first))
+      {
+        ULONG val;
+
+        // check if MUIA_Prop_First exists
+        if(GetAttr(MUIA_Prop_First, msg->DestObj, &val) != FALSE)
           data->VertPropObject = msg->DestObj;
       }
+
       if (data->VertPropObject)
       { if (data->NList_Smooth)
           set(data->VertPropObject,MUIA_Prop_DoSmooth, TRUE);
@@ -283,20 +287,26 @@ ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
       break;
     case MUIA_List_Prop_First :
       if (msg->DestObj && !data->VertPropObject)
-      { struct List *childlist;
-        APTR object_state,child;
-        LONG first;
-        if (get(msg->DestObj,MUIA_Prop_First,&first))
+      {
+        ULONG val;
+
+        // check if there exists a MUIA_Prop_First attribute
+        if(GetAttr(MUIA_Prop_First, msg->DestObj, &val) != FALSE)
           data->VertPropObject = msg->DestObj;
+
         if (data->VertPropObject)
         {
-          if (get(data->VertPropObject,MUIA_Group_ChildList,&childlist))
+          struct List *childlist;
+
+          if((childlist = (struct List *)xget(data->VertPropObject, MUIA_Group_ChildList)))
           {
-            object_state = childlist->lh_Head;
+            APTR object_state = childlist->lh_Head;
+            Object *child;
 
             while((child = NextObject(&object_state)))
             {
-              if (get(child,MUIA_Prop_First, &first))
+              // check if there exists a MUIA_Prop_First attribute
+              if(GetAttr(MUIA_Prop_First, msg->DestObj, &val) != FALSE)
               {
                 data->VertPropObject = msg->DestObj;
                 break;
@@ -512,10 +522,9 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
 
           NOWANT_NOTIFY(NTF_VSB);
 
-          if (data->VertPropObject && get(data->VertPropObject,MUIA_Prop_FirstReal,&Prop_FirstReal))
-          {
-/*D(bug("%lx|Prop_First= %ld  %ld \n",obj,data->old_prop_first,Prop_FirstReal));*/
-          }
+          if(data->VertPropObject)
+            Prop_FirstReal = (LONG)xget(data->VertPropObject, MUIA_Prop_FirstReal);
+
           data->NList_Prop_First_Real = tag->ti_Data;
           if ((!data->NList_Smooth) || ((!data->NList_First_Incr) && (!data->NList_AffFirst_Incr) &&
                                         ((data->NList_Prop_First_Prec - (LONG)tag->ti_Data == data->vinc) ||

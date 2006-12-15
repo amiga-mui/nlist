@@ -36,13 +36,6 @@
 #include "NList_func.h"
 #include "nlistviews_mcp/NListviews_mcp.h"
 
-LONG xget(Object *obj,ULONG attribute)
-{
-  LONG x=0;
-  get(obj,attribute,&x);
-  return(x);
-}
-
 void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
 {
   WORD vdheight;
@@ -131,10 +124,11 @@ void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
       data->vtop = _mtop(o);
       data->vbottom = _mbottom(o);
 
-      get(o,MUIA_Virtgroup_Left,&vl);
-      get(o,MUIA_Virtgroup_Top,&vt);
-      get(o,MUIA_Virtgroup_Width,&vw);
-      get(o,MUIA_Virtgroup_Height,&vh);
+      vl = xget(o, MUIA_Virtgroup_Left);
+      vt = xget(o, MUIA_Virtgroup_Top);
+      vw = xget(o, MUIA_Virtgroup_Width);
+      vh = xget(o, MUIA_Virtgroup_Height);
+
       virtleft = vl;
       virttop = vt;
       virtwidth = vw;
@@ -146,16 +140,20 @@ void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
       /* (mri_Flags & 0x20000000) if in a virtgroup */
       /* (mri_Flags & 0x40000000) if it is a virtgroup */
       o = data->VirtGroup2;
-      if (o == data->VirtGroup)
-      { if (!get(o,MUIA_Parent,&o))
-          o = NULL;
-      }
-      while (o)
-      { ocl = OCLASS(o);
+      if(o == data->VirtGroup)
+        o = (Object *)xget(o, MUIA_Parent);
+
+      while(o)
+      {
+        ocl = OCLASS(o);
+
         while (ocl)
-        { if (ocl == data->VirtClass)
-          { if (data->VirtGroup2 == data->VirtGroup)
+        {
+          if (ocl == data->VirtClass)
+          {
+            if (data->VirtGroup2 == data->VirtGroup)
               data->VirtGroup2 = o;
+
             if (data->vleft < _mleft(o))     data->vleft = _mleft(o);
             if (data->vright > _mright(o))   data->vright = _mright(o);
             if (data->vtop < _mtop(o))       data->vtop = _mtop(o);
@@ -165,9 +163,11 @@ void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
           else
             ocl = ocl->cl_Super;
         }
-        if (o && !get(o,MUIA_Parent,&o))
-          o = NULL;
+
+        if(o)
+          o = (Object *)xget(o, MUIA_Parent);
       }
+
       if (data->VirtGroup2 == data->VirtGroup)
         data->VirtGroup2 = NULL;
       if (data->vleft < data->mleft)     data->vleft = data->mleft;
@@ -1246,11 +1246,15 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
       SetBackGround(data->NList_ListBackGround);
       if (MUI_BeginRefresh(muiRenderInfo(obj),0))
       {
-        Object *o = (Object *) xget(_win(obj),MUIA_Window_RootObject);
-        data->refreshing = TRUE;
-        MUI_Redraw(o,MADF_DRAWOBJECT);  /* MADF_DRAWALL */
-        data->refreshing = FALSE;
-        MUI_EndRefresh(muiRenderInfo(obj),0);
+        Object *o = (Object *)xget(_win(obj), MUIA_Window_RootObject);
+
+        if(o)
+        {
+          data->refreshing = TRUE;
+          MUI_Redraw(o,MADF_DRAWOBJECT);  /* MADF_DRAWALL */
+          data->refreshing = FALSE;
+          MUI_EndRefresh(muiRenderInfo(obj),0);
+        }
       }
     }
     DrawAdjustBar(obj,data,0);

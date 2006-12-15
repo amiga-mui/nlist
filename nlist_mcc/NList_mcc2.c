@@ -438,10 +438,10 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
         }
         #endif
 
-        if (get(_win(obj), MUIA_Window_ActiveObject, &tagval) &&
-            ((tagval == (LONG) obj) ||
-             (tagval && get((Object *) tagval,MUIA_Listview_List,&tagval2) && (tagval2 == (LONG) obj)) ||
-             (!tagval && get(_win(obj), MUIA_Window_DefaultObject, &tagval2) && (tagval2 == (LONG) obj)))
+        if((tagval = xget(_win(obj), MUIA_Window_ActiveObject)) &&
+           ((tagval == (LONG)obj) ||
+             (tagval && (tagval2 = xget((Object *)tagval, MUIA_Listview_List)) && (tagval2 == (LONG)obj)) ||
+             (!tagval && (tagval2 = xget(_win(obj), MUIA_Window_DefaultObject)) && (tagval2 == (LONG)obj)))
            )
         {
           if (data->NList_AutoCopyToClip)
@@ -875,10 +875,11 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               }
               if (data->NList_DefaultObjectOnClick)
               {
-                ULONG tst;
-                get(_win(obj), MUIA_Window_ActiveObject, &tst);
+                ULONG tst = xget(_win(obj), MUIA_Window_ActiveObject);
+
                 if ((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (ULONG) obj))
-                { if (data->NList_MakeActive)
+                {
+                  if (data->NList_MakeActive)
                     set(_win(obj), MUIA_Window_ActiveObject, data->NList_MakeActive);
                   else
                     set(_win(obj), MUIA_Window_ActiveObject, MUIV_Window_ActiveObject_None);
@@ -1003,11 +1004,11 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
           else
           {
             if ((msg->imsg->Code==SELECTDOWN) && data->NList_DefaultObjectOnClick) /* click not in _isinobject2() */
-            { ULONG tst;
-              get(_win(obj), MUIA_Window_DefaultObject, &tst);
-              if (tst == (ULONG) obj)
-              { set(_win(obj), MUIA_Window_DefaultObject, NULL);
-              }
+            {
+              ULONG tst = xget(_win(obj), MUIA_Window_DefaultObject);
+
+              if(tst == (ULONG) obj)
+                set(_win(obj), MUIA_Window_DefaultObject, NULL);
             }
 /*
             if (!(((msg->imsg->Code==MIDDLEDOWN) || (msg->imsg->Code==MIDDLEUP)) && (data->drag_qualifier & IEQUALIFIER_MIDBUTTON)) &&
@@ -1160,14 +1161,14 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 ** Set the ShortHelp to the Button's for Being Over Button (If ShortHelp Exists)
 */
               data->affover = data->affbutton;
-              if ((data->affimage >= 0) && (data->affimage < data->LastImage) && data->NList_UseImages) {
+              if ((data->affimage >= 0) && (data->affimage < data->LastImage) && data->NList_UseImages)
+              {
                  STRPTR shorthelp;
-                 get(data->NList_UseImages[data->affimage].imgobj,MUIA_ShortHelp,&shorthelp);
-                 if (shorthelp) {
+                 
+                 if((shorthelp = (STRPTR)xget(data->NList_UseImages[data->affimage].imgobj, MUIA_ShortHelp)))
                     nnset(obj,MUIA_ShortHelp,shorthelp);
-                    }
-                 }
               }
+            }
            }
         else {
            if (data->affover!=-1) {

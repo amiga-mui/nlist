@@ -59,7 +59,6 @@ extern ULONG mNL_Trigger(struct IClass *cl,Object *obj,Msg msg);
 extern void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall);
 extern ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg);
 extern ULONG mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDraw *msg);
-extern LONG xget(Object *obj,ULONG attribute);
 
 /* NList_mcc4.c */
 

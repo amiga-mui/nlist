@@ -949,7 +949,6 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           APTR clippinghandle = NULL;
           WORD left,top,width,height,ol,ot;
           BOOL doclip = FALSE;
-          LONG disabled = FALSE;
 /*
  * if (muiRenderInfo(obj) != muiRenderInfo(nimg->NImgObj))
  * {
@@ -1019,10 +1018,10 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
             data->affbuttonpos.Height = _height(nimg->NImgObj);
 
             muiAreaData(nimg->NImgObj)->mad_Flags |= MADF_VISIBLE;
-            get(nimg->NImgObj,MUIA_Disabled,&disabled);
-            if (disabled)
-            { set(nimg->NImgObj,MUIA_Disabled,FALSE);
-            }
+
+            if(xget(nimg->NImgObj, MUIA_Disabled))
+              set(nimg->NImgObj, MUIA_Disabled, FALSE);
+
             MUI_Redraw(nimg->NImgObj,MADF_DRAWALL);
 
             if ((data->affbuttonstate == 2) || (data->affbuttonstate == -2))
@@ -1033,10 +1032,10 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
           }
           else
           { muiAreaData(nimg->NImgObj)->mad_Flags |= MADF_VISIBLE;
-            get(nimg->NImgObj,MUIA_Disabled,&disabled);
-            if (disabled)
-            { set(nimg->NImgObj,MUIA_Disabled,FALSE);
-            }
+
+            if(xget(nimg->NImgObj, MUIA_Disabled))
+              set(nimg->NImgObj, MUIA_Disabled, FALSE);
+
             MUI_Redraw(nimg->NImgObj,MADF_DRAWALL);
           }
           nimg->dx = _left(nimg->NImgObj) - ol;

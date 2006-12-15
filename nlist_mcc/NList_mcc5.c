@@ -513,17 +513,19 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
       if ((ent < data->NList_Entries) && data->EntriesArray &&
           ((data->ScrollBarsOld & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On))
       {
-		LONG hsb,lastent,hsbheight,vsbwidth;
+    		LONG hsb,lastent,hsbheight,vsbwidth=0;
 
-        if (data->scrollersobj && get(data->scrollersobj,MUIA_NListview_HSB_Height,&hsbheight))
-        { hsbheight += data->vdt + data->vdb;
+        // check if we got a HSB_Height attribute
+        if(data->scrollersobj && GetAttr(MUIA_NListview_HSB_Height, data->scrollersobj, (ULONG *)&hsbheight) != FALSE)
+        {
+          hsbheight += data->vdt + data->vdb;
           lastent = ent + (hsbheight / data->vinc) + 1;
         }
         else
           lastent = ent+1;
 
-        if (!data->scrollersobj || !get(data->scrollersobj,MUIA_NListview_VSB_Width,&vsbwidth))
-          vsbwidth = 0;
+        if(data->scrollersobj)
+          vsbwidth = xget(data->scrollersobj, MUIA_NListview_VSB_Width);
 
         hsb = 0;
         while ((ent < lastent) && (ent < data->NList_Entries))
@@ -594,15 +596,19 @@ static LONG DoRefresh(Object *obj,struct NLData *data)
       SetBackGround(data->NList_ListBackGround);
       if (MUI_BeginRefresh(muiRenderInfo(obj),0))
       {
-        Object *o = (Object *) xget(_win(obj),MUIA_Window_RootObject);
-        data->refreshing = TRUE;
+        Object *o = (Object *)xget(_win(obj),MUIA_Window_RootObject);
+
+        if(o)
+        {
+          data->refreshing = TRUE;
 /*
- *       if (data->do_draw_all && data->do_draw)
- *         data->refreshing = 2;
+ *         if (data->do_draw_all && data->do_draw)
+ *           data->refreshing = 2;
  */
-        MUI_Redraw(o,MADF_DRAWOBJECT);  /* MADF_DRAWALL */
-        data->refreshing = FALSE;
-        MUI_EndRefresh(muiRenderInfo(obj),0);
+          MUI_Redraw(o,MADF_DRAWOBJECT);  /* MADF_DRAWALL */
+          data->refreshing = FALSE;
+          MUI_EndRefresh(muiRenderInfo(obj),0);
+        }
       }
     }
     if ((data->pushtrigger == 2) ||
@@ -1225,7 +1231,7 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
   if (data->NList_Disabled)
     return (0);
 
-  if (get(obj,MUIA_ContextMenu,&mo) && mo)
+  if((mo = xget(obj, MUIA_ContextMenu)))
   {
     if ((mo & 0x9d510030) != 0x9d510030)
     {

@@ -581,4 +581,16 @@ extern struct TextFont *Topaz_8;
 extern char *stpcpy(char *to, char *from);
 #endif
 
+/// xget()
+//  Gets an attribute value from a MUI object
+ULONG xget(Object *obj, const ULONG attr);
+#if defined(__GNUC__)
+  // please note that we do not evaluate the return value of GetAttr()
+  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
+  // when they are supported by the object. But setting b=0 right before
+  // the GetAttr() should catch the case when attr doesn't exist at all
+  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+#endif
+///
+
 #endif /* MUI_NList_priv_MCC_H */

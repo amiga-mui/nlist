@@ -456,8 +456,8 @@ struct NImgList *GetNImage2(Object *obj,struct NLData *data,APTR imgobj)
     data->NImage2 = nimg2;
   }
   if (nimg2 && nimg2->ImgName && !nimg2->NImgObj && (nimg2->width == -1000) && data->adding_member)
-  { APTR parent = NULL;
-    if (get((APTR) nimg2->ImgName,MUIA_Parent,&parent) && parent)
+  {
+    if(xget((Object *)nimg2->ImgName, MUIA_Parent))
     {
 /*
  * D(bug("%lx|GetNImage2 %lx already attached !\n",obj,nimg2->ImgName));
@@ -688,7 +688,8 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
   if (!imgobj)
     return(0);
 
-  if ((flags == (ULONG)~0L) || !get(imgobj,MUIA_Bitmap_Width,&CI_BM_Width))
+  // check if the Bitmap_Width attribute doesn't exists
+  if((flags == (ULONG)~0L) || GetAttr(MUIA_Bitmap_Width, imgobj, (ULONG *)&CI_BM_Width) == FALSE)
     return (NL_CreateImage2(obj,data,imgobj,flags));
 
   if (imgobj && data->SETUP)
@@ -707,18 +708,22 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
     ULONG *CI_BM_SourceColors = NULL;
     LONG   CI_BM_Precision = 0;
     LONG   CI_BM_Transparent = 0;
-    get(imgobj,MUIA_Bitmap_Bitmap,&CI_BM_Bitmap);
-    get(imgobj,MUIA_Bitmap_Width,&CI_BM_Width);
-    get(imgobj,MUIA_Bitmap_Height,&CI_BM_Height);
-    get(imgobj,MUIA_Bitmap_MappingTable,&CI_BM_MappingTable);
-    get(imgobj,MUIA_Bitmap_Transparent,&CI_BM_Transparent);
-    get(imgobj,MUIA_Bitmap_SourceColors,&CI_BM_SourceColors);
-    get(imgobj,MUIA_Bitmap_Precision,&CI_BM_Precision);
+
+    CI_BM_Bitmap = (struct BitMap *)xget(imgobj, MUIA_Bitmap_Bitmap);
+    CI_BM_Width = xget(imgobj, MUIA_Bitmap_Width);
+    CI_BM_Height = xget(imgobj, MUIA_Bitmap_Height);
+    CI_BM_MappingTable = (UBYTE *)xget(imgobj, MUIA_Bitmap_MappingTable);
+    CI_BM_Transparent = xget(imgobj, MUIA_Bitmap_Transparent);
+    CI_BM_SourceColors = (ULONG *)xget(imgobj, MUIA_Bitmap_SourceColors);
+    CI_BM_Precision = xget(imgobj, MUIA_Bitmap_Precision);
+
     if (!CI_BM_Bitmap)
-    { get(imgobj,MUIA_Bodychunk_Body,&CI_BC_Body);
-      get(imgobj,MUIA_Bodychunk_Depth,&CI_BC_Depth);
-      get(imgobj,MUIA_Bodychunk_Compression,&CI_BC_Compression);
-      get(imgobj,MUIA_Bodychunk_Masking,&CI_BC_Masking);
+    {
+      CI_BC_Body = (UBYTE *)xget(imgobj, MUIA_Bodychunk_Body);
+      CI_BC_Depth = xget(imgobj, MUIA_Bodychunk_Depth);
+      CI_BC_Compression = xget(imgobj, MUIA_Bodychunk_Compression);
+      CI_BC_Masking = xget(imgobj, MUIA_Bodychunk_Masking);
+
       if (CI_BC_Body)
       {
         if((bm_src = NL_Malloc(data,sizeof(struct BitMap),"CreateImage_bm_src")))
@@ -1002,7 +1007,7 @@ ULONG NL_DeleteImage(Object *obj,struct NLData *data,APTR listimg)
     disposeBitMapImage(data,obj,bmimg);
   }
   else if (bmimg && (bmimg->control == MUIA_Image_Spec))
-  { APTR parent = NULL;
+  {
     APTR imgobj = (APTR) bmimg->obtainpens;
     struct NImgList *nimg2 = data->NImage2,*nimgprec = NULL;
     while (nimg2 && (nimg2->NImgObj != imgobj) && (nimg2->ImgName != imgobj))
@@ -1016,9 +1021,14 @@ ULONG NL_DeleteImage(Object *obj,struct NLData *data,APTR listimg)
       else
         data->NImage2 = nimg2->next;
       if (nimg2->NImgObj == imgobj)
-      { if (get(imgobj,MUIA_Parent,&parent) && (parent == data->NL_Group))
-        { if (data->SETUP && DoMethod(data->NL_Group,MUIM_Group_InitChange))
-          { DoMethod(data->NL_Group,OM_REMMEMBER,imgobj);
+      {
+        Object *parent;
+
+        if((parent = (Object *)xget(imgobj, MUIA_Parent)) && (parent == data->NL_Group))
+        {
+          if (data->SETUP && DoMethod(data->NL_Group,MUIM_Group_InitChange))
+          {
+            DoMethod(data->NL_Group,OM_REMMEMBER,imgobj);
             DoMethod(data->NL_Group,MUIM_Group_ExitChange);
           }
           else
