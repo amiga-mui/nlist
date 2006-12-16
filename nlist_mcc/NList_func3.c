@@ -1007,10 +1007,12 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
     Close(file);
   }
   else if (ior)
-  { if (clipstr)
-      CBWriteFTXT(ior,clipstr);
+  {
+    if (clipstr)
+      CBWriteFTXT(ior, clipstr);
     else
-      CBWriteFTXT(ior,"");
+      CBWriteFTXT(ior, (char *)"");
+
     CBClose(ior);
   }
   else

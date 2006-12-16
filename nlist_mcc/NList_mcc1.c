@@ -523,7 +523,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
           NOWANT_NOTIFY(NTF_VSB);
 
           if(data->VertPropObject)
-            Prop_FirstReal = (LONG)xget(data->VertPropObject, MUIA_Prop_FirstReal);
+            Prop_FirstReal = (LONG)xget(data->VertPropObject, MUIA_Prop_TrueFirst);
 
           data->NList_Prop_First_Real = tag->ti_Data;
           if ((!data->NList_Smooth) || ((!data->NList_First_Incr) && (!data->NList_AffFirst_Incr) &&
@@ -957,7 +957,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         if (data->NList_Format)
           NL_Read_Format(obj,data,data->NList_Format,(tag->ti_Tag == MUIA_List_Format));
         else
-          NL_Read_Format(obj,data,"",(tag->ti_Tag == MUIA_List_Format));
+          NL_Read_Format(obj,data, (char *)"",(tag->ti_Tag == MUIA_List_Format));
         Make_Active_Visible;
         REDRAW;
         break;

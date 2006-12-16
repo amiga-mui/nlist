@@ -1479,22 +1479,27 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
   { char num[8];
     data->DragHeight = data->vinc;
     data->DragWidth = data->mwidth;
-    if (data->NList_DragColOnly < 0)
-    { if (numlines == 1)
-        stpcpy(text,"Dragging 1 Item...");
+    if(data->NList_DragColOnly < 0)
+    {
+      if (numlines == 1)
+        stpcpy(text, (char *)"Dragging 1 Item...");
       else
-        stpcpy(stpcpy(stpcpy(text,"Dragging "),ltoa(numlines,num,8))," Items...");
+        stpcpy(stpcpy(stpcpy(text, (char *)"Dragging "),ltoa(numlines,num,8)), (char *)" Items...");
+
       data->DragText = text;
       data->DragEntry = -1;
     }
     else
-    { if (numlines != 1)
-      { stpcpy(stpcpy(text,ltoa(numlines,num,8))," items.");
+    {
+      if (numlines != 1)
+      {
+        stpcpy(stpcpy(text,ltoa(numlines,num,8)), (char *)" items.");
         data->DragText = text;
         data->DragEntry = -1;
       }
       else if (data->NList_DragLines == 1)
-      { stpcpy(text,"1 item.");
+      {
+        stpcpy(text, (char *)"1 item.");
         data->DragText = text;
         data->DragEntry = -1;
       }

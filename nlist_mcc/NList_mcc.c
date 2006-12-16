@@ -301,7 +301,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   LONG dropable = TRUE;      /*TRUE*/
   STRPTR ShortHelp = NULL;   // RHP: Added for Special ShortHelp
   APTR img_tr,grp;
-  char *img_name = "noimage";
+  const char *img_name = "noimage";
 
   if((tag = FindTagItem(MUIA_ShortHelp, taglist)))
     ShortHelp = (STRPTR)tag->ti_Data;
@@ -448,7 +448,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_ShowDropMarks = TRUE;
   data->NImage2 = NULL;
   data->NImage.NImgObj = img_tr;
-  data->NImage.ImgName = img_name;
+  data->NImage.ImgName = (char *)img_name;
   data->NImage.next = NULL;
   data->multiselect = MUIV_NList_MultiSelect_None;
   data->multisel_qualifier = 0;
@@ -730,7 +730,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   else
   {
     data->NList_Format = NULL;
-    if (!NL_Read_Format(obj,data,"",FALSE))
+    if (!NL_Read_Format(obj,data, (char *)"",FALSE))
     {
       CoerceMethod(cl, obj, OM_DISPOSE);
       return(0);

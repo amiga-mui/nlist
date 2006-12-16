@@ -40,11 +40,11 @@
 
 static struct NewMenu MenuData[] =
 {
-  { NM_TITLE, "Column"  , 0 ,0 ,0 ,(APTR) MUIV_NList_ContextMenu_Never },
-  { NM_ITEM ,  "Default Width: this" , 0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefWidth_This },
-  { NM_ITEM ,  "Default Width: all"  , 0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefWidth_All },
-  { NM_ITEM ,  "Default Order: this" , 0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefOrder_This },
-  { NM_ITEM ,  "Default Order: all"  , 0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefOrder_All },
+  { NM_TITLE, (STRPTR)"Column", 0 ,0 ,0 ,(APTR) MUIV_NList_ContextMenu_Never },
+  { NM_ITEM,  (STRPTR)"Default Width: this", 0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefWidth_This },
+  { NM_ITEM,  (STRPTR)"Default Width: all",  0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefWidth_All },
+  { NM_ITEM,  (STRPTR)"Default Order: this", 0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefOrder_This },
+  { NM_ITEM,  (STRPTR)"Default Order: all",  0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefOrder_All },
 
   { NM_END,NULL,0,0,0,(APTR)0 },
 };
@@ -1382,7 +1382,7 @@ static char *stackPtr(void)="\tmove.l\tsp,d0";
 void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
 {
   struct Window *w;
-  char *taskname;
+  const char *taskname;
 
   if (why < 0)
   {
@@ -1411,15 +1411,15 @@ void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
 
     stackES.es_StructSize = sizeof(struct EasyStruct);
     stackES.es_Flags      = 0;
-    stackES.es_Title      = "Stack Size Problem";
-    stackES.es_TextFormat = "MUI NList object \'0x%08lx\' have found that\n"
-                            "the real stacksize of the task \'%s\'\n"
-                            "is only %ld bytes.\n\n"
-                            "Actually %ld bytes of the stack have been used\n"
-                            "at some point of the object where it has been\n"
-                            "tested, so you should increase the stack value\n"
-                            "if you don't want to get a guru...";
-    stackES.es_GadgetFormat = "Ok";
+    stackES.es_Title      = (STRPTR)"Stack Size Problem";
+    stackES.es_TextFormat = (STRPTR)"MUI NList object \'0x%08lx\' have found that\n"
+                                    "the real stacksize of the task \'%s\'\n"
+                                    "is only %ld bytes.\n\n"
+                                    "Actually %ld bytes of the stack have been used\n"
+                                    "at some point of the object where it has been\n"
+                                    "tested, so you should increase the stack value\n"
+                                    "if you don't want to get a guru...";
+    stackES.es_GadgetFormat = (STRPTR)"Ok";
 
     #if defined(__amigaos4__)
     stackES.es_Screen       = 0;
@@ -1443,16 +1443,16 @@ void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
 
     stackES.es_StructSize = sizeof(struct EasyStruct);
     stackES.es_Flags      = 0;
-    stackES.es_Title      = "Stack Size Problem";
-    stackES.es_TextFormat = "MUI NList object \'0x%08lx\' have found that\n"
-                            "the real stacksize of the task \'%s\'\n"
-                            "is only %ld bytes.\n\n"
-                            "The minimum stack size for MUI programs is 8 Kb,\n"
-                            "and it's probably better to set it to\n"
-                            "10 Kb, 12 Kb or 16 Kb...\n\n"
-                            "NList object creation will fail until you'll\n"
-                            "set a correct value for it.";
-    stackES.es_GadgetFormat = "Ok";
+    stackES.es_Title      = (STRPTR)"Stack Size Problem";
+    stackES.es_TextFormat = (STRPTR)"MUI NList object \'0x%08lx\' have found that\n"
+                                    "the real stacksize of the task \'%s\'\n"
+                                    "is only %ld bytes.\n\n"
+                                    "The minimum stack size for MUI programs is 8 Kb,\n"
+                                    "and it's probably better to set it to\n"
+                                    "10 Kb, 12 Kb or 16 Kb...\n\n"
+                                    "NList object creation will fail until you'll\n"
+                                    "set a correct value for it.";
+    stackES.es_GadgetFormat = (STRPTR)"Ok";
 
     #if defined(__amigaos4__)
     stackES.es_Screen       = 0;

@@ -28,11 +28,9 @@
 
 #include <libraries/mui.h>
 
-#ifndef MUI_MUI_H
-#include "mui.h"
-#endif
-
+#include "mui/muiundoc.h"
 #include "mui/NList_mcc.h"
+
 #include "Debug.h"
 
 #include <mcc_common.h>
