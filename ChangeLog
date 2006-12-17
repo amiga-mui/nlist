@@ -6,9 +6,7 @@ $Id$
 
 2006-12-16  Jens Langner <Jens.Langner@light-speed.de>
 
-  * nlist_mcc: bumped version for upcoming release and adapted
-    makefiles to compile with -Wwrite-strings.
-  * nfloattext_mcc: bumped version for upcoming release and adapted
+  * misc: bumped versions for upcoming release and adapted
     makefiles to compile with -Wwrite-strings.
 
 2006-12-15  Jens Langner <Jens.Langner@light-speed.de>

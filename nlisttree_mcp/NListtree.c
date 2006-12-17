@@ -34,6 +34,8 @@
 #include <proto/locale.h>
 #include <proto/exec.h>
 
+#include "mui/muiundoc.h"
+
 #include <mui/NFloattext_mcc.h>
 #include <mui/NListview_mcc.h>
 #include <mui/NList_mcc.h>
@@ -57,8 +59,8 @@ static struct Locale *Locale;
 
 struct SampleArray
 {
-	char	*name;
-	UWORD   flags;
+	const char *name;
+	UWORD flags;
 };
 
 /*
@@ -107,7 +109,7 @@ static const struct SampleArray sa[] =
 /*********************************************************************************************/
 
 #if defined(__amigaos4__) || defined(__MORPHOS__)
-static int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
+static int VARARGS68K MySPrintf(char *buf, const char *fmt, ...)
 {
 	VA_LIST args;
 
@@ -118,7 +120,7 @@ static int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
 	return(strlen(buf));
 }
 #else
-static int STDARGS MySPrintf(char *buf, char *fmt, ...)
+static int STDARGS MySPrintf(char *buf, const char *fmt, ...)
 {
 	static const UWORD PutCharProc[2] = {0x16C0,0x4E75};
 	/* dirty hack to avoid assembler part :-)
@@ -268,7 +270,11 @@ VOID TransferValues(struct NListtreeP_Data *data)
 
 HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
 {
-	static STRPTR t1 = "\033b\033uNewsgroups", t2 = "\033b\033uFlags", t3 = "subscribed", t4 = "\0", t5 = "\033b\033uCnt";
+	static const char *t1 = "\033b\033uNewsgroups";
+  static const char *t2 = "\033b\033uFlags";
+  static const char *t3 = "subscribed";
+  static const char *t4 = "\0";
+  static const char *t5 = "\033b\033uCnt";
 	static char buf[10];
 
 	if ( msg->TreeNode != NULL )
@@ -280,15 +286,15 @@ HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
 
 		sprintf( buf, "%3ld", msg->Array[-1] );
 
-		*msg->Array++	= a->name;
-		*msg->Array++	= ( a->flags & 0x8000 ) ? t3 : t4;
+		*msg->Array++	= (STRPTR)a->name;
+		*msg->Array++	= (STRPTR)((a->flags & 0x8000) ? t3 : t4);
 		*msg->Array++	= buf;
 	}
 	else
 	{
-		*msg->Array++	= t1;
-		*msg->Array++	= t2;
-		*msg->Array++	= t5;
+		*msg->Array++	= (STRPTR)t1;
+		*msg->Array++	= (STRPTR)t2;
+		*msg->Array++	= (STRPTR)t5;
 	}
 
 	return( 0 );

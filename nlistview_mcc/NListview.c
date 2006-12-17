@@ -30,6 +30,8 @@
 #include <proto/utility.h>
 #include <proto/keymap.h>
 
+#include "mui/muiundoc.h"
+
 #include "private.h"
 #include "rev.h"
 

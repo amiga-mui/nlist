@@ -39,6 +39,8 @@
 #include <proto/locale.h>
 #include <proto/exec.h>
 
+#include "mui/muiundoc.h"
+
 #include "private.h"
 #include "rev.h"
 
@@ -190,7 +192,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 
 static DEFAULT_KEYS_ARRAY
 
-static char *functions_names[] =
+static const char *functions_names[] =
 {
   "Multiselect/Block Qualifier",
   "Drag Qualifier",
@@ -242,7 +244,7 @@ static struct KeyBinding empty_key = { 0, (UWORD)-1, 0 };
 
 /* *********************************************************************** */
 
-static char *MainTextArray[] =
+static const char *MainTextArray[] =
 {
   "If you have problems, try to increase the stack value,",
   "in the icon infos if you launch the program from icon,",
@@ -298,7 +300,7 @@ static char *MainTextArray[] =
 };
 
 
-static char *Pages[] =
+static const char *Pages[] =
 {
   "Fonts",
   "Colors",
@@ -308,7 +310,7 @@ static char *Pages[] =
   NULL
 };
 
-static char *Pages3[] =
+static const char *Pages3[] =
 {
   "Misc1",
   "Misc2",
@@ -318,14 +320,14 @@ static char *Pages3[] =
   NULL
 };
 
-static char *RS_MultiSelects[] =
+static const char *RS_MultiSelects[] =
 {
   "Qualifier",
   "Always",
   NULL
 };
 
-static char *RS_StackCheck[] =
+static const char *RS_StackCheck[] =
 {
   "< 1Kb free",
   "< 2Kb free",
@@ -333,7 +335,7 @@ static char *RS_StackCheck[] =
   NULL
 };
 
-static char *RS_ColWidthDrag[] =
+static const char *RS_ColWidthDrag[] =
 {
   "Top Bar",
   "Full Bar",
@@ -341,7 +343,7 @@ static char *RS_ColWidthDrag[] =
   NULL
 };
 
-static char *RS_DragTypes[] =
+static const char *RS_DragTypes[] =
 {
   "Immediate",
   "Borders",
@@ -349,7 +351,7 @@ static char *RS_DragTypes[] =
   NULL
 };
 
-static char *RS_VSB[] =
+static const char *RS_VSB[] =
 {
   "Always",
   "Auto",
@@ -357,7 +359,7 @@ static char *RS_VSB[] =
   NULL
 };
 
-static char *RS_HSB[] =
+static const char *RS_HSB[] =
 {
   "Always",
   "Auto",
@@ -366,7 +368,7 @@ static char *RS_HSB[] =
   NULL
 };
 
-static char *RS_Menu[] =
+static const char *RS_Menu[] =
 {
   "Always",
   "TopOnly",
@@ -499,26 +501,26 @@ static LONG DeadKeyConvert(struct NListviews_MCP_Data *data,struct KeyBinding *k
 
   if (qual)
   { if ((qual & KBQUALIFIER_CAPS) && (same & KBSYM_CAPS))
-                                          text = stpcpy(text,"caps ");
+                                          text = stpcpy(text, (char *)"caps ");
     else if ((qual & KBQUALIFIER_SHIFT) && (same & KBSYM_SHIFT))
-    {                                     text = stpcpy(text,"shift ");
-      if (qual & IEQUALIFIER_CAPSLOCK)    text = stpcpy(text,"capslock ");
+    {                                     text = stpcpy(text, (char *)"shift ");
+      if (qual & IEQUALIFIER_CAPSLOCK)    text = stpcpy(text, (char *)"capslock ");
     }
     else
-    { if (qual & IEQUALIFIER_LSHIFT)      text = stpcpy(text,"lshift ");
-      if (qual & IEQUALIFIER_RSHIFT)      text = stpcpy(text,"rshift ");
-      if (qual & IEQUALIFIER_CAPSLOCK)    text = stpcpy(text,"capslock ");
+    { if (qual & IEQUALIFIER_LSHIFT)      text = stpcpy(text, (char *)"lshift ");
+      if (qual & IEQUALIFIER_RSHIFT)      text = stpcpy(text, (char *)"rshift ");
+      if (qual & IEQUALIFIER_CAPSLOCK)    text = stpcpy(text, (char *)"capslock ");
     }
-    if (qual & IEQUALIFIER_CONTROL)       text = stpcpy(text,"control ");
+    if (qual & IEQUALIFIER_CONTROL)       text = stpcpy(text, (char *)"control ");
     if ((qual & KBQUALIFIER_ALT) && (same & KBSYM_ALT))
-                                          text = stpcpy(text,"alt ");
+                                          text = stpcpy(text, (char *)"alt ");
     else
-    { if (qual & IEQUALIFIER_LALT)        text = stpcpy(text,"lalt ");
-      if (qual & IEQUALIFIER_RALT)        text = stpcpy(text,"ralt ");
+    { if (qual & IEQUALIFIER_LALT)        text = stpcpy(text, (char *)"lalt ");
+      if (qual & IEQUALIFIER_RALT)        text = stpcpy(text, (char *)"ralt ");
     }
-    if (qual & IEQUALIFIER_LCOMMAND)      text = stpcpy(text,"lcommand ");
-    if (qual & IEQUALIFIER_RCOMMAND)      text = stpcpy(text,"rcommand ");
-    if (qual & IEQUALIFIER_NUMERICPAD)    text = stpcpy(text,"numpad ");
+    if (qual & IEQUALIFIER_LCOMMAND)      text = stpcpy(text, (char *)"lcommand ");
+    if (qual & IEQUALIFIER_RCOMMAND)      text = stpcpy(text, (char *)"rcommand ");
+    if (qual & IEQUALIFIER_NUMERICPAD)    text = stpcpy(text, (char *)"numpad ");
   }
 
   if (!(key->kb_KeyTag & 0x00004000) && (key->kb_Code != (UWORD)~0))
@@ -811,23 +813,23 @@ HOOKPROTONH(DisplayFunc, VOID, Object *obj, struct NList_DisplayMessage *ndm)
   {
     LONG i;
 
-    ndm->preparses[0]  = "\033r";
+    ndm->preparses[0]  = (STRPTR)"\033r";
 
     DeadKeyConvert(data,key);
     ndm->strings[0] = data->rawtext;
 
-    ndm->strings[1] = "\033c=";
+    ndm->strings[1] = (STRPTR)"\033c=";
 
     i = 0;
     while ((keytags[i] > 0) && (keytags[i] != key->kb_KeyTag))
       i++;
-    ndm->strings[2]  = functions_names[i];
+    ndm->strings[2] = (STRPTR)functions_names[i];
   }
   else
   {
-    ndm->strings[0]  = "\033cKey";
-    ndm->strings[1]  = "";
-    ndm->strings[2]  = "\033cAction";
+    ndm->strings[0]  = (STRPTR)"\033cKey";
+    ndm->strings[1]  = (STRPTR)"";
+    ndm->strings[2]  = (STRPTR)"\033cAction";
   }
 }
 MakeStaticHook(DisplayHook, DisplayFunc);

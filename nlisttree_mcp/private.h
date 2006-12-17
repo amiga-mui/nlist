@@ -23,10 +23,6 @@
 
 ***************************************************************************/
 
-#ifndef MUI_MUI_H
-  #include "mui.h"
-#endif
-
 #include "amiga-align.h"
 #include "../nlisttree_mcc/private.h"
 #include "default-align.h"

@@ -53,7 +53,7 @@
 #define MASTERVERSION	19
 
 #define USEDCLASSESP  used_classesP
-static const STRPTR used_classesP[] = { "NListviews.mcp", NULL };
+static const char *used_classesP[] = { "NListviews.mcp", NULL };
 
 #define	PreClassInit
 #define	PostClassExit

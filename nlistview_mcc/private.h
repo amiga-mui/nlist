@@ -28,10 +28,6 @@
 
 ***************************************************************************/
 
-#ifndef MUI_MUI_H
-#include "mui.h"
-#endif
-
 #include "amiga-align.h"
 #include "NListview_mcc.h"
 #include "default-align.h"

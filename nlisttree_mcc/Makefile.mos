@@ -35,10 +35,10 @@ BINDIR    = bin_mos
 CPU      = -mcpu=604e
 CPUFLAGS = -mmultiple
 CDEFS    = -D__NLT_VERDATE=\"`date +%d.%m.%Y`\" -D__NLT_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
-WARN     = -W -Wall
+WARN     = -W -Wall -Wwrite-strings
 OPTFLAGS = -O3 -finline-functions -fomit-frame-pointer -funroll-loops
-DEBUG    = -DDEBUG -g -O0
-CFLAGS   = -noixemul -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) \
+DEBUG    = -DDEBUG -O0
+CFLAGS   = -noixemul -g -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) \
            $(OPTFLAGS) $(DEBUG) -c
 LDFLAGS  = -noixemul -nostartfiles
 LDLIBS   = -ldebug
@@ -84,7 +84,7 @@ $(OBJDIR)/%.o: %.c
 $(TARGET): $(OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
-	@$(STRIP) -o $@  --remove-section=.comment $@.debug
+	@$(STRIP) -R ".comment" -S -o $@ $@.debug
 
 #
 

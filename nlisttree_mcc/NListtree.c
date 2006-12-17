@@ -145,7 +145,7 @@
 LONG __stack = 16384;
 
 #if defined(__amigaos4__) || defined(__MORPHOS__)
-static int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
+static int VARARGS68K MySPrintf(char *buf, const char *fmt, ...)
 {
 	VA_LIST args;
 
@@ -156,7 +156,7 @@ static int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
 	return(strlen(buf));
 }
 #else
-static int STDARGS MySPrintf(char *buf, char *fmt, ...)
+static int STDARGS MySPrintf(char *buf, const char *fmt, ...)
 {
 	static const UWORD PutCharProc[2] = {0x16C0,0x4E75};
 	/* dirty hack to avoid assembler part :-)
@@ -2841,7 +2841,7 @@ struct MUI_NListtree_TreeNode *CreateChildStructure( struct NListtree_Data *data
 *******************************************************************************
 \*****************************************************************************/
 
-VOID InsertTreeImages( struct NListtree_Data *data, STRPTR *buf, struct MUI_NListtree_TreeNode *tn, struct MUI_NListtree_TreeNode *otn, UWORD cnt )
+static void InsertTreeImages( struct NListtree_Data *data, STRPTR *buf, struct MUI_NListtree_TreeNode *tn, struct MUI_NListtree_TreeNode *otn, UWORD cnt )
 {
 	struct MUI_NListtree_TreeNode *gp;
 
@@ -3012,7 +3012,7 @@ VOID InsertTreeImages( struct NListtree_Data *data, STRPTR *buf, struct MUI_NLis
 	}
 }
 
-VOID InsertImage( struct NListtree_Data *data, STRPTR *buf, struct MUI_NListtree_TreeNode *otn )
+static void InsertImage( struct NListtree_Data *data, STRPTR *buf, struct MUI_NListtree_TreeNode *otn )
 {
 	WORD x1 = -1;
 
@@ -3059,7 +3059,7 @@ VOID InsertImage( struct NListtree_Data *data, STRPTR *buf, struct MUI_NListtree
 }
 
 
-VOID DrawImages( struct MUI_NListtree_TreeNode *otn, struct MUI_NListtree_TreeNode *tn, struct NListtree_Data *data, STRPTR *buf, UWORD cnt )
+static void DrawImages( struct MUI_NListtree_TreeNode *otn, struct MUI_NListtree_TreeNode *tn, struct NListtree_Data *data, STRPTR *buf, UWORD cnt )
 {
 	if ( tn )
 	{
@@ -5552,7 +5552,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 				{
 					struct NListtree_Data *data = INST_DATA( cl, obj );
 					struct Task *mytask;
-					char *taskname;
+					const char *taskname;
 					ULONG ver, rev;
 
 					D(DBF_ALWAYS, "1\n");
@@ -5586,14 +5586,14 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 
 						memset(&es,0,sizeof(es));
             es.es_StructSize = sizeof(struct EasyStruct);
-            es.es_Title      = "Update information...";
-						es.es_TextFormat = "NListtree.mcc has detected that your version of\n"
-							                 "NList.mcc which is used by task `%s'\n"
-							                 "is outdated (V%ld.%ld). Please update at least to\n"
-							                 "version 20.105, which is available at\n\n"
-							                 "http://www.sf.net/projects/nlist-classes\n\n"
-							                 "NListtree will terminate now to avoid problems...\n";
-            es.es_GadgetFormat = "Terminate";
+            es.es_Title      = (STRPTR)"Update information...";
+						es.es_TextFormat = (STRPTR)"NListtree.mcc has detected that your version of\n"
+							                         "NList.mcc which is used by task `%s'\n"
+							                         "is outdated (V%ld.%ld). Please update at least to\n"
+							                         "version 20.105, which is available at\n\n"
+							                         "http://www.sf.net/projects/nlist-classes\n\n"
+							                         "NListtree will terminate now to avoid problems...\n";
+            es.es_GadgetFormat = (STRPTR)"Terminate";
 
 						EasyRequest( NULL, &es, NULL, (LONG)taskname, ver, rev );
 
@@ -6722,14 +6722,14 @@ ULONG _ContextMenuBuild( struct IClass *cl, Object *obj, struct MUIP_NList_Conte
 		** Type		Label								Key	Flg	MX	UserData
 		** ========	===============================		===	===	===	==============
 		*/
-		{ NM_TITLE,	"NListtree",						0,	0,	0,	NULL,		},
+		{ NM_TITLE,	(STRPTR)"NListtree",          0,	0,	0,	NULL,		},
 
-		{ NM_ITEM,	"Copy to clipboard",				0,	0,	0,	NULL,		},
+		{ NM_ITEM,	(STRPTR)"Copy to clipboard",	0,	0,	0,	NULL,		},
 
-		{ NM_SUB,	"Unit 0",							0,	0,	0,	(APTR)0,	},
-		{ NM_SUB,	"Unit 1",							0,	0,	0,	(APTR)1,	},
-		{ NM_SUB,	"Unit 2",							0,	0,	0,	(APTR)2,	},
-		{ NM_SUB,	"Unit 3",							0,	0,	0,	(APTR)3,	},
+		{ NM_SUB,	  (STRPTR)"Unit 0",							0,	0,	0,	(APTR)0,	},
+		{ NM_SUB,	  (STRPTR)"Unit 1",							0,	0,	0,	(APTR)1,	},
+		{ NM_SUB,	  (STRPTR)"Unit 2",							0,	0,	0,	(APTR)2,	},
+		{ NM_SUB,	  (STRPTR)"Unit 3",							0,	0,	0,	(APTR)3,	},
 
 		{ NM_END,	NULL,								0,	0,	0,	NULL,		}
 	};
@@ -7249,7 +7249,7 @@ ULONG _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_I
 	struct MUI_NListtree_TreeNode *tn = NULL;
 	struct MUI_NListtree_ListNode *ln;
 	APTR user;
-	STATIC STRPTR np = "*** NULL POINTER ***";
+	static const char *np = "*** NULL POINTER ***";
 
 	D(DBF_ALWAYS, "MUIM_NListtree_Insert: name=%s flags=0x%lx listnode:0x%lx prevnode:0x%lx  %ld\n",msg->Name,msg->Flags,msg->ListNode,msg->PrevNode,data->NumEntries);
 
@@ -7289,7 +7289,7 @@ ULONG _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_I
 		struct MUI_NListtree_ListNode *li;
 
 		if ( !msg->Name )
-			msg->Name = np;
+			msg->Name = (char *)np;
 
 		/*
 		**	Should we duplicate the supplied node name?
@@ -7610,10 +7610,10 @@ ULONG _NListtree_InsertStruct( struct IClass *cl, Object *obj, struct MUIP_NList
 	struct NListtree_Data *data = INST_DATA( cl, obj );
 	STRPTR p, token;
 	ULONG len;
-	STATIC STRPTR np = "*** NULL POINTER ***";
+	static const char *np = "*** NULL POINTER ***";
 
 	if ( !msg->Name )
-		msg->Name = np;
+		msg->Name = (char *)np;
 
 	if((token = AllocVecPooled(data->MemoryPool, len = (strlen(msg->Name) + 1))))
 	{

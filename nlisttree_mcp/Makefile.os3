@@ -38,9 +38,9 @@ CPUFLAGS = -msoft-float
 CDEFS    = -D__NLTP_VERDATE=\"`date +%d.%m.%Y`\" -D__NLTP_VERDAYS="`expr \`date +%s\` / 86400 - 2922`"
 WARN     = -W -Wall
 OPTFLAGS = -O3 -finline-functions -fomit-frame-pointer -funroll-loops
-DEBUG    = -DDEBUG -g -O0
+DEBUG    = -DDEBUG -O0
 REDEFINE =
-CFLAGS   = -noixemul -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
+CFLAGS   = -noixemul -g -I. -I../includes $(CPU) $(CPUFLAGS) $(WARN) $(OPTFLAGS)\
            $(DEBUG) $(REDEFINE) -c
 LDFLAGS  = -noixemul -nostartfiles $(CPU)
 LDLIBS   = -lmui -ldebug
@@ -86,7 +86,7 @@ $(OBJDIR)/%.o: %.c
 $(TARGET): $(OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
-	@$(CC) $(LDFLAGS) -o $@ -s $(OBJS) $(LDLIBS)
+	@$(STRIP) -R ".comment" -S -o $@ $@.debug
 
 $(OBJDIR)/library.o: library.c ../includes/mccheader.c ../nlisttree_mcc/NListtree.h \
   private.h icon.bh rev.h
