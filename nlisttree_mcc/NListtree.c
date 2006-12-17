@@ -119,8 +119,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <devices/clipboard.h>
 #include <graphics/gfxmacros.h>
+#undef GetOutlinePen
+
+#include <devices/clipboard.h>
 #include <libraries/gadtools.h>
 #include <clib/alib_protos.h>
 #include <clib/macros.h>
