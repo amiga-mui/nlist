@@ -4,6 +4,8 @@ MUI NList MCC classes - ChangeLog
 
 $Id$
 
+#### v0.98 RELEASE ############################################################
+
 2006-12-16  Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: bumped versions for upcoming release and adapted
