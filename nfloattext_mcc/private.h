@@ -31,7 +31,6 @@
 #include <intuition/classusr.h>
 #include <libraries/mui.h>
 
-#include <mui.h>
 #include <mcc_common.h>
 
 #include "NFloattext_mcc.h"

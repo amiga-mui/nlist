@@ -418,7 +418,7 @@ void _DPRINTF(unsigned long dclass, unsigned long dflags, const char *file, int 
 
     if(ansi_output)
     {
-      char *highlight = ANSI_ESC_FG_GREEN;
+      const char *highlight = ANSI_ESC_FG_GREEN;
 
       switch(dclass)
       {
