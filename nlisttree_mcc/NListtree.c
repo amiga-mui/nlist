@@ -2105,10 +2105,10 @@ VOID OpenTreeNodeExpand( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 		D(DBF_ALWAYS, "Expanding node \"%s\"\n", tn->tn_Name);
 
 		tn->tn_Flags |= TNF_OPEN;
-	}
 
-	ExpandTree( data, tn );
-	InsertTreeVisible( data, tn, &pos );
+    ExpandTree( data, tn );
+    InsertTreeVisible( data, tn, &pos );
+	}
 }
 
 
@@ -2129,6 +2129,7 @@ VOID OpenTreeNodeListExpand( struct NListtree_Data *data, struct MUI_NListtree_L
 		ExpandTree( data, CTN( ln ) );
 		InsertTreeVisible( data, CTN( ln ), &i );
 	}
+/*
 	else if ( tb->tb_Entries > (LONG)( data->NumEntries / 4 ) )
 	{
 		i = MUIV_NList_Insert_Bottom;
@@ -2138,8 +2139,11 @@ VOID OpenTreeNodeListExpand( struct NListtree_Data *data, struct MUI_NListtree_L
 		ExpandTree( data, CTN( ln ) );
 		InsertTreeVisible( data, CTN( &data->RootList ), &i );
 	}
+*/
 	else
 	{
+    DoMethod(data->Obj, MUIM_NList_Redraw, GetVisualPos(data, tb->tb_Table[0]));
+
 		for( i = 0; i < tb->tb_Entries; i++ )
 		{
 			OpenTreeNodeExpand( data, tb->tb_Table[i] );
@@ -2273,6 +2277,7 @@ VOID CloseTreeNodeListCollapse( struct NListtree_Data *data, struct MUI_NListtre
 		CollapseTree( data, CTN( ln ), TRUE );
 		InsertTreeVisible( data, CTN( ln ), &i );
 	}
+/*
 	else if(tb->tb_Entries > (LONG)(data->NumEntries / 4))
 	{
 		i = MUIV_NList_Insert_Bottom;
@@ -2282,6 +2287,7 @@ VOID CloseTreeNodeListCollapse( struct NListtree_Data *data, struct MUI_NListtre
 		CollapseTree( data, CTN( ln ), TRUE );
 		InsertTreeVisible( data, CTN( &data->RootList ), &i );
 	}
+*/
 	else
 	{
 		for( i = 0; i < tb->tb_Entries; i++ )

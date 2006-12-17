@@ -6,6 +6,13 @@ $Id$
 
 #### v0.98 RELEASE ############################################################
 
+2006-12-17  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcc: applied a fix for certain tree open/close related problems
+    kindly provided by Thomas Igracki. NListtree was previously adding certain
+    items twice when opening a list tree. In addition if only a few items were
+    part of a list tree certain items weren't correctly or at all displayed.
+
 2006-12-16  Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: bumped versions for upcoming release and adapted
