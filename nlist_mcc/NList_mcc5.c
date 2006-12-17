@@ -23,8 +23,11 @@
 
 ***************************************************************************/
 
-#include <dos/dosextens.h>
 #include <graphics/gfxmacros.h>
+#undef GetOutlinePen
+
+#include <dos/dosextens.h>
+
 #include <libraries/gadtools.h>
 #include <clib/alib_protos.h>
 #include <proto/muimaster.h>

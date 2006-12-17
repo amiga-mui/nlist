@@ -26,10 +26,13 @@
 #include <stdlib.h>
 
 #include <graphics/gfxmacros.h>
+#undef GetOutlinePen
+
 #include <clib/alib_protos.h>
 #include <proto/muimaster.h>
 #include <proto/graphics.h>
 #include <proto/layers.h>
+
 
 #include "private.h"
 

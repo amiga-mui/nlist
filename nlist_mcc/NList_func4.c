@@ -28,9 +28,10 @@
 #include <exec/memory.h>
 #include <intuition/pointerclass.h>
 #include <datatypes/pictureclass.h>
+
+#include <proto/graphics.h>
 #include <proto/muimaster.h>
 #include <proto/intuition.h>
-#include <proto/graphics.h>
 #include <proto/exec.h>
 
 #include "private.h"
@@ -189,6 +190,9 @@ static struct BitMap move_pointer_bitmap =
   { (PLANEPTR) move_pointer_bp0,(PLANEPTR) move_pointer_bp1,NULL,NULL,NULL,NULL,NULL,NULL }
 };
 
+#if !defined(__amigaos4__) && !defined(__MORPHOS__)
+LONG ObtainBestPen( struct ColorMap *cm, ULONG r, ULONG g, ULONG b, ULONG tag1Type, ... );
+#endif
 
 /****************************************************************************************/
 /****************************************************************************************/

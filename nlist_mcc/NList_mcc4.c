@@ -809,7 +809,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
 
 		//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
       }
-      else if ((ptr1[0] == '\t') || (ptr1[0] == 0xA0))
+      else if ((ptr1[0] == '\t') || (((unsigned char)ptr1[0]) == 0xA0))
       {
         there_is_char = 1;
         if (afinfo->len > 0)
@@ -827,7 +827,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
         { afinfo->style = STYLE_TAB;
           afinfo->len = 1;
         }
-        else if (ptr1[0] == 0xA0)
+        else if (((unsigned char)ptr1[0]) == 0xA0)
         { afinfo->style = STYLE_FIXSPACE;
           afinfo->len = data->spacesize;
         }

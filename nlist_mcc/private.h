@@ -35,6 +35,16 @@
 
 #include <mcc_common.h>
 
+#ifndef LONG_MAX
+#define LONG_MAX    0x7fffffff    /* max value for a long */
+#endif
+#ifndef LONG_MIN
+#define LONG_MIN    0x80000000    /* min value for a long */
+#endif
+#ifndef ULONG_MAX
+#define ULONG_MAX   0xffffffffU    /* max value for an unsigned long */
+#endif
+
 #define MUIM_NList_Trigger            0x9d510090 /* GM */
 //#define MUIA_NList_Pause              0x9d5100c0  /* GM  isg  LONG              */
 #define MUIA_NList_TypeSelect               0x9d510030
