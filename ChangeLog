@@ -6,6 +6,11 @@ $Id$
 
 #### v0.98 RELEASE ############################################################
 
+2006-12-18  Jens Langner <Jens.Langner@light-speed.de>
+
+  * demo: added makefiles and made all our demos compile for all our different
+    targets like OS3/OS4/MOS.
+
 2006-12-17  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcc: applied a fix for certain tree open/close related problems
