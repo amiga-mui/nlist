@@ -1,63 +1,52 @@
-/******************************************************************************\
-********************************************************************************
-***
-***	NListtree.mcc	Copyright (c) 1999-2000 by Apocalypse Hard- and Software
-***					Carsten Scholling
-***
-***	Example program for MUI class NListtree.mcc
-***
-***
-***	Please do not use this "to be rewritten"-piece of software as an
-***	information resource on how to write programs in an object oriented
-***	MUI environment. It simply shows how to use some of the NListtree
-***	functions.
-***
-***
-********************************************************************************
-\******************************************************************************/
+/***************************************************************************
 
+ NListtree.mcc - New Listtree MUI Custom Class
+ Copyright (C) 1999-2001 by Carsten Scholling
+ Copyright (C) 2001-2006 by NList Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 /*
 **	Includes
 */
-#ifdef __SASC
- #include <pragmas/muimaster_pragmas.h>
- #include <pragmas/intuition_pragmas.h>
- #include <pragmas/graphics_pragmas.h>
- #include <pragmas/exec_pragmas.h>
+#include <proto/muimaster.h>
+#include <proto/exec.h>
+#include <proto/intuition.h>
+#include <proto/utility.h>
 
- #include <clib/muimaster_protos.h>
- #include <clib/exec_protos.h>
- #include <clib/alib_protos.h>
-#else
- #ifdef __GNUC__
-  #include <proto/muimaster.h>
-  #include <proto/exec.h>
- #endif
+#if !defined(__amigaos4__)
+#include <clib/alib_protos.h>
 #endif
 
 #include <exec/memory.h>
 #include <exec/types.h>
 
-#include <mui/nlisttree_mcc.h>
-#include <mui/nlistview_mcc.h>
-#include <mui/nlist_mcc.h>
-#include <libraries/mui.h>
+#include <mui/NListtree_mcc.h>
+#include <mui/NListview_mcc.h>
+#include <mui/NList_mcc.h>
 
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
 
-#include "Compiler.h"
-
 #ifdef MYDEBUG
- #ifdef __APHASO__
-  #include <Debug.h>
- #else
-  #define bug kprintf
-  #define D(x)
-  void kprintf( UBYTE *fmt, ... );
- #endif
+ #define bug kprintf
+ #define D(x)
+ void kprintf( UBYTE *fmt, ... );
 #else
  #define bug
  #define D(x)
@@ -68,6 +57,7 @@
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 #endif
 
+#include "SDI_hook.h"
 
 /*
 **	Do not use stack sizes below 8KB!!
@@ -78,8 +68,18 @@ LONG __stack = 16384;
 /*
 **	MUI library base.
 */
-struct Library *MUIMasterBase;
-struct IntuitionBase *IntuitionBase;
+struct Library *MUIMasterBase = NULL;
+
+#if defined(__amigaos4__)
+struct Library *IntuitionBase = NULL;
+#else
+struct IntuitionBase *IntuitionBase = NULL;
+#endif
+
+#if defined(__amigaos4__)
+struct IntuitionIFace *IIntuition = NULL;
+struct MUIMasterIFace *IMUIMaster = NULL;
+#endif
 
 struct MUI_NListtree_TreeNode *tntest;
 
@@ -100,193 +100,82 @@ STATIC APTR		app, window,lt_nodes,
 /*
 **	Sample tree structure.
 */
-struct SampleArray {
-	STRPTR	name;
-	UWORD   flags;
+struct SampleArray
+{
+	const char *name;
+	ULONG flags;
 };
 
 STATIC const struct SampleArray sa[] =
 {
-	"comp", TNF_LIST | TNF_OPEN,
-		"sys", TNF_LIST | TNF_OPEN,
-			"amiga", TNF_LIST | TNF_OPEN,
-				"misc", 0x8000,
-			"mac", TNF_LIST,
-				"system", 0x8000,
+	{ "comp", TNF_LIST | TNF_OPEN },
+	{	 "sys", TNF_LIST | TNF_OPEN },
+	{		 "amiga", TNF_LIST | TNF_OPEN },
+	{			 "misc", 0x8000 },
+	{		 "mac", TNF_LIST },
+	{			 "system", 0x8000 },
 
-	"de", TNF_LIST | TNF_OPEN,
-		"comm", TNF_LIST,
-			"software", TNF_LIST,
-				"ums", 0x8000,
-		"comp", TNF_LIST | TNF_OPEN,
-			"sys", TNF_LIST | TNF_OPEN,
-				"amiga", TNF_LIST,
-					"misc", 0x8000,
-					"tech", 0x8000,
-				"amiga", 0x8000,
+	{"de", TNF_LIST | TNF_OPEN },
+	{	 "comm", TNF_LIST },
+	{		 "software", TNF_LIST },
+	{			 "ums", 0x8000 },
+	{	 "comp", TNF_LIST | TNF_OPEN },
+	{		 "sys", TNF_LIST | TNF_OPEN },
+	{			 "amiga", TNF_LIST },
+	{				 "misc", 0x8000 },
+	{				 "tech", 0x8000 },
+	{			 "amiga", 0x8000 },
 
-	"sort test", TNF_LIST | TNF_OPEN,
-		"a", 0,
-		"x", TNF_LIST,
-		"v", 0,
-		"g", TNF_LIST,
-		"h", 0,
-		"k", TNF_LIST,
-		"u", 0,
-		"i", TNF_LIST,
-		"t", 0,
-		"e", TNF_LIST,
-		"q", 0,
-		"s", TNF_LIST,
-		"c", 0,
-		"f", TNF_LIST,
-		"p", 0,
-		"l", TNF_LIST,
-		"z", 0,
-		"w", TNF_LIST,
-		"b", 0,
-		"o", TNF_LIST,
-		"d", 0,
-		"m", TNF_LIST,
-		"r", 0,
-		"y", TNF_LIST,
-		"n", 0,
-		"j", TNF_LIST,
+	{"sort test", TNF_LIST | TNF_OPEN },
+	{	 "a", 0 },
+	{	 "x", TNF_LIST },
+	{	 "v", 0 },
+	{	 "g", TNF_LIST },
+	{	 "h", 0 },
+	{	 "k", TNF_LIST },
+	{	 "u", 0 },
+	{	 "i", TNF_LIST },
+	{	 "t", 0 },
+	{	 "e", TNF_LIST },
+	{	 "q", 0 },
+	{	 "s", TNF_LIST },
+	{	 "c", 0 },
+	{	 "f", TNF_LIST },
+	{	 "p", 0 },
+	{	 "l", TNF_LIST },
+	{	 "z", 0 },
+	{	 "w", TNF_LIST },
+	{	 "b", 0 },
+	{	 "o", TNF_LIST },
+	{	 "d", 0 },
+	{	 "m", TNF_LIST },
+	{	 "r", 0 },
+	{	 "y", TNF_LIST },
+	{	 "n", 0 },
+	{	 "j", TNF_LIST },
 
 
-	"m", TNF_LIST,
-		"i", TNF_LIST,
-			"c", TNF_LIST,
-				"h", TNF_LIST,
-					"e", TNF_LIST,
-						"l", TNF_LIST,
-							"a", TNF_LIST,
-								"n", TNF_LIST,
-									"g", TNF_LIST,
-										"e", TNF_LIST,
-											"l", TNF_LIST,
-												"o", 0,
+	{"m", TNF_LIST },
+	{	 "i", TNF_LIST },
+	{		 "c", TNF_LIST },
+	{			 "h", TNF_LIST },
+	{				 "e", TNF_LIST },
+	{					 "l", TNF_LIST },
+	{						 "a", TNF_LIST },
+	{							 "n", TNF_LIST },
+	{								 "g", TNF_LIST },
+	{									 "e", TNF_LIST },
+	{										 "l", TNF_LIST },
+	{											 "o", 0 },
 
-	"end", TNF_LIST,
-		"of", TNF_LIST,
-			"tree", 0,
+	{"end", TNF_LIST },
+	{	 "of", TNF_LIST },
+	{		 "tree", 0 },
 
-	"Sort Test 2", TNF_LIST,
+	{ "Sort Test 2", TNF_LIST },
 
-	NULL, 0
+	{ NULL, 0 }
 };
-
-
-
-#ifdef __MORPHOS__
-#undef MUI_NewObject
-#undef MUI_MakeObject
-
-#define DoMethod(obj, tags...)				({ULONG _tags[] = { tags }; DoMethodA((obj), (APTR)_tags);})
-#define DoSuperMethod(cl, obj, tags...)		({ULONG _tags[] = { tags }; DoSuperMethodA((cl), (obj), (APTR)_tags);})
-#define CoerceMethod(cl, obj, tags...)		({ULONG _tags[] = { tags }; CoerceMethodA((cl), (obj), (APTR)_tags);})
-
-Object *MUI_NewObject(char *classname, Tag tag1,...)
-{
-	ULONG mav[50];
-	va_list tags;
-	int i=0;
-
-	mav[i] = tag1;
-	if(mav[i] != TAG_DONE)
-	{
-		va_start(tags, tag1);
-		mav[++i] = va_arg(tags, ULONG);
-		i++;
-		while(i<50)
-		{
-			mav[i] = va_arg(tags, ULONG);
-			if(mav[i] == TAG_DONE) break;
-			mav[++i] = va_arg(tags, ULONG);
-			i++;
-		}
-		va_end(tags);
-	}
-	return(MUI_NewObjectA(classname, (struct TagItem *)&mav));
-}
-
-Object *MUI_MakeObject(long type, ...)
-{
-	ULONG mav[15];
-	va_list tags;
-	int i=0;
-
-	va_start(tags, type);
-	while(i<10)
-	{
-		mav[i] = va_arg(tags, ULONG);
-		i++;
-	}
-	va_end(tags);
-
-	return(MUI_MakeObjectA(type, (ULONG *)&mav));
-}
-
-#endif
-
-
-
-/*
-**	Prototypes and hooks.
-*/
-LONG SAVEDS ASM confunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_ConstructMessage *msg GNUCREG(a1) );
-STATIC struct Hook conhook = { {NULL, NULL}, (void *)confunc, NULL, NULL };
-
-LONG SAVEDS ASM desfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_DestructMessage *msg GNUCREG(a1) );
-STATIC struct Hook deshook = { {NULL, NULL}, (void *)desfunc, NULL, NULL };
-
-LONG SAVEDS ASM mtfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_MultiTestMessage *msg GNUCREG(a1) );
-STATIC struct Hook mthook = { {NULL, NULL}, (void *)mtfunc, NULL, NULL };
-
-LONG SAVEDS ASM dspfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_DisplayMessage *msg GNUCREG(a1) );
-STATIC struct Hook dsphook = { { NULL,NULL }, (void *)dspfunc, NULL, NULL };
-
-LONG SAVEDS ASM compfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_CompareMessage *msg GNUCREG(a1) );
-STATIC struct Hook comphook = { {NULL, NULL}, (void *)compfunc, NULL, NULL };
-
-LONG SAVEDS ASM insertfunc( REG(a2) APTR obj GNUCREG(a2) );
-STATIC struct Hook inserthook = { {NULL, NULL}, (void *)insertfunc, NULL, NULL };
-
-LONG SAVEDS ASM exchangefunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) );
-STATIC struct Hook exchangehook = { {NULL, NULL}, (void *)exchangefunc, NULL, NULL };
-
-LONG SAVEDS ASM renamefunc( REG(a2) APTR obj GNUCREG(a2) );
-STATIC struct Hook renamehook = { {NULL, NULL}, (void *)renamefunc, NULL, NULL };
-
-LONG SAVEDS ASM movefunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) );
-STATIC struct Hook movehook = { {NULL, NULL}, (void *)movefunc, NULL, NULL };
-
-LONG SAVEDS ASM copyfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) );
-STATIC struct Hook copyhook = { {NULL, NULL}, (void *)copyfunc, NULL, NULL };
-
-LONG SAVEDS ASM moveksfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) );
-STATIC struct Hook movekshook = { {NULL, NULL}, (void *)moveksfunc, NULL, NULL };
-
-LONG SAVEDS ASM copyksfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) );
-STATIC struct Hook copykshook = { {NULL, NULL}, (void *)copyksfunc, NULL, NULL };
-
-LONG SAVEDS ASM findnamefunc( REG(a2) APTR obj GNUCREG(a2) );
-STATIC struct Hook findnamehook = { {NULL, NULL}, (void *)findnamefunc, NULL, NULL };
-
-LONG SAVEDS ASM sortfunc( REG(a2) APTR obj GNUCREG(a2) );
-STATIC struct Hook sorthook = { {NULL, NULL}, (void *)sortfunc, NULL, NULL };
-
-LONG SAVEDS ASM getnrfunc( REG(a2) APTR obj GNUCREG(a2) );
-STATIC struct Hook getnrhook = { {NULL, NULL}, (void *)getnrfunc, NULL, NULL };
-
-LONG SAVEDS ASM numselfunc( REG(a2) APTR obj GNUCREG(a2) );
-STATIC struct Hook numselhook = { {NULL, NULL}, (void *)numselfunc, NULL, NULL };
-
-LONG SAVEDS ASM testfunc( REG(a2) APTR obj GNUCREG(a2) );
-STATIC struct Hook testhook = { {NULL, NULL}, (void *)testfunc, NULL, NULL };
-
-
-
 
 /*
 **	This function draws the sample tree structure.
@@ -338,8 +227,8 @@ STATIC VOID DrawSampleTree( Object *ltobj )
 
 	for( i = 0; i < 2500; i++ )
 	{
-		if ( i % 2 )	sprintf( txt, "Sort Entry %ld", i + 1 );
-		else			sprintf( txt, "Entry Sort %ld", i + 1 );
+		if ( i % 2 )	sprintf( txt, "Sort Entry %d", i + 1 );
+		else			sprintf( txt, "Entry Sort %d", i + 1 );
 
 		tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, txt, 0, ( i % 5 ) ? tn2 : tn1, MUIV_NListtree_Insert_PrevNode_Tail, ( i % 5 ) ? TNF_LIST : 0 );
 	}
@@ -351,7 +240,7 @@ STATIC VOID DrawSampleTree( Object *ltobj )
 
 
 
-__inline struct MUI_NListtree_TreeNode *GetParent( Object *obj, struct MUI_NListtree_TreeNode *tn )
+static struct MUI_NListtree_TreeNode *GetParent( Object *obj, struct MUI_NListtree_TreeNode *tn )
 {
 	if ( tn != NULL )
 	{
@@ -362,9 +251,9 @@ __inline struct MUI_NListtree_TreeNode *GetParent( Object *obj, struct MUI_NList
 }
 
 
-__inline struct MUI_NListtree_TreeNode *GetParentNotRoot( Object *obj, struct MUI_NListtree_TreeNode *tn )
+static struct MUI_NListtree_TreeNode *GetParentNotRoot( Object *obj, struct MUI_NListtree_TreeNode *tn )
 {
-	if ( tn = GetParent( obj, tn ) )
+	if((tn = GetParent( obj, tn)))
 	{
 		if ( GetParent( obj, tn ) )
 		{
@@ -385,7 +274,7 @@ struct MUI_NListtree_TreeNode *IsXChildOfY( Object *obj, struct MUI_NListtree_Tr
 			return( y );
 		}
 	}
-	while( y = GetParentNotRoot( obj, y ) );
+	while((y = GetParentNotRoot( obj, y)));
 
 	return( NULL );
 }
@@ -395,14 +284,14 @@ struct MUI_NListtree_TreeNode *IsXChildOfY( Object *obj, struct MUI_NListtree_Tr
 /*
 **	Allocates memory for each entry we create.
 */
-LONG ASM SAVEDS confunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_ConstructMessage *msg GNUCREG(a1) )
+HOOKPROTONHNO(confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
 {
 	struct SampleArray *sa;
 
 	/*
 	**	Allocate needed piece of memory for the new entry.
 	*/
-	if ( sa = (struct SampleArray *)AllocVec( sizeof( struct SampleArray) + strlen( msg->Name ) + 1, MEMF_CLEAR ) )
+	if((sa = (struct SampleArray *)AllocVec( sizeof( struct SampleArray) + strlen( msg->Name ) + 1, MEMF_CLEAR)))
 	{
 		/*
 		**	Save the user data field right after the
@@ -411,18 +300,18 @@ LONG ASM SAVEDS confunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *
 		strcpy( (STRPTR)&sa[1], msg->Name );
 		sa->name = (STRPTR)&sa[1];
 
-		sa->flags = (UWORD)msg->UserData;
+		sa->flags = (ULONG)msg->UserData;
 	}
 
 	return( (LONG)sa );
 }
-
+MakeStaticHook(conhook, confunc);
 
 
 /*
 **	Free memory we just allocated above.
 */
-LONG ASM SAVEDS desfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_DestructMessage *msg GNUCREG(a1) )
+HOOKPROTONHNO(desfunc, LONG, struct MUIP_NListtree_DestructMessage *msg)
 {
 	if ( msg->UserData != NULL )
 	{
@@ -432,37 +321,38 @@ LONG ASM SAVEDS desfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *
 
 	return( 0 );
 }
-
+MakeStaticHook(deshook, desfunc);
 
 
 /*
 **	Compare hook function.
 */
-LONG ASM SAVEDS compfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_CompareMessage *msg GNUCREG(a1) )
+HOOKPROTONHNO(compfunc, LONG, struct MUIP_NListtree_CompareMessage *msg)
 {
 	return( stricmp( msg->TreeNode1->tn_Name, msg->TreeNode2->tn_Name ) );
 }
+MakeStaticHook(comphook, compfunc);
 
 
 /*
 **	MultiTest hook function.
 */
-LONG ASM SAVEDS mtfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_MultiTestMessage *msg GNUCREG(a1) )
+HOOKPROTONHNO(mtfunc, LONG, struct MUIP_NListtree_MultiTestMessage *msg)
 {
 	if ( msg->TreeNode->tn_Flags & TNF_LIST )
 		return( FALSE );
 
 	return( TRUE );
 }
-
+MakeStaticHook(mthook, mtfunc);
 
 
 /*
 **	Format the entry data for displaying.
 */
-LONG ASM SAVEDS dspfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_DisplayMessage *msg GNUCREG(a1) )
+HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
 {
-	STATIC STRPTR t1 = "Newsgroups", t2 = "Flags", t3 = "subscribed", t4 = "\0", t5 = "Count";
+	STATIC CONST_STRPTR t1 = "Newsgroups", t2 = "Flags", t3 = "subscribed", t4 = "\0", t5 = "Count";
 	STATIC char buf[10];
 
 	if ( msg->TreeNode != NULL )
@@ -472,33 +362,33 @@ LONG ASM SAVEDS dspfunc( REG(a0) struct Hook *hook GNUCREG(a0), REG(a2) Object *
 		*/
 		struct SampleArray *a = (struct SampleArray *)msg->TreeNode->tn_User;
 
-		sprintf( buf, "%3ld", msg->Array[-1] );
+		sprintf( buf, "%3ld", (ULONG)msg->Array[-1] );
 
 		*msg->Array++	= msg->TreeNode->tn_Name;
-		*msg->Array++	= ( a->flags & 0x8000 ) ? t3 : t4;
+		*msg->Array++	= (STRPTR)(( a->flags & 0x8000 ) ? t3 : t4);
 		*msg->Array++	= buf;
 	}
 	else
 	{
-		*msg->Array++	= t1;
-		*msg->Array++	= t2;
-		*msg->Array++	= t5;
+		*msg->Array++	= (STRPTR)t1;
+		*msg->Array++	= (STRPTR)t2;
+		*msg->Array++	= (STRPTR)t5;
 
-		*msg->Preparse++	= "\033b\033u";
-		*msg->Preparse++	= "\033b\033u";
-		*msg->Preparse++	= "\033b\033u";
+		*msg->Preparse++	= (STRPTR)"\033b\033u";
+		*msg->Preparse++	= (STRPTR)"\033b\033u";
+		*msg->Preparse++	= (STRPTR)"\033b\033u";
 	}
 
 	return( 0 );
 }
-
+MakeStaticHook(dsphook, dspfunc);
 
 
 /*
 **	Insert a new entry which name is given in
 **	the string gadget.
 */
-LONG SAVEDS ASM insertfunc( REG(a2) APTR obj GNUCREG(a2) )
+HOOKPROTONHNP(insertfunc, LONG, Object *obj)
 {
 	STRPTR x;
 
@@ -516,17 +406,16 @@ LONG SAVEDS ASM insertfunc( REG(a2) APTR obj GNUCREG(a2) )
 
 	return( 0 );
 }
-
+MakeStaticHook(inserthook, insertfunc);
 
 
 /*
 **	Exchange two entries.
 */
-LONG SAVEDS ASM exchangefunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) )
+HOOKPROTONH(exchangefunc, LONG, Object *obj, ULONG **para)
 {
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG exchcnt = 0;
-	LONG x;
 
 	if ( ( exchcnt == 0 ) && ( (ULONG)*para == 42 ) )
 	{
@@ -550,7 +439,7 @@ LONG SAVEDS ASM exchangefunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para
 			{
 				struct MUI_NListtree_ListNode *ln1;
 
-				if ( ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0 ) )
+				if((ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0)))
 				{
 					DoMethod( obj, MUIM_NListtree_Exchange, ln1, tn1, MUIV_NListtree_Exchange_ListNode2_Active, MUIV_NListtree_Exchange_TreeNode2_Active, 0 );
 
@@ -570,14 +459,14 @@ LONG SAVEDS ASM exchangefunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para
 
 	return( 0 );
 }
-
+MakeStaticHook(exchangehook, exchangefunc);
 
 
 /*
 **	Rename the selected entry with the name is given in
 **	the string gadget.
 */
-LONG SAVEDS ASM renamefunc( REG(a2) APTR obj GNUCREG(a2) )
+HOOKPROTONHNP(renamefunc, LONG, Object *obj)
 {
 	struct MUI_NListtree_TreeNode *tn;
 	STRPTR x;
@@ -597,18 +486,17 @@ LONG SAVEDS ASM renamefunc( REG(a2) APTR obj GNUCREG(a2) )
 
 	return( 0 );
 }
-
+MakeStaticHook(renamehook, renamefunc);
 
 
 /*
 **	Insert a new entry which name is given in
 **	the string gadget.
 */
-LONG SAVEDS ASM movefunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) )
+HOOKPROTONH(movefunc, LONG, Object *obj, ULONG **para)
 {
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG movecnt = 0;
-	LONG x;
 
 	if ( ( movecnt == 0 ) && ( (ULONG)*para == 42 ) )
 	{
@@ -632,7 +520,7 @@ LONG SAVEDS ASM movefunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNU
 			{
 				struct MUI_NListtree_ListNode *ln1;
 
-				if ( ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0 ) )
+				if((ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0)))
 				{
 					DoMethod( obj, MUIM_NListtree_Move, ln1, tn1, MUIV_NListtree_Move_NewListNode_Active, tn2, 0 );
 
@@ -652,17 +540,17 @@ LONG SAVEDS ASM movefunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNU
 
 	return( 0 );
 }
+MakeStaticHook(movehook, movefunc);
 
 
 /*
 **	Insert a new entry which name is given in
 **	the string gadget.
 */
-LONG SAVEDS ASM copyfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) )
+HOOKPROTONH(copyfunc, LONG, Object *obj, ULONG **para)
 {
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG copycnt = 0;
-	LONG x;
 
 	if ( ( copycnt == 0 ) && ( (ULONG)*para == 42 ) )
 	{
@@ -684,7 +572,7 @@ LONG SAVEDS ASM copyfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNU
 		{
 			struct MUI_NListtree_ListNode *ln1;
 
-			if ( ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0 ) )
+			if((ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0)))
 			{
 				DoMethod( obj, MUIM_NListtree_Copy, ln1, tn1, MUIV_NListtree_Copy_DestListNode_Active, tn2, 0 );
 
@@ -701,17 +589,16 @@ LONG SAVEDS ASM copyfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNU
 
 	return( 0 );
 }
-
+MakeStaticHook(copyhook, copyfunc);
 
 
 /*
 **	Move KeepStructure
 */
-LONG SAVEDS ASM moveksfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) )
+HOOKPROTONH(moveksfunc, LONG, Object *obj, ULONG **para)
 {
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG movekscnt = 0;
-	LONG x;
 
 	if ( ( movekscnt == 0 ) && ( (ULONG)*para == 42 ) )
 	{
@@ -733,7 +620,7 @@ LONG SAVEDS ASM moveksfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para G
 		{
 			struct MUI_NListtree_ListNode *ln1;
 
-			if ( ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0 ) )
+			if((ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0)))
 			{
 				DoMethod( obj, MUIM_NListtree_Move, ln1, tn1, MUIV_NListtree_Move_NewListNode_Active, tn2, MUIV_NListtree_Move_Flag_KeepStructure );
 
@@ -750,16 +637,15 @@ LONG SAVEDS ASM moveksfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para G
 
 	return( 0 );
 }
-
+MakeStaticHook(movekshook, moveksfunc);
 
 /*
 **	Copy KeepStructure
 */
-LONG SAVEDS ASM copyksfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para GNUCREG(a1) )
+HOOKPROTONH(copyksfunc, LONG, Object *obj, ULONG **para)
 {
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG copykscnt = 0;
-	LONG x;
 
 	if ( ( copykscnt == 0 ) && ( (ULONG)*para == 42 ) )
 	{
@@ -781,7 +667,7 @@ LONG SAVEDS ASM copyksfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para G
 		{
 			struct MUI_NListtree_ListNode *ln1;
 
-			if ( ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0 ) )
+			if((ln1 = (struct MUI_NListtree_ListNode *)DoMethod( obj, MUIM_NListtree_GetEntry, tn1, MUIV_NListtree_GetEntry_Position_Parent, 0)))
 			{
 				DoMethod( obj, MUIM_NListtree_Copy, ln1, tn1, MUIV_NListtree_Copy_DestListNode_Active, tn2, MUIV_NListtree_Copy_Flag_KeepStructure );
 
@@ -798,24 +684,22 @@ LONG SAVEDS ASM copyksfunc( REG(a2) APTR obj GNUCREG(a2), REG(a1) ULONG **para G
 
 	return( 0 );
 }
+MakeStaticHook(copykshook, copyksfunc);
 
 
-
-LONG ASM SAVEDS fudf( REG(a0) struct Hook *h GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUIP_NListtree_FindUserDataMessage *msg GNUCREG(a1) )
+HOOKPROTONHNO(fudf, LONG, struct MUIP_NListtree_FindUserDataMessage *msg)
 {
 	nnset( tx_info1, MUIA_Text_Contents, "FindUserData Hook passed!" );
 	return( strncmp( (STRPTR)msg->User, (STRPTR)msg->UserData, strlen( (STRPTR)msg->User ) ) );
 }
-
-STATIC struct Hook fudh = { {NULL, NULL}, (void *)fudf, NULL, NULL };
+MakeStaticHook(fudh, fudf);
 
 /*
 **	Find the specified tree node by name.
 */
-LONG SAVEDS ASM findnamefunc( REG(a2) APTR obj GNUCREG(a2) )
+HOOKPROTONHNP(findnamefunc, LONG, Object *obj)
 {
 	struct MUI_NListtree_TreeNode *tn;
-	char buf[100];
 	STRPTR x;
 
 	/*
@@ -826,7 +710,7 @@ LONG SAVEDS ASM findnamefunc( REG(a2) APTR obj GNUCREG(a2) )
 	/*
 	**	Is it somewhere in the tree?
 	*/
-	if ( tn = (struct MUI_NListtree_TreeNode *)DoMethod(obj, MUIM_NListtree_FindUserData, MUIV_NListtree_FindUserData_ListNode_Root, x, MUIV_NListtree_FindUserData_Flag_Activate ) )
+	if((tn = (struct MUI_NListtree_TreeNode *)DoMethod(obj, MUIM_NListtree_FindUserData, MUIV_NListtree_FindUserData_ListNode_Root, x, MUIV_NListtree_FindUserData_Flag_Activate)))
 	{
 		/*
 		**	Found! Inform the user.
@@ -843,16 +727,14 @@ LONG SAVEDS ASM findnamefunc( REG(a2) APTR obj GNUCREG(a2) )
 
 	return( 0 );
 }
-
+MakeStaticHook(findnamehook, findnamefunc);
 
 
 /*
 **	Sort the active list.
 */
-LONG SAVEDS ASM sortfunc( REG(a2) APTR obj GNUCREG(a2) )
+HOOKPROTONHNP(sortfunc, LONG, Object *obj)
 {
-	struct MUI_NListtree_TreeNode *tn;
-	char buf[100];
 	clock_t start, end;
 	LONG lastactive;
 
@@ -869,13 +751,13 @@ LONG SAVEDS ASM sortfunc( REG(a2) APTR obj GNUCREG(a2) )
 
 	return( 0 );
 }
-
+MakeStaticHook(sorthook, sortfunc);
 
 
 /*
 **	Find the specified tree node by name.
 */
-LONG SAVEDS ASM getnrfunc( REG(a2) APTR obj GNUCREG(a2) )
+HOOKPROTONHNP(getnrfunc, LONG, Object *obj)
 {
 	LONG temp, temp2;
 
@@ -907,12 +789,12 @@ LONG SAVEDS ASM getnrfunc( REG(a2) APTR obj GNUCREG(a2) )
 
 	return( 0 );
 }
-
+MakeStaticHook(getnrhook, getnrfunc);
 
 /*
 **	Find the specified tree node by name.
 */
-LONG SAVEDS ASM numselfunc( REG(a2) APTR obj GNUCREG(a2) )
+HOOKPROTONHNP(numselfunc, LONG, Object *obj)
 {
 	LONG temp = 0;
 
@@ -956,12 +838,12 @@ LONG SAVEDS ASM numselfunc( REG(a2) APTR obj GNUCREG(a2) )
 
 	return( 0 );
 }
-
+MakeStaticHook(numselhook, numselfunc);
 
 /*
 **	Test func
 */
-LONG SAVEDS ASM testfunc( REG(a2) APTR obj GNUCREG(a2) )
+HOOKPROTONHNP(testfunc, LONG, Object *obj)
 {
 	ULONG id;
 	ULONG num;
@@ -972,7 +854,7 @@ LONG SAVEDS ASM testfunc( REG(a2) APTR obj GNUCREG(a2) )
 	{
 		DoMethod( obj, MUIM_NListtree_NextSelected, &id );
 
-		if( id == MUIV_NListtree_NextSelected_End )
+		if((LONG)id == MUIV_NListtree_NextSelected_End )
 			break;
 
 		//GetAttr( MUIA_List_Entries, obj, &num );
@@ -988,35 +870,42 @@ LONG SAVEDS ASM testfunc( REG(a2) APTR obj GNUCREG(a2) )
 
 	return( 0 );
 }
+MakeStaticHook(testhook, testfunc);
 
 
-
-
+#if defined(__amigaos4__)
+#define GETINTERFACE(iface, base)	(iface = (APTR)GetInterface((struct Library *)(base), "main", 1L, NULL))
+#define DROPINTERFACE(iface)			(DropInterface((struct Interface *)iface), iface = NULL)
+#else
+#define GETINTERFACE(iface, base)	TRUE
+#define DROPINTERFACE(iface)
+#endif
 
 /*
 **	Main
 */
-int main( int argc, STRPTR argv[] )
+int main(UNUSED int argc, UNUSED char *argv[])
 {
 	ULONG signals;
-
-	MUIMasterBase = OpenLibrary( "muimaster.library", 19 );
-	IntuitionBase = (struct IntuitionBase *)OpenLibrary( "intuition.library", 36 );
 
 	/*
 	**	Is MUI V19 available?
 	*/
-	if ( MUIMasterBase && IntuitionBase )
+  if((IntuitionBase = (APTR)OpenLibrary("intuition.library", 36)) &&
+     GETINTERFACE(IIntuition, IntuitionBase))
+  if((MUIMasterBase = OpenLibrary("muimaster.library", 19)) &&
+     GETINTERFACE(IMUIMaster, MUIMasterBase))
 	{
 		/*
 		**	Create application object.
 		*/
 		app = ApplicationObject,
-			MUIA_Application_Title,			"NListtree-Demo",
-			MUIA_Application_Copyright,		"©1999-2000 by Apocalypse Hard- and Software",
-			MUIA_Application_Author,		"Carsten Scholling",
+			MUIA_Application_Title,			  "NListtree-Demo",
+      MUIA_Application_Version    , "$VER: NListtree-Demo 1.0 (" __DATE__ ")",
+			MUIA_Application_Copyright,		"Copyright (C) 2001-2006 by NList Open Source Team",
+			MUIA_Application_Author,		  "NList Open Source Team",
 			MUIA_Application_Description,	"Demonstration program for MUI class NListtree.mcc",
-			MUIA_Application_Base,			"NLISTTREEDEMO",
+			MUIA_Application_Base,			  "NLISTTREEDEMO",
 
 			/*
 			**	Build the window.
@@ -1037,7 +926,7 @@ int main( int argc, STRPTR argv[] )
 							MUIA_CycleChain,				TRUE,
 							MUIA_NList_MinLineHeight,		18,
 							MUIA_NListtree_MultiSelect,		MUIV_NListtree_MultiSelect_Shifted,
-							//MUIA_NListtree_MultiTestHook,	&mthook,
+							MUIA_NListtree_MultiTestHook,	&mthook,
 							MUIA_NListtree_DisplayHook,		&dsphook,
 							MUIA_NListtree_ConstructHook,	&conhook,
 							MUIA_NListtree_DestructHook,	&deshook,	/* This is the same as MUIV_NListtree_CompareHook_LeavesMixed. */
@@ -1285,7 +1174,7 @@ int main( int argc, STRPTR argv[] )
 			/*
 			**	Minimal input loop.
 			*/
-			while( DoMethod( app, MUIM_Application_NewInput, &signals ) != MUIV_Application_ReturnID_Quit )
+			while((LONG)DoMethod( app, MUIM_Application_NewInput, &signals ) != MUIV_Application_ReturnID_Quit )
 			{
 				if ( signals )
 				{
@@ -1317,11 +1206,17 @@ int main( int argc, STRPTR argv[] )
 			printf( "Failed to create Application.\n" );
 	}
 
-	if ( IntuitionBase )
-		CloseLibrary( (struct Library *)IntuitionBase );
+	if(MUIMasterBase)
+  {
+    DROPINTERFACE(IMUIMaster);
+		CloseLibrary(MUIMasterBase);
+  }
 
-	if ( MUIMasterBase )
-		CloseLibrary( MUIMasterBase );
+	if(IntuitionBase)
+  {
+    DROPINTERFACE(IIntuition);
+		CloseLibrary((struct Library *)IntuitionBase);
+  }
 
 	return( 0 );
 }
