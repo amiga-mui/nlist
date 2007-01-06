@@ -3,6 +3,20 @@ MUI NList MCC classes - ChangeLog
 ---------------------------------
 
 $Id$
+$URL$
+
+2007-01-06  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nbitmap_mcc: added the sources of our new NBitmap.mcc custom class relative
+    kindly developed and provided by Daniel Allsopp in 2006. Currently the class
+    only compiles on AmigaOS4, but future versions should be ported to OS3 and MOS
+    as well and should also be running on cybergraphics.library systems. This new
+    class provides general purpose methods for loading/drawing all kind of bitmaps
+    (either loaded from a file or dtObject) including methods for applying certain
+    image modifications in advance. This class should also allow to load images
+    which can contain alpha-channel masking like e.g. 32bit PNG files. All in all
+    it should be the next generation MUI custom class for dealing with all kind
+    of images and their operations/display.
 
 #### v0.98 RELEASE ############################################################
 
