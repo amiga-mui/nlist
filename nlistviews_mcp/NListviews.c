@@ -5,7 +5,7 @@
                                             and 0x9d510101 to 0x9d51013F)
 
  Copyright (C) 1996-2001 by Gilles Masson
- Copyright (C) 2001-2005 by NList Open Source Team
+ Copyright (C) 2001-2007 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -257,12 +257,11 @@ static const char *MainTextArray[] =
   "\033C",
   "Latest public release can be found on aminet (dev/mui).",
   "All releases are available on",
-  "http://iutsoph.unice.fr/amiga/mui/MCC_NListxxx.lha",
-  " and",
-  "ftp://iutsoph.unice.fr/pub/amiga/mui/MCC_NListxxx.lha",
+  "http://www.sourceforge.net/projects/nlist-classes/",
   "\033C",
-  "\033r\0333(C) Gilles Masson, 1996-1998",
-  "\033r\0333masson@iutsoph.unice.fr",
+  "\033r\0333(C) 1996-1998 by Gilles Masson",
+  "\033r\0333(C) 2001-2007 by NList Open Source Team",
+  "\033r\0333http://www.sourceforge.net/projects/nlist-classes/",
   "\033C",
   "\033cThis new list/listview custom class",
   "\033chandles its own configurable backgrounds,",
