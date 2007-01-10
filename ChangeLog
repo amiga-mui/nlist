@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-01-10  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/misc: reworked some sources to look a *lot* nicer. Also added
+    two new debugging classes "datatype" and "draw" to capture possible flaws in
+    these areas.
+
 2007-01-06  Jens Langner <Jens.Langner@light-speed.de>
 
   * nbitmap_mcc: added the sources of our new NBitmap.mcc custom class relative
