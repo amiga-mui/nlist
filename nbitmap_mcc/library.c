@@ -25,20 +25,21 @@
 #include <proto/intuition.h>
 
 /* local includes */
+#include "Debug.h"
 #include "private.h"
 #include "rev.h"
 
 /* mcc initialisation */
 #define VERSION       LIB_VERSION
-#define REVISION	    LIB_REVISION
+#define REVISION      LIB_REVISION
 
-#define CLASS			    MUIC_NBitmap
+#define CLASS         MUIC_NBitmap
 #define SUPERCLASS    MUIC_Area
 
 #define INSTDATA      InstData
 
-#define UserLibID			"$VER: " MUIC_NBitmap " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	19
+#define UserLibID     "$VER: " MUIC_NBitmap " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define MASTERVERSION 19
 
 #define USEDCLASSESP used_classesP
 static const char *used_classesP[] = { "NBitmap.mcp", NULL };
@@ -48,65 +49,62 @@ static const char *used_classesP[] = { "NBitmap.mcp", NULL };
 
 #define USE_UTILITYBASE
 
-/* libraries */
+// libraries
 struct Library *DataTypesBase = NULL;
 struct Library *P96Base = NULL;
-struct Library *LocaleBase = NULL;
 
 struct DataTypesIFace *IDataTypes = NULL;
 struct P96IFace *IP96 = NULL;
-struct LocaleIFace *ILocale = NULL;
 
-/* BOOL ClassInitFunc() */
+// BOOL ClassInitFunc()
 BOOL ClassInitFunc(UNUSED struct Library *base)
 {
   BOOL res = FALSE;
 
-	/* open library interfaces */
-	if((DataTypesBase = OpenLibrary("datatypes.library", 39L)) &&
+  ENTER();
+
+  // open library interfaces
+  if((DataTypesBase = OpenLibrary("datatypes.library", 39L)) != NULL &&
      GETINTERFACE(IDataTypes, DataTypesBase))
-	{
-  	if((LocaleBase = OpenLibrary("locale.library", 39L)) &&
-       GETINTERFACE(ILocale, LocaleBase))
-  	{
+  {
 
-      // Picasso96API.library is not necessary but
-      // highly recommened
-    	if((P96Base = OpenLibrary("Picasso96API.library", 2L)) &&
-         GETINTERFACE(IP96, P96Base)) { }
-
-	    res = TRUE;
+    // Picasso96API.library is not necessary but
+    // highly recommened
+    if((P96Base = OpenLibrary("Picasso96API.library", 2L)) != NULL &&
+       GETINTERFACE(IP96, P96Base))
+    {
     }
-	}
 
-	return(res);
+    res = TRUE;
+  }
+
+  RETURN(res);
+  return res;
 }
 
 /* VOID ClassExitFunc() */
 VOID ClassExitFunc(UNUSED struct Library *base)
 {
+  ENTER();
+
   /* close libraries */
-	if(P96Base)
+  if(P96Base != NULL)
   {
     DROPINTERFACE(IP96);
-		CloseLibrary(P96Base);
-	  P96Base = NULL;
+    CloseLibrary(P96Base);
+    P96Base = NULL;
   }
 
-	if(LocaleBase)
-  {
-    DROPINTERFACE(ILocale);
-		CloseLibrary(LocaleBase);
-	  LocaleBase = NULL;
-  }
-
-	if(DataTypesBase)
+  if(DataTypesBase != NULL)
   {
     DROPINTERFACE(IDataTypes);
-		CloseLibrary(DataTypesBase);
-	  DataTypesBase = NULL;
+    CloseLibrary(DataTypesBase);
+    DataTypesBase = NULL;
   }
+
+  LEAVE();
 }
 
 /* library startup code */
 #include "mccheader.c"
+

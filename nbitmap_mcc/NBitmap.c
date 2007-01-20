@@ -20,13 +20,13 @@
 
 ***************************************************************************/
 
-/* ansi includes */
+// ansi includes
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 
-/* system includes */
+// system includes
 #include <proto/datatypes.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -38,7 +38,7 @@
 #include <proto/Picasso96API.h>
 #include <proto/utility.h>
 
-/* system */
+// system
 #include <datatypes/pictureclass.h>
 #include <dos/dosextens.h>
 #include <dos/dostags.h>
@@ -48,18 +48,18 @@
 #include <graphics/layers.h>
 #include <graphics/blitattr.h>
 
-/* libraries */
+// libraries
 #include <libraries/gadtools.h>
 #include <libraries/mui.h>
 #include <libraries/amigaguide.h>
 
-/* local includes */
+// local includes
 #include "NBitmap.h"
 #include "private.h"
 #include "rev.h"
 #include "Debug.h"
 
-/* functions */
+// functions
 /// GetConfigItem()
 //
 ULONG GetConfigItem(Object *obj, ULONG configitem, ULONG defaultsetting)

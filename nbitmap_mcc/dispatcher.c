@@ -43,10 +43,13 @@ static Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ..
   Object *rc;
   VA_LIST args;
 
+  ENTER();
+
   VA_START(args, obj);
   rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
   VA_END(args);
 
+  RETURN(rc);
   return rc;
 }
 #endif
@@ -54,316 +57,393 @@ static Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ..
 /* VOID setstr() */
 static VOID setstr(STRPTR *dest, STRPTR str)
 {
-  ULONG len;
+  ENTER();
 
-  if(*dest)
-	{
-	  FreeVec(*dest);
-		*dest = NULL;
+  if(*dest != NULL)
+  {
+    FreeVec(*dest);
+    *dest = NULL;
   }
 
-	if(str)
-	{
-	  len = strlen(str);
-		*dest = AllocVec(len+1, MEMF_ANY|MEMF_CLEAR);
-		if(*dest) CopyMem(str, *dest, len);
-	}
+  if(str != NULL)
+  {
+    ULONG len;
+
+    len = strlen(str) + 1;
+    if((*dest = AllocVec(len, MEMF_ANY)) != NULL)
+      strlcpy(*dest, str, len);
+  }
+
+  LEAVE();
 }
 
 /* ULONG NBitmap_New() */
 ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
 {
-		uint32 i;
-		struct InstData *data = NULL;
-		struct TagItem *tags = NULL, *tag = NULL;
+      uint32 i;
+      struct InstData *data = NULL;
+      struct TagItem *tags = NULL, *tag = NULL;
 
-		if((obj = (Object *)DoSuperNew(cl, obj,
-			MUIA_CycleChain, TRUE,
-		TAG_MORE, msg->ops_AttrList))!=NULL)
-			{
-				if((data = INST_DATA(cl, obj))!=NULL)
-					{
-						SetMem(data, 0, sizeof(struct InstData));
+      if((obj = (Object *)DoSuperNew(cl, obj,
+        MUIA_CycleChain, TRUE,
+      TAG_MORE, msg->ops_AttrList))!=NULL)
+        {
+          if((data = INST_DATA(cl, obj))!=NULL)
+            {
+              SetMem(data, 0, sizeof(struct InstData));
 
-						/* passed tags */
-						for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
-							{
-								switch(tag->ti_Tag)
-									{
-										case MUIA_NBitmap_Type:
-											data->type = tag->ti_Data;
-										break;
+              /* passed tags */
+              for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
+                  {
+                    switch(tag->ti_Tag)
+                      {
+                        case MUIA_NBitmap_Type:
+                          data->type = tag->ti_Data;
+                        break;
 
-										case MUIA_NBitmap_Normal:
-											data->data[0] = (uint32*)tag->ti_Data;
-										break;
+                        case MUIA_NBitmap_Normal:
+                          data->data[0] = (uint32*)tag->ti_Data;
+                        break;
 
-										case MUIA_NBitmap_Ghosted:
-											data->data[1] = (uint32*)tag->ti_Data;
-										break;
+                        case MUIA_NBitmap_Ghosted:
+                          data->data[1] = (uint32*)tag->ti_Data;
+                        break;
 
-										case MUIA_NBitmap_Selected:
-											data->data[2] = (uint32*)tag->ti_Data;
-										break;
+                        case MUIA_NBitmap_Selected:
+                          data->data[2] = (uint32*)tag->ti_Data;
+                        break;
 
-										case MUIA_NBitmap_Button:
-											data->button = (BOOL)tag->ti_Data;
-										break;
+                        case MUIA_NBitmap_Button:
+                          data->button = (BOOL)tag->ti_Data;
+                        break;
 
-										case MUIA_NBitmap_Label:
-											setstr(&data->label, (STRPTR)tag->ti_Data);
-										break;
-									}
-							}
+                        case MUIA_NBitmap_Label:
+                          setstr(&data->label, (STRPTR)tag->ti_Data);
+                        break;
+                      }
+                  }
 
-						/* load files */
-						if(data->type == MUIV_NBitmap_Type_File)
-							{
-								for(i=0;i<3;i++)
-									if(data->data[i]) NBitmap_LoadImage((STRPTR)data->data[i], i, cl, obj);
-							}
-						else
-							{
-								for(i=0;i<3;i++)
-									if(data->data[i]) data->dt_obj[i] = (Object *)data->data[i];
-							}
+              /* load files */
+              if(data->type == MUIV_NBitmap_Type_File)
+                  {
+                    for(i=0;i<3;i++)
+                      if(data->data[i]) NBitmap_LoadImage((STRPTR)data->data[i], i, cl, obj);
+                  }
+              else
+                  {
+                    for(i=0;i<3;i++)
+                      if(data->data[i]) data->dt_obj[i] = (Object *)data->data[i];
+                  }
 
-						/* setup images */
-						if(NBitmap_NewImage(cl, obj)) return((ULONG)obj);
-					}
-			}
+              /* setup images */
+              if(NBitmap_NewImage(cl, obj)) return((ULONG)obj);
+            }
+        }
 
-		CoerceMethod(cl, obj, OM_DISPOSE);
-		return(FALSE);
-	}
+      CoerceMethod(cl, obj, OM_DISPOSE);
+      return(FALSE);
+  }
 
 /* ULONG NBitmap_Get() */
 ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
-	{
+{
+  ULONG result;
 
-		return(DoSuperMethodA(cl,obj,msg));
-	}
+  ENTER();
+
+  result = DoSuperMethodA(cl, obj, msg);
+
+  RETURN(result);
+  return result;
+}
 
 /* ULONG NBitmap_Set() */
 ULONG NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
-	{
+{
+  ULONG result;
 
-		return(DoSuperMethodA(cl,obj,msg));
-	}
+  ENTER();
+
+  result = DoSuperMethodA(cl, obj, msg);
+
+  RETURN(result);
+  return result;
+}
 
 /* ULONG NBitmap_Dispose() */
 ULONG NBitmap_Dispose(struct IClass *cl, Object *obj, Msg msg)
-	{
-		NBitmap_DisposeImage(cl, obj);
-		return(DoSuperMethodA(cl, obj, msg));
-	}
+{
+  ULONG result;
+
+  ENTER();
+
+  NBitmap_DisposeImage(cl, obj);
+
+  result = DoSuperMethodA(cl, obj, msg);
+
+  RETURN(result);
+  return result;
+}
 
 /* ULONG NBitmap_Setup() */
 ULONG NBitmap_Setup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
-	{
-      if(DoSuperMethodA(cl, obj, (Msg)rinfo))
-			{
-				NBitmap_SetupImage(cl, obj);
-				return(1);
-			}
+{
+  ULONG result = 0;
 
-		return(0);
-	}
+  ENTER();
+
+  if(DoSuperMethodA(cl, obj, (Msg)rinfo))
+  {
+    NBitmap_SetupImage(cl, obj);
+    result = 1;
+  }
+
+  RETURN(result);
+  return result;
+}
 
 /* ULONG NBitmap_Cleanup() */
 ULONG NBitmap_Cleanup(struct IClass *cl, Object *obj, Msg msg)
-	{
-		NBitmap_CleanupImage(cl, obj);
+{
+  ULONG result;
 
-		return(DoSuperMethodA(cl, obj, msg));
-	}
+  ENTER();
+
+  NBitmap_CleanupImage(cl, obj);
+
+  result = DoSuperMethodA(cl, obj, msg);
+
+  RETURN(result);
+  return(result);
+}
 
 /* ULONG NBitmap_Show() */
 ULONG NBitmap_Show(struct IClass *cl, Object *obj, Msg msg)
-	{
-		DoSuperMethodA(cl, obj, msg);
+{
+  ULONG result;
 
-		return(TRUE);
-	}
+  ENTER();
+
+  result = DoSuperMethodA(cl, obj, msg);
+
+  RETURN(result);
+  return result;
+}
 
 /* ULONG NBitmap_Hide() */
 ULONG NBitmap_Hide(struct IClass *cl, Object *obj, Msg msg)
-	{
-		return(DoSuperMethodA(cl, obj, msg));
-	}
+{
+  ULONG result;
+
+  ENTER();
+
+  result = DoSuperMethodA(cl, obj, msg);
+
+  RETURN(result);
+  return result;
+}
 
 /* ULONG NBitmap_HandleInput() */
 ULONG NBitmap_HandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg)
-	{
-      struct InstData *data = NULL;
+{
+  struct InstData *data;
+  ULONG result;
 
-      if((data = INST_DATA(cl, obj))!=NULL)
-			{
-				if(msg->imsg)
-					{
-						switch(msg->imsg->Class)
-							{
-								case IDCMP_MOUSEBUTTONS:
-									if(_isinobject(msg->imsg->MouseX, msg->imsg->MouseY))
-										{
-											if(msg->imsg->Code == SELECTDOWN)
-												{
-                                       if(!data->pressed)
-														{
-															data->pressed = TRUE;
-															
-															MUI_Redraw(obj, MADF_DRAWUPDATE);
-															SetAttrs(obj, MUIA_Pressed, TRUE, TAG_DONE);
-														}
-												}
-											else if(msg->imsg->Code == SELECTUP)
-												{
-													if(data->overlay && data->pressed)
-														{
-															data->pressed = FALSE;
-															data->overlay = FALSE;
+  ENTER();
 
-															MUI_Redraw(obj, MADF_DRAWUPDATE);
-															SetAttrs(obj, MUIA_Pressed, FALSE, TAG_DONE);
-														}
-												}
-										}
-									else
-										{
-											if(msg->imsg->Code==SELECTUP)
-												{
-													data->pressed = FALSE;
-												}
-										}
-								break;
+  if((data = INST_DATA(cl, obj)) != NULL)
+  {
+    if(msg->imsg != NULL)
+    {
+      switch(msg->imsg->Class)
+      {
+        case IDCMP_MOUSEBUTTONS:
+          if(_isinobject(msg->imsg->MouseX, msg->imsg->MouseY))
+          {
+            if(msg->imsg->Code == SELECTDOWN)
+            {
+              if(data->pressed == FALSE)
+              {
+                data->pressed = TRUE;
 
-								case IDCMP_MOUSEMOVE:
-									if(_isinobject(msg->imsg->MouseX, msg->imsg->MouseY))
-										{
-											if(!data->overlay)
-												{
-													data->overlay = TRUE;
-													MUI_Redraw(obj, MADF_DRAWUPDATE);
-												}
-										}
-									else
-										{
-											if(data->overlay)
-												{
-													data->overlay = FALSE;
-													MUI_Redraw(obj, MADF_DRAWUPDATE);
-												}
-										}
-								break;
-							}
-					}
-			}
+                MUI_Redraw(obj, MADF_DRAWUPDATE);
+                SetAttrs(obj, MUIA_Pressed, TRUE, TAG_DONE);
+              }
+            }
+            else if(msg->imsg->Code == SELECTUP)
+            {
+              if(data->overlay && data->pressed)
+              {
+                data->pressed = FALSE;
+                data->overlay = FALSE;
 
-		return(DoSuperMethodA(cl, obj, (Msg)msg));
-	}
+                MUI_Redraw(obj, MADF_DRAWUPDATE);
+                SetAttrs(obj, MUIA_Pressed, FALSE, TAG_DONE);
+              }
+            }
+          }
+          else
+          {
+            if(msg->imsg->Code==SELECTUP)
+            {
+              data->pressed = FALSE;
+            }
+          }
+        break;
 
-/* ULONG	NBitmap_AskMinMax() */
-ULONG	NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
-	{
-		struct InstData *data = NULL;
+        case IDCMP_MOUSEMOVE:
+          if(_isinobject(msg->imsg->MouseX, msg->imsg->MouseY))
+          {
+            if(data->overlay == FALSE)
+            {
+              data->overlay = TRUE;
 
-		DoSuperMethodA(cl, obj, (Msg)msg);
+              MUI_Redraw(obj, MADF_DRAWUPDATE);
+            }
+          }
+          else
+          {
+            if(data->overlay)
+            {
+              data->overlay = FALSE;
 
-		if((data = INST_DATA(cl, obj))!=NULL)
-			{
-				/* spacing */
-				data->border_horiz = 0;
-				data->border_vert = 0;
+              MUI_Redraw(obj, MADF_DRAWUPDATE);
+            }
+          }
+        break;
+      }
+    }
+  }
 
-				if(data->button)
-					{
-						data->border_horiz += 4;
-						data->border_horiz += data->prefs.spacing_horiz*2;
+  result = DoSuperMethodA(cl, obj, (Msg)msg);
 
-						data->border_vert += 4;
-						data->border_vert += data->prefs.spacing_vert*2;
-					}
+  RETURN(result);
+  return result;
+}
 
-				/* standard width & height */
-				msg->MinMaxInfo->MinWidth = data->width + (data->border_horiz);
-				msg->MinMaxInfo->DefWidth = data->width + (data->border_horiz);
-				msg->MinMaxInfo->MaxWidth = data->width + (data->border_horiz);
+/* ULONG  NBitmap_AskMinMax() */
+ULONG NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
+{
+  struct InstData *data;
 
-				msg->MinMaxInfo->MinHeight = data->height + (data->border_vert);
-				msg->MinMaxInfo->DefHeight = data->height + (data->border_vert);
-				msg->MinMaxInfo->MaxHeight = data->height + (data->border_vert);
-			}
+  ENTER();
 
-		return(0);
-	}
+  DoSuperMethodA(cl, obj, (Msg)msg);
+
+  if((data = INST_DATA(cl, obj)) != NULL)
+  {
+    // spacing
+    data->border_horiz = 0;
+    data->border_vert = 0;
+
+    if(data->button)
+    {
+      data->border_horiz += 4;
+      data->border_horiz += data->prefs.spacing_horiz * 2;
+
+      data->border_vert += 4;
+      data->border_vert += data->prefs.spacing_vert * 2;
+    }
+
+    // standard width & height
+    msg->MinMaxInfo->MinWidth = data->width + data->border_horiz;
+    msg->MinMaxInfo->DefWidth = data->width + data->border_horiz;
+    msg->MinMaxInfo->MaxWidth = data->width + data->border_horiz;
+
+    msg->MinMaxInfo->MinHeight = data->height + data->border_vert;
+    msg->MinMaxInfo->DefHeight = data->height + data->border_vert;
+    msg->MinMaxInfo->MaxHeight = data->height + data->border_vert;
+  }
+
+  RETURN(0);
+  return 0;
+}
 
 /* ULONG NBitmap_Draw() */
 ULONG NBitmap_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
-	{
-		DoSuperMethodA(cl, obj, (Msg)msg);
+{
+  ULONG result;
 
-      if(msg->flags & MADF_DRAWUPDATE)
-			{
-            NBitmap_DrawImage(cl, obj);
-			}
+  ENTER();
 
-		if(msg->flags & MADF_DRAWOBJECT)
-			{
-            NBitmap_DrawImage(cl, obj);
-			}
+  result = DoSuperMethodA(cl, obj, (Msg)msg);
 
-		return(0);
-	}
+  if((msg->flags & MADF_DRAWUPDATE) || (msg->flags & MADF_DRAWOBJECT))
+  {
+    NBitmap_DrawImage(cl, obj);
+  }
+
+  RETURN(result);
+  return result;
+}
 
 /* DISPATCHER() */
 DISPATCHER(_Dispatcher)
 {
   ULONG result = TRUE;
 
+  ENTER();
+
   switch(msg->MethodID)
   {
     case OM_NEW:
-      return(NBitmap_New(cl, obj, (struct opSet *)msg));
+      result = NBitmap_New(cl, obj, (struct opSet *)msg);
+    break;
 
     case OM_SET:
-      return(NBitmap_Set(cl, obj, msg));
+      result = NBitmap_Set(cl, obj, msg);
+    break;
 
     case OM_GET:
-      return(NBitmap_Get(cl, obj, msg));
+      result = NBitmap_Get(cl, obj, msg);
+    break;
 
     case OM_DISPOSE:
-      return(NBitmap_Dispose(cl, obj, msg));
+      result = NBitmap_Dispose(cl, obj, msg);
+    break;
 
     case OM_ADDMEMBER:
-      return(DoSuperMethodA(cl, obj, msg));
+      result = DoSuperMethodA(cl, obj, msg);
+    break;
 
     case OM_REMMEMBER:
-      return(DoSuperMethodA(cl, obj, msg));
+      result = DoSuperMethodA(cl, obj, msg);
+    break;
 
     case MUIM_Setup:
-      return(NBitmap_Setup(cl, obj, (struct MUI_RenderInfo *)msg));
+      result = NBitmap_Setup(cl, obj, (struct MUI_RenderInfo *)msg);
+    break;
 
     case MUIM_Show:
-      return(NBitmap_Show(cl, obj, msg));
+      result = NBitmap_Show(cl, obj, msg);
+    break;
 
     case MUIM_Hide:
-      return(NBitmap_Hide(cl, obj, msg));
+      result = NBitmap_Hide(cl, obj, msg);
+    break;
 
     case MUIM_HandleInput:
-      return(NBitmap_HandleInput(cl, obj, (APTR)msg));
+      result = NBitmap_HandleInput(cl, obj, (APTR)msg);
+    break;
 
     case MUIM_Cleanup:
-      return(NBitmap_Cleanup(cl, obj, msg));
+      result = NBitmap_Cleanup(cl, obj, msg);
+    break;
 
     case MUIM_AskMinMax:
-      return(NBitmap_AskMinMax(cl, obj, (struct MUIP_AskMinMax *)msg));
+      result = NBitmap_AskMinMax(cl, obj, (struct MUIP_AskMinMax *)msg);
+    break;
 
     case MUIM_Draw:
-      return(NBitmap_Draw(cl, obj, (struct MUIP_Draw *)msg));
+      result = NBitmap_Draw(cl, obj, (struct MUIP_Draw *)msg);
+    break;
 
     default:
-      return(DoSuperMethodA(cl, obj, msg));
-	}
+      result = DoSuperMethodA(cl, obj, msg);
+    break;
+  }
 
-  return(result);
+  RETURN(result);
+  return result;
 }
+

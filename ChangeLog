@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-01-20  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/misc: reworked some more sources to look a *lot* nicer.
+
 2007-01-10  Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/misc: reworked some sources to look a *lot* nicer. Also added
