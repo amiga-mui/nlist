@@ -177,8 +177,11 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
         {
           uint32 arraysize;
 
-          /* true colour bitmap */
-          data->fmt = PBPAFMT_ARGB;
+			 /* correct read buffer */
+			 if(data->depth == 24)
+				data->fmt = PBPAFMT_RGB;
+			 else
+				data->fmt = PBPAFMT_ARGB;
 
           /* bitmap header */
           GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
@@ -196,7 +199,7 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
             SetMem(&pbpa, 0, sizeof(struct pdtBlitPixelArray));
             pbpa.MethodID = PDTM_READPIXELARRAY;
             pbpa.pbpa_PixelData = data->arraypixels[i];
-            pbpa.pbpa_PixelFormat = PBPAFMT_ARGB;
+				pbpa.pbpa_PixelFormat = data->fmt;
             pbpa.pbpa_PixelArrayMod = data->arraybpr;
             pbpa.pbpa_Left = 0;
             pbpa.pbpa_Top = 0;
@@ -421,7 +424,13 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
       if(data->arraypixels[item] != NULL)
       {
+		  int32 srctype;
         uint32 error;
+
+		  if(data->depth == 24)
+			 srctype = BLITT_RGB24;
+		  else
+			 srctype = BLITT_ARGB32;
 
         error = BltBitMapTags(BLITA_Source, data->arraypixels[item],
                               BLITA_Dest, _rp(obj),
@@ -431,7 +440,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
                               BLITA_DestY, _top(obj) + (data->border_vert / 2),
                               BLITA_Width, data->width,
                               BLITA_Height, data->height,
-                              BLITA_SrcType, BLITT_ARGB32,
+										BLITA_SrcType, srctype,
                               BLITA_DestType, BLITT_RASTPORT,
                               BLITA_SrcBytesPerRow, data->arraybpr,
                               BLITA_UseSrcAlpha, TRUE,
