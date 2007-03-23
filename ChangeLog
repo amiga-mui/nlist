@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-03-23  Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/Debug.c: fixed wrong final output of debug classes and flags.
+  * #?/Debug.c: disabling a debug flag was not possible due to a check for the
+    '!' at a wrong index.
+
 2007-03-11  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcp: added russian catalog translation kindly provided by

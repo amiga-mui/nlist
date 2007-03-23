@@ -125,7 +125,7 @@ void SetupDebug(void)
       else
       {
         // check if this call is a negation or not
-        if(tok[1] == '!')
+        if(tok[0] == '!')
         {
     			for(i=0; dbflags[i].token; i++)
 	    		{
@@ -163,7 +163,7 @@ void SetupDebug(void)
 		}
 	}
 
-	kprintf("set debug classes/flags (env:nlisttree.mcp.debug): %08x/%08x\n", debug_classes, debug_flags);
+	kprintf("set debug classes/flags (env:nlisttree.mcp.debug): %08lx/%08lx\n", debug_classes, debug_flags);
   kprintf("** Normal processing follows ***************************************\n");
 }
 
