@@ -137,6 +137,29 @@ BOOL NBitmap_LoadImage(STRPTR filename, uint32 item, struct IClass *cl, Object *
   return result;
 }
 ///
+/// NBitmap_FreeImage()
+//
+VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj)
+{
+	struct InstData *data = NULL;
+
+	if(((data = INST_DATA(cl, obj)) != NULL))
+	{
+		if(data->dt_obj[item] != NULL)
+		{
+			DisposeDTObject(data->dt_obj[item]);
+			data->dt_obj[item] = NULL;
+
+			if(data->arraypixels[item])
+			{
+				FreeVec(data->arraypixels[item]);
+				data->arraypixels[item] = NULL;
+			}
+		}
+	}
+}
+
+///
 /// NBitmap_NewImage()
 //
 BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)

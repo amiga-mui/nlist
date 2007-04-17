@@ -106,6 +106,7 @@ struct InstData
 
 /* prototypes */
 BOOL NBitmap_LoadImage(STRPTR filename, uint32 item, struct IClass *cl, Object *obj);
+VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj);
 BOOL NBitmap_NewImage(struct IClass *cl, Object *obj);
 VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj);
 VOID NBitmap_SetupImage(struct IClass *cl, Object *obj);

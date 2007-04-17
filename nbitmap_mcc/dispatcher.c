@@ -164,6 +164,28 @@ ULONG NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
 
   ENTER();
 
+  struct TagItem *tags, *tag;
+  struct InstData *data = INST_DATA(cl, obj);
+
+  for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
+  {
+	  switch(tag->ti_Tag)
+	  {
+		  case MUIA_NBitmap_Normal:
+           data->data[0] = (uint32*)tag->ti_Data;
+
+			  if(data->type == MUIV_NBitmap_Type_File)
+			  {
+				  NBitmap_FreeImage(0, cl, obj);
+				  NBitmap_LoadImage((STRPTR)data->data[0], 0, cl, obj);
+				  NBitmap_NewImage(cl, obj);
+
+				  MUI_Redraw(obj, MADF_DRAWOBJECT);
+			  }
+		  break;
+	  }
+  }
+
   result = DoSuperMethodA(cl, obj, msg);
 
   RETURN(result);
