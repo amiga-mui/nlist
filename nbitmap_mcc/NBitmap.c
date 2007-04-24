@@ -200,11 +200,11 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
         {
           uint32 arraysize;
 
-			 /* correct read buffer */
-			 if(data->depth == 24)
-				data->fmt = PBPAFMT_RGB;
-			 else
-				data->fmt = PBPAFMT_ARGB;
+          /* correct read buffer */
+          if(data->depth == 24)
+            data->fmt = PBPAFMT_RGB;
+          else
+            data->fmt = PBPAFMT_ARGB;
 
           /* bitmap header */
           GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
@@ -217,19 +217,8 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
           /* get array of pixels */
           if((data->arraypixels[i] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
           {
-            struct pdtBlitPixelArray pbpa;
+            DoMethod(data->dt_obj[i], PDTM_READPIXELARRAY, data->arraypixels[i], data->fmt, data->arraybpr, 0, 0, data->width, data->height);
 
-            SetMem(&pbpa, 0, sizeof(struct pdtBlitPixelArray));
-            pbpa.MethodID = PDTM_READPIXELARRAY;
-            pbpa.pbpa_PixelData = data->arraypixels[i];
-				pbpa.pbpa_PixelFormat = data->fmt;
-            pbpa.pbpa_PixelArrayMod = data->arraybpr;
-            pbpa.pbpa_Left = 0;
-            pbpa.pbpa_Top = 0;
-            pbpa.pbpa_Width = data->width;
-            pbpa.pbpa_Height = data->height;
-
-            DoMethodA(data->dt_obj[i], (Msg)&pbpa);
             result = TRUE;
           }
         }

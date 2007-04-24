@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-04-24  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: fixed an aliasing break by replacing a DoMethodA()
+    call by a varargs DoMethod() call.
+
 2007-03-23  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?/Debug.c: fixed wrong final output of debug classes and flags.
