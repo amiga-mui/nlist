@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-05-01  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: the GetEntry method didn't respect closed lists
+    when counting then nodes and hence the first node of a closed list was
+    always returned while the next node was skipped.
+
 2007-04-24  Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: fixed an aliasing break by replacing a DoMethodA()
@@ -200,7 +206,7 @@ $URL$
 2005-06-09  Jens Langner <Jens.Langner@light-speed.de>
 
   * includes/SDI: updated SDI headers to latest incarnation.
-	 
+   
 2005-05-25  Jens Langner <Jens.Langner@light-speed.de>
 
   * library.c: added missing USE_UTILITYBASE define which may have caused
