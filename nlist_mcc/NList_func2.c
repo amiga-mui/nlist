@@ -349,7 +349,7 @@ D(DBF_ALWAYS, "qsort ended.\n");
         	/* sba: was data->NList_LastInserted--; */
         	data->NList_LastInserted = ent1;
           DO_NOTIFY(NTF_Insert);
-        } else 
+        } else
         if (data->NList_LastInserted == ent1)
         {
         	/* sba: was data->NList_LastInserted++; */
@@ -1916,7 +1916,7 @@ ULONG mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
     data->NList_LastInserted = -1;
     res = NL_List_Move_Selected(data,obj,ent);
     if (data->NList_LastInserted >= 0)
-    { DO_NOTIFY(MUIA_NList_DragSortInsert);
+    { DO_NOTIFY(NTF_DragSortInsert);
     }
     else
       data->NList_LastInserted = li;

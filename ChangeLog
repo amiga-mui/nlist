@@ -7,6 +7,9 @@ $URL$
 
 2007-05-01  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlist_mcc/NList_func2.c: a wrong flag was used to signal a pending
+    notification for MUIA_NList_DragSortInsert. Using the correct flag should
+    fix bug #1668322.
   * nlisttree_mcc/NListtree.c: the GetEntry method didn't respect closed lists
     when counting then nodes and hence the first node of a closed list was
     always returned while the next node was skipped.
@@ -206,7 +209,7 @@ $URL$
 2005-06-09  Jens Langner <Jens.Langner@light-speed.de>
 
   * includes/SDI: updated SDI headers to latest incarnation.
-   
+
 2005-05-25  Jens Langner <Jens.Langner@light-speed.de>
 
   * library.c: added missing USE_UTILITYBASE define which may have caused
@@ -253,7 +256,7 @@ $URL$
 2004-12-15  Sebastian Bauer <mail@sebastianbauer.info>
 
   * NList_mcc: On some circumstances MUIA_NList_InsertPositions was not
-    set correctly if the element has been inserted via 
+    set correctly if the element has been inserted via
     MUIV_NList_Insert_Sorted. Hopfully fixed now.
 
 2004-12-14  Sebastian Bauer <mail@sebastianbauer.info>
@@ -273,7 +276,7 @@ $URL$
 
   * include/mccclass_68k.S: updated mcc 68k->PPC cross call stubs to
     latest version created by fdtrans 51.1
-    
+
 2004-10-03  Jens Langner <Jens.Langner@light-speed.de>,
             Sebastian Bauer <mail@sebastianbauer.info>
 
