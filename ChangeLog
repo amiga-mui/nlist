@@ -5,11 +5,18 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-05-02  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func2.c: a wrong flag was used to signal a pending
+    notification for MUIA_NList_DragSortInsert. Using the correct flag should
+    fix bug #1668322.
+
 2007-05-01  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func2.c: a wrong flag was used to signal a pending
     notification for MUIA_NList_DragSortInsert. Using the correct flag should
     fix bug #1668322.
+
   * nlisttree_mcc/NListtree.c: the GetEntry method didn't respect closed lists
     when counting then nodes and hence the first node of a closed list was
     always returned while the next node was skipped.
