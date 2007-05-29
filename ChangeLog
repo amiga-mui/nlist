@@ -7,7 +7,7 @@ $URL$
 
 2007-05-29  Thore Böckelmann <tboeckel@gmx.de>
 
-  * #?/Debug.c: added some const keywords. 
+  * #?/Debug.c: added some const keywords.
   * include/mccheader.c: reworked the LibOpen() and LibClose() functions to
     increment/decrement the lib_Open counter before obtaining the semaphore to
     prevent a possible race condition with LibExpunge().
