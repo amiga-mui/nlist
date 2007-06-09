@@ -89,10 +89,7 @@ $(TARGET): $(OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
 	@$(STRIP) -R ".comment" -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../includes/mccheader.c \
-  ../nlistview_mcc/NListview_mcc.h private.h rev.h
-
-$(OBJDIR)/library.o: library.c ../includes/mccheader.c NListviews_mcp.h \
+$(OBJDIR)/library.o: library.c ../includes/mccinit.c NListviews_mcp.h \
   private.h icon.bh rev.h
 
 $(OBJDIR)/NListviews.o: NListviews.c NListviews_mcp.h private.h \

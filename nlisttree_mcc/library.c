@@ -48,7 +48,7 @@
 
 #define INSTDATA			  NListtree_Data
 
-#define UserLibID			  "$VER: NListtree.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID			  CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	  19
 
 #define USEDCLASSESP  used_classesP
@@ -62,6 +62,4 @@ static const char *used_classes[]  = { "NList.mcc", NULL };
 /*                                                                            */
 /******************************************************************************/
 
-#define USE_UTILITYBASE
-
-#include "mccheader.c"
+#include "mccinit.c"

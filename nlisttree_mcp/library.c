@@ -42,13 +42,13 @@
 #define	VERSION				LIB_VERSION
 #define	REVISION			LIB_REVISION
 
-#define CLASS				MUIC_NListtreeP
-#define SUPERCLASSP		    MUIC_Mccprefs
+#define CLASS				  MUIC_NListtreeP
+#define SUPERCLASSP		MUIC_Mccprefs
 
-#define	INSTDATAP           NListtreeP_Data
+#define	INSTDATAP     NListtreeP_Data
 
-#define UserLibID			"$VER: NListtree.mcp " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	    19
+#define USERLIBID			CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define MASTERVERSION	19
 
 struct Library *LocaleBase;
 #if defined(__amigaos4__)
@@ -65,7 +65,5 @@ struct LocaleIFace *ILocale;
 #define USE_IM_PREFS_COLORS 1
 #include "icon.bh"
 
-#define USE_UTILITYBASE
-
-#include "mccheader.c"
+#include "mccinit.c"
 

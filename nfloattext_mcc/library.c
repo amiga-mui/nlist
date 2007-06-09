@@ -43,11 +43,10 @@
 
 #define	INSTDATA      NFTData
 
-#define UserLibID			"$VER: NFloattext.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID			CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	19
 
 #define USEDCLASSESP  used_classesP
-
 static const char *used_classesP[] = { "NListviews.mcp", NULL };
 
 /******************************************************************************/
@@ -56,6 +55,4 @@ static const char *used_classesP[] = { "NListviews.mcp", NULL };
 /*                                                                            */
 /******************************************************************************/
 
-#define USE_UTILITYBASE
-
-#include "mccheader.c"
+#include "mccinit.c"

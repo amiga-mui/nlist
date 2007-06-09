@@ -107,7 +107,7 @@ distclean: clean
 
 ## MAIN DEPENDENCIES ###################
 
-$(OBJDIR)/library.o: library.c ../includes/mccheader.c \
+$(OBJDIR)/library.o: library.c ../includes/mccinit.c \
   private.h rev.h
 
 $(OBJDIR)/NBitmap.o: NBitmap.c NBitmap.h ../includes/mui/NBitmap_mcc.h \

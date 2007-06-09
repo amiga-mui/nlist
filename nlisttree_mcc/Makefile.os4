@@ -107,7 +107,7 @@ distclean: clean
 
 ## MAIN DEPENDENCIES ###################
 
-$(OBJDIR)/library.o: library.c ../includes/mccheader.c ../nlisttree_mcc/NListtree.h \
+$(OBJDIR)/library.o: library.c ../includes/mccinit.c ../nlisttree_mcc/NListtree.h \
   private.h rev.h
 
 $(OBJDIR)/NListtree.o: NListtree.c NListtree.h ../includes/mui/NListtree_mcc.h \

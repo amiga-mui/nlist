@@ -51,14 +51,14 @@
 
 #define	INSTDATA            NLData
 
-#define UserLibID			      "$VER: NList.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID		        CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	      19
 
 #define USEDCLASSESP  used_classesP
 static const char *used_classesP[] = { "NListviews.mcp", NULL };
 
-#define	PreClassInit
-#define	PostClassExit
+#define	CLASSINIT
+#define	CLASSEXPUNGE
 
 #if defined(__MORPHOS__)
 struct Library *LayersBase = NULL;
@@ -78,7 +78,7 @@ struct ConsoleIFace *IConsole = NULL;
 
 static struct IOStdReq ioreq;
 
-BOOL PreClassInitFunc(void)
+static BOOL ClassInit(UNUSED struct Library *base)
 {
 	if((LayersBase = OpenLibrary("layers.library", 37L)) &&
      GETINTERFACE(ILayers, LayersBase))
@@ -117,7 +117,7 @@ BOOL PreClassInitFunc(void)
 }
 
 
-VOID PostClassExitFunc( void )
+static VOID ClassExpunge(UNUSED struct Library *base)
 {
 	NGR_Delete();
 
@@ -149,5 +149,4 @@ VOID PostClassExitFunc( void )
 /*                                                                            */
 /******************************************************************************/
 
-#define USE_UTILITYBASE
-#include "mccheader.c"
+#include "mccinit.c"

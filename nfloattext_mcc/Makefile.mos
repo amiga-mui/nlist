@@ -88,7 +88,7 @@ $(TARGET): $(OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(LDLIBS)
 	@$(STRIP) -R ".comment" -S -o $@ $@.debug
 
-library.o: library.c ../includes/mccheader.c NFloattext_mcc.h private.h rev.h
+library.o: library.c ../includes/mccinit.c NFloattext_mcc.h private.h rev.h
 
 NFloattext.o: NFloattext.c NFloattext_mcc.h private.h ../includes/mcc_common.h rev.h
 

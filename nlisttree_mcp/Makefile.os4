@@ -95,7 +95,7 @@ $(TARGET): $(M68KSTUBS) $(OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(M68KSTUBS) $(LDLIBS)
 	@$(STRIP) -R ".comment" -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../includes/mccheader.c ../nlisttree_mcc/NListtree.h \
+$(OBJDIR)/library.o: library.c ../includes/mccinit.c ../nlisttree_mcc/NListtree.h \
   private.h icon.bh rev.h
 
 $(OBJDIR)/NListtree.o: NListtree.c private.h \

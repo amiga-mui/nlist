@@ -49,21 +49,21 @@
 
 #define	INSTDATA			NLVData
 
-#define UserLibID			"$VER: NListview.mcc " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID			CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	19
 
 #define USEDCLASSESP  used_classesP
 static const char *used_classesP[] = { "NListviews.mcp", NULL };
 
-#define	PreClassInit
-#define	PostClassExit
+#define	CLASSINIT
+#define	CLASSEXPUNGE
 
 struct Library *KeymapBase = NULL;
 #if defined(__amigaos4__)
 struct KeymapIFace *IKeymap = NULL;
 #endif
 
-BOOL PreClassInitFunc(void)
+static BOOL ClassInit(UNUSED struct Library *base)
 {
 	if((KeymapBase = OpenLibrary("keymap.library", 36L)) &&
      GETINTERFACE(IKeymap, KeymapBase))
@@ -75,15 +75,14 @@ BOOL PreClassInitFunc(void)
 }
 
 
-void PostClassExitFunc(void)
+static VOID ClassExpunge(UNUSED struct Library *base)
 {
   if(KeymapBase)
   {
     DROPINTERFACE(IKeymap);
     CloseLibrary(KeymapBase);
+    KeymapBase = NULL;
   }
-
-  KeymapBase = NULL;
 }
 
 
@@ -93,5 +92,4 @@ void PostClassExitFunc(void)
 /*                                                                            */
 /******************************************************************************/
 
-#define USE_UTILITYBASE
-#include "mccheader.c"
+#include "mccinit.c"

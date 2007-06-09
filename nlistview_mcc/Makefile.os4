@@ -96,7 +96,7 @@ $(TARGET): $(M68KSTUBS) $(OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(OBJS) $(M68KSTUBS) $(LDLIBS)
 	@$(STRIP) -R ".comment" -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../includes/mccheader.c NListview_mcc.h \
+$(OBJDIR)/library.o: library.c ../includes/mccinit.c NListview_mcc.h \
   private.h rev.h
 
 $(OBJDIR)/NListview.o: NListview.c NListview_mcc.h private.h \

@@ -38,16 +38,14 @@
 
 #define INSTDATA      InstData
 
-#define UserLibID     "$VER: " MUIC_NBitmap " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
 #define USEDCLASSESP used_classesP
 static const char *used_classesP[] = { "NBitmap.mcp", NULL };
 
-#define ClassInit
-#define ClassExit
-
-#define USE_UTILITYBASE
+#define CLASSINIT
+#define CLASSEXPUNGE
 
 // libraries
 struct Library *DataTypesBase = NULL;
@@ -57,7 +55,7 @@ struct DataTypesIFace *IDataTypes = NULL;
 struct P96IFace *IP96 = NULL;
 
 // BOOL ClassInitFunc()
-BOOL ClassInitFunc(UNUSED struct Library *base)
+static BOOL ClassInit(UNUSED struct Library *base)
 {
   BOOL res = FALSE;
 
@@ -83,7 +81,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
 }
 
 /* VOID ClassExitFunc() */
-VOID ClassExitFunc(UNUSED struct Library *base)
+static VOID ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -106,5 +104,4 @@ VOID ClassExitFunc(UNUSED struct Library *base)
 }
 
 /* library startup code */
-#include "mccheader.c"
-
+#include "mccinit.c"

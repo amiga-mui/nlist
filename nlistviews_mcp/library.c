@@ -45,16 +45,16 @@
 #define	VERSION				LIB_VERSION
 #define	REVISION			LIB_REVISION
 
-#define CLASS				MUIC_NListviews_mcp
-#define SUPERCLASSP		    MUIC_Mccprefs
+#define CLASS				  MUIC_NListviews_mcp
+#define SUPERCLASSP		MUIC_Mccprefs
 
-#define	INSTDATAP           NListviews_MCP_Data
+#define	INSTDATAP     NListviews_MCP_Data
 
-#define UserLibID			"$VER: NListviews.mcp " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	    19
+#define USERLIBID			CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define MASTERVERSION	19
 
-#define	ClassInit
-#define	ClassExit
+#define	CLASSINIT
+#define	CLASSEXPUNGE
 
 struct Library *CxBase = NULL;
 struct Library *LocaleBase = NULL;
@@ -69,7 +69,7 @@ struct ConsoleIFace *IConsole = NULL;
 
 struct IOStdReq ioreq;
 
-BOOL ClassInitFunc(UNUSED struct Library *base)
+static BOOL ClassInit(UNUSED struct Library *base)
 {
 	if((CxBase = OpenLibrary("commodities.library", 37L)) &&
      GETINTERFACE(ICommodities, CxBase))
@@ -103,7 +103,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
 }
 
 
-VOID ClassExitFunc( UNUSED struct Library *base )
+static VOID ClassExpunge(UNUSED struct Library *base)
 {
 	if(LocaleBase)
 	{
@@ -142,6 +142,5 @@ VOID ClassExitFunc( UNUSED struct Library *base )
 #define USE_LIST_COLORS 1
 #include "icon.bh"
 
-#define USE_UTILITYBASE
-#include "mccheader.c"
+#include "mccinit.c"
 
