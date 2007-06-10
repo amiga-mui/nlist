@@ -37,7 +37,7 @@
 #include "private.h"
 
 #include "NList_func.h"
-#include "nlistviews_mcp/NListviews_mcp.h"
+#include "NListviews_mcp.h"
 
 void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall)
 {

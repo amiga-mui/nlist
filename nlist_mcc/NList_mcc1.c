@@ -34,8 +34,8 @@
 
 #include "NList_func.h"
 #include "rev.h"
-#include "nlistviews_mcp/NListviews_mcp.h"
-#include "nlistview_mcc/NListview_mcc.h"
+#include "NListviews_mcp.h"
+#include "NListview_mcc.h"
 
 extern const struct Hook NL_ConstructHook_String;
 extern const struct Hook NL_DestructHook_String;

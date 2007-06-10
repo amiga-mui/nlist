@@ -36,6 +36,14 @@
 
 #include <devices/inputevent.h>
 
+#if defined(__PPC__)
+  #if defined(__GNUC__)
+    #pragma pack(2)
+  #elif defined(__VBCC__)
+    #pragma amiga-align
+  #endif
+#endif
+
 #define MUIC_NListviews_mcp "NListviews.mcp"
 #define NListviewsMcpObject MUI_NewObject(MUIC_NListviews_mcp
 
@@ -183,5 +191,13 @@ struct KeyBinding {
  *  #define IEQUALIFIER_RCOMMAND      0x0080   'rcommand'
  *  #define IEQUALIFIER_NUMERICPAD    0x0100   'numpad'
  */
+
+#if defined(__PPC__)
+  #if defined(__GNUC__)
+    #pragma pack()
+  #elif defined(__VBCC__)
+    #pragma default-align
+  #endif
+#endif
 
 #endif /* MUI_NLISTVIEWS_MCP_H */

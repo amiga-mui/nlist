@@ -39,7 +39,7 @@
 #include "NList_func.h"
 #include "NList_grp.h"
 
-#include "nlistviews_mcp/NListviews_mcp.h"
+#include "NListviews_mcp.h"
 
 /* IO macros */
 /*

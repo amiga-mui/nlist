@@ -7,6 +7,9 @@ $URL$
 
 2007-06-10 Jens Langner <Jens.Langner@light-speed.de>
 
+  * #?/Makefile: replaced all platform specific makefiles with a single
+    platform flexible one which can be called by a simple 'make' call and
+    automatically identify for which platform it should compile the mcc/mcp.
   * include/mccinit.c: updated to latest 1.1 version which should fix possible
     stack issues during the LibInit() phase. Custom libraries will now be opened
     during the LibOpen() phase instead while maintaining an own mutual exclusive

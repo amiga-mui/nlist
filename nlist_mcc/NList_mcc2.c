@@ -34,7 +34,7 @@
 #endif
 
 #include "NList_func.h"
-#include "nlistviews_mcp/NListviews_mcp.h"
+#include "NListviews_mcp.h"
 
 #define MAX_INTUITICKS_WAIT 3
 

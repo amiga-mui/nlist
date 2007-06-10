@@ -37,7 +37,7 @@
 #include "private.h"
 
 #include "NList_func.h"
-#include "nlistview_mcc/NListview_mcc.h"
+#include "NListview_mcc.h"
 
 /*#define DO_CLIPBLIT    TRUE*/
 

@@ -35,9 +35,7 @@
 #include "private.h"
 #include "rev.h"
 
-#include "amiga-align.h"
-#include "nlistviews_mcp/NListviews_mcp.h"
-#include "default-align.h"
+#include "NListviews_mcp.h"
 
 #ifndef MUI_EHF_GUIMODE
 #define MUI_EHF_GUIMODE     (1<<1)  /* set this if you dont want your handler to be called */
