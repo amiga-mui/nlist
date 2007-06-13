@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-06-13  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: replaced all calls to sprintf() and strncat()
+    by sizeaware calls to snprintf() and strlcat(). This effectively makes
+    buffer overruns impossible. Additionally the buffer pointer no longer needs
+    to be passed around to all functions.
+
 2007-06-10 Jens Langner <Jens.Langner@light-speed.de>
 
   * #?/Makefile: replaced all platform specific makefiles with a single

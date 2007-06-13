@@ -118,6 +118,7 @@
 */
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <graphics/gfxmacros.h>
 #undef GetOutlinePen
@@ -141,41 +142,12 @@
 #define MUIA_Group_Forward     0x80421422
 #define MUIA_Imagedisplay_Spec 0x8042a547
 
+#define DATA_BUF_SIZE          4096
+
 /*********************************************************************************************/
 
 // stack definition (where is this used!?)
 LONG __stack = 16384;
-
-#if defined(__amigaos4__) || defined(__MORPHOS__)
-static int VARARGS68K MySPrintf(char *buf, const char *fmt, ...)
-{
-  VA_LIST args;
-
-  VA_START(args, fmt);
-  RawDoFmt(fmt, VA_ARG(args, void *), NULL, buf);
-  VA_END(args);
-
-  return(strlen(buf));
-}
-#else
-static int STDARGS MySPrintf(char *buf, const char *fmt, ...)
-{
-  static const UWORD PutCharProc[2] = {0x16C0,0x4E75};
-  /* dirty hack to avoid assembler part :-)
-     16C0: move.b d0,(a3)+
-     4E75: rts */
-  va_list args;
-
-  va_start(args, fmt);
-  RawDoFmt(fmt, args, (void (*)(void))PutCharProc, buf);
-  va_end(args);
-
-  return(strlen(buf));
-}
-#endif
-
-// replacement define for the standard sprintf
-#define sprintf MySPrintf
 
 /*
 **  Small helpful macros...
@@ -1497,7 +1469,7 @@ static int GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_T
     {
       /* Number of entries is number of the entries directly in this
       ** list and the number of the entries within the open nodes
-       */ 
+       */
 
       struct Table *tb = &CLN( tn )->ln_Table;
       int i, entries;
@@ -2381,7 +2353,7 @@ VOID RemoveNode1( struct NListtree_Data *data, UNUSED struct MUI_NListtree_ListN
       if ( !( data->TempActiveNode = CTN( Node_Prev( (struct Node *)&tn->tn_Node ) ) ) )
         data->TempActiveNode = GetParentNotRoot( tn );
 
-    D(DBF_ALWAYS, "Would set active node to: %s - 0x%08lx\n", data->TempActiveNode ? data->TempActiveNode->tn_Name : "NULL", data->TempActiveNode);
+    D(DBF_ALWAYS, "Would set active node to: %s - 0x%08lx\n", data->TempActiveNode ? data->TempActiveNode->tn_Name : (STRPTR)"NULL", data->TempActiveNode);
   }
 
   D(DBF_ALWAYS, "Removing node: %s - 0x%08lx, pos: %ld\n", tn->tn_Name, tn, pos);
@@ -2852,7 +2824,7 @@ struct MUI_NListtree_TreeNode *CreateChildStructure( struct NListtree_Data *data
 *******************************************************************************
 \*****************************************************************************/
 
-static void InsertTreeImages( struct NListtree_Data *data, STRPTR *buf, struct MUI_NListtree_TreeNode *tn, struct MUI_NListtree_TreeNode *otn, UWORD cnt )
+static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, struct MUI_NListtree_TreeNode *otn, UWORD cnt )
 {
   struct MUI_NListtree_TreeNode *gp;
 
@@ -2862,7 +2834,7 @@ static void InsertTreeImages( struct NListtree_Data *data, STRPTR *buf, struct M
 
     if((gp = GetParent(tn)))
     {
-      InsertTreeImages( data, buf, gp, otn, cnt + 1 );
+      InsertTreeImages( data, gp, otn, cnt + 1 );
     }
 
 
@@ -2986,8 +2958,7 @@ static void InsertTreeImages( struct NListtree_Data *data, STRPTR *buf, struct M
       {
         if ( otn->tn_Space > 0 )
         {
-          sprintf( *buf, "\033O[%lx;%lx;%ld,%ld]", data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, otn->tn_Space );
-          *buf += strlen( *buf );
+          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, otn->tn_Space );
 
           otn->tn_ImagePos += otn->tn_Space;
           otn->tn_Space = 0;
@@ -3004,31 +2975,29 @@ static void InsertTreeImages( struct NListtree_Data *data, STRPTR *buf, struct M
           {
             if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
             {
-              sprintf( *buf, "\033O[%lx;%lx;%ld,%ld]", data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, x2 );
+              snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, x2 );
 
               otn->tn_ImagePos += x2;
             }
           }
           else
           {
-            sprintf( *buf, "\033O[%lx;%lx;%ld,%ld]", data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, x2 );
+            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, x2 );
 
             otn->tn_ImagePos += x2;
           }
-
-          *buf += strlen( *buf );
         }
       }
     }
   }
 }
 
-static void InsertImage( struct NListtree_Data *data, STRPTR *buf, struct MUI_NListtree_TreeNode *otn )
+static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *otn )
 {
   WORD x1 = -1;
 
   if ( data->Style != MUICFGV_NListtree_Style_Mac )
-    InsertTreeImages( data, buf, otn, otn, 0 );
+    InsertTreeImages( data, otn, otn, 0 );
 
   if ( ( ( otn->tn_Flags & TNF_LIST ) && !( otn->tn_Flags & TNF_NOSIGN ) ) && ( !IsListEmpty( (struct List *)&(CLN( otn ))->ln_List ) || !( data->Flags & NLTF_EMPTYNODES ) ) )
   {
@@ -3041,8 +3010,7 @@ static void InsertImage( struct NListtree_Data *data, STRPTR *buf, struct MUI_NL
       x1 = IMAGE_Closed;
     }
 
-    sprintf( *buf, "\033O[%lx]", data->Image[x1].ListImage );
-    *buf += strlen( *buf );
+    snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]", data->buf, data->Image[x1].ListImage );
 
     if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
       x1 = SPEC_Hor;
@@ -3051,26 +3019,24 @@ static void InsertImage( struct NListtree_Data *data, STRPTR *buf, struct MUI_NL
 
     if ( data->Space > 0 )
     {
-      sprintf( *buf, "\033O[%lx;%lx;%ld,%ld]", data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, data->Space );
-      *buf += strlen( *buf );
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, data->Space );
     }
 
     if ( data->Style == MUICFGV_NListtree_Style_Win98Plus )
     {
-      sprintf( *buf, "\033O[%lx]\033O[%lx;%lx;%ld,%ld]", data->Image[IMAGE_Special].ListImage, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, 3 );
-      *buf += strlen( *buf );
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Special].ListImage, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, 3 );
     }
   }
 
   if ( data->Style == MUICFGV_NListtree_Style_Mac )
   {
-    InsertTreeImages( data, buf, otn, otn, 0 );
+    InsertTreeImages( data, otn, otn, 0 );
     otn->tn_ImagePos = 0;
   }
 }
 
 
-static void DrawImages( struct MUI_NListtree_TreeNode *otn, struct MUI_NListtree_TreeNode *tn, struct NListtree_Data *data, STRPTR *buf, UWORD cnt )
+static void DrawImages( struct MUI_NListtree_TreeNode *otn, struct MUI_NListtree_TreeNode *tn, struct NListtree_Data *data, UWORD cnt )
 {
   if ( tn )
   {
@@ -3078,21 +3044,21 @@ static void DrawImages( struct MUI_NListtree_TreeNode *otn, struct MUI_NListtree
 
     if((gp = GetParent(tn)))
     {
-      DrawImages( otn, gp, data, buf, cnt + 1 );
+      DrawImages( otn, gp, data, cnt + 1 );
     }
 
     if ( data->Style == MUICFGV_NListtree_Style_Mac )
     {
       if ( !gp )
       {
-        InsertImage( data, buf, otn );
+        InsertImage( data, otn );
       }
     }
     else
     {
       if ( !cnt )
       {
-        InsertImage( data, buf, otn );
+        InsertImage( data, otn );
       }
     }
   }
@@ -3381,7 +3347,6 @@ MakeStaticHook(_FindUserDataHook_PointerCompare, _FindUserDataFunc_PointerCompar
 HOOKPROTONO(NList_DispFunc, ULONG, struct NList_DisplayMessage *msg)
 {
   struct NListtree_Data *data = hook->h_Data;
-  STRPTR b = data->buf;
   struct MUI_NListtree_TreeNode *tn = CTN( msg->entry );
 
   /*
@@ -3396,29 +3361,27 @@ HOOKPROTONO(NList_DispFunc, ULONG, struct NList_DisplayMessage *msg)
 
   if ( tn )
   {
-      D(DBF_ALWAYS, "render flags=%lx %s %s\n",tn->tn_Flags,(tn->tn_Flags & TNF_LIST)?" list":"",msg->strings[1]);
+    D(DBF_ALWAYS, "render flags=%lx %s %s\n",tn->tn_Flags,(tn->tn_Flags & TNF_LIST)?" list":"",msg->strings[1]);
 
     if ( !data->DisplayHook || !msg->strings[data->TreeColumn] )
     {
       msg->strings[data->TreeColumn] = tn->tn_Name;
     }
 
-    *data->buf = 0;
-
     /*
     **  Reset image position. Will be updated inside DrawPos().
     */
     tn->tn_ImagePos = 0;
 
+    // NUL terminate the string
+    data->buf[0] = '\0';
     if ( !( data->Flags & NLTF_NO_TREE ) )
-      DrawImages( tn, tn, data, &b, 0 );
-
-    *b = 0;
+      DrawImages( tn, tn, data, 0 );
 
     if ( msg->preparses[data->TreeColumn] )
-      strncat( data->buf, msg->preparses[data->TreeColumn], 999 - strlen( data->buf ) );
+      strlcat(data->buf, msg->preparses[data->TreeColumn], DATA_BUF_SIZE);
 
-    strncat( data->buf, msg->strings[data->TreeColumn], 999 - strlen( data->buf ) );
+    strlcat(data->buf, msg->strings[data->TreeColumn], DATA_BUF_SIZE);
 
     D(DBF_ALWAYS, "%s - %s\n", ( data->Flags & NLTF_QUIET ) ? "QUIET" : "RUN", data->buf);
 
@@ -3439,7 +3402,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /****i* NListtree.mcc/MUICFG_NListtree_ImageSpecClosed ***********************
 *
-*   NAME  
+*   NAME
 *
 * MUICFG_NListtree_ImageSpecClosed -- [IS.],
 *
@@ -3459,7 +3422,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /****i* NListtree.mcc/MUICFG_NListtree_ImageSpecOpen *************************
 *
-*   NAME  
+*   NAME
 *
 * MUICFG_NListtree_ImageSpecOpen -- [IS.],
 *
@@ -3479,7 +3442,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /****i* NListtree.mcc/MUICFG_NListtree_ImageSpecSpecial **********************
 *
-*   NAME  
+*   NAME
 *
 * MUICFG_NListtree_ImageSpecSpecial -- [IS.],
 *
@@ -3499,9 +3462,9 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /****i* NListtree.mcc/MUICFG_NListtree_PenSpecLines **************************
 *
-*   NAME  
+*   NAME
 *
-* MUICFG_NListtree_PenSpecLines -- [IS.], 
+* MUICFG_NListtree_PenSpecLines -- [IS.],
 *
 *
 *   SPECIAL VALUES
@@ -3519,7 +3482,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /****i* NListtree.mcc/MUICFG_NListtree_PenSpecShadow *************************
 *
-*   NAME  
+*   NAME
 *
 * MUICFG_NListtree_PenSpecShadow -- [IS.],
 *
@@ -3539,7 +3502,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /****i* NListtree.mcc/MUICFG_NListtree_PenSpecDraw ***************************
 *
-*   NAME  
+*   NAME
 *
 * MUICFG_NListtree_PenSpecDraw -- [IS.],
 *
@@ -3619,7 +3582,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /****** NListtree.mcc/MUIA_NListtree_Active **********************************
 *
-*   NAME  
+*   NAME
 *
 * MUIA_NListtree_Active -- [.SG], struct MUI_NListtree_TreeNode *
 *
@@ -3639,7 +3602,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 * if it is visible. If the node is in an opened tree the listview is
 * scrolling into the visible area. Setting MUIV_NListtree_Active_Off will
 * vanish the cursor.
-* 
+*
 * MUIV_NListtree_Active_First/FirstVisible/LastVisible are special values
 * for activating the lists first or the top/bottom visible entry.
 *
@@ -3751,7 +3714,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /****** NListtree.mcc/MUIA_NListtree_CloseHook *******************************
 *
-*   NAME  
+*   NAME
 *
 * MUIA_NListtree_CloseHook -- [IS.], struct Hook *
 *
@@ -3763,7 +3726,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 *
 * The close hook is called after a list node is closed, then you can
 * change the list.
-* 
+*
 * The close hook will be called with the hook in A0, the object in A2
 * and a MUIP_NListtree_CloseMessage struct in A1 (see nlisttree_mcc.h).
 *
@@ -3814,7 +3777,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 *
 *   MUIV_NListtree_CompareHook_Tail
 *     Any entry is inserted at tail of the list.
-* 
+*
 *   MUIV_NListtree_CompareHook_LeavesTop
 *     Leaves are inserted at top of the list, nodes at bottom. They are
 *     alphabetically sorted.
@@ -3829,7 +3792,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 * The hook will be called with the hook in A0, the object in A2 and
 * a MUIP_NListtree_CompareMessage struct in A1 (see nlisttree_mcc.h). You
 * should return something like:
-* 
+*
 *   <0  (TreeNode1 <  TreeNode2)
 *    0  (TreeNode1 == TreeNode2)
 *   >0  (TreeNode1 >  TreeNode2)
@@ -3970,7 +3933,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 *
 * You have to supply a display hook to specify what should be shown in
 * the listview, otherwise only the name of the nodes is displayed.
-* 
+*
 * The display hook will be called with the hook in A0, the object in
 * A2 and a MUIP_NListtree_DisplayMessage struct in A1 (see nlisttree_mcc.h).
 *
@@ -4182,7 +4145,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /****** NListtree.mcc/MUIA_NListtree_FindNameHook ****************************
 *
-*   NAME  
+*   NAME
 *
 * MUIA_NListtree_FindNameHook -- [IS.],
 *
@@ -4304,7 +4267,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 *
 * Same as MUIA_NList_Format, but one column is reserved for the tree
 * indicators and the names of the nodes.
-* 
+*
 * For further detailed information see MUIA_NList_Format!
 *
 *
@@ -4420,7 +4383,7 @@ MakeStaticHook(NList_DispHook, NList_DispFunc);
 *
 * The open hook is called whenever a list node will be opened, so you
 * can change the list before the node is open.
-* 
+*
 * The open hook will be called with the hook in A0, the object in A2
 * and a MUIP_NListtree_OpenMessage struct in A1 (see nlisttree_mcc.h).
 *
@@ -4875,11 +4838,11 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
           ActivateTreeNode( data, actnode );
           DoMethod( data->Obj, MUIM_NListtree_Active, data->ActiveNodeNum, data->ActiveNode );
 
-          D(DBF_ALWAYS, "SET MUIA_NListtree_Active: %s - 0x%08lx - list: 0x%08lx  rootlist: 0x%lx\n", actnode ? actnode->tn_Name : "NULL", actnode, data->ActiveList, &data->RootList);
+          D(DBF_ALWAYS, "SET MUIA_NListtree_Active: %s - 0x%08lx - list: 0x%08lx  rootlist: 0x%lx\n", actnode ? actnode->tn_Name : (STRPTR)"NULL", actnode, data->ActiveList, &data->RootList);
         }
         else
         {
-          D(DBF_ALWAYS, "SET MUIA_NListtree_Active: TRIGGER: %s - 0x%08lx\n", actnode ? actnode->tn_Name : "NULL", actnode);
+          D(DBF_ALWAYS, "SET MUIA_NListtree_Active: TRIGGER: %s - 0x%08lx\n", actnode ? actnode->tn_Name : (STRPTR)"NULL", actnode);
         }
         break;
 
@@ -5640,7 +5603,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
             InitHook(data->FindUserDataHook, _FindUserDataHook_CaseInsensitive, data);
           }
 
-          data->buf = AllocVecPooled( data->MemoryPool, 4096 );
+          data->buf = AllocVecPooled( data->MemoryPool, DATA_BUF_SIZE );
           data->Obj = obj;
 
           /*
@@ -5993,7 +5956,7 @@ ULONG _Cleanup( struct IClass *cl, Object *obj, Msg msg )
 ULONG _Show( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
-  
+
   if (!DoSuperMethodA( cl, obj, (Msg)msg ))
     return 0;
 
@@ -6151,7 +6114,7 @@ D(DBF_ALWAYS, "mousebutton\n");
           struct MUI_NList_TestPos_Result tpres;
 
           D(DBF_ALWAYS, "inobject\n");
-          
+
           switch( msg->imsg->Code )
           {
             case SELECTDOWN:
@@ -6810,7 +6773,7 @@ ULONG _ContextMenuChoice( struct IClass *cl, Object *obj, struct MUIP_ContextMen
 *   INPUTS
 *
 * listnode -  Specify the node which list is used to open the node.
-* 
+*
 *   MUIV_NListtree_Open_ListNode_Root
 *     The root list is used.
 *
@@ -8887,7 +8850,7 @@ ULONG _NListtree_Rename( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
 
 /****** NListtree.mcc/MUIM_NListtree_FindName ********************************
 *
-*   NAME  
+*   NAME
 *
 * MUIM_NListtree_FindName -- Find node using name match. (V1)
 *
@@ -8942,7 +8905,7 @@ ULONG _NListtree_Rename( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
 *
 *   RESULT
 *
-* Returns the found node if available, NULL otherwise.  
+* Returns the found node if available, NULL otherwise.
 *
 *
 *   EXAMPLE
@@ -9645,7 +9608,7 @@ ULONG _NListtree_Sort( struct IClass *cl, Object *obj, struct MUIP_NListtree_Sor
 *   if ( tpres.tpr_Entry != NULL )
 *   {
 *     // Do something very special here...
-*   } 
+*   }
 *
 *
 *   NOTES
@@ -9701,7 +9664,7 @@ ULONG _NListtree_TestPos( UNUSED struct IClass *cl, Object *obj, struct MUIP_NLi
 
 /****** NListtree.mcc/MUIM_NListtree_Redraw **********************************
 *
-*   NAME  
+*   NAME
 *
 * MUIM_NListtree_Redraw -- Redraw the specified tree node. (V1)
 *
