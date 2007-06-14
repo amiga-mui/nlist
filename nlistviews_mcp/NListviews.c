@@ -109,7 +109,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 	if (obj)
 	{
 		SetAttrs(obj, MUIA_CycleChain, 1,
-		              MUIA_Selected, check, 
+		              MUIA_Selected, check,
 		              MUIA_ShortHelp, help,
 					  TAG_DONE);
 	}
@@ -496,58 +496,59 @@ static LONG DeadKeyConvert(struct NListviews_MCP_Data *data,struct KeyBinding *k
   UWORD qual = key->kb_Qualifier & KBQUAL_MASK;
   UWORD same = key->kb_Qualifier & KBSYM_MASK;
   int posraw;
-  data->rawtext[0] = '\0';
+
+  text[0] = '\0';
 
   if (qual)
   { if ((qual & KBQUALIFIER_CAPS) && (same & KBSYM_CAPS))
-                                          text = stpcpy(text, (char *)"caps ");
+                                          strlcat(text, (char *)"caps ", sizeof(data->rawtext));
     else if ((qual & KBQUALIFIER_SHIFT) && (same & KBSYM_SHIFT))
-    {                                     text = stpcpy(text, (char *)"shift ");
-      if (qual & IEQUALIFIER_CAPSLOCK)    text = stpcpy(text, (char *)"capslock ");
+    {                                     strlcat(text, (char *)"shift ", sizeof(data->rawtext));
+      if (qual & IEQUALIFIER_CAPSLOCK)    strlcat(text, (char *)"capslock ", sizeof(data->rawtext));
     }
     else
-    { if (qual & IEQUALIFIER_LSHIFT)      text = stpcpy(text, (char *)"lshift ");
-      if (qual & IEQUALIFIER_RSHIFT)      text = stpcpy(text, (char *)"rshift ");
-      if (qual & IEQUALIFIER_CAPSLOCK)    text = stpcpy(text, (char *)"capslock ");
+    { if (qual & IEQUALIFIER_LSHIFT)      strlcat(text, (char *)"lshift ", sizeof(data->rawtext));
+      if (qual & IEQUALIFIER_RSHIFT)      strlcat(text, (char *)"rshift ", sizeof(data->rawtext));
+      if (qual & IEQUALIFIER_CAPSLOCK)    strlcat(text, (char *)"capslock ", sizeof(data->rawtext));
     }
-    if (qual & IEQUALIFIER_CONTROL)       text = stpcpy(text, (char *)"control ");
+    if (qual & IEQUALIFIER_CONTROL)       strlcat(text, (char *)"control ", sizeof(data->rawtext));
     if ((qual & KBQUALIFIER_ALT) && (same & KBSYM_ALT))
-                                          text = stpcpy(text, (char *)"alt ");
+                                          strlcat(text, (char *)"alt ", sizeof(data->rawtext));
     else
-    { if (qual & IEQUALIFIER_LALT)        text = stpcpy(text, (char *)"lalt ");
-      if (qual & IEQUALIFIER_RALT)        text = stpcpy(text, (char *)"ralt ");
+    { if (qual & IEQUALIFIER_LALT)        strlcat(text, (char *)"lalt ", sizeof(data->rawtext));
+      if (qual & IEQUALIFIER_RALT)        strlcat(text, (char *)"ralt ", sizeof(data->rawtext));
     }
-    if (qual & IEQUALIFIER_LCOMMAND)      text = stpcpy(text, (char *)"lcommand ");
-    if (qual & IEQUALIFIER_RCOMMAND)      text = stpcpy(text, (char *)"rcommand ");
-    if (qual & IEQUALIFIER_NUMERICPAD)    text = stpcpy(text, (char *)"numpad ");
+    if (qual & IEQUALIFIER_LCOMMAND)      strlcat(text, (char *)"lcommand ", sizeof(data->rawtext));
+    if (qual & IEQUALIFIER_RCOMMAND)      strlcat(text, (char *)"rcommand ", sizeof(data->rawtext));
+    if (qual & IEQUALIFIER_NUMERICPAD)    strlcat(text, (char *)"numpad ", sizeof(data->rawtext));
   }
 
   if (!(key->kb_KeyTag & 0x00004000) && (key->kb_Code != (UWORD)~0))
   {
     switch (key->kb_Code & 0x7F)
     {
-      case 0x40 : strcpy(text,"space"); break;
-      case 0x41 : strcpy(text,"backspace"); break;
-      case 0x42 : strcpy(text,"tab"); break;
-      case 0x43 : strcpy(text,"enter"); break;
-      case 0x44 : strcpy(text,"return"); break;
-      case 0x45 : strcpy(text,"esc"); break;
-      case 0x46 : strcpy(text,"del"); break;
-      case 0x4C : strcpy(text,"up"); break;
-      case 0x4D : strcpy(text,"down"); break;
-      case 0x4E : strcpy(text,"right"); break;
-      case 0x4F : strcpy(text,"left"); break;
-      case 0x50 : strcpy(text,"f1"); break;
-      case 0x51 : strcpy(text,"f2"); break;
-      case 0x52 : strcpy(text,"f3"); break;
-      case 0x53 : strcpy(text,"f4"); break;
-      case 0x54 : strcpy(text,"f5"); break;
-      case 0x55 : strcpy(text,"f6"); break;
-      case 0x56 : strcpy(text,"f7"); break;
-      case 0x57 : strcpy(text,"f8"); break;
-      case 0x58 : strcpy(text,"f9"); break;
-      case 0x59 : strcpy(text,"f10"); break;
-      case 0x5F : strcpy(text,"help"); break;
+      case 0x40 : strlcat(text,"space", sizeof(data->rawtext)); break;
+      case 0x41 : strlcat(text,"backspace", sizeof(data->rawtext)); break;
+      case 0x42 : strlcat(text,"tab", sizeof(data->rawtext)); break;
+      case 0x43 : strlcat(text,"enter", sizeof(data->rawtext)); break;
+      case 0x44 : strlcat(text,"return", sizeof(data->rawtext)); break;
+      case 0x45 : strlcat(text,"esc", sizeof(data->rawtext)); break;
+      case 0x46 : strlcat(text,"del", sizeof(data->rawtext)); break;
+      case 0x4C : strlcat(text,"up", sizeof(data->rawtext)); break;
+      case 0x4D : strlcat(text,"down", sizeof(data->rawtext)); break;
+      case 0x4E : strlcat(text,"right", sizeof(data->rawtext)); break;
+      case 0x4F : strlcat(text,"left", sizeof(data->rawtext)); break;
+      case 0x50 : strlcat(text,"f1", sizeof(data->rawtext)); break;
+      case 0x51 : strlcat(text,"f2", sizeof(data->rawtext)); break;
+      case 0x52 : strlcat(text,"f3", sizeof(data->rawtext)); break;
+      case 0x53 : strlcat(text,"f4", sizeof(data->rawtext)); break;
+      case 0x54 : strlcat(text,"f5", sizeof(data->rawtext)); break;
+      case 0x55 : strlcat(text,"f6", sizeof(data->rawtext)); break;
+      case 0x56 : strlcat(text,"f7", sizeof(data->rawtext)); break;
+      case 0x57 : strlcat(text,"f8", sizeof(data->rawtext)); break;
+      case 0x58 : strlcat(text,"f9", sizeof(data->rawtext)); break;
+      case 0x59 : strlcat(text,"f10", sizeof(data->rawtext)); break;
+      case 0x5F : strlcat(text,"help", sizeof(data->rawtext)); break;
       default:
         data->ievent.ie_NextEvent = NULL;
         data->ievent.ie_Class = IECLASS_RAWKEY;
@@ -555,9 +556,9 @@ static LONG DeadKeyConvert(struct NListviews_MCP_Data *data,struct KeyBinding *k
         data->ievent.ie_Code = key->kb_Code;
         data->ievent.ie_Qualifier = 0;
         data->ievent.ie_position.ie_addr = (APTR) &data->ievent;
-        posraw = RawKeyConvert(&data->ievent,text,MCPMAXRAWBUF-strlen(data->rawtext),0L);
+        posraw = RawKeyConvert(&data->ievent,&text[strlen(text)], sizeof(data->rawtext)-strlen(text),0L);
         if (posraw >= 0)
-          text[posraw] = '\0';
+          text[strlen(text)+posraw] = '\0';
       break;
     }
   }

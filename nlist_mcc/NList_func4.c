@@ -253,7 +253,7 @@ void  NL_SetPointer(Object *obj,struct NLData *data,LONG type)
           data->PointerObj2 = move_pointer;
           SetWindowPointer(_window(obj), WA_Pointer, (LONG) data->PointerObj, TAG_DONE);
         } else
-        { 
+        {
           data->PointerObj2 = NULL;
           SetWindowPointer(_window(obj), TAG_DONE);
         }
@@ -277,7 +277,7 @@ void  NL_SetPointer(Object *obj,struct NLData *data,LONG type)
       }
     }
   } else if (type == SIZE_POINTER)
-  { 
+  {
   	if ((!data->PointerObj) || (data->PointerObj2 != size_pointer))
     {
       if (LIBVER(IntuitionBase) >= INTUIBASEMIN)
@@ -374,13 +374,15 @@ LONG NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y)
 struct NImgList *GetNImage(Object *obj,struct NLData *data,char *ImgName)
 {
   struct NImgList *nimg = &data->NImage;
+  int nameLen = strlen(ImgName)+2;
+
   STACK_CHECK;
   while (nimg && nimg->ImgName && strcmp(nimg->ImgName,ImgName))
     nimg = nimg->next;
-  if (!nimg && (nimg = (struct NImgList *) NL_Malloc(data,sizeof(struct NImgList)+strlen(ImgName)+2,"GetNImage")))
+  if (!nimg && (nimg = (struct NImgList *) NL_Malloc(data,sizeof(struct NImgList)+nameLen,"GetNImage")))
   { nimg->ImgName = (char *) nimg;
     nimg->ImgName = &nimg->ImgName[sizeof(struct NImgList)];
-    strcpy(nimg->ImgName,ImgName);
+    strlcpy(nimg->ImgName, ImgName, nameLen);
     nimg->NImgObj = NULL;
     nimg->width = -1;
     nimg->height = -1;

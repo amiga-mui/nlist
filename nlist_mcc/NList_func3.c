@@ -97,27 +97,27 @@ LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG
  */
   switch (msg->Code & 0x7F)
   {
-    case 0x41 : strcpy(text,"bs"); break;
-    case 0x42 : strcpy(text,"tab"); break;
-    case 0x43 : strcpy(text,"enter"); break;
-    case 0x44 : strcpy(text,"return"); break;
-    case 0x45 : strcpy(text,"esc"); break;
-    case 0x46 : strcpy(text,"del"); break;
-    case 0x4C : strcpy(text,"up"); break;
-    case 0x4D : strcpy(text,"down"); break;
-    case 0x4E : strcpy(text,"right"); break;
-    case 0x4F : strcpy(text,"left"); break;
-    case 0x50 : strcpy(text,"f1"); break;
-    case 0x51 : strcpy(text,"f2"); break;
-    case 0x52 : strcpy(text,"f3"); break;
-    case 0x53 : strcpy(text,"f4"); break;
-    case 0x54 : strcpy(text,"f5"); break;
-    case 0x55 : strcpy(text,"f6"); break;
-    case 0x56 : strcpy(text,"f7"); break;
-    case 0x57 : strcpy(text,"f8"); break;
-    case 0x58 : strcpy(text,"f9"); break;
-    case 0x59 : strcpy(text,"f10"); break;
-    case 0x5F : strcpy(text,"help"); break;
+    case 0x41 : strlcpy(text,"bs", bufsize); break;
+    case 0x42 : strlcpy(text,"tab", bufsize); break;
+    case 0x43 : strlcpy(text,"enter", bufsize); break;
+    case 0x44 : strlcpy(text,"return", bufsize); break;
+    case 0x45 : strlcpy(text,"esc", bufsize); break;
+    case 0x46 : strlcpy(text,"del", bufsize); break;
+    case 0x4C : strlcpy(text,"up", bufsize); break;
+    case 0x4D : strlcpy(text,"down", bufsize); break;
+    case 0x4E : strlcpy(text,"right", bufsize); break;
+    case 0x4F : strlcpy(text,"left", bufsize); break;
+    case 0x50 : strlcpy(text,"f1", bufsize); break;
+    case 0x51 : strlcpy(text,"f2", bufsize); break;
+    case 0x52 : strlcpy(text,"f3", bufsize); break;
+    case 0x53 : strlcpy(text,"f4", bufsize); break;
+    case 0x54 : strlcpy(text,"f5", bufsize); break;
+    case 0x55 : strlcpy(text,"f6", bufsize); break;
+    case 0x56 : strlcpy(text,"f7", bufsize); break;
+    case 0x57 : strlcpy(text,"f8", bufsize); break;
+    case 0x58 : strlcpy(text,"f9", bufsize); break;
+    case 0x59 : strlcpy(text,"f10", bufsize); break;
+    case 0x5F : strlcpy(text,"help", bufsize); break;
     default:
       data->ievent.ie_NextEvent = NULL;
       data->ievent.ie_Class = IECLASS_RAWKEY;
@@ -522,8 +522,9 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
             if (Line.delta)    data->cols[column].delta = (WORD) *Line.delta;
             if (Line.preparse)
             {
-              if((data->cols[column].preparse = NL_Malloc(data,strlen((char *)Line.preparse)+2,"ReadFormat_preparse")))
-                strcpy(data->cols[column].preparse,(char *)Line.preparse);
+              int len = strlen((char *)Line.preparse)+2;
+              if((data->cols[column].preparse = NL_Malloc(data,len,"ReadFormat_preparse")))
+                strlcpy(data->cols[column].preparse, (char *)Line.preparse, len);
             }
             if (Line.col)      data->cols[column].col = (WORD) *Line.col;
             if (Line.tbar)     data->cols[column].bar = (WORD) 2;
@@ -1016,9 +1017,11 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
     CBClose(ior);
   }
   else
-  { retstr = (char *) AllocVec(strlen(clipstr)+1,0L);
+  {
+    int len = strlen(clipstr) + 1;
+    retstr = (char *) AllocVec(len, 0L);
     if (retstr)
-      strcpy(retstr,clipstr);
+      strlcpy(retstr,clipstr, len);
     ok = (LONG) retstr;
   }
   if (clipstr)

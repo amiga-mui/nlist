@@ -2686,8 +2686,10 @@ struct MUI_NListtree_TreeNode *DuplicateNode( struct NListtree_Data *data, struc
     */
     if ( data->Flags & NLTF_DUPNODENAMES )
     {
-      new->ln_Name = (STRPTR)AllocVecPooled( data->TreePool, strlen( nodetodup->tn_Name ) + 1 );
-      strcpy( new->ln_Name, nodetodup->tn_Name );
+      int len = strlen( nodetodup->tn_Name ) + 1;
+
+      new->ln_Name = (STRPTR)AllocVecPooled( data->TreePool, len );
+      strlcpy( new->ln_Name, nodetodup->tn_Name, len );
       new->ln_IFlags |= TNIF_ALLOCATED;
     }
     else
@@ -3142,11 +3144,13 @@ HOOKPROTONHNO(_ConstructFunc, APTR, struct MUIP_NListtree_ConstructMessage *msg)
   */
   if ( msg->UserData )
   {
-    if((retdata = AllocVecPooled(msg->MemPool, strlen((STRPTR)msg->UserData ) + 1)))
+    int len = strlen((STRPTR)msg->UserData ) + 1;
+
+    if((retdata = AllocVecPooled(msg->MemPool, len)))
     {
       if ( msg->UserData )
       {
-        strcpy( (STRPTR)retdata, (STRPTR)msg->UserData );
+        strlcpy( (STRPTR)retdata, (STRPTR)msg->UserData, len );
       }
 
       D(DBF_ALWAYS, "Internal CostructHook ==> Data: %s\n", (STRPTR)msg->UserData);
@@ -5208,6 +5212,8 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
         break;
 
       case MUIA_NListtree_Format:
+      {
+        int len;
 
         /*
         **  If old data there, remove it.
@@ -5221,16 +5227,19 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
         /*
         **  Save raw list format.
         */
-        if((data->Format = AllocVecPooled( data->MemoryPool, strlen((STRPTR)tag->ti_Data) + 1)))
+        len = strlen((STRPTR)tag->ti_Data) + 1;
+
+        if((data->Format = AllocVecPooled( data->MemoryPool, len)))
         {
-          strcpy( data->Format, (STRPTR)tag->ti_Data );
+          strlcpy( data->Format, (STRPTR)tag->ti_Data, len );
 
           if ( !initial )
             nnset( data->Obj, MUIA_NList_Format, data->Format );
 
           D(DBF_ALWAYS, "SET MUIA_NListtree_Format: %s\n", (STRPTR)tag->ti_Data);
         }
-        break;
+      }
+      break;
 
       case MUIA_NListtree_MultiSelect:
 
@@ -7270,8 +7279,9 @@ ULONG _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_I
     */
     if ( data->Flags & NLTF_DUPNODENAMES )
     {
-      tn->tn_Name = (STRPTR)AllocVecPooled( data->TreePool, strlen( msg->Name ) + 1 );
-      strcpy( tn->tn_Name, msg->Name );
+      int len = strlen( msg->Name ) + 1;
+      tn->tn_Name = (STRPTR)AllocVecPooled( data->TreePool, len );
+      strlcpy( tn->tn_Name, msg->Name, len );
       tn->tn_IFlags |= TNIF_ALLOCATED;
     }
     else
@@ -8830,10 +8840,12 @@ ULONG _NListtree_Rename( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
     */
     if ( data->Flags & NLTF_DUPNODENAMES )
     {
+      int len = strlen( msg->NewName ) + 1;
+
       FreeVecPooled( data->TreePool, tn->tn_Name );
 
-      tn->tn_Name = (STRPTR)AllocVecPooled( data->TreePool, strlen( msg->NewName ) + 1 );
-      strcpy( tn->tn_Name, msg->NewName );
+      tn->tn_Name = (STRPTR)AllocVecPooled( data->TreePool, len );
+      strlcpy( tn->tn_Name, msg->NewName, len );
       tn->tn_IFlags |= TNIF_ALLOCATED;
     }
     else

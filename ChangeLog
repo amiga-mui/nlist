@@ -7,6 +7,8 @@ $URL$
 
 2007-06-14  Thore Böckelmann <tboeckel@gmx.de>
 
+  * misc: replaced all remaining occurences of strcpy() by strlcpy(). stpcpy()
+    has been replaced by strlcat().
   * misc: replaced all remaining occurences of sprintf() by snprintf().
 
 2007-06-13  Thore Böckelmann <tboeckel@gmx.de>
