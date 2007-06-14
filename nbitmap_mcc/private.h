@@ -42,12 +42,14 @@
 #define MUIV_NBitmap_Selected		2
 
 /* global definitions - as included in developers material */
-#define MUIA_NBitmap_Type				    (TAG_USER | (2044078415<<16) | 0x0000)
+#define MUIA_NBitmap_Type				 (TAG_USER | (2044078415<<16) | 0x0000)
 #define MUIA_NBitmap_Label			    (TAG_USER | (2044078415<<16) | 0x0001)
-#define MUIA_NBitmap_Button			    (TAG_USER | (2044078415<<16) | 0x0002)
-#define MUIA_NBitmap_Normal			    (TAG_USER | (2044078415<<16) | 0x0003)
+#define MUIA_NBitmap_Button			 (TAG_USER | (2044078415<<16) | 0x0002)
+#define MUIA_NBitmap_Normal			 (TAG_USER | (2044078415<<16) | 0x0003)
 #define MUIA_NBitmap_Ghosted		    (TAG_USER | (2044078415<<16) | 0x0004)
 #define MUIA_NBitmap_Selected		    (TAG_USER | (2044078415<<16) | 0x0005)
+#define MUIA_NBitmap_Width			    (TAG_USER | (2044078415<<16) | 0x0006)
+#define MUIA_NBitmap_Height		    (TAG_USER | (2044078415<<16) | 0x0007)
 
 #define MUIV_NBitmap_Type_File	    0
 #define MUIV_NBitmap_Type_DTObject	1
@@ -106,6 +108,8 @@ struct InstData
 
 /* prototypes */
 BOOL NBitmap_LoadImage(STRPTR filename, uint32 item, struct IClass *cl, Object *obj);
+VOID NBitmap_UpdateImage(uint32 item, STRPTR filename, struct IClass *cl, Object *obj);
+BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object *obj);
 VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj);
 BOOL NBitmap_NewImage(struct IClass *cl, Object *obj);
 VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj);

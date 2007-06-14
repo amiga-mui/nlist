@@ -137,6 +137,132 @@ BOOL NBitmap_LoadImage(STRPTR filename, uint32 item, struct IClass *cl, Object *
   return result;
 }
 ///
+/// NBitmap_UpdateImage()
+//
+VOID NBitmap_UpdateImage(uint32 item, STRPTR filename, struct IClass *cl, Object *obj)
+	{
+		uint32 displayid;
+		struct InstData *data = NULL;
+		struct Screen *scr = NULL;
+
+		if((data = INST_DATA(cl, obj)) != NULL)
+		{
+			if(filename != NULL)
+			{
+            if(data->dt_obj[item] != NULL)
+				{
+               /* free old image data */
+					if(data->fmt == PBPAFMT_LUT8) SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+
+               DisposeDTObject(data->dt_obj[item]);
+					data->dt_obj[item] = NULL;
+
+               if(data->arraypixels[item])
+					{
+						FreeVec(data->arraypixels[item]);
+						data->arraypixels[item] = NULL;
+					}
+
+					/* load new image */
+					if((NBitmap_LoadImage(filename, item, cl, obj)) != FALSE)
+					{
+						/* setup new image */
+						if((NBitmap_ExamineData(data->dt_obj[item], item, cl, obj)) != FALSE)
+						{
+							/* screen */
+							scr = _screen(obj);
+							GetScreenAttr(scr, SA_DisplayID, &displayid, sizeof(uint32));
+							data->scrdepth = p96GetModeIDAttr(displayid, P96IDA_DEPTH);
+
+							if(data->fmt == PBPAFMT_LUT8)
+							{
+								/* layout image */
+								SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
+								if(DoMethod(data->dt_obj[item], DTM_PROCLAYOUT, NULL, 1))
+								{
+									GetDTAttrs(data->dt_obj[item], PDTA_CRegs, &data->dt_colours[item], TAG_DONE);
+									GetDTAttrs(data->dt_obj[item], PDTA_MaskPlane, &data->dt_mask[item], TAG_DONE);
+									GetDTAttrs(data->dt_obj[item], PDTA_DestBitMap, &data->dt_bitmap[item], TAG_DONE);
+
+									if(data->dt_bitmap[item] == NULL) GetDTAttrs(data->dt_obj[item], PDTA_BitMap, &data->dt_bitmap[item], TAG_DONE);
+								}
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+///
+/// NBitmap_ExamineData()
+//
+BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object *obj)
+	{
+		BOOL result = FALSE;
+      uint32 arraysize;
+
+		struct pdtBlitPixelArray pbpa;
+		struct FrameInfo fri;
+		struct InstData *data = INST_DATA(cl, obj);
+
+		if(dt_obj != NULL)
+		{
+			SetMem(&fri, 0, sizeof(struct FrameInfo));
+			DoMethod(dt_obj, DTM_FRAMEBOX, NULL, &fri, &fri, sizeof(struct FrameInfo), 0);
+			data->depth = fri.fri_Dimensions.Depth;
+
+			if(data->depth>0 && data->depth<=8)
+			{
+				/* colour lookup bitmap */
+				data->fmt = PBPAFMT_LUT8;
+
+				/* bitmap header */
+				GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
+				data->width =  data->dt_header[0]->bmh_Width;
+				data->height =  data->dt_header[0]->bmh_Height;
+
+				result = TRUE;
+			}
+			else if(data->depth >=24)
+			{
+				/* true colour bitmap */
+				if(data->depth == 24) data->fmt = PBPAFMT_RGB;
+				if(data->depth == 32) data->fmt = PBPAFMT_ARGB;
+
+				/* bitmap header */
+				GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
+
+				data->width =  data->dt_header[0]->bmh_Width;
+				data->height =  data->dt_header[0]->bmh_Height;
+				data->arraybpp = data->depth/8;
+				data->arraybpr = data->arraybpp * data->width;
+				arraysize = (data->arraybpr) * data->height;
+
+				/* get array of pixels */
+				if((data->arraypixels[item] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR))!=NULL)
+				{
+					SetMem(&pbpa, 0, sizeof(struct pdtBlitPixelArray));
+
+					pbpa.MethodID = PDTM_READPIXELARRAY;
+					pbpa.pbpa_PixelData = data->arraypixels[item];
+					pbpa.pbpa_PixelFormat = data->fmt;
+					pbpa.pbpa_PixelArrayMod = data->arraybpr;
+					pbpa.pbpa_Left = 0;
+					pbpa.pbpa_Top = 0;
+					pbpa.pbpa_Width = data->width;
+					pbpa.pbpa_Height = data->height;
+
+					DoMethodA(dt_obj, (Msg)(VOID*)&pbpa);
+
+					result = TRUE;
+				}
+			}
+		}
+
+		return(result);
+	}
+///
 /// NBitmap_FreeImage()
 //
 VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj)

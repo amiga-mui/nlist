@@ -148,10 +148,24 @@ ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
 ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
 {
   ULONG result;
+  ULONG *store = ((struct opGet *)msg)->opg_Storage;
+
+  struct InstData *data = INST_DATA(cl, obj);
 
   ENTER();
 
-  result = DoSuperMethodA(cl, obj, msg);
+  switch (((struct opGet *)msg)->opg_AttrID)
+  {
+    case MUIA_NBitmap_Width:
+      *store = (LONG) data->width;
+	   return (TRUE);
+
+	 case MUIA_NBitmap_Height:
+      *store = (LONG) data->height;
+      return (TRUE);
+  }
+  
+  result = DoSuperMethodA(cl,obj,msg);
 
   RETURN(result);
   return result;
@@ -171,18 +185,14 @@ ULONG NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
   {
 	  switch(tag->ti_Tag)
 	  {
-		  case MUIA_NBitmap_Normal:
-           data->data[0] = (uint32*)tag->ti_Data;
-
-			  if(data->type == MUIV_NBitmap_Type_File)
-			  {
-				  NBitmap_FreeImage(0, cl, obj);
-				  NBitmap_LoadImage((STRPTR)data->data[0], 0, cl, obj);
-				  NBitmap_NewImage(cl, obj);
-
-				  MUI_Redraw(obj, MADF_DRAWOBJECT);
-			  }
-		  break;
+			case MUIA_NBitmap_Normal:
+				if(data->type == MUIV_NBitmap_Type_File)
+				{
+               data->data[0] = (uint32*)tag->ti_Data;
+					NBitmap_UpdateImage(0, (STRPTR)data->data[0], cl, obj);
+					MUI_Redraw(obj, MADF_DRAWOBJECT);
+				}
+			break;
 	  }
   }
 
