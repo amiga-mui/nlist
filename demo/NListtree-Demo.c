@@ -227,8 +227,8 @@ STATIC VOID DrawSampleTree( Object *ltobj )
 
 	for( i = 0; i < 2500; i++ )
 	{
-		if ( i % 2 )	sprintf( txt, "Sort Entry %d", i + 1 );
-		else			sprintf( txt, "Entry Sort %d", i + 1 );
+		if ( i % 2 )	snprintf( txt, sizeof(txt), "Sort Entry %d", i + 1 );
+		else			snprintf( txt, sizeof(txt), "Entry Sort %d", i + 1 );
 
 		tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, txt, 0, ( i % 5 ) ? tn2 : tn1, MUIV_NListtree_Insert_PrevNode_Tail, ( i % 5 ) ? TNF_LIST : 0 );
 	}
@@ -362,7 +362,7 @@ HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
 		*/
 		struct SampleArray *a = (struct SampleArray *)msg->TreeNode->tn_User;
 
-		sprintf( buf, "%3ld", (ULONG)msg->Array[-1] );
+		snprintf( buf, sizeof(buf), "%3ld", (ULONG)msg->Array[-1] );
 
 		*msg->Array++	= msg->TreeNode->tn_Name;
 		*msg->Array++	= (STRPTR)(( a->flags & 0x8000 ) ? t3 : t4);

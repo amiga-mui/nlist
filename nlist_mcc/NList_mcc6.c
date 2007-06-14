@@ -1218,7 +1218,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
 			{
 				char txt[100];
 
-				sprintf( txt, "Drawing line len: %ld, x: %ld, y: %ld - '%%%ld.%lds'", curclen, x2, y, curclen, curclen );
+				snprintf( txt, sizeof(txt), "Drawing line len: %ld, x: %ld, y: %ld - '%%%ld.%lds'", curclen, x2, y, curclen, curclen );
 				D(bug( txt, ptr1 ));
 			}
 			*/
