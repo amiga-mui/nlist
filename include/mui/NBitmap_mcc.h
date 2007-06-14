@@ -37,6 +37,10 @@
 #define MUIA_NBitmap_Normal         (TAG_USER | (2044078415<<16) | 0x0003)
 #define MUIA_NBitmap_Ghosted        (TAG_USER | (2044078415<<16) | 0x0004)
 #define MUIA_NBitmap_Selected       (TAG_USER | (2044078415<<16) | 0x0005)
+#define MUIA_NBitmap_Width          (TAG_USER | (2044078415<<16) | 0x0006)
+#define MUIA_NBitmap_Height         (TAG_USER | (2044078415<<16) | 0x0007)
+#define MUIA_NBitmap_MaxWidth       (TAG_USER | (2044078415<<16) | 0x0008)
+#define MUIA_NBitmap_MaxHeight      (TAG_USER | (2044078415<<16) | 0x0009)
 
 /* source types */
 #define MUIV_NBitmap_Type_File      0
