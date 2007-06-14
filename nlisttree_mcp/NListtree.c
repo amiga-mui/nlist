@@ -25,6 +25,7 @@
 */
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <libraries/mui.h>
 #include <utility/hooks.h>
