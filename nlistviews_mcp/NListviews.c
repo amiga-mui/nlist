@@ -477,19 +477,6 @@ static STRPTR STRING(enum StringsID id,STRPTR defstr)
 
 #define STRING(a,b) b
 
-
-#if !defined(__SASC) && !defined(__MORPHOS__)
-static char *stpcpy(char *to,char *from)
-{
-  register char *to2 = to;
-
-  while (*from)
-    *to2++ = *from++;
-  *to2 = '\0';
-  return (to2);
-}
-#endif
-
 static LONG DeadKeyConvert(struct NListviews_MCP_Data *data,struct KeyBinding *key)
 {
   char *text = data->rawtext;
