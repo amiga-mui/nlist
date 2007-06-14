@@ -46,8 +46,10 @@ static char *CopyText(char *textin)
 
   if (textin)
   {
-    if((textout = AllocVec(strlen(textin)+2,MEMF_ANY)))
-      strcpy(textout, textin);
+    int len = strlen(textin)+2;
+
+    if((textout = AllocVec(len,MEMF_ANY)))
+      strlcpy(textout, textin, len);
   }
 
   return (textout);
