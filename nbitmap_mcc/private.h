@@ -37,22 +37,24 @@
 #include "NBitmap.h"
 
 /* private definitions */
-#define MUIV_NBitmap_Normal     0
-#define MUIV_NBitmap_Ghosted		1
-#define MUIV_NBitmap_Selected		2
+#define MUIV_NBitmap_Normal				0
+#define MUIV_NBitmap_Ghosted				1
+#define MUIV_NBitmap_Selected				2
 
 /* global definitions - as included in developers material */
-#define MUIA_NBitmap_Type				 (TAG_USER | (2044078415<<16) | 0x0000)
-#define MUIA_NBitmap_Label			    (TAG_USER | (2044078415<<16) | 0x0001)
-#define MUIA_NBitmap_Button			 (TAG_USER | (2044078415<<16) | 0x0002)
-#define MUIA_NBitmap_Normal			 (TAG_USER | (2044078415<<16) | 0x0003)
-#define MUIA_NBitmap_Ghosted		    (TAG_USER | (2044078415<<16) | 0x0004)
-#define MUIA_NBitmap_Selected		    (TAG_USER | (2044078415<<16) | 0x0005)
-#define MUIA_NBitmap_Width			    (TAG_USER | (2044078415<<16) | 0x0006)
-#define MUIA_NBitmap_Height		    (TAG_USER | (2044078415<<16) | 0x0007)
+#define MUIA_NBitmap_Type					(TAG_USER | (2044078415<<16) | 0x0000)
+#define MUIA_NBitmap_Label					(TAG_USER | (2044078415<<16) | 0x0001)
+#define MUIA_NBitmap_Button				(TAG_USER | (2044078415<<16) | 0x0002)
+#define MUIA_NBitmap_Normal				(TAG_USER | (2044078415<<16) | 0x0003)
+#define MUIA_NBitmap_Ghosted				(TAG_USER | (2044078415<<16) | 0x0004)
+#define MUIA_NBitmap_Selected				(TAG_USER | (2044078415<<16) | 0x0005)
+#define MUIA_NBitmap_Width					(TAG_USER | (2044078415<<16) | 0x0006)
+#define MUIA_NBitmap_Height				(TAG_USER | (2044078415<<16) | 0x0007)
+#define MUIA_NBitmap_MaxWidth				(TAG_USER | (2044078415<<16) | 0x0008)
+#define MUIA_NBitmap_MaxHeight			(TAG_USER | (2044078415<<16) | 0x0009)
 
-#define MUIV_NBitmap_Type_File	    0
-#define MUIV_NBitmap_Type_DTObject	1
+#define MUIV_NBitmap_Type_File			0
+#define MUIV_NBitmap_Type_DTObject		1
 
 /* private structures */
 struct PrefsData
@@ -71,26 +73,27 @@ struct PrefsData
 struct InstData
 {
   BOOL button;
-	BOOL overlay;
-	BOOL pressed;
-	STRPTR label;
+  BOOL overlay;
+  BOOL pressed;
+  STRPTR label;
 
-	uint32 scrdepth;
+  uint32 scrdepth;
 
-	uint32 *data[3];
-	uint32 fmt, type;
-	uint32 width, height, depth;
-	uint32 border_horiz, border_vert;
-	uint32 arraybpp, arraybpr, arraysize;
-	APTR arraypixels[3];
-		
-	uint32 *dt_colours[3];
-	Object *dt_obj[3];
-	PLANEPTR *dt_mask[3];
+  uint32 *data[3];
+  uint32 fmt, type;
+  uint32 width, height, depth;
+  uint32 maxwidth, maxheight;
+  uint32 border_horiz, border_vert;
+  uint32 arraybpp, arraybpr, arraysize;
+  APTR arraypixels[3];
+	
+  uint32 *dt_colours[3];
+  Object *dt_obj[3];
+  PLANEPTR *dt_mask[3];
 
-	struct PrefsData prefs;
-	struct BitMap *dt_bitmap[3];
-	struct BitMapHeader *dt_header[3];
+  struct PrefsData prefs;
+  struct BitMap *dt_bitmap[3];
+  struct BitMapHeader *dt_header[3];
 };
 
 /* macros */

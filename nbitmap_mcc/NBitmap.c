@@ -310,44 +310,50 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
         DoMethod(data->dt_obj[0], DTM_FRAMEBOX, NULL, &fri, &fri, sizeof(struct FrameInfo), 0);
         data->depth = fri.fri_Dimensions.Depth;
 
-        if(data->depth > 0 && data->depth <= 8)
+		  if(data->maxwidth == 0 || (data->maxwidth <= data->dt_header[i]->bmh_Width))
         {
-          /* colour lookup bitmap */
-          data->fmt = PBPAFMT_LUT8;
-
-          /* bitmap header */
-          GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
-          data->width =  data->dt_header[0]->bmh_Width;
-          data->height =  data->dt_header[0]->bmh_Height;
-
-          result = TRUE;
-        }
-        else if(data->depth > 8)
-        {
-          uint32 arraysize;
-
-          /* correct read buffer */
-          if(data->depth == 24)
-            data->fmt = PBPAFMT_RGB;
-          else
-            data->fmt = PBPAFMT_ARGB;
-
-          /* bitmap header */
-          GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
-          data->width =  data->dt_header[0]->bmh_Width;
-          data->height =  data->dt_header[0]->bmh_Height;
-          data->arraybpp = data->depth / 8;
-          data->arraybpr = data->arraybpp * data->width;
-          arraysize = (data->arraybpr) * data->height;
-
-          /* get array of pixels */
-          if((data->arraypixels[i] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
+		    if(data->maxheight == 0 || (data->maxheight <= data->dt_header[i]->bmh_Height))
           {
-            DoMethod(data->dt_obj[i], PDTM_READPIXELARRAY, data->arraypixels[i], data->fmt, data->arraybpr, 0, 0, data->width, data->height);
+				if(data->depth > 0 && data->depth <= 8)
+				{
+					/* colour lookup bitmap */
+					data->fmt = PBPAFMT_LUT8;
 
-            result = TRUE;
-          }
-        }
+					/* bitmap header */
+					GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
+					data->width =  data->dt_header[0]->bmh_Width;
+					data->height =  data->dt_header[0]->bmh_Height;
+
+					result = TRUE;
+				}
+				else if(data->depth > 8)
+				{
+					uint32 arraysize;
+
+					/* correct read buffer */
+					if(data->depth == 24)
+						data->fmt = PBPAFMT_RGB;
+					else
+						data->fmt = PBPAFMT_ARGB;
+
+					/* bitmap header */
+					GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
+					data->width =  data->dt_header[0]->bmh_Width;
+					data->height =  data->dt_header[0]->bmh_Height;
+					data->arraybpp = data->depth / 8;
+					data->arraybpr = data->arraybpp * data->width;
+					arraysize = (data->arraybpr) * data->height;
+
+					/* get array of pixels */
+					if((data->arraypixels[i] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
+					{
+						DoMethod(data->dt_obj[i], PDTM_READPIXELARRAY, data->arraypixels[i], data->fmt, data->arraybpr, 0, 0, data->width, data->height);
+
+						result = TRUE;
+					}
+				}
+			 }
+		  }
       }
     }
   }
