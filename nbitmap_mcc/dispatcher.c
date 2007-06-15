@@ -158,21 +158,21 @@ ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
   {
     case MUIA_NBitmap_Width:
       *store = (LONG) data->width;
-	   return (TRUE);
+      return (TRUE);
 
-	 case MUIA_NBitmap_Height:
+    case MUIA_NBitmap_Height:
       *store = (LONG) data->height;
       return (TRUE);
 
     case MUIA_NBitmap_MaxWidth:
       *store = (LONG) data->maxwidth;
-	   return (TRUE);
+      return (TRUE);
 
-	 case MUIA_NBitmap_MaxHeight:
+    case MUIA_NBitmap_MaxHeight:
       *store = (LONG) data->maxheight;
       return (TRUE);
   }
-  
+
   result = DoSuperMethodA(cl,obj,msg);
 
   RETURN(result);
@@ -182,34 +182,33 @@ ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
 /* ULONG NBitmap_Set() */
 ULONG NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
 {
+  struct InstData *data = INST_DATA(cl, obj);
+  struct TagItem *tags, *tag;
   ULONG result;
 
   ENTER();
 
-  struct TagItem *tags, *tag;
-  struct InstData *data = INST_DATA(cl, obj);
-
   for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
   {
-	  switch(tag->ti_Tag)
-	  {
-			case MUIA_NBitmap_Normal:
-				if(data->type == MUIV_NBitmap_Type_File)
-				{
-               data->data[0] = (uint32*)tag->ti_Data;
-					NBitmap_UpdateImage(0, (STRPTR)data->data[0], cl, obj);
-					MUI_Redraw(obj, MADF_DRAWOBJECT);
-				}
-			break;
+    switch(tag->ti_Tag)
+    {
+      case MUIA_NBitmap_Normal:
+        if(data->type == MUIV_NBitmap_Type_File)
+        {
+          data->data[0] = (uint32*)tag->ti_Data;
+          NBitmap_UpdateImage(0, (STRPTR)data->data[0], cl, obj);
+          MUI_Redraw(obj, MADF_DRAWOBJECT);
+        }
+        break;
 
-			case MUIA_NBitmap_MaxWidth:
-				data->maxwidth = (uint32)tag->ti_Data;
-			break;
-			
-			case MUIA_NBitmap_MaxHeight:
-				data->maxheight = (uint32)tag->ti_Data;
-			break;
-	  }
+      case MUIA_NBitmap_MaxWidth:
+        data->maxwidth = (uint32)tag->ti_Data;
+      break;
+
+      case MUIA_NBitmap_MaxHeight:
+        data->maxheight = (uint32)tag->ti_Data;
+      break;
+    }
   }
 
   result = DoSuperMethodA(cl, obj, msg);

@@ -7,6 +7,8 @@ $URL$
 
 2007-06-15  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nbitmap/dispatcher.c: moved all variable definitions in front of the ENTER()
+    macro.
   * nlist_mcc/NList_func.c: added some range and NULL pointer checks to the
     MUIM_NList_GetSelectInfo method.
   * docs/MCC_NList.doc: the "auto copy to clip" feature requires the attribute
