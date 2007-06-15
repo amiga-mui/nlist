@@ -19,10 +19,6 @@ $URL$
     macro.
   * nlist_mcc/NList_func.c: added some range and NULL pointer checks to the
     MUIM_NList_GetSelectInfo method.
-  * docs/MCC_NList.doc: the "auto copy to clip" feature requires the attribute
-    MUIA_NList_TypeSelect to be set to MUIV_NList_TypeSelect_Char to work. The
-    default value of MUIV_NList_TypeSelect_Line will prevent that feature. Up to
-    now the docs didn't tell anything about this requirement.
 
 2007-06-14  Thore Böckelmann <tboeckel@gmx.de>
 
