@@ -90,7 +90,7 @@ ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
         {
           if((data = INST_DATA(cl, obj))!=NULL)
             {
-              SetMem(data, 0, sizeof(struct InstData));
+              memset(data, 0, sizeof(struct InstData));
 
               /* passed tags */
               for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )

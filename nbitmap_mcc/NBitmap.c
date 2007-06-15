@@ -208,7 +208,7 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
 
 		if(dt_obj != NULL)
 		{
-			SetMem(&fri, 0, sizeof(struct FrameInfo));
+			memset(&fri, 0, sizeof(struct FrameInfo));
 			DoMethod(dt_obj, DTM_FRAMEBOX, NULL, &fri, &fri, sizeof(struct FrameInfo), 0);
 			data->depth = fri.fri_Dimensions.Depth;
 
@@ -242,7 +242,7 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
 				/* get array of pixels */
 				if((data->arraypixels[item] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR))!=NULL)
 				{
-					SetMem(&pbpa, 0, sizeof(struct pdtBlitPixelArray));
+					memset(&pbpa, 0, sizeof(struct pdtBlitPixelArray));
 
 					pbpa.MethodID = PDTM_READPIXELARRAY;
 					pbpa.pbpa_PixelData = data->arraypixels[item];
@@ -306,7 +306,7 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
       {
         struct FrameInfo fri;
 
-        SetMem(&fri, 0, sizeof(struct FrameInfo));
+        memset(&fri, 0, sizeof(struct FrameInfo));
         DoMethod(data->dt_obj[0], DTM_FRAMEBOX, NULL, &fri, &fri, sizeof(struct FrameInfo), 0);
         data->depth = fri.fri_Dimensions.Depth;
 
@@ -630,7 +630,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
           uint8 *p = array;
           uint32 pxl;
 
-          SetMem(&tinfo, 0, sizeof(struct TrueColorInfo));
+          memset(&tinfo, 0, sizeof(struct TrueColorInfo));
           tinfo.PixelDistance = 3;
           tinfo.BytesPerRow = twidth * 3;
           tinfo.RedData = array;
