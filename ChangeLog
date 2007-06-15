@@ -7,6 +7,8 @@ $URL$
 
 2007-06-15  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nbitmap/private.h: added missing declarations of the OS4 specific types
+    int8/16/32 and uint8/16/32 to make NBitmap.mcc compilable for OS3 and MOS.
   * nbitmap/dispatcher.c: moved all variable definitions in front of the ENTER()
     macro.
   * nlist_mcc/NList_func.c: added some range and NULL pointer checks to the

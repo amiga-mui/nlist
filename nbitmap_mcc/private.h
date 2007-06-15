@@ -56,18 +56,37 @@
 #define MUIV_NBitmap_Type_File			0
 #define MUIV_NBitmap_Type_DTObject		1
 
+#ifndef uint8
+typedef unsigned char uint8;
+#endif
+#ifndef int8
+typedef signed char int8;
+#endif
+#ifndef uint16
+typedef unsigned short uint16;
+#endif
+#ifndef int16
+typedef signed short int16;
+#endif
+#ifndef uint32
+typedef unsigned long uint32;
+#endif
+#ifndef int32
+typedef signed long int32;
+#endif
+
 /* private structures */
 struct PrefsData
 {
   uint8 show_label;
-	uint8 overlay_type;
-	uint8 overlay_r;
-	uint8 overlay_g;
-	uint8 overlay_b;
-	double overlay_shadeover;
-	double overlay_shadepress;
-	uint8 spacing_horiz;
-	uint8 spacing_vert;
+  uint8 overlay_type;
+  uint8 overlay_r;
+  uint8 overlay_g;
+  uint8 overlay_b;
+  double overlay_shadeover;
+  double overlay_shadepress;
+  uint8 spacing_horiz;
+  uint8 spacing_vert;
 };
 
 struct InstData
@@ -86,7 +105,7 @@ struct InstData
   uint32 border_horiz, border_vert;
   uint32 arraybpp, arraybpr, arraysize;
   APTR arraypixels[3];
-	
+
   uint32 *dt_colours[3];
   Object *dt_obj[3];
   PLANEPTR *dt_mask[3];
