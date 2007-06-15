@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-06-15  Thore Böckelmann <tboeckel@gmx.de>
+
+  * docs/MCC_NList.doc: the "auto copy to clip" feature requires the attribute
+    MUIA_NList_TypeSelect to be set to MUIV_NList_TypeSelect_Char to work. The
+    default value of MUIV_NList_TypeSelect_Line will prevent that feature. Up to
+    now the docs didn't tell anything about this requirement.
+
 2007-06-14  Thore Böckelmann <tboeckel@gmx.de>
 
   * misc: replaced all remaining occurences of strcpy() by strlcpy(). stpcpy()

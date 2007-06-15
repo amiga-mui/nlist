@@ -244,7 +244,12 @@ NList.mcc/MUIM_NList_UseImage
         If set to TRUE you can copy the selected area to the
         clipboard 0 with Amiga-C and Amiga-X (Amiga-X because
         i have seen that sometimes Amiga-C is a shortcut !).
-        (work with both Right-Amiga and Left-Amiga keys)
+        (works with both Right-Amiga and Left-Amiga keys)
+
+        MUIA_NList_AutoCopyToClip == TRUE also requires MUIA_NList_TypeSelect
+        to be set to MUIV_NList_TypeSelect_Char. The default value of
+        MUIV_NList_TypeSelect_Line will *NOT* allow automatic copying to the
+        clipboard!
 
     DEFAULT
         TRUE
