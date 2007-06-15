@@ -480,12 +480,14 @@ static STRPTR STRING(enum StringsID id,STRPTR defstr)
 static LONG DeadKeyConvert(struct NListviews_MCP_Data *data,struct KeyBinding *key)
 {
   char *text = data->rawtext;
+  char keystr[8];
   UWORD qual = key->kb_Qualifier & KBQUAL_MASK;
   UWORD same = key->kb_Qualifier & KBSYM_MASK;
   int posraw;
 
   text[0] = '\0';
 
+  D(DBF_ALWAYS, "0 text='%s'", text);
   if (qual)
   { if ((qual & KBQUALIFIER_CAPS) && (same & KBSYM_CAPS))
                                           strlcat(text, (char *)"caps ", sizeof(data->rawtext));
@@ -509,6 +511,7 @@ static LONG DeadKeyConvert(struct NListviews_MCP_Data *data,struct KeyBinding *k
     if (qual & IEQUALIFIER_RCOMMAND)      strlcat(text, (char *)"rcommand ", sizeof(data->rawtext));
     if (qual & IEQUALIFIER_NUMERICPAD)    strlcat(text, (char *)"numpad ", sizeof(data->rawtext));
   }
+  D(DBF_ALWAYS, "1 text='%s'", text);
 
   if (!(key->kb_KeyTag & 0x00004000) && (key->kb_Code != (UWORD)~0))
   {
@@ -543,12 +546,18 @@ static LONG DeadKeyConvert(struct NListviews_MCP_Data *data,struct KeyBinding *k
         data->ievent.ie_Code = key->kb_Code;
         data->ievent.ie_Qualifier = 0;
         data->ievent.ie_position.ie_addr = (APTR) &data->ievent;
-        posraw = RawKeyConvert(&data->ievent,&text[strlen(text)], sizeof(data->rawtext)-strlen(text),0L);
-        if (posraw >= 0)
-          text[strlen(text)+posraw] = '\0';
+        posraw = RawKeyConvert(&data->ievent, keystr, sizeof(keystr), 0L);
+        D(DBF_ALWAYS, "posraw=%d", posraw);
+        if (posraw > 0)
+        {
+          keystr[posraw] = '\0';
+          strlcat(text, keystr, sizeof(data->rawtext));
+        }
       break;
     }
   }
+  D(DBF_ALWAYS, "2 text='%s'", text);
+
   return ((LONG)strlen(data->rawtext));
 }
 

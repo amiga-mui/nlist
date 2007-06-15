@@ -7,6 +7,9 @@ $URL$
 
 2007-06-15  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlistviews_mcp/NListviews.c: the raw key conversion was completely broken
+    due to the latest changes. Now a separate buffer is used which is appended
+    to the hotkey string.
   * demo/Makefile.#?: fixed wrong include path.
   * nbitmap/dispatcher.c, nbitmap/NBitmap.c: replaced SetMem() calls by standard
     memset() calls, as SetMem() is OS4-only.
