@@ -29,7 +29,7 @@
 
 #include "NList_func.h"
 
-/* Extent the selection between ent1 and ent2. 
+/* Extent the selection between ent1 and ent2.
    Make the first_change and last_change optimal for redrawing optimiztion */
 void NL_SegChanged(struct NLData *data,LONG ent1,LONG ent2)
 {
@@ -959,7 +959,7 @@ LONG NList_Compare(Object *obj,struct NLData *data,APTR s1,APTR s2)
   else
     return ((LONG) Stricmp(s1,s2));
 #endif
- 
+
 }
 
 
@@ -1699,15 +1699,15 @@ ULONG mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_Get
   msg->res->start_pos= -1;
   msg->res->end_pos = -1;
 
-  if (!data->NList_TypeSelect)
+  if(data->NList_TypeSelect == MUIV_NList_TypeSelect_Line)
   {
     ent = 0;
 
-    while (ent < data->NList_Entries)
+    while(ent < data->NList_Entries)
     {
-      if (data->EntriesArray[ent]->Select != TE_Select_None)
+      if(data->EntriesArray[ent] != NULL && data->EntriesArray[ent]->Select != TE_Select_None)
       {
-        if (msg->res->start == -1)
+        if(msg->res->start == -1)
           msg->res->start = ent;
 
         msg->res->end = ent;
@@ -1729,17 +1729,17 @@ ULONG mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_Get
     msg->res->vstart = msg->res->start;
     msg->res->vend = msg->res->end;
 
-    if ((msg->res->vstart >= 0) && (msg->res->vend >= msg->res->vstart))
+    if((msg->res->vstart >= 0) && (msg->res->vend >= msg->res->vstart))
       msg->res->vnum = msg->res->vend - msg->res->vstart + 1;
   }
 
-  if ((msg->res->start >= 0) && data->EntriesArray[msg->res->start]->Wrap)
+  if (msg->res->start >= 0 && msg->res->start < data->NList_Entries && data->EntriesArray[msg->res->start] != NULL && data->EntriesArray[msg->res->start]->Wrap)
   {
     if (data->EntriesArray[msg->res->start]->Wrap & TE_Wrap_TmpLine)
       msg->res->start -= data->EntriesArray[msg->res->start]->dnum;
   }
 
-  if ((msg->res->end >= 0) && data->EntriesArray[msg->res->end]->Wrap)
+  if (msg->res->end >= 0 && msg->res->end < data->NList_Entries && data->EntriesArray[msg->res->end] != NULL && data->EntriesArray[msg->res->end]->Wrap)
   {
     if (data->EntriesArray[msg->res->end]->Wrap & TE_Wrap_TmpLine)
       msg->res->end -= data->EntriesArray[msg->res->end]->dnum;
