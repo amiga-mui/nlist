@@ -7,6 +7,7 @@ $URL$
 
 2007-06-15  Thore Böckelmann <tboeckel@gmx.de>
 
+  * demo/Makefile.#?: fixed wrong include path.
   * nbitmap/dispatcher.c, nbitmap/NBitmap.c: replaced SetMem() calls by standard
     memset() calls, as SetMem() is OS4-only.
   * nbitmap/private.h: added missing declarations of the OS4 specific types

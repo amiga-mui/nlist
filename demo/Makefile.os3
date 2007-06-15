@@ -41,7 +41,7 @@ CDEFS    = -D__NL_VERDATE=\"`date +%d.%m.%Y`\" -D__NL_VERDAYS="`expr \`date +%s\
 WARN     = -W -Wall -Wwrite-strings
 OPTFLAGS = -O3 -finline-functions -fomit-frame-pointer -funroll-loops
 DEBUG    = -O0 -DDEBUG
-CFLAGS   = -noixemul -g -I. -I../includes -I.. -c $(CPU) $(WARN) $(OPTFLAGS) $(DEBUG)
+CFLAGS   = -noixemul -g -I. -I../include -I.. -c $(CPU) $(WARN) $(OPTFLAGS) $(DEBUG)
 LDFLAGS  = -noixemul $(CPU)
 LDLIBS   = -lmui -ldebug
 
