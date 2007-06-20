@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-06-20  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.c: fixed bugs #1190788 and #1720456 by uncommenting a
+    previously commented out line. If a line is now marked up to the right
+    border and then copied to the clipboard the beginning of the following line
+    will no longer be copied as well. Please check and report if this fix has
+    any other negative side effect.
+
 2007-06-15  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/NListviews.c: the raw key conversion was completely broken

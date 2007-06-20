@@ -221,11 +221,18 @@ void SelectFirstPoint(Object *obj,struct NLData *data,WORD x,WORD y)
       }
       else if (res.char_xoffset >= 0)
       { if (res.column == data->numcols-1)
-        { /*res.xoffset = PMAX;*/   /* when on full right, go full left of next line */
+        { res.xoffset = PMAX;   /* when on full right, go full left of next line */
+        /*
+          // The last releases had these lines while the one above had been commented out.
+          // The problem with these 4 lines is, that the beginning of then next line will
+          // be copied as well if the line is marked until the very right position, which
+          // is definitely wrong (see bugs #1190788 and #1720456). I hope this fix does
+          // not have any other negative side effects.
           res.column=0;
           res.xoffset = PMIN;
           res.char_xoffset = PMIN;
           res.entry++;
+        */
         }
         else
           res.xoffset = data->cols[res.column].c->maxx;
