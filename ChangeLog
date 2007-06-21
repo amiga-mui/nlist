@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-06-21  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: the Class element of an IntuiMessage was assigned
+    a non-zero value instead of checking it, which made NList.mcc to start
+    dragging single items in certain situations. Now a correct check is done.
+    This fixes bug #1627687.
+
 2007-06-20  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func.c: fixed bugs #1190788 and #1720456 by uncommenting a

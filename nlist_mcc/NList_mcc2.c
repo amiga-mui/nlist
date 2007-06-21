@@ -1716,7 +1716,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
  */
 
     if (drag_ok && (data->drag_type != MUIV_NList_DragType_None) &&
-        ((msg->imsg->Class = IDCMP_MOUSEBUTTONS) || (msg->imsg->Class = IDCMP_MOUSEMOVE)) &&
+        ((msg->imsg->Class == IDCMP_MOUSEBUTTONS) || (msg->imsg->Class == IDCMP_MOUSEMOVE)) &&
         (data->NList_Active >= data->NList_First) &&
         (data->NList_Active < data->NList_First + data->NList_Visible))
     {
