@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-06-22  Thore Böckelmann <tboeckel@gmx.de>
+
+  * docs/MCC_NList.doc: added the necessary requirements for AutoCopyToClip to
+    be working. The object must either be the window's active or default object.
+
 2007-06-21  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc2.c: the Class element of an IntuiMessage was assigned

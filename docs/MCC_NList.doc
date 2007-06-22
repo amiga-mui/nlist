@@ -246,10 +246,10 @@ NList.mcc/MUIM_NList_UseImage
         i have seen that sometimes Amiga-C is a shortcut !).
         (works with both Right-Amiga and Left-Amiga keys)
 
-        MUIA_NList_AutoCopyToClip == TRUE also requires MUIA_NList_TypeSelect
-        to be set to MUIV_NList_TypeSelect_Char. The default value of
-        MUIV_NList_TypeSelect_Line will *NOT* allow automatic copying to the
-        clipboard!
+        MUIA_NList_AutoCopyToClip == TRUE also requires that the NList object
+        is either the window's active object (see MUIA_Window_ActiveObject) or
+        the attached list object is window's default object (see
+        MUIA_Window_DefaultObject). Otherwise nothing will ever be copied!
 
     DEFAULT
         TRUE
