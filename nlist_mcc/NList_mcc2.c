@@ -353,11 +353,11 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 /*
 ** Reset the ShortHelp to the Default for Not Being Over Button
 */
-          if (data->affover>=0) 
+          if (data->affover>=0)
           {
              data->affover = -1;
              nnset(obj,MUIA_ShortHelp,data->NList_ShortHelp);
-          }          
+          }
           if (data->affbutton >= 0)
           {
             NL_Changed(data,data->affbuttonline);
@@ -445,8 +445,10 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
            )
         {
           if (data->NList_AutoCopyToClip)
-          { if (NL_TestKey(obj,data,KEYTAG_COPY_TO_CLIPBOARD,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-            { NL_CopyTo(obj,data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
+          {
+            if (NL_TestKey(obj,data,KEYTAG_COPY_TO_CLIPBOARD,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            {
+              NL_CopyTo(obj,data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
               if (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char)
                 SelectFirstPoint(obj,data,data->click_x,data->click_y);
               retval = MUI_EventHandlerRC_Eat;
@@ -502,7 +504,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
           {
           	/* Up key pressed */
             if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-            { 
+            {
             	LONG newactsel = MUIV_NList_Select_On;
             	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
             		newactsel = MUIV_NList_Select_Off;
@@ -1164,7 +1166,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               if ((data->affimage >= 0) && (data->affimage < data->LastImage) && data->NList_UseImages)
               {
                  STRPTR shorthelp;
-                 
+
                  if((shorthelp = (STRPTR)xget(data->NList_UseImages[data->affimage].imgobj, MUIA_ShortHelp)))
                     nnset(obj,MUIA_ShortHelp,shorthelp);
               }
@@ -1714,7 +1716,6 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
  *     //retval = MUI_EventHandlerRC_Eat;
  *   }
  */
-
     if (drag_ok && (data->drag_type != MUIV_NList_DragType_None) &&
         ((msg->imsg->Class == IDCMP_MOUSEBUTTONS) || (msg->imsg->Class == IDCMP_MOUSEMOVE)) &&
         (data->NList_Active >= data->NList_First) &&

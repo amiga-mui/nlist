@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-06-26  Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: removed all trailing "\n" of all debug macros, as these clutter the
+    debug output.
+
 2007-06-22  Thore Böckelmann <tboeckel@gmx.de>
 
   * docs/MCC_NList.doc: added the necessary requirements for AutoCopyToClip to
