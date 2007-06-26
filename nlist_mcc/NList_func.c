@@ -413,7 +413,8 @@ void SelectSecondPoint(Object *obj,struct NLData *data,WORD x,WORD y)
  *   }
  */
   else if (res.entry >= 0)
-  { if (res.char_number == -1)
+  {
+    if (res.char_number == -1)
     { if (res.char_xoffset < 0)
       { if (res.column == 0)
           res.xoffset = PMIN;
@@ -421,12 +422,18 @@ void SelectSecondPoint(Object *obj,struct NLData *data,WORD x,WORD y)
           res.xoffset = data->cols[res.column].c->minx;
       }
       else if (res.char_xoffset >= 0)
-      { if (res.column == data->numcols-1)
-        { /*res.xoffset = PMAX;*/   /* when on full right, go full left of next line */
+      {
+        if (res.column == data->numcols-1)
+        {
+          res.xoffset = PMAX;   /* when on full right, go full left of next line */
+          /*
+          // before this part was active while the assignment above was inactive
+          // see bugs #1190788 and #1720456
           res.column=0;
           res.xoffset = PMIN;
           res.char_xoffset = PMIN;
           res.entry++;
+          */
         }
         else
           res.xoffset = data->cols[res.column].c->maxx;
@@ -434,7 +441,8 @@ void SelectSecondPoint(Object *obj,struct NLData *data,WORD x,WORD y)
       }
     }
     else
-    { res.xoffset += data->cols[res.column].c->minx - res.char_xoffset;
+    {
+      res.xoffset += data->cols[res.column].c->minx - res.char_xoffset;
       if (res.char_xoffset < 0)
         res.char_number++;
     }
