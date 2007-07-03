@@ -10551,7 +10551,7 @@ ULONG _NListtree_GetListActive( struct IClass *cl, Object *obj, UNUSED struct MU
   */
   DoMethod( obj, MUIM_NList_GetEntry, MUIV_NList_GetEntry_Active, &tn );
 
-  D(DBF_ALWAYS, "Got Active notify from NList 0x%08lx - %s (0x%08lx - Name: %s) force=%ld", tn, (tn != NULL && tn->tn_Name != NULL) ? tn->tn_Name : "NULL", data->ActiveNode, (data->ActiveNode != NULL && data->ActiveNode->tn_Name != NULL) ? data->ActiveNode->tn_Name : "NULL", data->ForceActiveNotify);
+  D(DBF_ALWAYS, "Got Active notify from NList 0x%08lx - %s (0x%08lx - Name: %s) force=%ld", tn, (tn != NULL && tn->tn_Name != NULL) ? tn->tn_Name : (STRPTR)"NULL", data->ActiveNode, (data->ActiveNode != NULL && data->ActiveNode->tn_Name != NULL) ? data->ActiveNode->tn_Name : (STRPTR)"NULL", data->ForceActiveNotify);
 
   if ( tn != data->ActiveNode || data->ForceActiveNotify)
   {
