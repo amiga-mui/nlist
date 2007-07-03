@@ -254,7 +254,7 @@ HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
     */
     struct SampleArray *a = (struct SampleArray *)msg->TreeNode->tn_User;
 
-    snprintf(buf, sizeof(buf), "%3ld", msg->Array[-1]);
+    snprintf(buf, sizeof(buf), "%3ld", (ULONG)msg->Array[-1]);
 
     *msg->Array++  = (STRPTR)a->name;
     *msg->Array++  = (STRPTR)((a->flags & 0x8000) ? t3 : t4);

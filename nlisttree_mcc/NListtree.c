@@ -262,7 +262,7 @@ INLINE VOID DrawLineWin( struct RastPort *rp, WORD l, WORD t, WORD r, WORD b )
 INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WORD l, WORD t, UNUSED WORD r, WORD b )
 {
   struct RastPort *rp = (struct RastPort *)_rp( data->obj );
-  register UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2;
+  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2;
 
   ENTER();
 
@@ -326,7 +326,7 @@ INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WO
 INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, WORD l, WORD t, WORD r, WORD b )
 {
   struct RastPort *rp = (struct RastPort *)_rp( data->obj );
-  register UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2, h = t + ( b - t ) / 2;
+  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2, h = t + ( b - t ) / 2;
 
   ENTER();
 
@@ -405,7 +405,7 @@ INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, W
 INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im, WORD l, WORD t, WORD r, WORD b )
 {
   struct RastPort *rp = (struct RastPort *)_rp( data->obj );
-  register UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2, h = t + ( b - t ) / 2;
+  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2, h = t + ( b - t ) / 2;
 
   ENTER();
 
@@ -483,7 +483,7 @@ INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im,
 INLINE VOID DrawTreeHorBar( struct TreeImage_Data *data, struct MyImage *im, WORD l, WORD t, WORD r, WORD b )
 {
   struct RastPort *rp = (struct RastPort *)_rp( data->obj );
-  register UWORD h = t + ( b - t ) / 2;
+  UWORD h = t + ( b - t ) / 2;
 
   ENTER();
 
@@ -531,7 +531,7 @@ ULONG TreeImage_Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
   if ( ( msg->flags & MADF_DRAWOBJECT ) || ( msg->flags & MADF_DRAWUPDATE ) )
   {
     struct MyImage *im;
-    register WORD l, t, r, b;
+    WORD l, t, r, b;
 
     D(DBF_ALWAYS, "DRAW SPEC: %ld", data->spec);
 
@@ -629,7 +629,7 @@ DISPATCHER(TreeImage_Dispatcher)
   {
     case OM_NEW:      return( TreeImage_New(      cl, obj, (APTR)msg ) );
     case OM_SET:      return( TreeImage_Set(      cl, obj, (APTR)msg ) );
-    case MUIM_Draw:     return( TreeImage_Draw(     cl, obj, (APTR)msg ) );
+    case MUIM_Draw:   return( TreeImage_Draw(     cl, obj, (APTR)msg ) );
   }
 
   return( DoSuperMethodA( cl, obj, msg ) );
@@ -687,7 +687,7 @@ ULONG totalmem = 0;
 */
 INLINE APTR AllocVecPooled( APTR mempool, ULONG size )
 {
-  register ULONG *mem;
+  ULONG *mem;
 
   if((mem = (ULONG *)AllocPooled(mempool, size + 4)))
   {
@@ -708,7 +708,7 @@ INLINE APTR AllocVecPooled( APTR mempool, ULONG size )
 */
 INLINE VOID FreeVecPooled( APTR mempool, APTR mem )
 {
-  register ULONG *m = (ULONG *)mem;
+  ULONG *m = (ULONG *)mem;
 
 #ifdef MYDEBUG
   totalmem -= m[-1];
@@ -972,7 +972,7 @@ INLINE VOID MakeSet( struct NListtree_Data *data, ULONG tag, APTR val )
 */
 INLINE struct Node *Node_Next( struct Node *node )
 {
-  register struct Node *next = NULL;
+  struct Node *next = NULL;
 
   //if ( node )
   {
@@ -994,7 +994,7 @@ INLINE struct Node *Node_Next( struct Node *node )
 */
 INLINE struct Node *Node_Prev( struct Node *node )
 {
-  register struct Node *prev = NULL;
+  struct Node *prev = NULL;
 
   //if ( node )
   {
@@ -1118,7 +1118,7 @@ BOOL NLAddToTable( struct NListtree_Data *data, struct Table *table, struct MUI_
 */
 LONG NLFindInTable( struct Table *table, struct MUI_NListtree_TreeNode *entry )
 {
-  register LONG i;
+  LONG i;
 
   for( i = 0; i < table->tb_Entries; i++ )
   {
@@ -2832,7 +2832,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
 
   if ( tn )
   {
-    WORD x1 = -1, x2 = 0;
+    LONG x1 = -1, x2 = 0;
 
     if((gp = GetParent(tn)))
     {
@@ -2850,7 +2850,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
 
         if ( Node_Next( (struct Node *)&tn->tn_Node ) )
         {
-          if ( !cnt )
+          if(cnt == 0)
           {
             x1 = SPEC_VertT;
           }
@@ -2861,7 +2861,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
         }
         else
         {
-          if ( !cnt )
+          if(cnt == 0)
           {
             x1 = SPEC_VertEnd;
           }
@@ -2918,7 +2918,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
 
         if ( Node_Next( (struct Node *)&tn->tn_Node ) )
         {
-          if ( !cnt )
+          if(cnt == 0)
           {
             if ( !( tn->tn_Flags & TNF_LIST ) )
             {
@@ -2932,7 +2932,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
         }
         else
         {
-          if ( !cnt )
+          if(cnt == 0)
           {
             if ( !( tn->tn_Flags & TNF_LIST ) )
             {
@@ -2956,11 +2956,11 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
         otn->tn_Space += x2 + data->Space;
       }
 
-      if ( ( x1 != SPEC_Space ) || !cnt || ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
+      if ( ( x1 != SPEC_Space ) || cnt == 0 || ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
       {
         if ( otn->tn_Space > 0 )
         {
-          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, otn->tn_Space );
+          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, (ULONG)otn->tn_Space );
 
           otn->tn_ImagePos += otn->tn_Space;
           otn->tn_Space = 0;
@@ -2977,14 +2977,14 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
           {
             if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
             {
-              snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, x2 );
+              snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, x2 );
 
               otn->tn_ImagePos += x2;
             }
           }
           else
           {
-            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, x2 );
+            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, x2 );
 
             otn->tn_ImagePos += x2;
           }
@@ -2996,7 +2996,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
 
 static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *otn )
 {
-  WORD x1 = -1;
+  LONG x1 = -1;
 
   if ( data->Style != MUICFGV_NListtree_Style_Mac )
     InsertTreeImages( data, otn, otn, 0 );
@@ -3012,7 +3012,7 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
       x1 = IMAGE_Closed;
     }
 
-    snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]", data->buf, data->Image[x1].ListImage );
+    snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]", data->buf, (ULONG)data->Image[x1].ListImage );
 
     if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
       x1 = SPEC_Hor;
@@ -3021,12 +3021,12 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 
     if ( data->Space > 0 )
     {
-      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, data->Space );
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, (ULONG)data->Space );
     }
 
     if ( data->Style == MUICFGV_NListtree_Style_Win98Plus )
     {
-      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]\033O[%lx;%lx;%ld,%ld]", data->buf, data->Image[IMAGE_Special].ListImage, data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, 3 );
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Special].ListImage, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, 3L );
     }
   }
 
@@ -3058,7 +3058,7 @@ static void DrawImages( struct MUI_NListtree_TreeNode *otn, struct MUI_NListtree
     }
     else
     {
-      if ( !cnt )
+      if(cnt == 0)
       {
         InsertImage( data, otn );
       }

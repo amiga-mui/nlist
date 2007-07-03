@@ -7,6 +7,8 @@ $URL$
 
 2007-07-03  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlisttree_mcc/NListtree.c, nlisttree_mcp/NListtree.c: added some more
+    typecasts to the image generating functions to please GCC.
   * nlisttree_mcc/NListtree.c: added some typecasts to the debug output to
     please GCC.
 
