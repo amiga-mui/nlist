@@ -59,6 +59,7 @@ static const char *used_classesP[] = { "NListviews.mcp", NULL };
 
 #define	CLASSINIT
 #define	CLASSEXPUNGE
+#define MIN_STACKSIZE 8192
 
 #if defined(__MORPHOS__)
 struct Library *LayersBase = NULL;

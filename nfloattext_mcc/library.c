@@ -49,6 +49,8 @@
 #define USEDCLASSESP  used_classesP
 static const char *used_classesP[] = { "NListviews.mcp", NULL };
 
+#define MIN_STACKSIZE 8192
+
 /******************************************************************************/
 /*                                                                            */
 /* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */

@@ -46,6 +46,7 @@ static const char *used_classesP[] = { "NBitmap.mcp", NULL };
 
 #define CLASSINIT
 #define CLASSEXPUNGE
+#define MIN_STACKSIZE 8192
 
 // libraries
 struct Library *DataTypesBase = NULL;

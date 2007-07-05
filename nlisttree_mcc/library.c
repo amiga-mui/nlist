@@ -51,6 +51,8 @@
 #define USERLIBID			  CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	  19
 
+#define MIN_STACKSIZE 8192
+
 #define USEDCLASSESP  used_classesP
 #define USEDCLASSES   used_classes
 static const char *used_classesP[] = { "NListtree.mcp", "NListviews.mcp", NULL };

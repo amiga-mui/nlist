@@ -58,6 +58,8 @@ static const char *used_classesP[] = { "NListviews.mcp", NULL };
 #define	CLASSINIT
 #define	CLASSEXPUNGE
 
+#define MIN_STACKSIZE 8192
+
 struct Library *KeymapBase = NULL;
 #if defined(__amigaos4__)
 struct KeymapIFace *IKeymap = NULL;

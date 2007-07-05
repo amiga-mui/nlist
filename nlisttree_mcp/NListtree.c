@@ -49,7 +49,12 @@
 #define MSG_DRAW2      MSG_DUMMY
 #define MSG_DRAW2_KEY  MSG_DUMMY
 
-static struct Locale *Locale;
+static struct Locale *Locale = NULL;
+
+struct Library *LocaleBase = NULL;
+#if defined(__amigaos4__)
+struct LocaleIFace *ILocale = NULL;
+#endif
 
 #ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))

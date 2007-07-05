@@ -56,6 +56,8 @@
 #define	CLASSINIT
 #define	CLASSEXPUNGE
 
+#define MIN_STACKSIZE 8192
+
 struct Library *CxBase = NULL;
 struct Library *LocaleBase = NULL;
 struct Device *ConsoleDevice = NULL;

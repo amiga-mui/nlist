@@ -50,10 +50,7 @@
 #define USERLIBID			CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	19
 
-struct Library *LocaleBase;
-#if defined(__amigaos4__)
-struct LocaleIFace *ILocale;
-#endif
+#define MIN_STACKSIZE 8192
 
 /******************************************************************************/
 /*                                                                            */

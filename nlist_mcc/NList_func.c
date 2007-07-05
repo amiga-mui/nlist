@@ -1836,7 +1836,7 @@ ULONG mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod
               table2[num] = table1[num+1];
           }
         }
-        DoMethodA(dest,(Msg) table2);
+        DoMethodA(dest, (Msg)table2);
       }
       ent++;
       if (msg->pos == MUIV_NList_DoMethod_Selected)
