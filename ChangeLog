@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-07-12  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcp/NListtree.c: added platform dependend type definition of
+    LocaleBase.
+
 2007-07-05 Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mccinit.c: updated to latest 1.4 version and adapted all our

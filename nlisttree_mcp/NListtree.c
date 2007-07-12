@@ -51,9 +51,11 @@
 
 static struct Locale *Locale = NULL;
 
-struct Library *LocaleBase = NULL;
 #if defined(__amigaos4__)
+struct Library *LocaleBase = NULL;
 struct LocaleIFace *ILocale = NULL;
+#else
+struct LocaleBase *LocaleBase = NULL;
 #endif
 
 #ifndef MAKE_ID
