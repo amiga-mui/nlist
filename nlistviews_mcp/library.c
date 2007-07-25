@@ -71,18 +71,34 @@ struct ConsoleIFace *IConsole = NULL;
 
 struct IOStdReq ioreq;
 
+/******************************************************************************/
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
+
+#define USE_LIST_BODY   1
+#define USE_LIST_COLORS 1
+#include "icon.bh"
+#include "mccinit.c"
+
 static BOOL ClassInit(UNUSED struct Library *base)
 {
 	if((CxBase = OpenLibrary("commodities.library", 37L)) &&
-     GETINTERFACE(ICommodities, CxBase))
+     GETINTERFACE(ICommodities, struct CommoditiesIFace *, CxBase))
 	{
 		if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
 		{
 			ConsoleDevice = (struct Device *)ioreq.io_Device;
-      if(GETINTERFACE(IConsole, ConsoleDevice))
+      if(GETINTERFACE(IConsole, struct ConsoleIFace *, ConsoleDevice))
       {
   			if((LocaleBase = OpenLibrary( "locale.library", 38)) &&
-           GETINTERFACE(ILocale, LocaleBase))
+           GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
         {
 			    //if ( LocaleBase )
 				  //  catalog = OpenCatalogA( NULL, "NListviews.catalog", NULL );
@@ -132,17 +148,4 @@ static VOID ClassExpunge(UNUSED struct Library *base)
   	CxBase = NULL;
   }
 }
-
-
-/******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
-/******************************************************************************/
-
-#define USE_LIST_BODY   1
-#define USE_LIST_COLORS 1
-#include "icon.bh"
-
-#include "mccinit.c"
 

@@ -65,15 +65,28 @@ struct Library *KeymapBase = NULL;
 struct KeymapIFace *IKeymap = NULL;
 #endif
 
+/******************************************************************************/
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
+
+#include "mccinit.c"
+
 static BOOL ClassInit(UNUSED struct Library *base)
 {
-	if((KeymapBase = OpenLibrary("keymap.library", 36L)) &&
-     GETINTERFACE(IKeymap, KeymapBase))
-	{
+  if((KeymapBase = OpenLibrary("keymap.library", 36L)) &&
+     GETINTERFACE(IKeymap, struct KeymapIFace *, KeymapBase))
+  {
     return TRUE;
-	}
+  }
 
-	return FALSE;
+  return FALSE;
 }
 
 
@@ -87,11 +100,3 @@ static VOID ClassExpunge(UNUSED struct Library *base)
   }
 }
 
-
-/******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
-/******************************************************************************/
-
-#include "mccinit.c"

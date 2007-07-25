@@ -55,6 +55,19 @@ struct Library *P96Base = NULL;
 struct DataTypesIFace *IDataTypes = NULL;
 struct P96IFace *IP96 = NULL;
 
+/******************************************************************************/
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
+
+#include "mccinit.c"
+
 // BOOL ClassInitFunc()
 static BOOL ClassInit(UNUSED struct Library *base)
 {
@@ -64,13 +77,13 @@ static BOOL ClassInit(UNUSED struct Library *base)
 
   // open library interfaces
   if((DataTypesBase = OpenLibrary("datatypes.library", 39L)) != NULL &&
-     GETINTERFACE(IDataTypes, DataTypesBase))
+     GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
   {
 
     // Picasso96API.library is not necessary but
     // highly recommened
     if((P96Base = OpenLibrary("Picasso96API.library", 2L)) != NULL &&
-       GETINTERFACE(IP96, P96Base))
+       GETINTERFACE(IP96, struct P96IFace *, P96Base))
     {
     }
 
@@ -104,5 +117,3 @@ static VOID ClassExpunge(UNUSED struct Library *base)
   LEAVE();
 }
 
-/* library startup code */
-#include "mccinit.c"

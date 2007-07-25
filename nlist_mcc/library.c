@@ -79,19 +79,32 @@ struct ConsoleIFace *IConsole = NULL;
 
 static struct IOStdReq ioreq;
 
+/******************************************************************************/
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
+
+#include "mccinit.c"
+
 static BOOL ClassInit(UNUSED struct Library *base)
 {
 	if((LayersBase = OpenLibrary("layers.library", 37L)) &&
-     GETINTERFACE(ILayers, LayersBase))
+     GETINTERFACE(ILayers, struct LayersIFace *, LayersBase))
 	{
 		if((DiskfontBase = OpenLibrary("diskfont.library", 37L)) &&
-       GETINTERFACE(IDiskfont, DiskfontBase))
+       GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
 		{
 			if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
 			{
 				ConsoleDevice = (APTR)ioreq.io_Device;
 
-        if(GETINTERFACE(IConsole, ConsoleDevice))
+        if(GETINTERFACE(IConsole, struct ConsoleIFace *, ConsoleDevice))
         {
 				  if(NGR_Create())
 				  {
@@ -144,10 +157,3 @@ static VOID ClassExpunge(UNUSED struct Library *base)
   }
 }
 
-/******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
-/******************************************************************************/
-
-#include "mccinit.c"

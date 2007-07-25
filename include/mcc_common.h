@@ -1,11 +1,8 @@
 /***************************************************************************
 
- NList Custom Classes
- Copyright (C) 1996-2004 by Gilles Masson,
-                            Carsten Scholling <aphaso@aphaso.de>,
-                            Przemyslaw Grunchala,
-                            Sebastian Bauer <sebauer@t-online.de>,
-                            Jens Langner <Jens.Langner@light-speed.de>
+ TextEditor.mcc - Textediting MUI Custom Class
+ Copyright (C) 1997-2000 Allan Odgaard
+ Copyright (C) 2005 by TextEditor Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -17,7 +14,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Lesser General Public License for more details.
 
- NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+ TextEditor class Support Site:  http://www.sf.net/projects/texteditor_mcc
 
  $Id$
 
@@ -40,6 +37,7 @@
 #define SetSuperAttrs 	ISetSuperAttrs
 #define CoerceMethod 		ICoerceMethod
 #define CoerceMethodA 	ICoerceMethodA
+#define CallHookA       CallHookPkt
 
 #ifdef OpenWindowTags
 #undef OpenWindowTags
