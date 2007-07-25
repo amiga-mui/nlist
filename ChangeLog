@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-07-25 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mccinit.c: updated to latest 1.7 version
+
 2007-07-24  Thore Böckelmann <tboeckel@gmx.de>
 
   * include/mccinit.c: updated to latest 1.6 version which fixes an unbalanced
