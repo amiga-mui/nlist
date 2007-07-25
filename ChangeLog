@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-07-25  Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mccinit.c: updated to latest 1.8 version which really uses the
+    GETINTERFACE() macro with 3 parameters.
+
 2007-07-25 Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mccinit.c: updated to latest 1.7 version
