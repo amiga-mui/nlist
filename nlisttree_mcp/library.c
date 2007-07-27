@@ -53,14 +53,17 @@
 #define MIN_STACKSIZE 8192
 
 /******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
+/* define the functions used by the startup code ahead of including mccinit.c */
 /******************************************************************************/
 
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
 #define USE_IM_PREFS_BODY   1
 #define USE_IM_PREFS_COLORS 1
 #include "icon.bh"
-
 #include "mccinit.c"
 
+/******************************************************************************/
+/* define all implementations of our user functions                           */
+/******************************************************************************/

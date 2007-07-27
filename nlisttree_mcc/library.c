@@ -59,9 +59,14 @@ static const char *used_classesP[] = { "NListtree.mcp", "NListviews.mcp", NULL }
 static const char *used_classes[]  = { "NList.mcc", NULL };
 
 /******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
+/* define the functions used by the startup code ahead of including mccinit.c */
 /******************************************************************************/
 
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
 #include "mccinit.c"
+
+/******************************************************************************/
+/* define all implementations of our user functions                           */
+/******************************************************************************/
