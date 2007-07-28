@@ -5,6 +5,8 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.99 RELEASE ############################################################
+
 2007-07-25  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?/library.c: now really uses the 3 parameter version of GETINTERFACE()
