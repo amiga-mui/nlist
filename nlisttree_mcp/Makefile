@@ -126,6 +126,7 @@ endif
 # Common Directories
 OBJDIR = .obj_$(OS)
 BINDIR = bin_$(OS)
+LOCALE = locale
 
 # target definition
 MCCTARGET = $(BINDIR)/NListtree.mcp
@@ -229,6 +230,12 @@ TESTOBJS = $(OBJDIR)/NListtree-Test.o \
            $(OBJDIR)/NListtree.o \
            $(OBJDIR)/Debug.o
 
+# available catalog translations
+CATALOGS = \
+  $(LOCALE)/deutsch.catalog \
+  $(LOCALE)/russian.catalog \
+  $(LOCALE)/svenska.catalog \
+
 #
 
 all: $(BINDIR) $(OBJDIR) $(MCCTARGET) #$(TESTTARGET)
@@ -267,6 +274,16 @@ $(TESTTARGET): $(TESTOBJS)
 
 $(OBJDIR)/library.o: library.c ../include/mccinit.c \
   ../include/mui/NListtree_mcc.h private.h rev.h
+
+## CATALOG GENERATION #################
+
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+	@printf '\033[33mGenerating $@\033[0m\n'
+	@$(FC) $(LOCALE)/NListtree.mcp.cd $< CATALOG $@
+
+.IGNORE: $(CATALOGS)
+
+catalogs: $(CATALOGS)
 
 #
 
