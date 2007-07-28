@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 /* system */
 #include <exec/execbase.h>
