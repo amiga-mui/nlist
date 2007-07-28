@@ -66,9 +66,12 @@ NLIST_OBJS = $(OBJDIR)/NList-Demo.o \
 NLISTTREE_DEMO = $(BINDIR)/NListtree-Demo
 NLISTTREE_OBJS = $(OBJDIR)/NListtree-Demo.o
 
+NBITMAP_DEMO = $(BINDIR)/NBitmap-Demo
+NBITMAP_OBJS = $(OBJDIR)/NBitmap-Demo.o
+
 #
 
-all: $(BINDIR) $(OBJDIR) $(NLIST_DEMO) $(NLISTTREE_DEMO)
+all: $(BINDIR) $(OBJDIR) $(NLIST_DEMO) $(NLISTTREE_DEMO) $(NBITMAP_DEMO)
 
 # make the object directories
 $(OBJDIR):
@@ -97,12 +100,18 @@ $(NLISTTREE_DEMO): $(NLISTTREE_OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(NLISTTREE_OBJS) $(LDLIBS)
 	@$(STRIP) -R ".comment" -S -o $@ $@.debug
 
+$(NBITMAP_DEMO): $(NBITMAP_OBJS)
+	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@$(CC) $(LDFLAGS) -o $@.debug $(NBITMAP_OBJS) $(LDLIBS)
+	@$(STRIP) -R ".comment" -S -o $@ $@.debug
+
 #
 
 .PHONY: clean
 clean:
 	-$(RM) $(NLIST_DEMO) $(NLIST_DEMO).debug $(NLIST_OBJS)
 	-$(RM) $(NLISTTREE_DEMO) $(NLISTTREE_DEMO).debug $(NLISTTREE_OBJS)
+	-$(RM) $(NBITMAP_DEMO) $(NBITMAP_DEMO).debug $(NBITMAP_OBJS)
 
 .PHONY: distclean
 distclean: clean
