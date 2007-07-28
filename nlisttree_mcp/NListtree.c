@@ -54,6 +54,8 @@ static struct Locale *Locale = NULL;
 #if defined(__amigaos4__)
 struct Library *LocaleBase = NULL;
 struct LocaleIFace *ILocale = NULL;
+#elif defined(__MORPHOS__)
+struct Library *LocaleBase = NULL;
 #else
 struct LocaleBase *LocaleBase = NULL;
 #endif
