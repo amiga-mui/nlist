@@ -6381,7 +6381,10 @@ ULONG _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
   */
 
   data->Flags |= NLTF_DRAGDROP;
+/*
+  // not yet working, see comment in _DragNDrop_DropType()
   data->OldDropTarget = NULL;
+*/
 
   result = DoSuperMethodA( cl, obj, msg );
 
@@ -6453,11 +6456,11 @@ ULONG _DragNDrop_DropType( struct IClass *cl, Object *obj, struct MUIP_NList_Dro
     data->DropTargetPos, data->DropType);
 
 /*
-// dies macht Probleme, sobald eine Liste aufgeklappt wird und dadurch ein Scrollbalken
-// eingeblendet werden muss. Erstens wird die Scrollbar nicht korrekt dargestellt und
-// zweitens wird das Dragging total lahm. Wird der Mauszeiger aus dem Object rausbewegt
-// hängt das Dragging komplett. Auf jeden Fall ein Problem in NList.mcc.
-  if((data->DropTarget->tn_Flags & TNF_LIST) && !(data->DropTarget->tn_Flags & TNF_OPEN))
+// this causes problems as soon as a list is expanded und hence a scroll bar is
+// displayed.
+// First the scroll bar is not displayed properly and second the dragging becomes
+// *very* slow. If the mouse pointer is then moved outside the object the dragging
+// is hanging completely. All in all this must be an issue in NList.mcc.  if((data->DropTarget->tn_Flags & TNF_LIST) && !(data->DropTarget->tn_Flags & TNF_OPEN))
   {
     // the current possible drop target is a closed list node
     if(data->OldDropTarget != data->DropTarget)
@@ -6497,9 +6500,9 @@ ULONG _DragNDrop_DropType( struct IClass *cl, Object *obj, struct MUIP_NList_Dro
       }
     }
   }
-*/
 
   data->OldDropTarget = data->DropTarget;
+*/
 
   return( 0 );
 }

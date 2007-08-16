@@ -7,6 +7,8 @@ $URL$
 
 2007-08-16  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlisttree_mcc/NListtree.c: translated a german comment to english and
+    commented out two further lines which broke the build.
   * nlisttree_mcc/NListtree.c: upon MUIM_NListtree_Redraw only visible nodes are
     redrawn to avoid unnecessary overhead.
 
