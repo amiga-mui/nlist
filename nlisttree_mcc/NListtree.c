@@ -591,7 +591,7 @@ ULONG TreeImage_New( struct IClass *cl, Object *obj, struct opSet *msg )
   data->spec = 0;
 
   RETURN(obj);
-    return( (ULONG)obj );
+  return( (ULONG)obj );
 }
 
 
@@ -883,11 +883,12 @@ VOID SetupImage( struct NListtree_Data *data, struct MUI_ImageSpec *is, ULONG nr
       data->Image[nr].Image = rim;
       data->Image[nr].ListImage = (Object *)DoMethod( data->Obj, MUIM_NList_CreateImage, rim, 0 );
 
+      LEAVE();
       return;
     }
   }
 
-    LEAVE();
+  LEAVE();
 }
 
 
@@ -1425,22 +1426,26 @@ BOOL GetEntryPos( struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNo
 **************************************************************************/
 static int GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
 {
-  LONG pos;
+  LONG pos = -1;
 
-  if (tn == CTN(&data->RootList))
-    return -1;
-
-  if ((data->Flags & NLTF_NLIST_DIRECT_ENTRY_SUPPORT ) && tn)
+  if(tn != CTN(&data->RootList) && tn != NULL)
   {
-    if (tn->tn_NListEntry)
-      return (int)tn->tn_NListEntry->entpos;
+    if(data->Flags & NLTF_NLIST_DIRECT_ENTRY_SUPPORT)
+    {
+      // respect visible nodes only
+      if((tn->tn_IFlags & TNIF_VISIBLE) && tn->tn_NListEntry != NULL)
+        pos = (int)tn->tn_NListEntry->entpos;
+    }
+
+    // respect visible nodes only
+    if(pos == -1 && tn->tn_IFlags & TNIF_VISIBLE)
+    {
+      // result will be MUIV_NList_GetPos_End (-1) if not found.
+      pos = MUIV_NList_GetPos_Start;
+      DoMethod(data->Obj, MUIM_NList_GetPos, tn, &pos);
+    }
   }
 
-  /*
-  **  Result will be MUIV_NList_GetPos_End (-1) if not found.
-  */
-  pos = MUIV_NList_GetPos_Start;
-  DoMethod( data->Obj, MUIM_NList_GetPos, tn, &pos );
   return (int)pos;
 }
 
@@ -5518,7 +5523,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
           MUIA_NList_MultiSelect,     ld.MultiSelect,
           ( ld.MultiSelect != 0 )     ? MUIA_NList_MultiTestHook : TAG_IGNORE,  &NList_MultiTestHook,
           //$$$ MUIA_Listview_DragType
-          MUIA_NList_DragType,      ( ld.Flags & NLTF_DRAGDROPSORT ) ? MUIV_NList_DragType_Default : MUIV_NList_DragType_None,
+          MUIA_NList_DragType,        ( ld.Flags & NLTF_DRAGDROPSORT ) ? MUIV_NList_DragType_Default : MUIV_NList_DragType_None,
           MUIA_NList_DragSortable,    ( ld.Flags & NLTF_DRAGDROPSORT ) ? TRUE : FALSE,
           MUIA_NList_ShowDropMarks,   ( ld.Flags & NLTF_DRAGDROPSORT ) ? TRUE : FALSE,
           //$$$ MUIA_List_DisplayHook (other register format)
@@ -6333,7 +6338,7 @@ ULONG _DragNDrop_DragQuery( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUIP_DragQuery *d = (struct MUIP_DragQuery *)msg;
-    ULONG result;
+  ULONG result;
 
   ENTER();
 
@@ -6352,15 +6357,15 @@ ULONG _DragNDrop_DragQuery( struct IClass *cl, Object *obj, Msg msg )
 
   result = DoSuperMethodA( cl, obj, msg );
 
-    RETURN(result);
-    return result;
+  RETURN(result);
+  return result;
 }
 
 
 ULONG _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
-    ULONG result;
+  ULONG result;
 
   ENTER();
 
@@ -6376,11 +6381,12 @@ ULONG _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
   */
 
   data->Flags |= NLTF_DRAGDROP;
+  data->OldDropTarget = NULL;
 
   result = DoSuperMethodA( cl, obj, msg );
 
-    RETURN(result);
-    return result;
+  RETURN(result);
+  return result;
 }
 
 
@@ -6389,7 +6395,7 @@ ULONG _DragNDrop_DragReport( struct IClass *cl, Object *obj, Msg msg )
   #define _between( a, x, b ) ( ( x ) >= ( a ) && ( x ) <= ( b ) )
   #define _isinobject( x, y ) ( _between( _mleft( obj ), ( x ), _mright( obj ) ) && _between( _mtop( obj ), ( y ), _mbottom( obj ) ) )
   struct MUIP_DragReport *d = (struct MUIP_DragReport *)msg;
-    ULONG result;
+  ULONG result;
 
   ENTER();
 
@@ -6398,8 +6404,8 @@ ULONG _DragNDrop_DragReport( struct IClass *cl, Object *obj, Msg msg )
 
   result = DoSuperMethodA( cl, obj, msg );
 
-    RETURN(result);
-    return result;
+  RETURN(result);
+  return result;
 }
 
 
@@ -6445,6 +6451,55 @@ ULONG _DragNDrop_DropType( struct IClass *cl, Object *obj, struct MUIP_NList_Dro
 
   D(DBF_ALWAYS, "OPos: %ld, OType: %ld, Pos: %ld, Type: %ld", *msg->pos, *msg->type,
     data->DropTargetPos, data->DropType);
+
+/*
+// dies macht Probleme, sobald eine Liste aufgeklappt wird und dadurch ein Scrollbalken
+// eingeblendet werden muss. Erstens wird die Scrollbar nicht korrekt dargestellt und
+// zweitens wird das Dragging total lahm. Wird der Mauszeiger aus dem Object rausbewegt
+// hängt das Dragging komplett. Auf jeden Fall ein Problem in NList.mcc.
+  if((data->DropTarget->tn_Flags & TNF_LIST) && !(data->DropTarget->tn_Flags & TNF_OPEN))
+  {
+    // the current possible drop target is a closed list node
+    if(data->OldDropTarget != data->DropTarget)
+    {
+      // the possible drop target node has changed
+      // remember the current time
+      CurrentTime(&data->OpenDropListSecs, &data->OpenDropListMicros);
+    }
+    else
+    {
+      // no target change and we can drop something on the node
+      // now check if the desired delay has passed
+      ULONG secs;
+      ULONG micros;
+      ULONG diffSecs;
+      ULONG diffMicros;
+
+      // get the current system time
+      CurrentTime(&secs, &micros);
+      // calculate the difference to the last time
+      diffSecs = secs - data->OpenDropListSecs;
+      if(micros < data->OpenDropListMicros)
+      {
+        diffMicros = micros + 1000000L - data->OpenDropListMicros;
+        diffSecs--;
+      }
+      else
+        diffMicros = micros - data->OpenDropListMicros;
+
+      if((diffSecs == 0 && diffMicros >= 500000L) || diffSecs > 0)
+      {
+        // the time has passed, now open the list node
+        DoMethod(obj, MUIM_NListtree_Open, GetParent( data->DropTarget ), data->DropTarget, 0);
+        // reset the start time
+        data->OpenDropListSecs = secs;
+        data->OpenDropListMicros = micros;
+      }
+    }
+  }
+*/
+
+  data->OldDropTarget = data->DropTarget;
 
   return( 0 );
 }
@@ -6545,7 +6600,7 @@ ULONG _DragNDrop_DropDraw( struct IClass *cl, Object *obj, struct MUIP_NList_Dro
 ULONG _DragNDrop_DragFinish( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
-    ULONG result;
+  ULONG result;
 
   ENTER();
 
@@ -6553,8 +6608,8 @@ ULONG _DragNDrop_DragFinish( struct IClass *cl, Object *obj, Msg msg )
 
   result = DoSuperMethodA( cl, obj, msg );
 
-    RETURN(result);
-    return result;
+  RETURN(result);
+  return result;
 }
 
 
@@ -7961,7 +8016,7 @@ ULONG _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NList
   }
 
   RETURN(0);
-    return( 0 );
+  return( 0 );
 }
 
 
@@ -9733,13 +9788,17 @@ ULONG _NListtree_TestPos( UNUSED struct IClass *cl, Object *obj, struct MUIP_NLi
 */
 ULONG _NListtree_Redraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_Redraw *msg )
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
 
   //D(bug( "TreeNode: 0x%08lx (pos: %ld), Flags: 0x%08lx (%s)\n", msg->TreeNode, GetVisualPos( data, msg->TreeNode ), msg->Flags, ( msg->Flags & MUIV_NListtree_Redraw_Flag_Nr ) ? "NR" : "" ) );
 
-  if ( ( (LONG)msg->TreeNode != MUIV_NListtree_Redraw_Active ) && ( (LONG)msg->TreeNode != MUIV_NListtree_Redraw_All ) && !( msg->Flags & MUIV_NListtree_Redraw_Flag_Nr ) )
+  if(((LONG)msg->TreeNode != MUIV_NListtree_Redraw_Active) && ((LONG)msg->TreeNode != MUIV_NListtree_Redraw_All) && !(msg->Flags & MUIV_NListtree_Redraw_Flag_Nr))
   {
-    DoMethod( obj, MUIM_NList_Redraw, GetVisualPos( data, msg->TreeNode ) );
+    LONG pos;
+
+    // redraw the given node only if it is visible
+    if((pos = GetVisualPos(data, msg->TreeNode)) != -1)
+      DoMethod(obj, MUIM_NList_Redraw, pos);
   }
   else
   {
@@ -9747,7 +9806,7 @@ ULONG _NListtree_Redraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
     DoMethod( obj, MUIM_NList_Redraw, (LONG)msg->TreeNode );
   }
 
-  return( 0 );
+  return(0);
 }
 
 
@@ -9898,7 +9957,7 @@ ULONG _NListtree_Select( struct IClass *cl, Object *obj, struct MUIP_NListtree_S
   data->Flags &= ~NLTF_SELECT_METHOD;
 
   RETURN(state);
-    return( (ULONG)state );
+  return( (ULONG)state );
 }
 
 
@@ -10421,7 +10480,7 @@ ULONG _NListtree_CopyToClip( struct IClass *cl, Object *obj, struct MUIP_NListtr
 *
 *   This method MUST NOT be called directly !
 *
-*   It will be called by NListreet while the DragReport, with
+*   It will be called by NListree while the DragReport, with
 *   default *pos and *type values depending on the drag pointer
 *   position that you can modify as you want.
 *
@@ -10590,7 +10649,7 @@ ULONG _NListtree_GetDoubleClick( struct IClass *cl, Object *obj, UNUSED struct M
   }
 
   RETURN(0);
-    return( 0 );
+  return( 0 );
 }
 
 

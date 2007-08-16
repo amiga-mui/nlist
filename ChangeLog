@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-08-16  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: upon MUIM_NListtree_Redraw only visible nodes are
+    redrawn to avoid unnecessary overhead.
+
 #### v0.99 RELEASE ############################################################
 
 2007-07-25  Thore Böckelmann <tboeckel@gmx.de>
