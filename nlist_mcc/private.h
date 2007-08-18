@@ -315,6 +315,7 @@ struct NLData
   LONG  NList_WheelFast;
   LONG  NList_WheelMMB;
   LONG  NList_VerticalCenteredText;
+  BOOL  NList_AutoClip;
 //  LONG  NList_Pause;
 
   STRPTR NList_ShortHelp;

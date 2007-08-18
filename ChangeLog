@@ -5,6 +5,19 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-08-18 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc: added new MUIA_NList_AutoClip attribute which allows to disable
+    the default behaviour of an NList object where in read-only (NoInput) mode
+    when MUIA_NList_TypeSelect is set to select charwise, the content will be
+    automatically copied to the clipboard. This should allow to set a NList object
+    to comply with the Amiga styleguide where always Amiga+C should be used to
+    manually copy the selected content to the clipboard.
+  * nlist_mcc/NList-Test.c: added the sources of the NList demo as a new test
+    application which will be directly linked against the NList objects and therefore
+    allows to more easily/quickly test changes in the NList code.
+  * include/mccinit.c: updated to latest 1.10 version
+
 2007-08-16  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: translated a german comment to english and

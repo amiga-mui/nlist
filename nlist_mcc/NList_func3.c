@@ -933,7 +933,7 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
         c2 = data->sel_pt[data->max_sel].column;
         p2 = data->sel_pt[data->max_sel].colpos;
         ent = data->sel_pt[data->min_sel].ent;
-        //D(DBF_SELECT, "ok=%d ent=%d mincol=%d maxcol=%d minpos=%d maxpos=%d", ok, ent, c1, c2, p1, p2);
+        D(DBF_STARTUP, "ok=%d ent=%d mincol=%d maxcol=%d minpos=%d maxpos=%d", ok, ent, c1, c2, p1, p2);
         if (ok && (ent >= 0) && (ent < data->NList_Entries))
         { if (ent == data->sel_pt[data->max_sel].ent)
           { CCB_ENTRY_START_END(ent,c1,p1,c2,p2);

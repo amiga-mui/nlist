@@ -985,6 +985,9 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_AutoCopyToClip :
         data->NList_AutoCopyToClip = (LONG) tag->ti_Data;
         break;
+      case MUIA_NList_AutoClip :
+        data->NList_AutoClip = (BOOL)tag->ti_Data;
+        break;
       case MUIA_NList_TabSize :
         data->NList_TabSize = (LONG) tag->ti_Data;
         REDRAW_ALL;
@@ -1233,9 +1236,10 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_NList_Exports:					*msg->opg_Storage = (ULONG) data->NList_Exports;			return( TRUE );
     case MUIA_NList_TitleMark:				*msg->opg_Storage = (ULONG) data->NList_TitleMark;			return( TRUE );
     case MUIA_NList_TitleMark2:				*msg->opg_Storage = (ULONG) data->NList_TitleMark2;		return( TRUE );
-    case MUIA_NList_PrivateData:				*msg->opg_Storage = (ULONG) data->NList_PrivateData;		return( TRUE );
-    case MUIA_Version:							*msg->opg_Storage = (ULONG) LIB_VERSION;						return(TRUE);
-    case MUIA_Revision:							*msg->opg_Storage = (ULONG) LIB_REVISION;						return(TRUE);
+    case MUIA_NList_AutoClip:				*msg->opg_Storage = (ULONG) data->NList_AutoClip;     return(TRUE);
+    case MUIA_NList_PrivateData:		*msg->opg_Storage = (ULONG) data->NList_PrivateData;	return(TRUE);
+    case MUIA_Version:							*msg->opg_Storage = (ULONG) LIB_VERSION;						  return(TRUE);
+    case MUIA_Revision:							*msg->opg_Storage = (ULONG) LIB_REVISION;						  return(TRUE);
 
     default:
       return(DoSuperMethodA(cl, obj, (Msg)msg));

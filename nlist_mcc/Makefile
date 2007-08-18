@@ -264,7 +264,7 @@ TESTOBJS = $(OBJDIR)/NList-Test.o   \
 
 #
 
-all: $(BINDIR) $(OBJDIR) $(MCCTARGET) #$(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) $(MCCTARGET) $(TESTTARGET)
 
 # make the object directories
 $(OBJDIR):

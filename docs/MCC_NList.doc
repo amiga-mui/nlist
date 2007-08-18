@@ -235,6 +235,34 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_List_AdjustWidth, MUIA_NList_AdjustHeight
+
+NList.mcc/MUIA_NList_AutoClip
+
+    NAME
+        MUIA_NList_AutoClip -- [ISG], BOOL
+
+    FUNCTION
+        If set to TRUE and the NList object is in read-only (NoInput) mode and
+        is set to select char-wide rather than by line, the selected content is
+        immediately copied to the clipboard as soon as it is selected via the
+        mouse.
+
+    DEFAULT
+        TRUE
+
+    WARNING
+        Please note that due to historical reasons this feature is turned
+        on per default. However, due to violating the Amiga style guides, new
+        or revised applications are adviced to disable auto clipping as
+        manually performing the copy operation should be the preferred method.
+
+    SEE ALSO
+        MUIA_NList_Input
+        MUIA_NList_TypeSelect
+        MUIA_NList_AutoCopyToClip
+        MUIA_NList_CopyColumnToClipHook
+        MUIA_NList_CopyEntryToClipHook
+        MUIM_NList_CopyToClip
 NList.mcc/MUIA_NList_AutoCopyToClip
 
     NAME
@@ -255,7 +283,9 @@ NList.mcc/MUIM_NList_UseImage
         TRUE
 
     SEE ALSO
-        MUIA_NList_CopyColumnToClipHook, MUIA_NList_CopyEntryToClipHook,
+        MUIA_NList_AutoClip
+        MUIA_NList_CopyColumnToClipHook
+        MUIA_NList_CopyEntryToClipHook
         MUIM_NList_CopyToClip
 NList.mcc/MUIA_NList_AutoVisible
 

@@ -1035,9 +1035,10 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
  *D(bug("18a  Class=%lx Code=%lx Qualifier=%lx mx=%ld my=%ld %ld.%ld (%ld)\n",msg->imsg->Class,co,qu,mx,my,msg->imsg->Seconds,msg->imsg->Micros,data->moves));
  *}
 */
-            if (!data->NList_Input && (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char) &&
-                (data->sel_pt[0].ent >= 0) && (data->sel_pt[1].ent >= 0) && !MultQual)
-            { NL_CopyTo(obj,data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
+            if(data->NList_Input == FALSE && (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char) &&
+               data->NList_AutoClip == TRUE && (data->sel_pt[0].ent >= 0) && (data->sel_pt[1].ent >= 0) && !MultQual)
+            {
+              NL_CopyTo(obj,data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
               SelectFirstPoint(obj,data,data->click_x,data->click_y);
             }
           }
