@@ -211,7 +211,8 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
   }
 #endif
   while (ent < ent2)
-  { forcepen = FALSE;
+  {
+    forcepen = FALSE;
     if ((ent != data->NList_First) && (ent != (data->NList_First + data->NList_Visible - 1)) &&
         (((not_all == 1) && ((ent - data->NList_First) & 1L)) ||
          ((not_all == 2) && !((ent - data->NList_First) & 1L))))
@@ -220,7 +221,8 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
     }
     if (!data->NList_TypeSelect || ((ent != data->sel_pt[data->min_sel].ent) && (ent != data->sel_pt[data->max_sel].ent)))
     { if (data->NList_TypeSelect)
-      { if ((ent > data->sel_pt[data->min_sel].ent) && (ent < data->sel_pt[data->max_sel].ent))
+      {
+        if ((ent > data->sel_pt[data->min_sel].ent) && (ent < data->sel_pt[data->max_sel].ent))
         { ent3 = ent + 1;
           if (!not_all)
           { while ((ent3 < ent2) && (ent3 < data->sel_pt[data->max_sel].ent))
@@ -308,7 +310,9 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
       }
     }
     else
-    { WORD x1,x2,x3,x4;
+    {
+      WORD x1,x2,x3,x4;
+
       x1 = minx;
       x4 = maxx;
       if ((ent == data->minx_change_entry) && (x1 < hfx + data->minx_change_offset))
@@ -343,20 +347,32 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
         { vert3 -= data->NList_First_Incr;
         }
       }
-      if (x1 < x2)
-      { SetBackGround(data->NList_ListBackGround);
+
+      if(x1 < x2)
+      {
+        SetBackGround(data->NList_ListBackGround);
         DoMethod(obj,MUIM_DrawBackground,(LONG) x1,vert3,(LONG) x2-x1,vertd,(LONG) x1+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
       }
       if (x2 < x3)
-      { SetBackGround(MUII_myListCursor);
+      {
+        SetBackGround(MUII_myListCursor);
         DoMethod(obj,MUIM_DrawBackground,(LONG) x2,vert3,(LONG) x3-x2,vertd,(LONG) x2+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
       }
       if (x3 < x4)
-      { SetBackGround(data->NList_ListBackGround);
+      {
+        SetBackGround(data->NList_ListBackGround);
         DoMethod(obj,MUIM_DrawBackground,(LONG) x3,vert3,(LONG) x4-x3,vertd,(LONG) x3+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
       }
-      x1 -= 2*data->spacesize;
-      x4 += 2*data->spacesize;
+
+      // FIXME: This isn't perfect, but it is the fastest 'solution'
+      // to fixing the distorted text output when the text is
+      // italic and anti-aliased. Please note that 'spacesize' isn't entirely
+      // correct as we should moved back by what the char width really is
+      // at the 'x1-1' position. However, this seems to be problematic here
+      // as we don't really have access to this informaton here?!?!
+      if(data->NList_TypeSelect)
+        x1 -= data->spacesize;
+
       x2 = hfx + data->sel_pt[data->min_sel].xoffset;
       x3 = hfx + data->sel_pt[data->max_sel].xoffset;
       if (x2 < x1) x2 = x1;
@@ -376,8 +392,9 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
           linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x1,x2-1,MUIPEN(mypen),0,FALSE);
         }
         if (x2 < x3)
-        { mypen = data->NList_CursorPen;
-            linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x2,x3-1,MUIPEN(mypen),0,data->ForcePen);
+        {
+          mypen = data->NList_CursorPen;
+          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x2,x3-1,MUIPEN(mypen),0,data->ForcePen);
         }
         if (x3 < x4)
         { mypen = data->NList_ListPen;
@@ -389,6 +406,7 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
       ent++;
     }
   }
+
   if (ent < ent4)
   { { SetBackGround(data->NList_ListBackGround) }
     vert3 = data->vpos+(data->vinc * (ent - data->NList_First));

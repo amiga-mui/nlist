@@ -5,6 +5,23 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-08-19 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/NList_mcc6.c: partly fixed bug #1172351 where due to consequtive
+    DrawText() calls at the very same position the font display is messed
+    up if the font is anti-aliased. The problem seems to be that not the entire
+    background where the new text is drawn will be cleared right before executing
+    the DrawText() function. However, due to the overlapping of italic text NList
+    requires to also at least redraw one character before and after the char that
+    should be initially redrawn. Unfortunately this isn't quite easy to achieve in
+    the DrawLines() function as there doesn't seem to be a way to check the exact
+    width of the pre/post-fixed char. Therefore only some additional space is
+    cleared/redrawn as well (data->spacesize) which in fact isn't quite correct
+    and ends up in still having a screwed up font display in case the user
+    quickly selects/deselects over the vers same area if TypeSelect is set to
+    charwise selection. More work is required here, but due to the ugly source
+    code it would be hard to find/fix the issues quickly.
+
 2007-08-18 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: added new MUIA_NList_AutoClip attribute which allows to disable
