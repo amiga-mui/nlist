@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-02 Pär Boberg <pbobbenb@spray.se>
+
+  * nlisttree_mcp/locale/svenska.ct: Just bumped the version number to match
+    v18.13 release of nlisttree.mcp.
+
 2007-08-19 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc/NList_mcc6.c: partly fixed bug #1172351 where due to consequtive
