@@ -5,6 +5,16 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-07 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/Pointer.c, misc: reworked the whole mouse pointer setup/cleanup
+    routines from scratch and adapted them to use 32bit ARGB pointer images in
+    case NList is compiled for AmigaOS4. In addition to black/white color setup
+    works now all automatically like previously introduced in TextEditor.mcc.
+    This whole thing should finally allow to remove the configuration for the
+    pointer color in the NList configuration as well as showing a specialized
+    select pointer in case the mouse is above a read-only floattext object.
+
 2007-09-02 Pär Boberg <pbobbenb@spray.se>
 
   * nlisttree_mcp/locale/svenska.ct: Just bumped the version number to match

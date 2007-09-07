@@ -825,7 +825,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
  *}
 */
                       data->adjustbar = -10;
-                      NL_SetPointer(obj,data,MOVE_POINTER);
+
+                      // set a custom mouse pointer
+                      ShowCustomPointer(obj, data, PT_MOVE);
                     }
                   }
                   data->moves = FALSE;
@@ -1112,12 +1114,13 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
             do_draw = TRUE;
           }
           else if ((msg->imsg->Code==SELECTUP) && (data->adjustbar == -10))
-          { NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+          {
+            NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
             data->moves = FALSE;
             drag_ok = FALSE;
             data->adjustbar = -1;
             do_draw = TRUE;
-            NL_ClearPointer(obj,data);
+            HideCustomPointer(obj, data);
           }
           if (((msg->imsg->Code==SELECTUP) || (msg->imsg->Code==MENUDOWN)) &&
               (data->affbutton >= 0))
@@ -1357,7 +1360,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
  *}
 */
               data->adjustbar = -10;
-              NL_SetPointer(obj,data,MOVE_POINTER);
+
+              // set a custom mouse pointer
+              ShowCustomPointer(obj, data, PT_MOVE);
 
               data->moves = FALSE;
               drag_ok = FALSE;
@@ -1429,9 +1434,12 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
                   (res.flags & MUI_NLPR_BAR) && (res.flags & MUI_NLPR_ONTOP) &&
                   (res.column < data->numcols) && (res.column >= 0))) &&
                 (NL_OnWindow(obj,data,msg->imsg->MouseX,msg->imsg->MouseY)))
-              NL_SetPointer(obj,data,SIZE_POINTER);
+            {
+              // set a custom mouse pointer
+              ShowCustomPointer(obj, data, PT_SIZE);
+            }
             else
-              NL_ClearPointer(obj,data);
+              HideCustomPointer(obj, data);
           }
         }
 

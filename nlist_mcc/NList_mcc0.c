@@ -107,8 +107,6 @@ static ULONG mNL_Hide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 
   data->badrport = FALSE;
 
-  NL_ClearPointer(obj,data);
-
   retval = DoSuperMethodA(cl,obj,(Msg) msg);
 
   data->rp = NULL;

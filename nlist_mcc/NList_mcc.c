@@ -594,8 +594,10 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->affbuttoncol = -1;
   data->affbuttonstate = 0;
   data->storebutton = TRUE;
-  data->PointerObj = NULL;
-  data->PointerObj2 = NULL;
+  data->SizePointerObj = NULL;
+  data->MovePointerObj = NULL;
+  data->SelectPointerObj = NULL;
+  data->activeCustomPointer = PT_NONE;
   data->MOUSE_MOVE = FALSE;
   data->pad1 = -1;
   data->pad2 = TRUE;
@@ -1341,11 +1343,6 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   LOAD_BG(data->BG_Cursor_init,  data->NList_CursorBackground,  MUICFG_NList_BG_Cursor,  DEFAULT_BG_CURSOR);
   LOAD_BG(data->BG_UnselCur_init,data->NList_UnselCurBackground,MUICFG_NList_BG_UnselCur,DEFAULT_BG_UNSELCUR);
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PointerColor, &ptrd) && *ptrd)
-      NL_SpecPointerColors(*ptrd);
-  }
-
   if (data->NList_ForcePen == MUIV_NList_ForcePen_Default)
   { LONG *ptrd, fpen = MUIV_NList_ForcePen_Off;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ForcePen, &ptrd))
@@ -1465,6 +1462,9 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     data->VirtGroup2 = data->VirtGroup;
   }
 
+  // setup our custom selection pointer
+  SetupCustomPointers(data);
+
 /*  MUI_RequestIDCMP(obj,IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_INTUITICKS|IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW);*/
 /*  MUI_RequestIDCMP(obj,IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_INTUITICKS);*/
 
@@ -1508,6 +1508,9 @@ ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 
   data->nodraw = 1;
   data->DRAW = 0;
+
+  // cleanup our custom mouse pointers
+  CleanupCustomPointers(obj, data);
 
   DoMethod(_app(obj),MUIM_Application_RemInputHandler,&data->ihnode);
 

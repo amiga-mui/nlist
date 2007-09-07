@@ -33,6 +33,8 @@
 
 #include "Debug.h"
 
+#include "Pointer.h"
+
 #include <mcc_common.h>
 
 #ifndef LONG_MAX
@@ -88,9 +90,6 @@
 #define SCROLLBARSTIME 10
 
 #define DATA_STRING_MAX 120
-
-#define MOVE_POINTER 0
-#define SIZE_POINTER 1
 
 #define CI_PERCENT 0
 #define CI_COL     1
@@ -363,8 +362,12 @@ struct NLData
   Object *VirtGroup2;
   struct IClass *VirtClass;
   Object *MenuObj;
-  APTR   PointerObj;
-  APTR   PointerObj2;
+
+  // for our own mouse pointer management
+  Object *SizePointerObj;
+  Object *MovePointerObj;
+  Object *SelectPointerObj;
+  enum PointerType activeCustomPointer;
 
   struct TextFont *InUseFont;
 
@@ -563,7 +566,6 @@ struct NLData
   char rawtext[MAXRAWBUF];
 
 };
-
 
 
 #define MUII_myListUnselCur  (data->NList_UnselCurBackground)

@@ -240,6 +240,7 @@ MCCOBJS = $(OBJDIR)/library.o      \
           $(OBJDIR)/NList_grp.o    \
           $(OBJDIR)/NList_img.o    \
           $(OBJDIR)/NList_img2.o   \
+          $(OBJDIR)/Pointer.o      \
           $(OBJDIR)/Debug.o
 
 TESTOBJS = $(OBJDIR)/NList-Test.o   \
@@ -260,6 +261,7 @@ TESTOBJS = $(OBJDIR)/NList-Test.o   \
            $(OBJDIR)/NList_grp.o    \
            $(OBJDIR)/NList_img.o    \
            $(OBJDIR)/NList_img2.o   \
+           $(OBJDIR)/Pointer.o      \
            $(OBJDIR)/Debug.o
 
 #
