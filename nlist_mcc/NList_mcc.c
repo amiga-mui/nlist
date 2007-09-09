@@ -1463,7 +1463,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   }
 
   // setup our custom selection pointer
-  SetupCustomPointers(obj, data);
+  SetupCustomPointers(data);
 
 /*  MUI_RequestIDCMP(obj,IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_INTUITICKS|IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW);*/
 /*  MUI_RequestIDCMP(obj,IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_INTUITICKS);*/

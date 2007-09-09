@@ -7,6 +7,9 @@ $URL$
 
 2007-09-09 Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlist_mcc/Pointer.c: fixed an issue where in case some other gadget/process
+    set the window pointer to something else we might have ended up with the
+    wrong or no custom pointer at all.
   * nlist_mcc/NList_mcc2.c: in case a NList object is in the charwise selection
     mode a specialized selection pointer will now be shown instead of just
     showing the normal pointer image. This should make the charwise selection

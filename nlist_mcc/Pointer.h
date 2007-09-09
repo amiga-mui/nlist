@@ -38,7 +38,7 @@ enum PointerType
 };
 
 // prototypes
-void SetupCustomPointers(Object *obj, struct NLData *data);
+void SetupCustomPointers(struct NLData *data);
 void CleanupCustomPointers(Object *obj, struct NLData *data);
 void ShowCustomPointer(Object *obj, struct NLData *data, enum PointerType type);
 void HideCustomPointer(Object *obj, struct NLData *data);

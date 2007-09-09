@@ -497,7 +497,7 @@ static void IdentifyPointerColors(Object *obj)
 }
 #endif
 
-void SetupCustomPointers(Object *obj, struct NLData *data)
+void SetupCustomPointers(struct NLData *data)
 {
   ENTER();
 
@@ -600,19 +600,12 @@ void SetupCustomPointers(Object *obj, struct NLData *data)
     #endif
   }
 
-  // we setup a notification for the Application_Sleep
-  // attribute as it might interfere with our own custom pointer setup
-  DoMethod(_app(obj), MUIM_Notify, MUIA_Application_Sleep, FALSE, obj, 3, MUIM_WriteLong, PT_NONE, &(data->activeCustomPointer));
-
   LEAVE();
 }
 
 void CleanupCustomPointers(Object *obj, struct NLData *data)
 {
   ENTER();
-
-  // kill our notification for MUIA_Application_Sleep
-  DoMethod(_app(obj), MUIM_KillNotify, MUIA_Application_Sleep);
 
   // restore the original default WB pointer
   if(((struct Library *)IntuitionBase)->lib_Version >= 39)
@@ -660,7 +653,14 @@ void ShowCustomPointer(Object *obj, struct NLData *data, enum PointerType type)
 {
   ENTER();
 
-  if(data->activeCustomPointer != type)
+  // even if it seems to be a waste of performance, but
+  // we unfortunately have to always set the window pointer
+  // regardless of the point if it was previously set or not.
+  // This is required as any other gadget or process might
+  // reset the window pointer and as such we would end up
+  // with no custom pointer as well. So we only check the window
+  // sleep status here :(
+  if(xget(_win(obj), MUIA_Window_Sleep) == FALSE)
   {
     Object *ptrObject = NULL;
 
