@@ -1198,12 +1198,16 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
              break;
            }
         }
+      // walk through to next case...
+
       case IDCMP_MOUSEMOVE:
-        if ((msg->imsg->Class == IDCMP_MOUSEMOVE) && data->MOUSE_MOVE)
+
+        if((msg->imsg->Class == IDCMP_MOUSEMOVE) && data->MOUSE_MOVE)
           data->ScrollBarsTime = SCROLLBARSTIME;
-        if ((msg->imsg->Class == IDCMP_MOUSEMOVE) &&
-            ((msg->imsg->Qualifier & IEQUALIFIER_LEFTBUTTON) != IEQUALIFIER_LEFTBUTTON) &&
-            ((msg->imsg->Qualifier & (IEQUALIFIER_LALT|IEQUALIFIER_LCOMMAND)) != (IEQUALIFIER_LALT|IEQUALIFIER_LCOMMAND)))
+
+        if((msg->imsg->Class == IDCMP_MOUSEMOVE) &&
+           ((msg->imsg->Qualifier & IEQUALIFIER_LEFTBUTTON) != IEQUALIFIER_LEFTBUTTON) &&
+           ((msg->imsg->Qualifier & (IEQUALIFIER_LALT|IEQUALIFIER_LCOMMAND)) != (IEQUALIFIER_LALT|IEQUALIFIER_LCOMMAND)))
         {
 /*
  *{
@@ -1242,8 +1246,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
           }
         }
 
-        if (!data->MOUSE_MOVE && (msg->imsg->Class == IDCMP_MOUSEMOVE))
+        if(!data->MOUSE_MOVE && (msg->imsg->Class == IDCMP_MOUSEMOVE))
           break;
+
         data->mouse_x = msg->imsg->MouseX;
         data->mouse_y = msg->imsg->MouseY;
 
@@ -1409,11 +1414,14 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
           }
         }
 
-        { struct MUI_NList_TestPos_Result res;
+        {
+          struct MUI_NList_TestPos_Result res;
           res.char_number = -2;
           NL_List_TestPos(obj,data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
-          if (data->adjustbar == -10)
-          { if ((res.column >= data->NList_MinColSortable) && (data->adjustcolumn >= 0) &&
+
+          if(data->adjustbar == -10)
+          {
+            if ((res.column >= data->NList_MinColSortable) && (data->adjustcolumn >= 0) &&
                 (data->adjustcolumn != res.column) && (res.xoffset > 0) &&
                 (res.xoffset < data->cols[res.column].c->dx) && (res.xoffset < data->cols[data->adjustcolumn].c->dx))
             { struct colinfo *tmpc = data->cols[res.column].c;
@@ -1438,8 +1446,17 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               // set a custom mouse pointer
               ShowCustomPointer(obj, data, PT_SIZE);
             }
+            else if((data->NList_TypeSelect == MUIV_NList_TypeSelect_Char) &&
+                    _isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
+            {
+              // in case the NList object is in charwise selection mode and the mouse
+              // is above the object itself we show a specialized selection pointer
+              ShowCustomPointer(obj, data, PT_SELECT);
+            }
             else
+            {
               HideCustomPointer(obj, data);
+            }
           }
         }
 

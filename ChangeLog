@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-09 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/NList_mcc2.c: in case a NList object is in the charwise selection
+    mode a specialized selection pointer will now be shown instead of just
+    showing the normal pointer image. This should make the charwise selection
+    more obvious and intuitive and be in line what TextEditor.mcc now does as
+    well.
+
 2007-09-07 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc/Pointer.c, misc: reworked the whole mouse pointer setup/cleanup

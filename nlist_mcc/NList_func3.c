@@ -907,16 +907,14 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
       return (0);
   }
 
-  if (data->SETUP)
-  { set(_app(obj),MUIA_Application_Sleep,TRUE );
-  }
-
   switch (pos)
   {
     case MUIV_NList_CopyToClip_Active :
       CCB_ENTRY(data->NList_Active);
       break;
-    case MUIV_NList_CopyToClip_Selected :
+
+    case MUIV_NList_CopyToClip_Selected:
+    {
       if (!data->NList_TypeSelect)
       { ent = 0;
         while (ok && (ent < data->NList_Entries))
@@ -927,7 +925,8 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
         }
       }
       else
-      { LONG c1,p1,c2,p2;
+      {
+        LONG c1,p1,c2,p2;
         c1 = data->sel_pt[data->min_sel].column;
         p1 = data->sel_pt[data->min_sel].colpos;
         c2 = data->sel_pt[data->max_sel].column;
@@ -953,7 +952,9 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
           ent++;
         }
       }
-      break;
+    }
+    break;
+
     case MUIV_NList_CopyToClip_All :
       { ent = 0;
         while (ok && (ent < data->NList_Entries))
@@ -1027,9 +1028,7 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
   }
   if (clipstr)
     NL_Free(data,clipstr,"CopyTo");
-  if (data->SETUP)
-  { set(_app(obj),MUIA_Application_Sleep,FALSE );
-  }
+
   return(ok);
 }
 

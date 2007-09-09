@@ -828,6 +828,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
             MUIA_NList_Format, "BAR W=-1,BAR W=-1,BAR",
             MUIA_NList_SourceArray, MainTextArray,
             MUIA_NList_AutoVisible, TRUE,
+            //MUIA_NList_AutoClip, FALSE,
             MUIA_NList_TitleSeparator, TRUE,
             MUIA_NList_Title, TRUE,
             MUIA_NList_EntryValueDependent, TRUE,

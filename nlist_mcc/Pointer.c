@@ -497,7 +497,7 @@ static void IdentifyPointerColors(Object *obj)
 }
 #endif
 
-void SetupCustomPointers(struct NLData *data)
+void SetupCustomPointers(Object *obj, struct NLData *data)
 {
   ENTER();
 
@@ -600,12 +600,19 @@ void SetupCustomPointers(struct NLData *data)
     #endif
   }
 
+  // we setup a notification for the Application_Sleep
+  // attribute as it might interfere with our own custom pointer setup
+  DoMethod(_app(obj), MUIM_Notify, MUIA_Application_Sleep, FALSE, obj, 3, MUIM_WriteLong, PT_NONE, &(data->activeCustomPointer));
+
   LEAVE();
 }
 
 void CleanupCustomPointers(Object *obj, struct NLData *data)
 {
   ENTER();
+
+  // kill our notification for MUIA_Application_Sleep
+  DoMethod(_app(obj), MUIM_KillNotify, MUIA_Application_Sleep);
 
   // restore the original default WB pointer
   if(((struct Library *)IntuitionBase)->lib_Version >= 39)
