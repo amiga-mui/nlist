@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-13 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlistviews_mcp: added a new 'Inactive' Pen and FrameSpec pop object for the
+    upcoming inactive cursor color being introduced to e.g. NList itself. In
+    addition, as the pointer color selections in now fully automatic the config
+    item to manually select the black color has been removed - minor cleanups
+    included.
+
 2007-09-09 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc/Pointer.c: fixed an issue where in case some other gadget/process

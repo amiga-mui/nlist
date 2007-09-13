@@ -52,12 +52,14 @@
 #define MUICFG_NList_Pen_Select     0x9d510003
 #define MUICFG_NList_Pen_Cursor     0x9d510004
 #define MUICFG_NList_Pen_UnselCur   0x9d510005
+#define MUICFG_NList_Pen_InactCur   0x9d510104
 
 #define MUICFG_NList_BG_Title       0x9d510006
 #define MUICFG_NList_BG_List        0x9d510007
 #define MUICFG_NList_BG_Select      0x9d510008
 #define MUICFG_NList_BG_Cursor      0x9d510009
 #define MUICFG_NList_BG_UnselCur    0x9d51000a
+#define MUICFG_NList_BG_InactCur    0x9d510105
 
 #define MUICFG_NList_Font           0x9d51000b
 #define MUICFG_NList_Font_Little    0x9d51000c
@@ -79,11 +81,11 @@
 #define MUICFG_NList_List_Select    0x9d510019
 #define MUICFG_NList_Menu           0x9d51001A
 #define MUICFG_NList_PartialChar    0x9d51001B
-#define MUICFG_NList_PointerColor   0x9d51001C
+#define MUICFG_NList_PointerColor   0x9d51001C  /* OBSOLETE */
 #define MUICFG_NList_SerMouseFix    0x9d51001D
 #define MUICFG_NList_Keys           0x9d51001E
 #define MUICFG_NList_DragLines      0x9d51001F
-#define MUICGF_NList_VCenteredLines 0x9d510020
+#define MUICFG_NList_VCenteredLines 0x9d510020
 
 #define MUICFG_NList_WheelStep      0x9d510101
 #define MUICFG_NList_WheelFast      0x9d510102
@@ -102,11 +104,13 @@
 #define DEFAULT_PEN_SELECT   "m5"
 #define DEFAULT_PEN_CURSOR   "m5"
 #define DEFAULT_PEN_UNSELCUR "m5"
+#define DEFAULT_PEN_INACTCUR "m5"
 #define DEFAULT_BG_TITLE     "2:m3"
 #define DEFAULT_BG_LIST      "2:m2"
 #define DEFAULT_BG_SELECT    "0:135"
 #define DEFAULT_BG_CURSOR    "0:131"
 #define DEFAULT_BG_UNSELCUR  "2:m3"
+#define DEFAULT_BG_INACTCUR  "2:m3"
 #define DEFAULT_VERT_INC     1
 #define DEFAULT_HSB          MUIV_NListview_HSB_Auto
 #define DEFAULT_CWD          MUIV_NList_ColWidthDrag_All

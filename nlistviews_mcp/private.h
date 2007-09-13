@@ -62,11 +62,13 @@ struct NListviews_MCP_Data
   APTR mcp_PenSelect;
   APTR mcp_PenCursor;
   APTR mcp_PenUnselCur;
+  APTR mcp_PenInactCur;
   APTR mcp_BG_Title;
   APTR mcp_BG_List;
   APTR mcp_BG_Select;
   APTR mcp_BG_Cursor;
   APTR mcp_BG_UnselCur;
+  APTR mcp_BG_InactCur;
 
   APTR mcp_R_Multi;
   APTR mcp_B_MultiMMB;
@@ -88,7 +90,6 @@ struct NListviews_MCP_Data
   APTR mcp_List_Select;
   APTR mcp_NList_Menu;
   APTR mcp_PartialChar;
-  APTR mcp_PointerColor;
   APTR mcp_SerMouseFix;
   APTR mcp_DragLines;
   APTR mcp_VerticalCenteredLines;

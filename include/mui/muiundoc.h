@@ -261,6 +261,12 @@ struct MUI_DragImage
 
 #define MUIA_Dtpic_Name 0x80423d72
 
+/****************************************************************************/
+/** Popimage                                                               **/
+/****************************************************************************/
+
+#define PopimageObject MUI_NewObject(MUIC_Popimage
+
 #define MUIV_Application_OCW_ScreenPage (1<<1) /* show just the screen page of the config window */
 
 #if defined(__PPC__)
