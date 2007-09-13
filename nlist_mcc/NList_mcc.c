@@ -1411,7 +1411,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   	LONG *vert;
 
 	data->NList_VerticalCenteredText = 1; /* default is yes */
-	if (DoMethod(obj, MUIM_GetConfigItem, MUICGF_NList_VCenteredLines, &vert))
+	if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VCenteredLines, &vert))
 		data->NList_VerticalCenteredText = *vert;
   }
 
