@@ -232,7 +232,7 @@ void obtain_pen(struct MUI_RenderInfo *mri, ULONG *pen, struct MUI_PenSpec *ps)
 }
 
 
-
+#if defined(DO_STACK_CHECK)
 static LONG Calc_Stack(Object *obj,struct NLData *data)
 {
   LONG total;
@@ -272,6 +272,7 @@ static LONG Calc_Stack(Object *obj,struct NLData *data)
   total = (LONG) (data->NList_SPUpper - data->NList_SPLower);
   return (100000);
 }
+#endif // DO_STACK_CHECK
 
 #if !defined(__MORPHOS__)
 Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
@@ -386,11 +387,15 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->ocl = OCLASS(obj);
   data->rp = NULL;
   data->NL_Group = grp;
+
+#if defined(DO_STACK_CHECK)
   data->NList_Process = (struct Process *) FindTask(NULL);
   data->NList_StackCheck = 2;
   data->NList_SPLower = NULL;
   Calc_Stack(obj,data);
   data->NList_SPLower = (char *) 4L;
+#endif // DO_STACK_CHECK
+
   data->NList_Title = NULL;
   data->NList_TitleSeparator = TRUE;
   data->NList_TitleMark = MUIV_NList_TitleMark_None;
@@ -969,6 +974,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->ihnode.ihn_Method  = MUIM_NList_Trigger;
   data->ihnode.ihn_Flags   = MUIIHNF_TIMER;
 
+#if defined(DO_STACK_CHECK)
   if((tag = FindTagItem(MUIA_NList_StackCheck, taglist)))
   {
     if (!tag->ti_Data)
@@ -981,6 +987,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     CoerceMethod(cl, obj, OM_DISPOSE);
     return(0);
   }
+#endif // DO_STACK_CHECK
 
   set(obj,MUIA_FillArea,(LONG) FALSE);
 
@@ -1130,43 +1137,51 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   if (data->NList_MinLineHeight <= 0)
     data->addvinc = -data->NList_MinLineHeight;
   else
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VertInc, &ptrd))
       data->addvinc = *ptrd;
     else
       data->addvinc = DEFAULT_VERT_INC;
   }
 
-  { LONG *ptrd;
+#if defined(DO_STACK_CHECK)
+  {
+    LONG *ptrd;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_StackCheck, &ptrd))
       data->NList_StackCheck = *ptrd + 1;
     else
       data->NList_StackCheck = 2;
     Calc_Stack(obj,data);
   }
+#endif
 
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ColWidthDrag, &ptrd))
       data->NList_ColWidthDrag = *ptrd;
     else
       data->NList_ColWidthDrag = DEFAULT_CWD;
   }
 
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialCol, &ptrd))
       data->NList_PartialCol = *ptrd;
     else
       data->NList_PartialCol = TRUE;
   }
 
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialChar, &ptrd))
       data->NList_PartialChar = *ptrd;
     else
       data->NList_PartialChar = 0;
   }
 
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     data->NList_List_Select = MUIV_NList_Select_List;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_List_Select, &ptrd))
     { if (!*ptrd)
@@ -1174,35 +1189,40 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
   }
 
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_SerMouseFix, &ptrd))
       data->NList_SerMouseFix = *ptrd;
     else
       data->NList_SerMouseFix = 0;
   }
 
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragLines, &ptrd))
       data->NList_DragLines = *ptrd + 1;
     else
       data->NList_DragLines = DEFAULT_DRAGLINES;
   }
 
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelStep, &ptrd))
       data->NList_WheelStep = *ptrd;
     else
       data->NList_WheelStep = 1;
   }
 
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelFast, &ptrd))
       data->NList_WheelFast = *ptrd;
     else
       data->NList_WheelFast = 5;
   }
 
-  { LONG *ptrd;
+  {
+    LONG *ptrd;
     data->NList_WheelMMB = FALSE;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelMMB, &ptrd))
     { if (*ptrd)

@@ -5,6 +5,22 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-13  Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: removed the complete stack checking mechanism for various reasons.
+    Fist, stack checking causes serious performance penalties. Compared to
+    MUI's own List class NList class is quite slow and stack checking just
+    makes things worse. Second, if the stack size for an application is too
+    low it will very likely crash in other parts and not just while processing
+    NList stuff. Third, when you got a warning requester before telling you to
+    increase the stack size you did so just to get rid of that requester. This
+    requester was shown if the free stack size dropped below a certain limit.
+    By increasing the stack size the requester vanished, but there is no
+    guarantee that the increased stack is really needed. The check is just a
+    rough estimation without any calculated requirement which will be exceeded.
+    Nevertheless, stack checking can be enabled again by compiling NList.mcc
+    with DO_STACK_CHECK #define'd.
+
 2007-09-13 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlistviews_mcp: added a new 'Inactive' Pen and FrameSpec pop object for the

@@ -79,7 +79,7 @@ LONG NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y)
 
 
 
-struct NImgList *GetNImage(Object *obj,struct NLData *data,char *ImgName)
+struct NImgList *GetNImage(UNUSED Object *obj,struct NLData *data,char *ImgName)
 {
   struct NImgList *nimg = &data->NImage;
   int nameLen = strlen(ImgName)+2;
@@ -153,7 +153,7 @@ void DeleteNImages(UNUSED Object *obj, struct NLData *data)
 }
 
 
-struct NImgList *GetNImage2(Object *obj,struct NLData *data,APTR imgobj)
+struct NImgList *GetNImage2(UNUSED Object *obj,struct NLData *data,APTR imgobj)
 {
   struct NImgList *nimg2 = data->NImage2;
   STACK_CHECK;
@@ -205,7 +205,7 @@ struct NImgList *GetNImage2(Object *obj,struct NLData *data,APTR imgobj)
 }
 
 
-void DeleteNImages2(Object *obj,struct NLData *data)
+void DeleteNImages2(UNUSED Object *obj,struct NLData *data)
 {
   struct NImgList *nimg2 = data->NImage2;
   STACK_CHECK;

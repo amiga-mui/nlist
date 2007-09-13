@@ -1371,6 +1371,7 @@ ULONG mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMen
  *        data->do_draw_all = TRUE;
  */
 
+#if defined(DO_STACK_CHECK)
 #if defined(__GNUC__)
 #define stackPtr() ({register char *sp __asm("sp");sp;})
 #elif defined(__SASC)
@@ -1381,7 +1382,9 @@ static char *stackPtr(void)="\tmove.l\tsp,d0";
 #else
 #define stackPtr NULL
 #endif
+#endif // DO_STACK_CHECK
 
+#if defined(DO_STACK_CHECK)
 void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
 {
   struct Window *w;
@@ -1469,3 +1472,4 @@ void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
     EasyRequest(w,&stackES,NULL,(LONG)obj,(LONG)taskname,data->NList_SPUpper - data->NList_SPLower);
   }
 }
+#endif // DO_STACK_CHECK

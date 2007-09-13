@@ -84,7 +84,10 @@ struct NListviews_MCP_Data
   APTR mcp_Font_Fixed;
 
   APTR mcp_ForcePen;
+
+#if defined(DO_STACK_CHECK)
   APTR mcp_StackCheck;
+#endif // DO_STACK_CHECK
   APTR mcp_ColWidthDrag;
   APTR mcp_PartialCol;
   APTR mcp_List_Select;
