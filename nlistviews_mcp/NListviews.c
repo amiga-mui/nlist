@@ -863,7 +863,6 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
   group1 = group2 = group31 = group33 = group34 = group35 = group36 = group4 = group5 = NULL;
 
-<<<<<<< .mine
   data->mcp_group = NULL;
   data->mcp_list1 = NULL;
   data->mcp_list2 = NULL;
@@ -897,7 +896,6 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->mcp_List_Select = NULL;
   data->mcp_NList_Menu = NULL;
   data->mcp_PartialChar = NULL;
-  data->mcp_PointerColor = NULL;
   data->mcp_SerMouseFix = NULL;
   data->mcp_DragLines = NULL;
   data->mcp_WheelStep = NULL;
@@ -913,25 +911,6 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->mcp_txtfct = NULL;
   data->mcp_popstrfct = NULL;
   data->mcp_poplistfct = NULL;
-=======
-  data->mcp_group = data->mcp_list1 = data->mcp_list2 = NULL;
-  data->mcp_PenTitle = data->mcp_PenList = NULL;
-  data->mcp_PenSelect = data->mcp_PenCursor = data->mcp_PenUnselCur = data->mcp_PenInactCur = NULL;
-  data->mcp_BG_Title = data->mcp_BG_List = NULL;
-  data->mcp_BG_Select = data->mcp_BG_Cursor = data->mcp_BG_UnselCur = data->mcp_BG_InactCur = NULL;
-  data->mcp_R_Multi = data->mcp_B_MultiMMB = data->mcp_R_Drag = NULL;
-  data->mcp_ST_DragQualifier = data->mcp_SL_VertInc = NULL;
-  data->mcp_R_HSB = data->mcp_R_VSB = data->mcp_B_Smooth = NULL;
-  data->mcp_Font = data->mcp_Font_Little = data->mcp_Font_Fixed = NULL;
-  data->mcp_ForcePen = data->mcp_StackCheck = data->mcp_ColWidthDrag = NULL;
-  data->mcp_PartialCol = data->mcp_List_Select = data->mcp_NList_Menu = NULL;
-  data->mcp_PartialChar = data->mcp_SerMouseFix = data->mcp_DragLines = NULL;
-  data->mcp_WheelStep = data->mcp_WheelFast = data->mcp_WheelMMB = NULL;
-  data->mcp_listkeys = data->mcp_stringkey = data->mcp_snoopkey = NULL;
-  data->mcp_insertkey = data->mcp_removekey = data->mcp_defaultkeys = data->mcp_updatekeys = NULL;
-  data->mcp_txtfct = data->mcp_popstrfct = data->mcp_poplistfct = NULL;
->>>>>>> .r211
-
   data->nlkeys = NULL;
 
   data->mcp_stringkey = HotkeyStringObject,
@@ -1407,12 +1386,8 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
           Child, GroupObject,
 
-<<<<<<< .mine
           #if defined(DO_STACK_CHECK)
-            Child, MUI_NewObject(MUIC_Group,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_STACK_WARNING,"Stack Warning")),
-=======
             Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_STACK_WARNING,"Stack Warning")),
->>>>>>> .r211
               Child, HSpace(0),
               Child, GroupObject,
                 Child, VSpace(0),
