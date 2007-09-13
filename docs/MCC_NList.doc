@@ -1568,6 +1568,10 @@ NList.mcc/MUIM_NList_UseImage
         the stack has been changed for some other reason and is
         not compatible with the check.
 
+	NOTE
+        This tag is a no-op unless NList.mcc has been compiled with
+        stack checking active.
+
     DEFAULT
         TRUE
 NList.mcc/MUIA_NList_TabSize

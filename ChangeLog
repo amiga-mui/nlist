@@ -7,6 +7,8 @@ $URL$
 
 2007-09-13  Thore Böckelmann <tboeckel@gmx.de>
 
+  * docs/MCC_NList.doc: added a note to MUIA_NList_StackCheck that this tag is
+    a no-op from the next release on.
   * misc: removed the complete stack checking mechanism for various reasons.
     Fist, stack checking causes serious performance penalties. Compared to
     MUI's own List class NList class is quite slow and stack checking just
