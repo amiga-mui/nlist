@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-14  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: hopefully fixed the "first click does not select"
+    bug. This occured with MUI3.8/m68k only when two lists within one windows
+    both have set MUIA_NList_DefaultObjectOnClick to TRUE. In this case the
+    second, inactive list never gets activated on the first click. OS4 and
+    MorphOS don't seem to be unaffected by this.
+
 2007-09-13  Thore Böckelmann <tboeckel@gmx.de>
 
   * docs/MCC_NList.doc: added a note to MUIA_NList_StackCheck that this tag is

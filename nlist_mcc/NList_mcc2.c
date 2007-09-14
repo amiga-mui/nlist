@@ -997,9 +997,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
 
               if (data->drag_type != MUIV_NList_DragType_None)
-              { if (DragQual)
-                { drag_ok = TRUE;
-                }
+              {
+                if (DragQual)
+                  drag_ok = TRUE;
                 else if ((data->drag_type == MUIV_NList_DragType_Immediate) || (data->drag_type == MUIV_NList_DragType_Borders))
                   data->drag_border = TRUE;
               }
@@ -1007,18 +1007,28 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
           }
           else
           {
-            if ((msg->imsg->Code==SELECTDOWN) && data->NList_DefaultObjectOnClick) /* click not in _isinobject2() */
+            if(MUIMasterBase->lib_Version >= 20)
             {
-              ULONG tst = xget(_win(obj), MUIA_Window_DefaultObject);
+              // FIXME: this causes problems with MUI3.8/m68k if there are two NList objects
+              // in one window and both of them have MUIA_NList_DefaultObjectOnClick==TRUE.
+              // The not active list never gets active on the first click, probably because
+              // MUI chokes on setting the default object to NULL. At least with OS4 this
+              // does not cause any problems.
+              if ((msg->imsg->Code==SELECTDOWN) && data->NList_DefaultObjectOnClick)
+              {
+                /* click was not in _isinobject2() */
+                ULONG tst = xget(_win(obj), MUIA_Window_DefaultObject);
 
-              if(tst == (ULONG) obj)
-                set(_win(obj), MUIA_Window_DefaultObject, NULL);
+                if(tst == (ULONG) obj)
+                  set(_win(obj), MUIA_Window_DefaultObject, NULL);
+              }
             }
 /*
             if (!(((msg->imsg->Code==MIDDLEDOWN) || (msg->imsg->Code==MIDDLEUP)) && (data->drag_qualifier & IEQUALIFIER_MIDBUTTON)) &&
                 !(((msg->imsg->Code==MENUDOWN) || (msg->imsg->Code==MENUUP)) && (data->drag_qualifier & IEQUALIFIER_RBUTTON)))
 */
-            { NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,FALSE);
+            {
+              NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,FALSE);
               data->selectskiped = FALSE;
               data->moves = FALSE;
               drag_ok = FALSE;
