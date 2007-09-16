@@ -7,6 +7,9 @@ $URL$
 
 2007-09-16 Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlist_mcc/NList_mcc.c: now that our new preferences also allows to enable
+    disable the new char selection pointer we now check for the settings in NList
+    as well.
   * nlistviews_mcp: reworked the whole preferences GUI and finally got rid of
     all the nonsense Misc1-MiscX register tabs. All the various options are now
     grouped together based on their purpose. In addition, the preferences GUI

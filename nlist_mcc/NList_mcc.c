@@ -1169,7 +1169,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialCol, &ptrd))
       data->NList_PartialCol = *ptrd;
     else
-      data->NList_PartialCol = TRUE;
+      data->NList_PartialCol = DEFAULT_PARTIALCOL;
   }
 
   {
@@ -1177,7 +1177,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialChar, &ptrd))
       data->NList_PartialChar = *ptrd;
     else
-      data->NList_PartialChar = 0;
+      data->NList_PartialChar = DEFAULT_PARTIALCHAR;
   }
 
   {
@@ -1194,7 +1194,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_SerMouseFix, &ptrd))
       data->NList_SerMouseFix = *ptrd;
     else
-      data->NList_SerMouseFix = 0;
+      data->NList_SerMouseFix = DEFAULT_SERMOUSEFIX;
   }
 
   {
@@ -1207,26 +1207,43 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   {
     LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelStep, &ptrd))
+    if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelStep, &ptrd))
       data->NList_WheelStep = *ptrd;
     else
-      data->NList_WheelStep = 1;
+      data->NList_WheelStep = DEFAULT_WHEELSTEP;
   }
 
   {
     LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelFast, &ptrd))
+
+    if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelFast, &ptrd))
       data->NList_WheelFast = *ptrd;
     else
-      data->NList_WheelFast = 5;
+      data->NList_WheelFast = DEFAULT_WHEELFAST;
   }
 
   {
     LONG *ptrd;
-    data->NList_WheelMMB = FALSE;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelMMB, &ptrd))
-    { if (*ptrd)
+    data->NList_WheelMMB = DEFAULT_WHEELMMB;
+
+    if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelMMB, &ptrd))
+    {
+      if(*ptrd != 0)
         data->NList_WheelMMB = TRUE;
+      else
+        data->NList_WheelMMB = FALSE;
+    }
+  }
+
+  {
+    LONG *ptrd;
+    data->NList_SelectPointer = DEFAULT_SELECTPOINTER;
+    if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_SelectPointer, &ptrd))
+    {
+      if(*ptrd != 0)
+        data->NList_SelectPointer = TRUE;
+      else
+        data->NList_SelectPointer = FALSE;
     }
   }
 
@@ -1307,10 +1324,12 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 */
 
   { LONG *ptrd;
+
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Smooth, &ptrd))
       data->NList_Smooth = *ptrd;
     else
-      data->NList_Smooth = 0;
+      data->NList_Smooth = DEFAULT_SMOOTHSCROLL;
+
     if (data->VertPropObject)
     { if (data->NList_Smooth)
         set(data->VertPropObject,MUIA_Prop_DoSmooth, TRUE);
@@ -1364,14 +1383,16 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   LOAD_BG(data->BG_UnselCur_init,data->NList_UnselCurBackground,MUICFG_NList_BG_UnselCur,DEFAULT_BG_UNSELCUR);
 
   if (data->NList_ForcePen == MUIV_NList_ForcePen_Default)
-  { LONG *ptrd, fpen = MUIV_NList_ForcePen_Off;
+  {
+    LONG *ptrd, fpen = MUIV_NList_ForcePen_Off;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ForcePen, &ptrd))
       fpen = *ptrd;
     data->ForcePen = (LONG) fpen;
   }
   else
     data->ForcePen = data->NList_ForcePen;
-  for (ent = 0;ent < data->NList_Entries;ent++)
+
+  for(ent = 0;ent < data->NList_Entries;ent++)
     data->EntriesArray[ent]->PixLen = -1;
 
   data->actbackground = -1;
@@ -1396,7 +1417,8 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     LONG *ptrd;
     data->ContextMenu = MUIV_NList_ContextMenu_Always;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Menu, &ptrd))
-    { switch (*ptrd)
+    {
+      switch (*ptrd)
       { case MUIV_NList_ContextMenu_TopOnly :
         case MUIV_NList_ContextMenu_Always :
         case MUIV_NList_ContextMenu_Never :
@@ -1410,9 +1432,9 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   {
   	LONG *vert;
 
-	data->NList_VerticalCenteredText = 1; /* default is yes */
-	if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VCenteredLines, &vert))
-		data->NList_VerticalCenteredText = *vert;
+	  data->NList_VerticalCenteredText = DEFAULT_VCENTERED;
+	  if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VCenteredLines, &vert))
+		  data->NList_VerticalCenteredText = *vert;
   }
 
   if (data->ContextMenu != data->ContextMenuOn)

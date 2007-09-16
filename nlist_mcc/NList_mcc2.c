@@ -1457,7 +1457,8 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               // set a custom mouse pointer
               ShowCustomPointer(obj, data, PT_SIZE);
             }
-            else if((data->NList_TypeSelect == MUIV_NList_TypeSelect_Char) &&
+            else if(data->NList_SelectPointer == TRUE &&
+                    (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char) &&
                     _isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
             {
               // in case the NList object is in charwise selection mode and the mouse
