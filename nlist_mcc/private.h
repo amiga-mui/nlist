@@ -227,14 +227,6 @@ struct NLData
   LONG Micros;
 
   LONG DRAW;
-#if defined(DO_STACK_CHECK)
-  struct Process *NList_Process;
-  LONG  NList_StackCheck;
-  char *NList_SPUpper;
-  char *NList_SPLower;
-  char *NList_SPLowest;
-  char *NList_SPmin;
-#endif // DO_STACK_CHECK
 
   char *NList_Format;
   char *NList_SkipChars;

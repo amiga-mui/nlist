@@ -677,7 +677,6 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
   STRPTR ptr1;
   struct TextExtent te;
   WORD column, curclen, dcurclen, ni;
-  STACK_CHECK;
 
   if ((ent < -1) || (ent >= data->NList_Entries))
     return (0);

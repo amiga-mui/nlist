@@ -66,7 +66,6 @@ ULONG mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   LONG vinc = data->vinc;
-  STACK_CHECK;
 /*
  *   if (data->nodraw)
  *   {
@@ -402,8 +401,6 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
   ULONG retval;
   LONG do_things = TRUE;
   struct TagItem *tags,*tag;
-
-  STACK_CHECK;
 
   for(tags = ((struct opSet *)msg)->ops_AttrList; (tag = (struct TagItem *)NextTagItem(&tags));)
   {
@@ -1119,7 +1116,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
     }
   }
   retval = DoSuperMethodA(cl,obj,msg);
-  STACK_ALERT;
+
 /*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
   return (retval);
 }
@@ -1134,8 +1131,6 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
 {
 
 	struct NLData	*data	= INST_DATA( cl, obj );
-
-  STACK_CHECK;
 
   switch (((struct opGet *)msg)->opg_AttrID)
   {
@@ -1157,7 +1152,7 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_List_Entries:
     case MUIA_NList_Entries:					*msg->opg_Storage	= (ULONG) data->NList_Entries;			return( TRUE );
     case MUIA_List_Active:
-    case MUIA_NList_Active:					D(DBF_ALWAYS, "GET: MUIA_NList_Active = %ld",data->NList_Active);*msg->opg_Storage   = (ULONG) data->NList_Active;			   return( TRUE );
+    case MUIA_NList_Active:					*msg->opg_Storage   = (ULONG) data->NList_Active;			    return( TRUE );
     case MUIA_NList_Horiz_First:				*msg->opg_Storage	= (ULONG) data->NList_Horiz_First;		return( TRUE );
     case MUIA_NList_Horiz_Visible:			*msg->opg_Storage	= (ULONG) data->NList_Horiz_Visible;	return( TRUE );
     case MUIA_NList_Horiz_Entries:			*msg->opg_Storage	= (ULONG) data->NList_Horiz_Entries;	return( TRUE );

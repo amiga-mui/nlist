@@ -96,7 +96,6 @@ extern ULONG mNL_SetColumnCol(struct IClass *cl,Object *obj,struct MUIP_NList_Se
 extern ULONG mNL_List_ColWidth(struct IClass *cl,Object *obj,struct MUIP_NList_ColWidth *msg);
 extern ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuBuild *msg);
 extern ULONG mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *msg);
-extern void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why);
 
 /* NList_mcc6.c */
 

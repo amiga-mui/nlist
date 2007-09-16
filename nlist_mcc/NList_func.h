@@ -180,16 +180,6 @@
 /*data->cols[column].style*/
 
 
-#if defined(DO_STACK_CHECK)
-#define STACK_CHECK \
-  if (data->NList_SPLower) NL_Stack_Alert(obj,data,-1);
-#define STACK_ALERT \
-  if (data->NList_SPLower && (data->NList_SPLowest < data->NList_SPmin)) NL_Stack_Alert(obj,data,0);
-#else // DO_STACK_CHECK
-#define STACK_CHECK
-#define STACK_ALERT
-#endif // DO_STACK_CHECK
-
 #define NL_Malloc2(pool,len,str)  NL2_Malloc2((pool),(len),NULL)
 #define NL_Free2(pool,ptr,str)    NL2_Free2((pool),(ptr),NULL)
 #define NL_Malloc(data,len,str)   NL2_Malloc((data),(len),NULL)

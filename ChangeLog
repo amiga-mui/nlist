@@ -7,6 +7,11 @@ $URL$
 
 2007-09-16 Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlist_mcc: removed all stackchecking functionality regardless if we can compile
+    them conditionally via DO_STACK_CHECK or not. It was about time to do a cleanup
+    of NList and this should be a first step. Stack checking shouldn't really be
+    required on any platform. And if so anything can be restored in one go by
+    reverting this change via subversion (SVN).
   * nlist_mcc/NList_mcc.c: now that our new preferences also allows to enable
     disable the new char selection pointer we now check for the settings in NList
     as well.

@@ -232,48 +232,6 @@ void obtain_pen(struct MUI_RenderInfo *mri, ULONG *pen, struct MUI_PenSpec *ps)
 }
 
 
-#if defined(DO_STACK_CHECK)
-static LONG Calc_Stack(Object *obj,struct NLData *data)
-{
-  LONG total;
-
-#ifdef __MORPHOS__
-  return 100000;
-#endif
-
-
-  if (data->NList_Process && data->NList_SPLower)
-  {
-/*
- *     if ((data->NList_Process->pr_Task.tc_Node.ln_Type == NT_PROCESS) && (data->NList_Process->pr_CLI != NULL))
- *     { data->NList_SPUpper = (char *) data->NList_Process->pr_ReturnAddr + sizeof(ULONG);
- *       total = *(LONG *) data->NList_Process->pr_ReturnAddr;
- *       data->NList_SPLower = data->NList_SPUpper - ((char *) total);
- *     }
- *     else
- */
-    { data->NList_SPUpper = (char *) data->NList_Process->pr_Task.tc_SPUpper;
-      data->NList_SPLower = (char *) data->NList_Process->pr_Task.tc_SPLower;
-      total = (LONG) (data->NList_SPUpper - data->NList_SPLower);
-    }
-    data->NList_SPLowest = data->NList_SPUpper;
-    data->NList_SPmin = data->NList_SPLower + (data->NList_StackCheck*1024);
-
-    STACK_CHECK;
-    /* return the good result only if the current stack is between min and max stack ! */
-    if ((data->NList_SPLowest > data->NList_SPLower) && (data->NList_SPLowest < data->NList_SPUpper))
-      return (total);
-  }
-  /* if not a process or if current stack is bad against min and max then make fake values */
-  data->NList_SPUpper = (char *) 0x7FFFFFFFL;
-  data->NList_SPLower = NULL;
-  data->NList_SPmin = data->NList_SPLower + (data->NList_StackCheck*1024);
-  data->NList_SPLowest = data->NList_SPmin + 10;
-  total = (LONG) (data->NList_SPUpper - data->NList_SPLower);
-  return (100000);
-}
-#endif // DO_STACK_CHECK
-
 #if !defined(__MORPHOS__)
 Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
@@ -387,14 +345,6 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->ocl = OCLASS(obj);
   data->rp = NULL;
   data->NL_Group = grp;
-
-#if defined(DO_STACK_CHECK)
-  data->NList_Process = (struct Process *) FindTask(NULL);
-  data->NList_StackCheck = 2;
-  data->NList_SPLower = NULL;
-  Calc_Stack(obj,data);
-  data->NList_SPLower = (char *) 4L;
-#endif // DO_STACK_CHECK
 
   data->NList_Title = NULL;
   data->NList_TitleSeparator = TRUE;
@@ -974,21 +924,6 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->ihnode.ihn_Method  = MUIM_NList_Trigger;
   data->ihnode.ihn_Flags   = MUIIHNF_TIMER;
 
-#if defined(DO_STACK_CHECK)
-  if((tag = FindTagItem(MUIA_NList_StackCheck, taglist)))
-  {
-    if (!tag->ti_Data)
-      data->NList_SPLower = NULL;
-  }
-
-  if (data->NList_SPLower && Calc_Stack(obj,data) < 8000)
-  {
-    NL_Stack_Alert(obj,data,1);
-    CoerceMethod(cl, obj, OM_DISPOSE);
-    return(0);
-  }
-#endif // DO_STACK_CHECK
-
   set(obj,MUIA_FillArea,(LONG) FALSE);
 
 /*D(bug("%lx|NEW 9 \n",obj));*/
@@ -1050,8 +985,6 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   register struct NLData *data;
   LONG ent;
   data = INST_DATA(cl,obj);
-  STACK_CHECK;
-  STACK_ALERT;
 
 /*D(bug("%lx|mNL_Setup() 1 \n",obj));*/
 
@@ -1144,17 +1077,6 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     else
       data->addvinc = DEFAULT_VERT_INC;
   }
-
-#if defined(DO_STACK_CHECK)
-  {
-    LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_StackCheck, &ptrd))
-      data->NList_StackCheck = *ptrd + 1;
-    else
-      data->NList_StackCheck = 2;
-    Calc_Stack(obj,data);
-  }
-#endif
 
   {
     LONG *ptrd;
@@ -1546,7 +1468,6 @@ ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 /*D(bug("%lx|mNL_Cleanup() 1 \n",obj));*/
 
   data = INST_DATA(cl,obj);
-  STACK_CHECK; STACK_ALERT;
 
   data->nodraw = 1;
   data->DRAW = 0;

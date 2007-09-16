@@ -148,8 +148,6 @@ ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
   if (data->NList_Disabled)
     return (0);
 
-  STACK_CHECK;
-
   if ((msg->muikey != MUIKEY_NONE) && !data->NList_Quiet && !data->NList_Disabled)
   {
     data->ScrollBarsTime = SCROLLBARSTIME;
@@ -286,8 +284,6 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
     return (MUI_EventHandlerRC_Eat);
   if (data->NList_Disabled)
     return (0);
-
-  STACK_CHECK;
 
   if ((data->left != _left(obj)) || (data->top != _top(obj)) ||
       (data->width != _width(obj)) || (data->height != _height(obj)))
@@ -1985,7 +1981,6 @@ ULONG mNL_Trigger(struct IClass *cl, UNUSED Object *obj, UNUSED Msg msg)
       data->ScrollBarsTime--;
     else
     {
-      STACK_ALERT;
       data->ScrollBarsTime = 0;
       if (!data->NList_Quiet && !data->NList_Disabled)
         NL_UpdateScrollers(obj,data,FALSE);

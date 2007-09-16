@@ -1706,7 +1706,6 @@ ULONG mNL_List_Remove(struct IClass *cl,Object *obj,struct MUIP_NList_Remove *ms
 ULONG mNL_DragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  STACK_CHECK;
   if (data->NList_Disabled)
   {
 /*D(bug("%lx| 1 DragQuery_Refuse\n",obj));*/

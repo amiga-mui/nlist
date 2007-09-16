@@ -688,8 +688,6 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
  *D(bug("%lx|Refresh rejected %ld %ld %ld %ld %lx %lx\n",obj,data->DRAW,data->do_draw_all,data->do_draw,(LONG)data->refreshing,(LONG)(muiRenderInfo(obj)->mri_Flags & MUIMRI_REFRESHMODE),(LONG)(data->rp->Layer->Flags & LAYERREFRESH)));
  */
 
-  STACK_CHECK;
-
   if (muiAreaData(obj)->mad_Flags & MADF_DRAWOBJECT)
     data->do_draw_all = TRUE;
 

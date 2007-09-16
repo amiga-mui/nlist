@@ -84,7 +84,6 @@ struct NImgList *GetNImage(UNUSED Object *obj,struct NLData *data,char *ImgName)
   struct NImgList *nimg = &data->NImage;
   int nameLen = strlen(ImgName)+2;
 
-  STACK_CHECK;
   while (nimg && nimg->ImgName && strcmp(nimg->ImgName,ImgName))
     nimg = nimg->next;
   if (!nimg && (nimg = (struct NImgList *) NL_Malloc(data,sizeof(struct NImgList)+nameLen,"GetNImage")))
@@ -156,7 +155,6 @@ void DeleteNImages(UNUSED Object *obj, struct NLData *data)
 struct NImgList *GetNImage2(UNUSED Object *obj,struct NLData *data,APTR imgobj)
 {
   struct NImgList *nimg2 = data->NImage2;
-  STACK_CHECK;
   while (nimg2 && (nimg2->NImgObj != imgobj) && (nimg2->ImgName != imgobj))
     nimg2 = nimg2->next;
   if (!nimg2 && (nimg2 = (struct NImgList *) NL_Malloc(data,sizeof(struct NImgList),"GetNImage2")))
@@ -208,7 +206,6 @@ struct NImgList *GetNImage2(UNUSED Object *obj,struct NLData *data,APTR imgobj)
 void DeleteNImages2(UNUSED Object *obj,struct NLData *data)
 {
   struct NImgList *nimg2 = data->NImage2;
-  STACK_CHECK;
   while (nimg2)
   { data->NImage2 = nimg2->next;
     if (nimg2->ImgName && !nimg2->NImgObj)
@@ -268,7 +265,6 @@ void GetNImage_Sizes(UNUSED Object *obj, struct NLData *data)
 
 void GetNImage_End(Object *obj,struct NLData *data)
 {
-  STACK_CHECK;
   if (data->adding_member == 2)
   { data->adding_member = 0;
 /*D(bug("%lx|GNIE Group_ExitChange\n",obj));*/

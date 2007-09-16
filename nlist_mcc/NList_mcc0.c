@@ -40,8 +40,6 @@ static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 
   ENTER();
 
-  STACK_CHECK;
-
   data->rp = _rp(obj);
 
   data->SHOW = TRUE;
@@ -102,8 +100,6 @@ static ULONG mNL_Hide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
   ULONG retval;
 
   ENTER();
-
-  STACK_CHECK;
 
   data->badrport = FALSE;
 
