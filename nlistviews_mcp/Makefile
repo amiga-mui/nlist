@@ -128,10 +128,11 @@ endif
 # Common Directories
 OBJDIR = .obj_$(OS)
 BINDIR = bin_$(OS)
+LOCALE = locale
 
 # target definition
 MCCTARGET = $(BINDIR)/NListviews.mcp
-TESTTARGET= $(BINDIR)/NListviews-Test
+TESTTARGET= $(BINDIR)/NListviews-Prefs
 
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings
@@ -222,16 +223,21 @@ endif
 # hosts.
 
 MCCOBJS = $(OBJDIR)/library.o \
+          $(OBJDIR)/locale.o \
           $(OBJDIR)/NListviews.o \
           $(OBJDIR)/Debug.o
 
-TESTOBJS = $(OBJDIR)/NListviews-Test.o \
+TESTOBJS = $(OBJDIR)/NListviews-Prefs.o \
+           $(OBJDIR)/locale.o \
            $(OBJDIR)/NListviews.o \
            $(OBJDIR)/Debug.o
 
+# available catalog translations
+CATALOGS = $(LOCALE)/deutsch.catalog
+
 #
 
-all: $(BINDIR) $(OBJDIR) $(MCCTARGET) #$(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) locale.c $(MCCTARGET) $(TESTTARGET)
 
 # make the object directories
 $(OBJDIR):
@@ -253,6 +259,10 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@printf '\033[32mCompiling $<\033[0m\n'
 	@$(CC) $(CFLAGS) $< -o $@
 
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+	@printf '\033[33mGenerating $@\033[0m\n'
+	@$(FC) $(LOCALE)/NListviews_mcp.cd $< CATALOG $@
+
 #
 
 $(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
@@ -268,6 +278,21 @@ $(TESTTARGET): $(TESTOBJS)
 $(OBJDIR)/library.o: library.c ../include/mccinit.c \
   ../include/mui/NListview_mcc.h private.h rev.h
 
+locale.h: locale.c
+locale.c: $(LOCALE)/NListviews_mcp.cd C_h.sd C_c.sd
+	@printf '\033[33mGenerating locale file $@...\033[0m\n'
+	@$(FC) $(LOCALE)/NListviews_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
+
+## CATALOG GENERATION #################
+
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+	@printf '\033[33mGenerating $@\033[0m\n'
+	@$(FC) $(LOCALE)/NListviews_mcp.cd $< CATALOG $@
+
+.IGNORE: $(CATALOGS)
+
+catalogs: $(CATALOGS)
+
 #
 
 .PHONY: clean
@@ -278,5 +303,7 @@ clean:
 
 .PHONY: distclean
 distclean: clean
+	-$(RM) locale.?
+	-$(RM) $(LOCALE)/*.catalog
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)

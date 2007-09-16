@@ -58,6 +58,8 @@
 
 #define MIN_STACKSIZE 8192
 
+#include "locale.h"
+
 struct Library *CxBase = NULL;
 struct Library *LocaleBase = NULL;
 struct Device *ConsoleDevice = NULL;
@@ -101,8 +103,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
   			if((LocaleBase = OpenLibrary( "locale.library", 38)) &&
            GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
         {
-			    //if ( LocaleBase )
-				  //  catalog = OpenCatalogA( NULL, "NListviews.catalog", NULL );
+          // open the NListviews_mcp catalog
+          OpenCat();
 
   			  return(TRUE);
         }
@@ -124,12 +126,11 @@ static BOOL ClassInit(UNUSED struct Library *base)
 
 static VOID ClassExpunge(UNUSED struct Library *base)
 {
-	if(LocaleBase)
-	{
-		//if ( catalog )
-		//	CloseCatalog( catalog );
-		//catalog = NULL;
+  // close the catalog
+	CloseCat();
 
+  if(LocaleBase)
+	{
     DROPINTERFACE(ILocale);
 		CloseLibrary(LocaleBase);
 		LocaleBase	= NULL;

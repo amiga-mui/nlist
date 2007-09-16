@@ -5,6 +5,16 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-16 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlistviews_mcp: reworked the whole preferences GUI and finally got rid of
+    all the nonsense Misc1-MiscX register tabs. All the various options are now
+    grouped together based on their purpose. In addition, the preferences GUI
+    is now fully localized which should allow to generate translations for every
+    language. All in all the whole preference program should have a more
+    professional, clear and intuitive look&feel now like it should have been
+    right from the start.
+
 2007-09-14  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc2.c: hopefully fixed the "first click does not select"

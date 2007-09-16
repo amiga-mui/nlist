@@ -52,65 +52,61 @@
 
 struct NListviews_MCP_Data
 {
-  APTR mcp_group;
+  Object *mcp_group;
 
-  APTR mcp_list1;
-  APTR mcp_list2;
+  Object *mcp_list1;
+  Object *mcp_list2;
 
-  APTR mcp_PenTitle;
-  APTR mcp_PenList;
-  APTR mcp_PenSelect;
-  APTR mcp_PenCursor;
-  APTR mcp_PenUnselCur;
-  APTR mcp_PenInactCur;
-  APTR mcp_BG_Title;
-  APTR mcp_BG_List;
-  APTR mcp_BG_Select;
-  APTR mcp_BG_Cursor;
-  APTR mcp_BG_UnselCur;
-  APTR mcp_BG_InactCur;
+  Object *mcp_PenTitle;
+  Object *mcp_PenList;
+  Object *mcp_PenSelect;
+  Object *mcp_PenCursor;
+  Object *mcp_PenUnselCur;
+  Object *mcp_PenInactCur;
+  Object *mcp_BG_Title;
+  Object *mcp_BG_List;
+  Object *mcp_BG_Select;
+  Object *mcp_BG_Cursor;
+  Object *mcp_BG_UnselCur;
+  Object *mcp_BG_InactCur;
 
-  APTR mcp_R_Multi;
-  APTR mcp_B_MultiMMB;
-  APTR mcp_R_Drag;
-  APTR mcp_ST_DragQualifier;
-  APTR mcp_SL_VertInc;
-  APTR mcp_R_HSB;
-  APTR mcp_R_VSB;
-  APTR mcp_B_Smooth;
+  Object *mcp_R_Multi;
+  Object *mcp_B_MultiMMB;
+  Object *mcp_R_Drag;
+  Object *mcp_SL_VertInc;
+  Object *mcp_R_HSB;
+  Object *mcp_R_VSB;
+  Object *mcp_B_Smooth;
 
-  APTR mcp_Font;
-  APTR mcp_Font_Little;
-  APTR mcp_Font_Fixed;
+  Object *mcp_Font;
+  Object *mcp_Font_Little;
+  Object *mcp_Font_Fixed;
+  Object *mcp_ForcePen;
 
-  APTR mcp_ForcePen;
+  Object *mcp_ColWidthDrag;
+  Object *mcp_PartialCol;
+  Object *mcp_List_Select;
+  Object *mcp_NList_Menu;
+  Object *mcp_PartialChar;
+  Object *mcp_SerMouseFix;
+  Object *mcp_DragLines;
+  Object *mcp_VerticalCenteredLines;
+  Object *mcp_SelectPointer;
 
-#if defined(DO_STACK_CHECK)
-  APTR mcp_StackCheck;
-#endif // DO_STACK_CHECK
-  APTR mcp_ColWidthDrag;
-  APTR mcp_PartialCol;
-  APTR mcp_List_Select;
-  APTR mcp_NList_Menu;
-  APTR mcp_PartialChar;
-  APTR mcp_SerMouseFix;
-  APTR mcp_DragLines;
-  APTR mcp_VerticalCenteredLines;
+  Object *mcp_WheelStep;
+  Object *mcp_WheelFast;
+  Object *mcp_WheelMMB;
 
-  APTR mcp_WheelStep;
-  APTR mcp_WheelFast;
-  APTR mcp_WheelMMB;
-
-  APTR mcp_listkeys;
-  APTR mcp_stringkey;
-  APTR mcp_snoopkey;
-  APTR mcp_insertkey;
-  APTR mcp_removekey;
-  APTR mcp_updatekeys;
-  APTR mcp_defaultkeys;
-  APTR mcp_txtfct;
-  APTR mcp_popstrfct;
-  APTR mcp_poplistfct;
+  Object *mcp_listkeys;
+  Object *mcp_stringkey;
+  Object *mcp_snoopkey;
+  Object *mcp_insertkey;
+  Object *mcp_removekey;
+  Object *mcp_updatekeys;
+  Object *mcp_defaultkeys;
+  Object *mcp_txtfct;
+  Object *mcp_popstrfct;
+  Object *mcp_poplistfct;
 
   struct KeyBinding *nlkeys;
   LONG nlkeys_size;

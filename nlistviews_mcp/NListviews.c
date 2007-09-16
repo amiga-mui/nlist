@@ -44,6 +44,8 @@
 #include "private.h"
 #include "rev.h"
 
+#include "locale.h"
+
 #define INTUIBASEMIN 39
 
 
@@ -192,29 +194,6 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 
 static DEFAULT_KEYS_ARRAY
 
-static const char *functions_names[] =
-{
-  "Multiselect/Block Qualifier",
-  "Drag Qualifier",
-  "Balance Qualifier",
-  "Copy to clipboard",
-  "Default width column",
-  "Default width all columns",
-  "Default order column",
-  "Default order all columns",
-  "Select to top",
-  "Select to bottom",
-  "Select to page up",
-  "Select to page down",
-  "Select up",
-  "Select down",
-  "Toggle active",
-  "Fast MouseWheel Qualifier",
-  "Horiz.MouseWheel Qualifier",
-  "Qualified Title Click Qualifier",
-  "",NULL
-};
-
 static ULONG keytags[] =
 {
   KEYTAG_QUALIFIER_MULTISELECT    ,
@@ -298,188 +277,15 @@ static const char *MainTextArray[] =
   NULL
 };
 
-
-static const char *Pages[] =
-{
-  "Fonts",
-  "Colors",
-  "Misc",
-  "ScrollBars",
-  "Keys",
-  NULL
-};
-
-static const char *Pages3[] =
-{
-  "Misc1",
-  "Misc2",
-  "Misc3",
-  "Misc4",
-  "Misc5",
-  NULL
-};
-
-static const char *RS_MultiSelects[] =
-{
-  "Qualifier",
-  "Always",
-  NULL
-};
-
-#if defined(DO_STACK_CHECK)
-static const char *RS_StackCheck[] =
-{
-  "< 1Kb free",
-  "< 2Kb free",
-  "< 3Kb free",
-  NULL
-};
-#endif // DO_STACK_CHECK
-
-static const char *RS_ColWidthDrag[] =
-{
-  "Top Bar",
-  "Full Bar",
-  "Visible",
-  NULL
-};
-
-static const char *RS_DragTypes[] =
-{
-  "Immediate",
-  "Borders",
-  "Qualifier",
-  NULL
-};
-
-static const char *RS_VSB[] =
-{
-  "Always",
-  "Auto",
-  "FullAuto",
-  NULL
-};
-
-static const char *RS_HSB[] =
-{
-  "Always",
-  "Auto",
-  "FullAuto",
-  "None",
-  NULL
-};
-
-static const char *RS_Menu[] =
-{
-  "Always",
-  "TopOnly",
-  "Never",
-  NULL
-};
-
-
-enum StringsID
-{
-    MSG_FONTS,
-    MSG_COLORS,
-    MSG_PENS,
-    MSG_BACKGROUNDS,
-    MSG_TITLE_PEN_WIN,
-    MSG_TITLE_PEN_HELP,
-    MSG_PBG_TITLE,
-    MSG_TITLE_BG_WIN,
-    MSG_TITLE_BG_HELP,
-    MSG_LIST_PEN_WIN,
-    MSG_LIST_PEN_HELP,
-    MSG_PBG_LIST,
-    MSG_LIST_BG_WIN,
-    MSG_LIST_BG_HELP,
-    MSG_SELECT_PEN_WIN,
-    MSG_SELECT_PEN_HELP,
-    MSG_PBG_SELECT,
-    MSG_SELECT_BG_WIN,
-    MSG_SELECT_BG_HELP,
-    MSG_CURSOR_PEN_WIN,
-    MSG_CURSOR_PEN_HELP,
-    MSG_PBG_CURSOR,
-    MSG_CURSOR_BG_WIN,
-    MSG_CURSOR_BG_HELP,
-    MSG_UNSEL_PEN_WIN,
-    MSG_UNSEL_PEN_HELP,
-    MSG_PBG_UNSEL,
-    MSG_UNSEL_BG_WIN,
-    MSG_UNSEL_BG_HELP,
-    MSG_NORMAL_FONT,
-    MSG_NORMAL_FONT_HELP,
-    MSG_NORMAL_FONT_ASL,
-    MSG_LITTLE_FONT,
-    MSG_LITTLE_FONT_HELP,
-    MSG_LITTLE_FONT_ASL,
-    MSG_FIXED_FONT,
-    MSG_FIXED_FONT_HELP,
-    MSG_FIXED_FONT_ASL,
-    MSG_MULTISELECT,
-    MSG_MULTISELECT_HELP,
-    MSG_MMB_MULTISEL,
-    MSG_MMB_MULTISEL_HELP,
-    MSG_LEADING,
-    MSG_LEADING_HELP,
-    MSG_DRAGTYPE,
-    MSG_DRAGTYPE_HELP,
-    MSG_DRAG_QUALIFIER_HELP,
-    MSG_DEFAULT_CONTEXT_MENU,
-    MSG_DEFAULT_CONTEXT_MENU_HELP,
-    MSG_PARTIAL_COL_MARK,
-    MSG_PARTIAL_COL_MARK_HELP,
-    MSG_PARTIAL_CHARS_DRAWN,
-    MSG_PARTIAL_CHARS_DRAWN_HELP,
-    MSG_BALANCING_COLS,
-    MSG_BALANCING_COLS_HELP,
-    MSG_FORCE_SELECT_PEN,
-    MSG_FORCE_SELECT_PEN_HELP,
-    MSG_LIST_LIKE_MULTISEL,
-    MSG_LIST_LIKE_MULTISEL_HELP,
-#if defined(DO_STACK_CHECK)
-    MSG_STACK_WARNING,
-    MSG_STACK_WARNING_HELP,
-#endif // DO_STACK_CHECK
-    MSG_SB_HORIZONTAL,
-    MSG_SB_HORIZONTAL_HELP,
-    MSG_SB_VERTICAL,
-    MSG_SB_VERTICAL_HELP,
-    MSG_SMOOTH_SCROLL,
-    MSG_SMOOTH_SCROLLING,
-    MSG_SMOOTH_SCROLLING_HELP,
-    MSG_SPECIAL_POINTER_COLORS,
-    MSG_SPECIAL_POINTER_COLORS_HELP,
-    MSG_SERMOUSE_FIX,
-    MSG_SERMOUSE_FIX_HELP,
-    MSG_WHEEL_STEP,
-    MSG_WHEEL_STEP_HELP,
-    MSG_WHEEL_FAST,
-    MSG_WHEEL_FAST_HELP,
-    MSG_MMB_FASTWHEEL,
-    MSG_MMB_FASTWHEEL_HELP,
-    MSG_DRAG_LINES,
-    MSG_DRAG_LINES_HELP,
-    MSG_SNOOP_KEY,
-    MSG_INSERT_KEY,
-    MSG_REMOVE_KEY,
-    MSG_UPDATE_KEYS,
-    MSG_DEFAULT_KEYS
-};
-
-
-/*
-static STRPTR STRING(enum StringsID id,STRPTR defstr)
-{
-  if (LocaleBase)
-    return(GetCatalogStr(catalog,id,defstr));
-  return(defstr);
-}
-*/
-
-#define STRING(a,b) b
+// static arrays which we fill up later on
+static const char *Pages[6];
+static const char *RS_ColWidthDrag[4];
+static const char *RS_VSB[4];
+static const char *RS_HSB[5];
+static const char *RS_Menu[4];
+static const char *RS_MultiSelects[3];
+static const char *RS_DragTypes[4];
+static const char *functions_names[20];
 
 static LONG DeadKeyConvert(struct NListviews_MCP_Data *data,struct KeyBinding *key)
 {
@@ -824,9 +630,10 @@ HOOKPROTONH(DisplayFunc, VOID, Object *obj, struct NList_DisplayMessage *ndm)
   }
   else
   {
-    ndm->strings[0]  = (STRPTR)"\033cKey";
-    ndm->strings[1]  = (STRPTR)"";
-    ndm->strings[2]  = (STRPTR)"\033cAction";
+    ndm->preparses[0] = (STRPTR)"\033r";
+    ndm->strings[0] = (STRPTR)tr(MSG_HOTKEYS_KEY);
+    ndm->strings[1] = (STRPTR)"";
+    ndm->strings[2] = (STRPTR)tr(MSG_HOTKEYS_ACTION);
   }
 }
 MakeStaticHook(DisplayHook, DisplayFunc);
@@ -854,14 +661,14 @@ MakeStaticHook(DestructHook, DestructFunc);
 static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   struct NListviews_MCP_Data *data;
-  APTR group1, group2, group31, group33, group34, group35, group36, group4, group5;
+  APTR group1, group2, group3, group4, group5;
 
   if(!(obj = (Object *)DoSuperMethodA(cl, obj,(Msg) msg)))
     return(0);
 
   data = INST_DATA(cl,obj);
 
-  group1 = group2 = group31 = group33 = group34 = group35 = group36 = group4 = group5 = NULL;
+  group1 = group2 = group3 = group4 = group5 = NULL;
 
   data->mcp_group = NULL;
   data->mcp_list1 = NULL;
@@ -871,15 +678,16 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->mcp_PenSelect = NULL;
   data->mcp_PenCursor = NULL;
   data->mcp_PenUnselCur = NULL;
+  data->mcp_PenInactCur = NULL;
   data->mcp_BG_Title = NULL;
   data->mcp_BG_List = NULL;
   data->mcp_BG_Select = NULL;
   data->mcp_BG_Cursor = NULL;
   data->mcp_BG_UnselCur = NULL;
+  data->mcp_BG_InactCur = NULL;
   data->mcp_R_Multi = NULL;
   data->mcp_B_MultiMMB = NULL;
   data->mcp_R_Drag = NULL;
-  data->mcp_ST_DragQualifier = NULL;
   data->mcp_SL_VertInc = NULL;
   data->mcp_R_HSB = NULL;
   data->mcp_R_VSB = NULL;
@@ -888,9 +696,6 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->mcp_Font_Little = NULL;
   data->mcp_Font_Fixed = NULL;
   data->mcp_ForcePen = NULL;
-#if defined(DO_STACK_CHECK)
-  data->mcp_StackCheck = NULL;
-#endif // DO_STACK_CHECK
   data->mcp_ColWidthDrag = NULL;
   data->mcp_PartialCol = NULL;
   data->mcp_List_Select = NULL;
@@ -927,550 +732,580 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   }
 
   group1 = GroupObject,
-          Child, data->mcp_list1 = NListviewObject,
-            MUIA_CycleChain, 1,
-            MUIA_NList_Title,"\033cNList / NListview",
-            MUIA_NList_TitleSeparator, TRUE,
-            MUIA_NListview_Vert_ScrollBar, MUIV_NListview_VSB_Default,
-            MUIA_NListview_Horiz_ScrollBar, MUIV_NListview_HSB_Default,
-            MUIA_NList_DefaultObjectOnClick, TRUE,
-            MUIA_NList_SourceArray, MainTextArray,
+
+          Child, VGroup,
+            GroupFrameT(tr(MSG_GROUP_EXAMPLE)),
+
+            Child, data->mcp_list1 = NListviewObject,
+              MUIA_CycleChain, 1,
+              MUIA_NList_Title,"\033cNList / NListview",
+              MUIA_NList_TitleSeparator, TRUE,
+              MUIA_NListview_Vert_ScrollBar, MUIV_NListview_VSB_Default,
+              MUIA_NListview_Horiz_ScrollBar, MUIV_NListview_HSB_Default,
+              MUIA_NList_DefaultObjectOnClick, TRUE,
+              MUIA_NList_SourceArray, MainTextArray,
+            End,
           End,
 
-          Child, GroupObject,MUIA_Group_Columns,(2), GroupFrameT(STRING(MSG_FONTS,"Fonts")),
+          Child, GroupObject,
+            GroupFrameT(tr(MSG_FONTS)),
             GroupSpacing(2),
+            MUIA_Group_Columns, 2,
+
             MUIA_Weight,(ULONG)30,
-            Child, Label(STRING(MSG_NORMAL_FONT,"Normal Font:")),
+            Child, Label(tr(MSG_NORMAL_FONT)),
             Child, data->mcp_Font = PopaslObject,
-              MUIA_Popstring_String, String2(0,80),
-              MUIA_Popstring_Button, PopButton(MUII_PopUp),
-              MUIA_Popasl_Type , ASL_FontRequest,
-              MUIA_ShortHelp, STRING(MSG_NORMAL_FONT_HELP,"Choose the normal NList font."),
-              ASLFO_TitleText  , STRING(MSG_NORMAL_FONT_ASL,"Please select the normal font..."),
+              MUIA_Popstring_String,  String2(0,80),
+              MUIA_Popstring_Button,  PopButton(MUII_PopUp),
+              MUIA_Popasl_Type,       ASL_FontRequest,
+              MUIA_ShortHelp,         tr(MSG_NORMAL_FONT_HELP),
+              ASLFO_TitleText,        tr(MSG_NORMAL_FONT_ASL),
             End,
 
-            Child, Label(STRING(MSG_LITTLE_FONT,"Little Font:")),
+            Child, Label(tr(MSG_SMALL_FONT)),
             Child, data->mcp_Font_Little = PopaslObject,
-              MUIA_Popstring_String, String2(0,80),
-              MUIA_Popstring_Button, PopButton(MUII_PopUp),
-              MUIA_Popasl_Type , ASL_FontRequest,
-              MUIA_ShortHelp, STRING(MSG_LITTLE_FONT_HELP,"Choose the little NList font."),
-              ASLFO_TitleText  , STRING(MSG_LITTLE_FONT_ASL,"Please select the little font..."),
+              MUIA_Popstring_String,  String2(0,80),
+              MUIA_Popstring_Button,  PopButton(MUII_PopUp),
+              MUIA_Popasl_Type,       ASL_FontRequest,
+              MUIA_ShortHelp,         tr(MSG_SMALL_FONT_HELP),
+              ASLFO_TitleText,        tr(MSG_SMALL_FONT_ASL),
             End,
 
-            Child, Label(STRING(MSG_FIXED_FONT,"Fixed Font:")),
+            Child, Label(tr(MSG_FIXED_FONT)),
             Child, data->mcp_Font_Fixed = PopaslObject,
-              MUIA_Popstring_String, String2(0,80),
-              MUIA_Popstring_Button, PopButton(MUII_PopUp),
-              MUIA_Popasl_Type , ASL_FontRequest,
-              MUIA_ShortHelp, STRING(MSG_FIXED_FONT_HELP,"Choose the fixed NList font."),
-              ASLFO_TitleText  , STRING(MSG_FIXED_FONT_ASL,"Please select the fixed font..."),
-              ASLFO_FixedWidthOnly, TRUE,
+              MUIA_Popstring_String,  String2(0,80),
+              MUIA_Popstring_Button,  PopButton(MUII_PopUp),
+              MUIA_Popasl_Type,       ASL_FontRequest,
+              MUIA_ShortHelp,         tr(MSG_FIXED_FONT_HELP),
+              ASLFO_TitleText,        tr(MSG_FIXED_FONT_ASL),
+              ASLFO_FixedWidthOnly,   TRUE,
             End,
 
-            Child, Label(STRING(MSG_LEADING,"Leading")),
+            Child, Label(tr(MSG_FONT_MARGIN)),
             Child, data->mcp_SL_VertInc = SliderObject,
-              MUIA_CycleChain, 1,
-              MUIA_Numeric_Min  , 0,
-              MUIA_Numeric_Max  , 9,
+              MUIA_CycleChain,    1,
+              MUIA_Numeric_Min,   0,
+              MUIA_Numeric_Max,   9,
               MUIA_Numeric_Value, 1,
-              MUIA_ShortHelp, STRING(MSG_LEADING_HELP,"Adjust the value which will be\nadded to the font height to get\nthe default entry height."),
+              MUIA_ShortHelp,     tr(MSG_FONT_MARGIN_HELP),
             End,
 
           End,
       End;
 
-  group2 = GroupObject,
-          Child, GroupObject,MUIA_Group_Columns,(3), GroupFrameT(STRING(MSG_COLORS,"Colors")),
-            GroupSpacing(2),
-            Child, MUI_MakeObject(MUIO_BarTitle, STRING(MSG_PENS,"Pens")),
-            Child, VCenter(Label("")),
-            Child, MUI_MakeObject(MUIO_BarTitle, STRING(MSG_BACKGROUNDS,"Backs")),
+  group2 = VGroup,
+             Child, VGroup,
+              GroupFrameT(tr(MSG_COLORS)),
+              GroupSpacing(2),
+              MUIA_VertWeight, 85,
+              MUIA_Group_Columns, 3,
 
-            Child, data->mcp_PenTitle = PoppenObject,
-              MUIA_CycleChain, 1,
-              MUIA_Window_Title, STRING(MSG_TITLE_PEN_WIN,"Title Pen"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_TITLE_PEN_HELP,"Adjust Color of Title Pen."),
-            End,
-            Child, VCenter(Label(STRING(MSG_PBG_TITLE,"\033c Title "))),
-            Child, data->mcp_BG_Title = PopimageObject,
-              MUIA_CycleChain, 1,
-              MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
-              MUIA_Window_Title, STRING(MSG_TITLE_BG_WIN,"Title Background"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_TITLE_BG_HELP,"Adjust Title Background."),
-            End,
-
-            Child, data->mcp_PenList = PoppenObject,
-              MUIA_CycleChain, 1,
-              MUIA_Window_Title, STRING(MSG_LIST_PEN_WIN,"List Pen"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_LIST_PEN_HELP,"Adjust Color of List Pen."),
-            End,
-            Child, VCenter(Label(STRING(MSG_PBG_LIST,"\033c List "))),
-            Child, data->mcp_BG_List = PopimageObject,
-              MUIA_CycleChain, 1,
-              MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
-              MUIA_Window_Title, STRING(MSG_LIST_BG_WIN,"List Background"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_LIST_BG_HELP,"Adjust List Background."),
-            End,
-
-            Child, data->mcp_PenSelect = PoppenObject,
-              MUIA_CycleChain, 1,
-              MUIA_Window_Title, STRING(MSG_SELECT_PEN_WIN,"Selected Entry"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_SELECT_PEN_HELP,"Adjust Color of Selected Entry Pen."),
-            End,
-            Child, VCenter(Label(STRING(MSG_PBG_SELECT,"\033c Select "))),
-            Child, data->mcp_BG_Select = PopimageObject,
-              MUIA_CycleChain, 1,
-              MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
-              MUIA_Window_Title, STRING(MSG_SELECT_BG_WIN,"Selected Entry"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_SELECT_BG_HELP,"Adjust Selected Entry Background."),
-            End,
-
-            Child, data->mcp_PenCursor = PoppenObject,
-              MUIA_CycleChain, 1,
-              MUIA_Window_Title, STRING(MSG_CURSOR_PEN_WIN,"Selected Cursor"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_CURSOR_PEN_HELP,"Adjust Color of Selected Cursor Pen."),
-            End,
-            Child, VCenter(Label(STRING(MSG_PBG_CURSOR,"\033c Cursor "))),
-            Child, data->mcp_BG_Cursor = PopimageObject,
-              MUIA_CycleChain, 1,
-              MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
-              MUIA_Window_Title, STRING(MSG_CURSOR_BG_WIN,"Selected Cursor"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_CURSOR_BG_HELP,"Adjust Selected Cursor Background."),
-            End,
-
-            Child, data->mcp_PenUnselCur = PoppenObject,
-              MUIA_CycleChain, 1,
-              MUIA_Window_Title, STRING(MSG_UNSEL_PEN_WIN,"Unselected Cursor"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_UNSEL_PEN_HELP,"Adjust Color of Unselected Cursor Pen."),
-            End,
-            Child, VCenter(Label(STRING(MSG_PBG_UNSEL,"\033c Unsel "))),
-            Child, data->mcp_BG_UnselCur = PopimageObject,
-              MUIA_CycleChain, 1,
-              MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
-              MUIA_Window_Title, STRING(MSG_UNSEL_BG_WIN,"Unselected Cursor"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_UNSEL_BG_HELP,"Adjust Unselected Cursor Background."),
-            End,
-
-            Child, data->mcp_PenInactCur = PoppenObject,
-              MUIA_CycleChain, 1,
-              MUIA_Window_Title, STRING(MSG_INACT_PEN_WIN, "Inactive Cursor"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_INACT_PEN_HELP,"Adjust Color of Inactive Cursor Pen."),
-            End,
-            Child, VCenter(Label(STRING(MSG_PBG_INACT,"\033c Inactive "))),
-            Child, data->mcp_BG_InactCur = PopimageObject,
-              MUIA_CycleChain, 1,
-              MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
-              MUIA_Window_Title, STRING(MSG_INACT_BG_WIN, "Inactive Cursor"),
-              MUIA_Draggable, TRUE,
-              MUIA_ShortHelp, STRING(MSG_INACT_BG_HELP, "Adjust Inactive Cursor Background."),
-            End,
-
-          End,
-      End;
-
-  group31 = GroupObject,MUIA_Group_Horiz,TRUE,
-          Child, GroupObject,
-
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_MULTISELECT,"MultiSelect")),
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, data->mcp_R_Multi = RadioObject,
-                  MUIA_Radio_Entries,RS_MultiSelects,
-                  MUIA_ShortHelp, STRING(MSG_MULTISELECT_HELP,"Choose your default multiselection mode."),
-                End,
-                Child, VSpace(0),
+              Child, RectangleObject,
+                MUIA_VertWeight,         0,
+                MUIA_Rectangle_HBar,     TRUE,
+                MUIA_Rectangle_BarTitle, tr(MSG_TEXTCOLOR),
               End,
               Child, HSpace(0),
-            End,
-
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                  Child, data->mcp_B_MultiMMB = ImageObject,
-                    ImageButtonFrame,
-                    MUIA_InputMode        , MUIV_InputMode_Toggle,
-                    MUIA_Image_Spec       , MUII_CheckMark,
-                    MUIA_Image_FreeVert   , TRUE,
-                    MUIA_Background       , MUII_ButtonBack,
-                    MUIA_ShowSelState     , FALSE,
-                  End,
-                  Child, Label(STRING(MSG_MMB_MULTISEL,"MMB multiselect")),
-                  MUIA_ShortHelp, STRING(MSG_MMB_MULTISEL_HELP,"Set it if you want to use the Middle\nMouse Button as a multiselect qualifier."),
-                End,
-                Child, VSpace(0),
+              Child, RectangleObject,
+                MUIA_VertWeight,         0,
+                MUIA_Rectangle_HBar,     TRUE,
+                MUIA_Rectangle_BarTitle, tr(MSG_BACKGROUNDCOLOR),
               End,
-              Child, HSpace(0),
-            End,
 
-          End,
+              Child, data->mcp_PenTitle = PoppenObject,
+                MUIA_CycleChain,    1,
+                MUIA_Window_Title,  tr(MSG_TITLE_PEN_WIN),
+                MUIA_Draggable,     TRUE,
+                MUIA_ShortHelp,     tr(MSG_TITLE_PEN_HELP),
+              End,
+              Child, VCenter(Label(tr(MSG_PBG_TITLE))),
+              Child, data->mcp_BG_Title = PopimageObject,
+                MUIA_CycleChain,       1,
+                MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
+                MUIA_Window_Title,     tr(MSG_TITLE_BG_WIN),
+                MUIA_Draggable,        TRUE,
+                MUIA_ShortHelp,        tr(MSG_TITLE_BG_HELP),
+              End,
 
-          Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_DRAGTYPE,"DragType")),
-            Child, HSpace(0),
-            Child, GroupObject,
+              Child, data->mcp_PenList = PoppenObject,
+                MUIA_CycleChain,   1,
+                MUIA_Window_Title, tr(MSG_LIST_PEN_WIN),
+                MUIA_Draggable,    TRUE,
+                MUIA_ShortHelp,    tr(MSG_LIST_PEN_HELP),
+              End,
+              Child, VCenter(Label(tr(MSG_PBG_LIST))),
+              Child, data->mcp_BG_List = PopimageObject,
+                MUIA_CycleChain,        1,
+                MUIA_Imageadjust_Type,  MUIV_Imageadjust_Type_Background,
+                MUIA_Window_Title,      tr(MSG_LIST_BG_WIN),
+                MUIA_Draggable,         TRUE,
+                MUIA_ShortHelp,         tr(MSG_LIST_BG_HELP),
+              End,
+
+              Child, data->mcp_PenSelect = PoppenObject,
+                MUIA_CycleChain,    1,
+                MUIA_Window_Title,  tr(MSG_SELECT_PEN_WIN),
+                MUIA_Draggable,     TRUE,
+                MUIA_ShortHelp,     tr(MSG_SELECT_PEN_HELP),
+              End,
+              Child, VCenter(Label(tr(MSG_PBG_SELECT))),
+              Child, data->mcp_BG_Select = PopimageObject,
+                MUIA_CycleChain,        1,
+                MUIA_Imageadjust_Type,  MUIV_Imageadjust_Type_Background,
+                MUIA_Window_Title,      tr(MSG_SELECT_BG_WIN),
+                MUIA_Draggable,         TRUE,
+                MUIA_ShortHelp,         tr(MSG_SELECT_BG_HELP),
+              End,
+
+              Child, data->mcp_PenCursor = PoppenObject,
+                MUIA_CycleChain,    1,
+                MUIA_Window_Title,  tr(MSG_CURSOR_PEN_WIN),
+                MUIA_Draggable,     TRUE,
+                MUIA_ShortHelp,     tr(MSG_CURSOR_PEN_HELP),
+              End,
+              Child, VCenter(Label(tr(MSG_PBG_CURSOR))),
+              Child, data->mcp_BG_Cursor = PopimageObject,
+                MUIA_CycleChain,        1,
+                MUIA_Imageadjust_Type,  MUIV_Imageadjust_Type_Background,
+                MUIA_Window_Title,      tr(MSG_CURSOR_BG_WIN),
+                MUIA_Draggable,         TRUE,
+                MUIA_ShortHelp,         tr(MSG_CURSOR_BG_HELP),
+              End,
+
+              Child, data->mcp_PenUnselCur = PoppenObject,
+                MUIA_CycleChain,    1,
+                MUIA_Window_Title,  tr(MSG_UNSEL_PEN_WIN),
+                MUIA_Draggable,     TRUE,
+                MUIA_ShortHelp,     tr(MSG_UNSEL_PEN_HELP),
+              End,
+              Child, VCenter(Label(tr(MSG_PBG_UNSEL))),
+              Child, data->mcp_BG_UnselCur = PopimageObject,
+                MUIA_CycleChain,        1,
+                MUIA_Imageadjust_Type,  MUIV_Imageadjust_Type_Background,
+                MUIA_Window_Title,      tr(MSG_UNSEL_BG_WIN),
+                MUIA_Draggable,         TRUE,
+                MUIA_ShortHelp,         tr(MSG_UNSEL_BG_HELP),
+              End,
+
+              Child, data->mcp_PenInactCur = PoppenObject,
+                MUIA_CycleChain,    1,
+                MUIA_Window_Title,  tr(MSG_INACT_PEN_WIN),
+                MUIA_Draggable,     TRUE,
+                MUIA_ShortHelp,     tr(MSG_INACT_PEN_HELP),
+              End,
+              Child, VCenter(Label(tr(MSG_PBG_INACT))),
+              Child, data->mcp_BG_InactCur = PopimageObject,
+                MUIA_CycleChain,        1,
+                MUIA_Imageadjust_Type,  MUIV_Imageadjust_Type_Background,
+                MUIA_Window_Title,      tr(MSG_INACT_BG_WIN),
+                MUIA_Draggable,         TRUE,
+                MUIA_ShortHelp,         tr(MSG_INACT_BG_HELP),
+              End,
+
+             End,
+
+             Child, VGroup,
+              GroupFrameT(tr(MSG_COLOR_OPTIONS)),
+              MUIA_VertWeight, 15,
+
               Child, VSpace(0),
-              Child, data->mcp_R_Drag = RadioObject,
-                MUIA_Radio_Entries,RS_DragTypes,
-                MUIA_ShortHelp, STRING(MSG_DRAGTYPE_HELP,"Set the drag mode. Immediate for the three,\nBorders for left/right list edges and qualifier,\nQualifier for qualifier only.\nImmediate is used only when no-multiselect mode."),
-              End,
-              Child, VSpace(0),
-            End,
-            Child, HSpace(0),
-          End,
-
-        End;
-
-  group33 = GroupObject,MUIA_Group_Horiz,TRUE,
-
-          Child, GroupObject,
-
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                  Child, data->mcp_PartialCol = ImageObject,
-                    ImageButtonFrame,
-                    MUIA_InputMode        , MUIV_InputMode_Toggle,
-                    MUIA_Image_Spec       , MUII_CheckMark,
-                    MUIA_Image_FreeVert   , TRUE,
-                    MUIA_Background       , MUII_ButtonBack,
-                    MUIA_ShowSelState     , FALSE,
-                    MUIA_Selected         , TRUE,
-                  End,
-                  Child, Label(STRING(MSG_PARTIAL_COL_MARK,"Partial col. mark")),
-                  MUIA_ShortHelp, STRING(MSG_PARTIAL_COL_MARK_HELP,"When set, a mark will be drawn\nwhen the contents of an entry\ncolumn couldn't be drawn fully."),
-                End,
-                Child, VSpace(0),
-              End,
-              Child, HSpace(0),
-            End,
-
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                  Child, data->mcp_PartialChar = ImageObject,
-                    ImageButtonFrame,
-                    MUIA_InputMode        , MUIV_InputMode_Toggle,
-                    MUIA_Image_Spec       , MUII_CheckMark,
-                    MUIA_Image_FreeVert   , TRUE,
-                    MUIA_Background       , MUII_ButtonBack,
-                    MUIA_ShowSelState     , FALSE,
-                    MUIA_Selected         , FALSE,
-                  End,
-                  Child, Label(STRING(MSG_PARTIAL_CHARS_DRAWN,"Partial chars drawn")),
-                  MUIA_ShortHelp, STRING(MSG_PARTIAL_CHARS_DRAWN_HELP,"When set, chars on the right and\nleft edge of the list which are\nnot fully visible will be drawn."),
-                End,
-                Child, VSpace(0),
-              End,
-              Child, HSpace(0),
-            End,
-
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                  Child, data->mcp_VerticalCenteredLines = ImageObject,
-                    ImageButtonFrame,
-                    MUIA_InputMode        , MUIV_InputMode_Toggle,
-                    MUIA_Image_Spec       , MUII_CheckMark,
-                    MUIA_Image_FreeVert   , TRUE,
-                    MUIA_Background       , MUII_ButtonBack,
-                    MUIA_ShowSelState     , FALSE,
-                    MUIA_Selected         , FALSE,
-                  End,
-                  Child, Label("Vertical centered lines"),//STRING(MSG_PARTIAL_CHARS_DRAWN,"Partial chars drawn")),
-                  MUIA_ShortHelp, "If activated, the text lines are centered vertically.",//STRING(MSG_PARTIAL_CHARS_DRAWN_HELP,"When set, chars on the right and\nleft edge of the list which are\nnot fully visible will be drawn."),
-                End,
-                Child, VSpace(0),
-              End,
-              Child, HSpace(0),
-            End,
-
-          End,
-
-          Child, GroupObject,
-
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_BALANCING_COLS,"Balancing Columns")),
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, data->mcp_ColWidthDrag = RadioObject,
-                  MUIA_Radio_Entries,RS_ColWidthDrag,
-                End,
-                MUIA_ShortHelp, STRING(MSG_BALANCING_COLS_HELP,"NList permit to change the column width\nwith mouse dragging the column separator.\nThe moved bar can be visible on first\nline or title only, be visible on the\nfull list height, or the width changes\ncan be immediatly visibles.\n"),
-                Child, VSpace(0),
-              End,
-              Child, HSpace(0),
-            End,
-
-          End,
-
-        End;
-
-  group34 = GroupObject,
-
-          Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-            Child, HSpace(0),
-            Child, GroupObject,
-              Child, VSpace(0),
-              Child, GroupObject,MUIA_Group_Horiz,TRUE,
+              Child, HGroup,
+                Child, HSpace(0),
                 Child, data->mcp_ForcePen = ImageObject,
                   ImageButtonFrame,
-                  MUIA_InputMode        , MUIV_InputMode_Toggle,
-                  MUIA_Image_Spec       , MUII_CheckMark,
-                  MUIA_Image_FreeVert   , TRUE,
-                  MUIA_Background       , MUII_ButtonBack,
-                  MUIA_ShowSelState     , FALSE,
-                End,
-                Child, Label(STRING(MSG_FORCE_SELECT_PEN,"Force select. pen")),
-                MUIA_ShortHelp, STRING(MSG_FORCE_SELECT_PEN_HELP,"Set it if you want the Select,\nCursor and Unselected Cursor pen\ncolors to be forced."),
+                  MUIA_InputMode,      MUIV_InputMode_Toggle,
+                  MUIA_Image_Spec,     MUII_CheckMark,
+                  MUIA_Image_FreeVert, TRUE,
+                  MUIA_Background,     MUII_ButtonBack,
+                  MUIA_ShowSelState,   FALSE,
+               End,
+               Child, Label(tr(MSG_FORCE_SELECT_PEN)),
+               MUIA_ShortHelp, tr(MSG_FORCE_SELECT_PEN_HELP),
+               Child, HSpace(0),
               End,
               Child, VSpace(0),
-            End,
-            Child, HSpace(0),
-          End,
+             End,
+           End;
 
-          Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-            Child, HSpace(0),
-            Child, GroupObject,
-              MUIA_HorizWeight, 1000,
-              Child, VSpace(0),
-              Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                Child, Label(STRING(MSG_DRAG_LINES,"Max visible drag")),
-                Child, data->mcp_DragLines = SliderObject,
-                  MUIA_CycleChain, 1,
-                  MUIA_Numeric_Min  , 0,
-                  MUIA_Numeric_Max  , 20,
-                  MUIA_Numeric_Value, DEFAULT_DRAGLINES,
-                End,
-                MUIA_ShortHelp, STRING(MSG_DRAG_LINES_HELP,"Give the max number of lines\nwhich will be shown when\ndragged. When more you'll get\nthe message : Dragging xx Items..."),
-              End,
-              Child, VSpace(0),
-            End,
-            Child, HSpace(0),
-          End,
+  RS_VSB[0] = tr(MSG_VSB_ALWAYS);
+  RS_VSB[1] = tr(MSG_VSB_AUTO);
+  RS_VSB[2] = tr(MSG_VSB_FULLAUTO);
+  RS_VSB[3] = NULL;
 
-        End;
+  RS_HSB[0] = tr(MSG_HSB_ALWAYS);
+  RS_HSB[1] = tr(MSG_HSB_AUTO);
+  RS_HSB[2] = tr(MSG_HSB_FULLAUTO);
+  RS_HSB[3] = tr(MSG_HSB_NONE);
+  RS_HSB[4] = NULL;
 
-  group35 = GroupObject,
+  group3 =  VGroup,
 
-          Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-            Child, HSpace(0),
-            Child, GroupObject,
-              Child, VSpace(0),
-              Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                Child, data->mcp_WheelMMB = ImageObject,
-                  ImageButtonFrame,
-                  MUIA_InputMode        , MUIV_InputMode_Toggle,
-                  MUIA_Image_Spec       , MUII_CheckMark,
-                  MUIA_Image_FreeVert   , TRUE,
-                  MUIA_Background       , MUII_ButtonBack,
-                  MUIA_ShowSelState     , FALSE,
-                End,
-                Child, Label(STRING(MSG_MMB_FASTWHEEL,"MMB Fast Wheel")),
-                MUIA_ShortHelp, STRING(MSG_MMB_FASTWHEEL_HELP,"Set it if you want to use the Middle\nMouse Button as a fast mouse wheel qualifier.\nSee Mouse Wheel qualifiers in\nkeubindings too."),
-              End,
-              Child, VSpace(0),
-            End,
-            Child, HSpace(0),
-          End,
-
-          Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-            Child, HSpace(0),
-            Child, GroupObject,
-              MUIA_HorizWeight, 1000,
-              Child, VSpace(0),
-              Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                Child, Label(STRING(MSG_WHEEL_STEP,"Mouse Wheel Step")),
-                Child, data->mcp_WheelStep = SliderObject,
-                  MUIA_CycleChain, 1,
-                  MUIA_Numeric_Min  , 1,
-                  MUIA_Numeric_Max  , 5,
-                  MUIA_Numeric_Value, 1,
-                End,
-                MUIA_ShortHelp, STRING(MSG_WHEEL_STEP_HELP,"Set it to the number of entries scrolled\nfor each mouse wheel move."),
-              End,
-              Child, VSpace(0),
-            End,
-            Child, HSpace(0),
-          End,
-
-          Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-            Child, HSpace(0),
-            Child, GroupObject,
-              MUIA_HorizWeight, 1000,
-              Child, VSpace(0),
-              Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                Child, Label(STRING(MSG_WHEEL_FAST,"Mouse Wheel Fast Step")),
-                Child, data->mcp_WheelFast = SliderObject,
-                  MUIA_CycleChain, 1,
-                  MUIA_Numeric_Min  , 2,
-                  MUIA_Numeric_Max  , 10,
-                  MUIA_Numeric_Value, 5,
-                End,
-                MUIA_ShortHelp, STRING(MSG_WHEEL_FAST_HELP,"Set it to the number of entries scrolled\nfor each mouse wheel move\nwhen in fast mode."),
-              End,
-              Child, VSpace(0),
-            End,
-            Child, HSpace(0),
-          End,
-
-        End;
-
-  group36 = GroupObject,MUIA_Group_Horiz,TRUE,
-
-          Child, GroupObject,
-
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                  Child, data->mcp_List_Select = ImageObject,
-                    ImageButtonFrame,
-                    MUIA_InputMode        , MUIV_InputMode_Toggle,
-                    MUIA_Image_Spec       , MUII_CheckMark,
-                    MUIA_Image_FreeVert   , TRUE,
-                    MUIA_Background       , MUII_ButtonBack,
-                    MUIA_ShowSelState     , FALSE,
-                    MUIA_Selected         , TRUE,
+              Child, HGroup,
+                Child, HGroup,
+                  GroupFrameT(tr(MSG_SB_HORIZONTAL)),
+                  Child, HSpace(0),
+                  Child, VGroup,
+                    Child, VSpace(0),
+                    Child, data->mcp_R_HSB = RadioObject,
+                      MUIA_Radio_Entries, RS_HSB,
+                    End,
+                    MUIA_ShortHelp, tr(MSG_SB_HORIZONTAL_HELP),
+                    Child, VSpace(0),
                   End,
-                  Child, Label(STRING(MSG_LIST_LIKE_MULTISEL,"List like multiselect.")),
-                  MUIA_ShortHelp, STRING(MSG_LIST_LIKE_MULTISEL_HELP,"Set it if you want the Multiselect\nwith key act near like List one."),
+                  Child, HSpace(0),
                 End,
-                Child, VSpace(0),
-              End,
-              Child, HSpace(0),
-            End,
 
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrame, MUIA_Background, MUII_GroupBack,
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, GroupObject,MUIA_Group_Horiz,TRUE,
-                  Child, data->mcp_SerMouseFix = ImageObject,
-                    ImageButtonFrame,
-                    MUIA_InputMode        , MUIV_InputMode_Toggle,
-                    MUIA_Image_Spec       , MUII_CheckMark,
-                    MUIA_Image_FreeVert   , TRUE,
-                    MUIA_Background       , MUII_ButtonBack,
-                    MUIA_ShowSelState     , FALSE,
+                Child, HGroup,
+                  GroupFrameT(tr(MSG_SB_VERTICAL)),
+                  Child, HSpace(0),
+                  Child, VGroup,
+                    Child, VSpace(0),
+                    Child, data->mcp_R_VSB = RadioObject,
+                      MUIA_Radio_Entries,RS_VSB,
+                    End,
+                    MUIA_ShortHelp, tr(MSG_SB_VERTICAL_HELP),
+                    Child, VSpace(0),
                   End,
-                  Child, Label(STRING(MSG_SERMOUSE_FIX,"Serial Mouse Fix")),
-                  MUIA_ShortHelp, STRING(MSG_SERMOUSE_FIX_HELP,"Set it to fix Drag&Drop problem\nif you are using some special pointer\ndriver (most of time on serial port)."),
+                  Child, HSpace(0),
                 End,
                 Child, VSpace(0),
               End,
-              Child, HSpace(0),
-            End,
 
-          End,
-
-          Child, GroupObject,
-
-          #if defined(DO_STACK_CHECK)
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_STACK_WARNING,"Stack Warning")),
-              Child, HSpace(0),
-              Child, GroupObject,
+              Child, VGroup,
+                GroupFrameT(tr(MSG_SCROLLCONTROL)),
                 Child, VSpace(0),
-                Child, data->mcp_StackCheck = RadioObject,
-                  MUIA_Radio_Entries,RS_StackCheck,
+
+                Child, ColGroup(2),
+                  Child, HSpace(0),
+                  Child, HGroup,
+                    Child, data->mcp_B_Smooth = ImageObject,
+                      ImageButtonFrame,
+                      MUIA_InputMode,       MUIV_InputMode_Toggle,
+                      MUIA_Image_Spec,      MUII_CheckMark,
+                      MUIA_Image_FreeVert,  TRUE,
+                      MUIA_Background,      MUII_ButtonBack,
+                      MUIA_ShowSelState,    FALSE,
+                    End,
+                    Child, Label(tr(MSG_SMOOTH_SCROLLING)),
+                    MUIA_ShortHelp, tr(MSG_SMOOTH_SCROLLING_HELP),
+                    Child, HSpace(0),
+                  End,
+
+                  Child, HSpace(0),
+                  Child, HGroup,
+                    Child, data->mcp_WheelMMB = ImageObject,
+                      ImageButtonFrame,
+                      MUIA_InputMode,       MUIV_InputMode_Toggle,
+                      MUIA_Image_Spec,      MUII_CheckMark,
+                      MUIA_Image_FreeVert,  TRUE,
+                      MUIA_Background,      MUII_ButtonBack,
+                      MUIA_ShowSelState,    FALSE,
+                    End,
+                    Child, Label(tr(MSG_MMB_FASTWHEEL)),
+                    MUIA_ShortHelp, tr(MSG_MMB_FASTWHEEL_HELP),
+                    Child, HSpace(0),
+                  End,
+
+                  Child, Label(tr(MSG_WHEEL_STEP)),
+                  Child, data->mcp_WheelStep = SliderObject,
+                    MUIA_CycleChain,    1,
+                    MUIA_Numeric_Min,   1,
+                    MUIA_Numeric_Max,   10,
+                    MUIA_Numeric_Value, DEFAULT_WHEELSTEP,
+                    MUIA_ShortHelp, tr(MSG_WHEEL_STEP_HELP),
+                  End,
+
+                  Child, Label(tr(MSG_WHEEL_FAST)),
+                  Child, data->mcp_WheelFast = SliderObject,
+                    MUIA_CycleChain,    1,
+                    MUIA_Numeric_Min,   1,
+                    MUIA_Numeric_Max,   10,
+                    MUIA_Numeric_Value, DEFAULT_WHEELFAST,
+                    MUIA_ShortHelp, tr(MSG_WHEEL_FAST_HELP),
+                  End,
                 End,
-                MUIA_ShortHelp, STRING(MSG_STACK_WARNING_HELP,"NList objects do checks to\nknow what part of stack is free\nand open a requester when it is\ntoo small.\nIt's not perfect because the stack\nis checked only at some points of the\nobject code and MUI code use more stack\nthan NList will ever see beeing used.\n\nAnyway it should prevent\nor explain most of stack crashes...\n\nIt seems that [< 2 Kb] is a good value."),
+
                 Child, VSpace(0),
               End,
-              Child, HSpace(0),
-            End,
-          #endif // DO_STACK_CHECK
 
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_DEFAULT_CONTEXT_MENU,"Default ContextMenu")),
-              Child, HSpace(0),
-              Child, GroupObject,
+
+            End;
+
+
+  RS_MultiSelects[0] = tr(MSG_MULTISELECT_QUAL);
+  RS_MultiSelects[1] = tr(MSG_MULTISELECT_ALWAYS);
+  RS_MultiSelects[2] = NULL;
+
+  RS_DragTypes[0] = tr(MSG_DRAGTYPE_IMMEDIATE);
+  RS_DragTypes[1] = tr(MSG_DRAGTYPE_BORDERS);
+  RS_DragTypes[2] = tr(MSG_DRAGTYPE_QUALIFIER);
+  RS_DragTypes[3] = NULL;
+
+  RS_ColWidthDrag[0] = tr(MSG_COLWIDTHDRAG_TITLE);
+  RS_ColWidthDrag[1] = tr(MSG_COLWIDTHDRAG_FULLBAR);
+  RS_ColWidthDrag[2] = tr(MSG_COLWIDTHDRAG_VISIBLE);
+  RS_ColWidthDrag[3] = NULL;
+
+  RS_Menu[0] = tr(MSG_CMENU_ALWAYS);
+  RS_Menu[1] = tr(MSG_CMENU_TOPONLY);
+  RS_Menu[2] = tr(MSG_CMENU_NEVER);
+  RS_Menu[3] = NULL;
+
+  group4 = VGroup,
+
+              Child, HGroup,
+                Child, VGroup,
+                  Child, HGroup,
+                    GroupFrameT(tr(MSG_MULTISELECT)),
+
+                    Child, HSpace(0),
+                    Child, VGroup,
+                      Child, VSpace(0),
+
+                      Child, HGroup,
+                        Child, data->mcp_R_Multi = RadioObject,
+                          MUIA_Radio_Entries, RS_MultiSelects,
+                          MUIA_ShortHelp,     tr(MSG_MULTISELECT_HELP),
+                        End,
+                        Child, HSpace(0),
+                      End,
+
+                      Child, RectangleObject,
+                        MUIA_VertWeight,     0,
+                        MUIA_Rectangle_HBar, TRUE,
+                      End,
+
+                      Child, HGroup,
+                        Child, data->mcp_List_Select = ImageObject,
+                          ImageButtonFrame,
+                          MUIA_InputMode,       MUIV_InputMode_Toggle,
+                          MUIA_Image_Spec,      MUII_CheckMark,
+                          MUIA_Image_FreeVert,  TRUE,
+                          MUIA_Background,      MUII_ButtonBack,
+                          MUIA_ShowSelState,    FALSE,
+                          MUIA_Selected,        TRUE,
+                        End,
+                        Child, Label(tr(MSG_MULTISEL_MOVEACTIVE)),
+                        MUIA_ShortHelp, tr(MSG_MULTISEL_MOVEACTIVE_HELP),
+                        Child, HSpace(0),
+                      End,
+
+                      Child, HGroup,
+                        Child, data->mcp_B_MultiMMB = ImageObject,
+                          ImageButtonFrame,
+                          MUIA_InputMode,     MUIV_InputMode_Toggle,
+                          MUIA_Image_Spec,    MUII_CheckMark,
+                          MUIA_Background,    MUII_ButtonBack,
+                          MUIA_ShowSelState,  FALSE,
+                          MUIA_Image_FreeVert,TRUE,
+                        End,
+                        Child, Label(tr(MSG_MMB_MULTISEL)),
+                        MUIA_ShortHelp, tr(MSG_MMB_MULTISEL_HELP),
+                        Child, HSpace(0),
+                      End,
+
+                      Child, VSpace(0),
+                    End,
+                    Child, HSpace(0),
+                  End,
+
+                  Child, HGroup,
+                    GroupFrameT(tr(MSG_LAYOUT)),
+                    Child, HSpace(0),
+                    Child, VGroup,
+                      Child, VSpace(0),
+                        Child, HGroup,
+                          Child, data->mcp_PartialCol = ImageObject,
+                            ImageButtonFrame,
+                            MUIA_InputMode,       MUIV_InputMode_Toggle,
+                            MUIA_Image_Spec,      MUII_CheckMark,
+                            MUIA_Image_FreeVert,  TRUE,
+                            MUIA_Background,      MUII_ButtonBack,
+                            MUIA_ShowSelState,    FALSE,
+                            MUIA_Selected,        TRUE,
+                          End,
+                          Child, Label(tr(MSG_PARTIAL_COL_MARK)),
+                          MUIA_ShortHelp, tr(MSG_PARTIAL_COL_MARK_HELP),
+                          Child, HSpace(0),
+                        End,
+
+                        Child, HGroup,
+                          Child, data->mcp_PartialChar = ImageObject,
+                            ImageButtonFrame,
+                            MUIA_InputMode,       MUIV_InputMode_Toggle,
+                            MUIA_Image_Spec,      MUII_CheckMark,
+                            MUIA_Image_FreeVert,  TRUE,
+                            MUIA_Background,      MUII_ButtonBack,
+                            MUIA_ShowSelState,    FALSE,
+                            MUIA_Selected,        FALSE,
+                          End,
+                          Child, Label(tr(MSG_PARTIAL_CHARS_DRAWN)),
+                          MUIA_ShortHelp, tr(MSG_PARTIAL_CHARS_DRAWN_HELP),
+                          Child, HSpace(0),
+                        End,
+
+                        Child, HGroup,
+                          Child, data->mcp_VerticalCenteredLines = ImageObject,
+                            ImageButtonFrame,
+                            MUIA_InputMode,       MUIV_InputMode_Toggle,
+                            MUIA_Image_Spec,      MUII_CheckMark,
+                            MUIA_Image_FreeVert,  TRUE,
+                            MUIA_Background,      MUII_ButtonBack,
+                            MUIA_ShowSelState,    FALSE,
+                            MUIA_Selected,        FALSE,
+                          End,
+                          Child, Label(tr(MSG_VERT_CENTERED)),
+                          MUIA_ShortHelp, tr(MSG_VERT_CENTERED_HELP),
+                          Child, HSpace(0),
+                        End,
+
+                      Child, VSpace(0),
+                    End,
+                    Child, HSpace(0),
+                  End,
+
+                End,
+
+                Child, VGroup,
+
+                  Child, HGroup,
+                    GroupFrameT(tr(MSG_DRAGDROP)),
+
+                    Child, VGroup,
+                      Child, VSpace(0),
+
+                      Child, HGroup,
+                        Child, HSpace(0),
+                        Child, data->mcp_R_Drag = RadioObject,
+                          MUIA_Radio_Entries, RS_DragTypes,
+                          MUIA_ShortHelp,     tr(MSG_DRAGTYPE_HELP),
+                        End,
+                        Child, HSpace(0),
+                      End,
+
+                      Child, RectangleObject,
+                        MUIA_VertWeight,     0,
+                        MUIA_Rectangle_HBar, TRUE,
+                      End,
+
+                      Child, ColGroup(2),
+
+                        Child, Label(tr(MSG_DRAG_LINES)),
+                        Child, data->mcp_DragLines = SliderObject,
+                          MUIA_ShortHelp, tr(MSG_DRAG_LINES_HELP),
+                          MUIA_CycleChain,    1,
+                          MUIA_Numeric_Min,   0,
+                          MUIA_Numeric_Max,   20,
+                          MUIA_Numeric_Value, DEFAULT_DRAGLINES,
+                        End,
+
+                        Child, HSpace(0),
+                        Child, HGroup,
+                          Child, data->mcp_SerMouseFix = ImageObject,
+                            ImageButtonFrame,
+                            MUIA_InputMode,       MUIV_InputMode_Toggle,
+                            MUIA_Image_Spec,      MUII_CheckMark,
+                            MUIA_Image_FreeVert,  TRUE,
+                            MUIA_Background,      MUII_ButtonBack,
+                            MUIA_ShowSelState,    FALSE,
+                          End,
+                          Child, Label(tr(MSG_SERMOUSE_FIX)),
+                          MUIA_ShortHelp, tr(MSG_SERMOUSE_FIX_HELP),
+                          Child, HSpace(0),
+                        End,
+                      End,
+
+                      Child, VSpace(0),
+                    End,
+
+                  End,
+
+                  Child, HGroup,
+                    GroupFrameT(tr(MSG_BALANCING_COLS)),
+                    Child, HSpace(0),
+                    Child, VGroup,
+                      Child, VSpace(0),
+                      Child, data->mcp_ColWidthDrag = RadioObject,
+                        MUIA_Radio_Entries, RS_ColWidthDrag,
+                      End,
+                      MUIA_ShortHelp, tr(MSG_BALANCING_COLS_HELP),
+                      Child, VSpace(0),
+                    End,
+                    Child, HSpace(0),
+                  End,
+
+                End,
+              End,
+
+              Child, VGroup,
+                GroupFrameT(tr(MSG_GROUP_MISC)),
+                MUIA_VertWeight, 10,
+
                 Child, VSpace(0),
-                Child, data->mcp_NList_Menu = RadioObject,
-                  MUIA_Radio_Entries,RS_Menu,
-                  MUIA_ShortHelp, STRING(MSG_DEFAULT_CONTEXT_MENU_HELP,"NList permit to have its default\ncontext menu being disabled or enabled\nonly on title(top of list when no title).\n"),
+                Child, HGroup,
+
+                  Child, HSpace(0),
+                  Child, VGroup,
+
+                    Child, HGroup,
+                      Child, data->mcp_SelectPointer = ImageObject,
+                        ImageButtonFrame,
+                        MUIA_InputMode,       MUIV_InputMode_Toggle,
+                        MUIA_Image_Spec,      MUII_CheckMark,
+                        MUIA_Image_FreeVert,  TRUE,
+                        MUIA_Background,      MUII_ButtonBack,
+                        MUIA_ShowSelState,    FALSE,
+                      End,
+                      Child, Label(tr(MSG_SELECT_POINTER)),
+                      MUIA_ShortHelp, tr(MSG_SELECT_POINTER_HELP),
+                      Child, HSpace(0),
+                    End,
+
+                  End,
+
+                  Child, HGroup,
+                    Child, VGroup,
+                      Child, VSpace(0),
+                        Child, RectangleObject,
+                        MUIA_VertWeight,         0,
+                        MUIA_Rectangle_HBar,     TRUE,
+                        MUIA_Rectangle_BarTitle, tr(MSG_BAR_CONTEXTMENU),
+                      End,
+                      Child, data->mcp_NList_Menu = RadioObject,
+                        MUIA_Radio_Entries,RS_Menu,
+                        MUIA_ShortHelp, tr(MSG_DEFAULT_CONTEXT_MENU_HELP),
+                      End,
+                      Child, VSpace(0),
+                    End,
+                  End,
+
+                  Child, HSpace(0),
                 End,
                 Child, VSpace(0),
               End,
-              Child, HSpace(0),
-            End,
 
-          End,
+            End;
 
-        End;
-
-  group4 = GroupObject,
-
-          Child, GroupObject,MUIA_Group_Horiz,TRUE,
-
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_SB_HORIZONTAL,"Horizontal Scrollbar")),
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, data->mcp_R_HSB = RadioObject,
-                  MUIA_Radio_Entries,RS_HSB,
-                End,
-                MUIA_ShortHelp, STRING(MSG_SB_HORIZONTAL_HELP,"Set the default mode\nof the horizontal scroller."),
-                Child, VSpace(0),
-              End,
-              Child, HSpace(0),
-            End,
-
-            Child, GroupObject,MUIA_Group_Horiz,TRUE, GroupFrameT(STRING(MSG_SB_VERTICAL,"Vertical Scrollbar")),
-              Child, HSpace(0),
-              Child, GroupObject,
-                Child, VSpace(0),
-                Child, data->mcp_R_VSB = RadioObject,
-                  MUIA_Radio_Entries,RS_VSB,
-                End,
-                MUIA_ShortHelp, STRING(MSG_SB_VERTICAL_HELP,"Set the default mode\nof the vertical scroller."),
-                Child, VSpace(0),
-              End,
-              Child, HSpace(0),
-            End,
-            Child, VSpace(0),
-
-          End,
-
-          Child, GroupObject, GroupFrameT(STRING(MSG_SMOOTH_SCROLL,"Smooth Scrolling")),
-            Child, VSpace(0),
-            Child, GroupObject,MUIA_Group_Horiz,TRUE,
-              Child, HSpace(0),
-              Child, data->mcp_B_Smooth = ImageObject,
-                ImageButtonFrame,
-                MUIA_InputMode        , MUIV_InputMode_Toggle,
-                MUIA_Image_Spec       , MUII_CheckMark,
-                MUIA_Image_FreeVert   , TRUE,
-                MUIA_Background       , MUII_ButtonBack,
-                MUIA_ShowSelState     , FALSE,
-              End,
-              Child, Label(STRING(MSG_SMOOTH_SCROLLING,"Smooth Scrolling.\n(set speed with\nthe smooth\nslider in Listviews)")),
-              MUIA_ShortHelp, STRING(MSG_SMOOTH_SCROLLING_HELP,"Set it if you want to use Smooth\nscrolling for NList objects.\n\n*Use the smooth slider in Listviews*\n*prefs to set how fast/slow it will be.*\n\nSmooth for standard lists can be on or\noff, but a 0 smooth slider value make\nno smooth at all !"),
-              Child, HSpace(0),
-            End,
-            Child, VSpace(0),
-          End,
-
-        End;
+  functions_names[0] = tr(MSG_FUNC_MULTISELQUAL);
+  functions_names[1] = tr(MSG_FUNC_DRAGQUAL);
+  functions_names[2] = tr(MSG_FUNC_BALANCEQUAL);
+  functions_names[3] = tr(MSG_FUNC_COPYCLIP);
+  functions_names[4] = tr(MSG_FUNC_DEFCOLWIDTH);
+  functions_names[5] = tr(MSG_FUNC_DEFALLCOLWIDTH);
+  functions_names[6] = tr(MSG_FUNC_DEFORDERCOL);
+  functions_names[7] = tr(MSG_FUNC_DEFALLORDERCOL);
+  functions_names[8] = tr(MSG_FUNC_SELECTTOP);
+  functions_names[9] = tr(MSG_FUNC_SELECTBOTTOM);
+  functions_names[10]= tr(MSG_FUNC_SELECTPAGEUP);
+  functions_names[11]= tr(MSG_FUNC_SELECTPAGEDOWN);
+  functions_names[12]= tr(MSG_FUNC_SELECTUP);
+  functions_names[13]= tr(MSG_FUNC_SELECTDOWN);
+  functions_names[14]= tr(MSG_FUNC_TOGGLEACTIVE);
+  functions_names[15]= tr(MSG_FUNC_FASTWHEELQUAL);
+  functions_names[16]= tr(MSG_FUNC_HORIZWHEELQUAL);
+  functions_names[17]= tr(MSG_FUNC_TITLECLICKQUAL);
+  functions_names[18]= "";
+  functions_names[19]= NULL;
 
   group5 = GroupObject,
           Child, NListviewObject,
@@ -1492,7 +1327,7 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
             Child, GroupObject,MUIA_Group_Horiz,TRUE,
               Child, data->mcp_stringkey,
-              Child, data->mcp_snoopkey = ToggleButtonCycle("Snoop",FALSE,TRUE,STRING(MSG_SNOOP_KEY,"Start the grab of the hotkey.")),
+              Child, data->mcp_snoopkey = ToggleButtonCycle(tr(MSG_SNOOP), FALSE, TRUE, tr(MSG_SNOOP_KEY)),
             End,
 
             Child, BalanceObject, End,
@@ -1523,27 +1358,27 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
           End,
 
           Child, GroupObject,MUIA_Group_Horiz,TRUE,
-            Child, data->mcp_insertkey = SimpleButtonCycle("Insert",STRING(MSG_INSERT_KEY,"Insert a new hotkey.")),
-            Child, data->mcp_removekey = SimpleButtonCycle("Remove",STRING(MSG_REMOVE_KEY,"Remove a hotkey.")),
-            Child, data->mcp_updatekeys = SimpleButtonCycle("Update keys",STRING(MSG_UPDATE_KEYS,"Add the default hotkeys for\nthe functions which are not\ncurrently in the list.")),
-            Child, data->mcp_defaultkeys = SimpleButtonCycle("Default all keys",STRING(MSG_DEFAULT_KEYS,"Reset all hotkeys to default ones.")),
+            Child, data->mcp_insertkey = SimpleButtonCycle(tr(MSG_BUTTON_INSERT), tr(MSG_BUTTON_INSERT_HELP)),
+            Child, data->mcp_removekey = SimpleButtonCycle(tr(MSG_BUTTON_REMOVE), tr(MSG_BUTTON_REMOVE_HELP)),
+            Child, data->mcp_updatekeys = SimpleButtonCycle(tr(MSG_BUTTON_UPDATEKEYS), tr(MSG_BUTTON_UPDATEKEYS_HELP)),
+            Child, data->mcp_defaultkeys = SimpleButtonCycle(tr(MSG_BUTTON_DEFAULTKEYS), tr(MSG_BUTTON_DEFAULTKEYS_HELP)),
           End,
 
         End;
 
+  Pages[0] = tr(MSG_PAGE_FONTS);
+  Pages[1] = tr(MSG_PAGE_COLORS);
+  Pages[2] = tr(MSG_PAGE_SCROLLING);
+  Pages[3] = tr(MSG_PAGE_OPTIONS);
+  Pages[4] = tr(MSG_PAGE_KEYBINDINGS);
+
   data->mcp_group = GroupObject,
-    Child, RegisterObject,MUIA_Register_Titles,(Pages),
-      MUIA_Register_Frame, TRUE,
+    Child, RegisterObject,
+      MUIA_Register_Titles, Pages,
+      MUIA_Register_Frame,  TRUE,
       Child, group1,
       Child, group2,
-      Child, RegisterObject,MUIA_Register_Titles,(Pages3),
-        MUIA_Register_Frame, TRUE,
-        Child, group31,
-        Child, group33,
-        Child, group34,
-        Child, group35,
-        Child, group36,
-      End,
+      Child, group3,
       Child, group4,
       Child, group5,
     End,
@@ -1600,19 +1435,49 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   // our mcc gadgets accordingly
   if(MUIMasterBase->lib_Version >= 20)
   {
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenTitle,     MUICFG_NList_Pen_Title, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenList,      MUICFG_NList_Pen_List, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenSelect,    MUICFG_NList_Pen_Select, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenCursor,    MUICFG_NList_Pen_Cursor, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenUnselCur,  MUICFG_NList_Pen_UnselCur, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenInactCur,  MUICFG_NList_Pen_InactCur, 0, NULL);
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenTitle,     MUICFG_NList_Pen_Title, 1, tr(MSG_TITLE_PEN_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenList,      MUICFG_NList_Pen_List, 1, tr(MSG_LIST_PEN_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenSelect,    MUICFG_NList_Pen_Select, 1, tr(MSG_SELECT_PEN_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenCursor,    MUICFG_NList_Pen_Cursor, 1, tr(MSG_CURSOR_PEN_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenUnselCur,  MUICFG_NList_Pen_UnselCur, 1, tr(MSG_UNSEL_PEN_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenInactCur,  MUICFG_NList_Pen_InactCur, 1, tr(MSG_INACT_PEN_WIN));
 
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Title,     MUICFG_NList_BG_Title, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_List,      MUICFG_NList_BG_List, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Select,    MUICFG_NList_BG_Select, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Cursor,    MUICFG_NList_BG_Cursor, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_UnselCur,  MUICFG_NList_BG_UnselCur, 0, NULL);
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_InactCur,  MUICFG_NList_BG_InactCur, 0, NULL);
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Title,     MUICFG_NList_BG_Title, 1, tr(MSG_TITLE_BG_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_List,      MUICFG_NList_BG_List, 1, tr(MSG_LIST_BG_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Select,    MUICFG_NList_BG_Select, 1, tr(MSG_SELECT_BG_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Cursor,    MUICFG_NList_BG_Cursor, 1, tr(MSG_CURSOR_BG_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_UnselCur,  MUICFG_NList_BG_UnselCur, 1, tr(MSG_UNSEL_BG_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_InactCur,  MUICFG_NList_BG_InactCur, 1, tr(MSG_INACT_BG_WIN));
+
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_Font,         MUICFG_NList_Font, 1, tr(MSG_NORMAL_FONT));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_Font_Little,  MUICFG_NList_Font_Little, 1, tr(MSG_SMALL_FONT));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_Font_Fixed,   MUICFG_NList_Font_Fixed, 1, tr(MSG_FIXED_FONT));
+
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_SL_VertInc,   MUICFG_NList_VertInc, 1, tr(MSG_FONT_MARGIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_R_Drag,       MUICFG_NList_DragType, 1, tr(MSG_DRAGDROP));
+
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_R_Multi,      MUICFG_NList_MultiSelect, 1, tr(MSG_MULTISELECT));
+
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_R_VSB,        MUICFG_NListview_VSB, 1, tr(MSG_SB_VERTICAL));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_R_HSB,        MUICFG_NListview_HSB, 1, tr(MSG_SB_HORIZONTAL));
+
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_B_Smooth,     MUICFG_NList_Smooth, 1, tr(MSG_SMOOTH_SCROLLING));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_ForcePen,     MUICFG_NList_ForcePen, 1, tr(MSG_FORCE_SELECT_PEN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_ColWidthDrag, MUICFG_NList_ColWidthDrag, 1, tr(MSG_BALANCING_COLS));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PartialCol,   MUICFG_NList_PartialCol, 1, tr(MSG_PARTIAL_COL_MARK));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_List_Select,  MUICFG_NList_List_Select, 1, tr(MSG_MULTISEL_MOVEACTIVE));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_NList_Menu,   MUICFG_NList_Menu, 1, tr(MSG_BAR_CONTEXTMENU));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PartialChar,  MUICFG_NList_PartialChar, 1, tr(MSG_PARTIAL_CHARS_DRAWN));
+
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_SerMouseFix,  MUICFG_NList_SerMouseFix, 1, tr(MSG_SERMOUSE_FIX));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_listkeys,     MUICFG_NList_Keys, 1, tr(MSG_PAGE_KEYBINDINGS));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_DragLines,    MUICFG_NList_DragLines, 1, tr(MSG_DRAG_LINES));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_VerticalCenteredLines, MUICFG_NList_VCenteredLines, 1, tr(MSG_VERT_CENTERED));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_SelectPointer,MUICFG_NList_SelectPointer, 1, tr(MSG_SELECT_POINTER));
+
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_WheelStep,    MUICFG_NList_WheelStep, 1, tr(MSG_WHEEL_STEP));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_WheelFast,    MUICFG_NList_WheelFast, 1, tr(MSG_WHEEL_FAST));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_WheelMMB,     MUICFG_NList_WheelMMB, 1, tr(MSG_MMB_FASTWHEEL));
   }
 
   return ((ULONG)obj);
@@ -1641,7 +1506,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   LOAD_DATALONG(data->mcp_SL_VertInc, MUIA_Numeric_Value,    MUICFG_NList_VertInc,     DEFAULT_VERT_INC);
 
-  LOAD_DATALONG(data->mcp_B_Smooth,   MUIA_Selected,         MUICFG_NList_Smooth,      FALSE);
+  LOAD_DATALONG(data->mcp_B_Smooth,   MUIA_Selected,         MUICFG_NList_Smooth,      DEFAULT_SMOOTHSCROLL);
 
   LOAD_DATAFONT(data->mcp_Font,       MUICFG_NList_Font);
   LOAD_DATAFONT(data->mcp_Font_Little,MUICFG_NList_Font_Little);
@@ -1649,7 +1514,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   {
     LONG *ptrd;
-    LONG num = 0;
+    LONG num = DEFAULT_DRAGTYPE;
     if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_DragType)))
     {
       if      (*ptrd == MUIV_NList_DragType_Qualifier)
@@ -1662,23 +1527,6 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
     set(data->mcp_R_Drag,MUIA_Radio_Active, num);
 
   }
-
-#if defined(DO_STACK_CHECK)
-  {
-    LONG *ptrd;
-    LONG num = 1;
-    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_StackCheck)))
-    {
-      if      (*ptrd == 0)
-        num = 0;
-      else if (*ptrd == 2)
-        num = 2;
-      else
-        num = 1;
-    }
-    set(data->mcp_StackCheck,MUIA_Radio_Active, num);
-  }
-#endif // DO_STACK_CHECK
 
   {
     LONG *ptrd;
@@ -1697,7 +1545,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   {
     LONG *ptrd;
-    LONG num = 0;
+    LONG num = DEFAULT_MULTISELECT;
 
     if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_MultiSelect)))
       num = *ptrd;
@@ -1734,7 +1582,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   {
     LONG *ptrd;
-    LONG num = 1;
+    LONG num = DEFAULT_VSB;
 
     if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListview_VSB)))
       num = *ptrd;
@@ -1747,7 +1595,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   {
     LONG *ptrd;
-    LONG num = FALSE;
+    LONG num = DEFAULT_FORCEPEN;
     if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_ForcePen)))
     {
       if (*ptrd)
@@ -1759,14 +1607,15 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   }
 
   LOAD_DATALONG(data->mcp_DragLines,    MUIA_Numeric_Value,    MUICFG_NList_DragLines, DEFAULT_DRAGLINES);
-  LOAD_DATALONG(data->mcp_VerticalCenteredLines, MUIA_Selected, MUICFG_NList_VCenteredLines, TRUE);
-  LOAD_DATALONG(data->mcp_WheelStep,    MUIA_Numeric_Value,    MUICFG_NList_WheelStep, 1);
-  LOAD_DATALONG(data->mcp_WheelFast,    MUIA_Numeric_Value,    MUICFG_NList_WheelFast, 5);
-  LOAD_DATALONG(data->mcp_WheelMMB,     MUIA_Selected,         MUICFG_NList_WheelMMB,  FALSE);
+  LOAD_DATALONG(data->mcp_VerticalCenteredLines, MUIA_Selected, MUICFG_NList_VCenteredLines, DEFAULT_VCENTERED);
+  LOAD_DATALONG(data->mcp_SelectPointer, MUIA_Selected, MUICFG_NList_SelectPointer, DEFAULT_SELECTPOINTER);
+  LOAD_DATALONG(data->mcp_WheelStep,    MUIA_Numeric_Value,    MUICFG_NList_WheelStep, DEFAULT_WHEELSTEP);
+  LOAD_DATALONG(data->mcp_WheelFast,    MUIA_Numeric_Value,    MUICFG_NList_WheelFast, DEFAULT_WHEELFAST);
+  LOAD_DATALONG(data->mcp_WheelMMB,     MUIA_Selected,         MUICFG_NList_WheelMMB,  DEFAULT_WHEELMMB);
 
   {
     LONG *ptrd;
-    LONG num = FALSE;
+    LONG num = DEFAULT_SERMOUSEFIX;
     if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_SerMouseFix)))
     {
       if (*ptrd)
@@ -1779,7 +1628,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   {
     LONG *ptrd;
-    LONG num = TRUE;
+    LONG num = DEFAULT_LIST_SELECT;
     if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_List_Select)))
     {
       if (*ptrd)
@@ -1792,7 +1641,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   {
     LONG *ptrd;
-    LONG num = TRUE;
+    LONG num = DEFAULT_PARTIALCOL;
     if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_PartialCol)))
     {
       if (*ptrd)
@@ -1805,7 +1654,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   {
     LONG *ptrd;
-    LONG num = FALSE;
+    LONG num = DEFAULT_PARTIALCHAR;
     if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_PartialChar)))
     {
       if (*ptrd)
@@ -1818,7 +1667,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   {
     LONG *ptrd;
-    LONG num = 0;
+    LONG num = DEFAULT_CMENU;
     if((ptrd = (LONG *)DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_Menu)) != NULL)
     {
       if(*ptrd == (LONG)MUIV_NList_ContextMenu_TopOnly)
@@ -1883,15 +1732,6 @@ ULONG mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settings
     DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_DragType);
   }
 
-#if defined(DO_STACK_CHECK)
-  {
-    LONG ptrd,num;
-    get(data->mcp_StackCheck, MUIA_Radio_Active, &ptrd);
-    num = ptrd;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_StackCheck);
-  }
-#endif // DO_STACK_CHECK
-
   {
     LONG ptrd,num;
     get(data->mcp_ColWidthDrag, MUIA_Radio_Active, &ptrd);
@@ -1939,6 +1779,7 @@ ULONG mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settings
 
   SAVE_DATALONG(data->mcp_DragLines,    MUIA_Numeric_Value,     MUICFG_NList_DragLines);
   SAVE_DATALONG(data->mcp_VerticalCenteredLines,    MUIA_Selected,     MUICFG_NList_VCenteredLines);
+  SAVE_DATALONG(data->mcp_SelectPointer,MUIA_Selected,          MUICFG_NList_SelectPointer);
   SAVE_DATALONG(data->mcp_WheelStep,    MUIA_Numeric_Value,     MUICFG_NList_WheelStep);
   SAVE_DATALONG(data->mcp_WheelFast,    MUIA_Numeric_Value,     MUICFG_NList_WheelFast);
   SAVE_DATALONG(data->mcp_WheelMMB,     MUIA_Selected,          MUICFG_NList_WheelMMB);

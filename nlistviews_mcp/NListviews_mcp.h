@@ -72,20 +72,21 @@
 #define MUICFG_NListview_VSB        0x9d510011
 #define MUICFG_NListview_HSB        0x9d510012
 
-#define MUICFG_NList_DragQualifier  0x9d510013
+#define MUICFG_NList_DragQualifier  0x9d510013 /* OBSOLETE */
 #define MUICFG_NList_Smooth         0x9d510014
 #define MUICFG_NList_ForcePen       0x9d510015
-#define MUICFG_NList_StackCheck     0x9d510016
+#define MUICFG_NList_StackCheck     0x9d510016 /* OBSOLETE */
 #define MUICFG_NList_ColWidthDrag   0x9d510017
 #define MUICFG_NList_PartialCol     0x9d510018
 #define MUICFG_NList_List_Select    0x9d510019
 #define MUICFG_NList_Menu           0x9d51001A
 #define MUICFG_NList_PartialChar    0x9d51001B
-#define MUICFG_NList_PointerColor   0x9d51001C  /* OBSOLETE */
+#define MUICFG_NList_PointerColor   0x9d51001C /* OBSOLETE */
 #define MUICFG_NList_SerMouseFix    0x9d51001D
 #define MUICFG_NList_Keys           0x9d51001E
 #define MUICFG_NList_DragLines      0x9d51001F
 #define MUICFG_NList_VCenteredLines 0x9d510020
+#define MUICFG_NList_SelectPointer  0x9d510106
 
 #define MUICFG_NList_WheelStep      0x9d510101
 #define MUICFG_NList_WheelFast      0x9d510102
@@ -99,24 +100,38 @@
 #define MUIV_NList_ColWidthDrag_Visual    2
 
 
-#define DEFAULT_PEN_TITLE    "m5"
-#define DEFAULT_PEN_LIST     "m5"
-#define DEFAULT_PEN_SELECT   "m5"
-#define DEFAULT_PEN_CURSOR   "m5"
-#define DEFAULT_PEN_UNSELCUR "m5"
-#define DEFAULT_PEN_INACTCUR "m5"
-#define DEFAULT_BG_TITLE     "2:m3"
-#define DEFAULT_BG_LIST      "2:m2"
-#define DEFAULT_BG_SELECT    "0:135"
-#define DEFAULT_BG_CURSOR    "0:131"
-#define DEFAULT_BG_UNSELCUR  "2:m3"
-#define DEFAULT_BG_INACTCUR  "2:m3"
-#define DEFAULT_VERT_INC     1
-#define DEFAULT_HSB          MUIV_NListview_HSB_Auto
-#define DEFAULT_CWD          MUIV_NList_ColWidthDrag_All
-#define DEFAULT_WHEELSTEP    1
-#define DEFAULT_WHEELFAST    5
-#define DEFAULT_DRAGLINES    10
+// default values for the above MUICFG values
+#define DEFAULT_PEN_TITLE     "m5"
+#define DEFAULT_PEN_LIST      "m5"
+#define DEFAULT_PEN_SELECT    "m5"
+#define DEFAULT_PEN_CURSOR    "m5"
+#define DEFAULT_PEN_UNSELCUR  "m5"
+#define DEFAULT_PEN_INACTCUR  "m5"
+#define DEFAULT_BG_TITLE      "0:140"
+#define DEFAULT_BG_LIST       "2:m2"
+#define DEFAULT_BG_SELECT     "0:135"
+#define DEFAULT_BG_CURSOR     "0:131"
+#define DEFAULT_BG_UNSELCUR   "2:m3"
+#define DEFAULT_BG_INACTCUR   "2:m3"
+#define DEFAULT_VERT_INC      0
+#define DEFAULT_HSB           MUIV_NListview_HSB_Auto
+#define DEFAULT_VSB           MUIV_NListview_VSB_Auto
+#define DEFAULT_CWD           MUIV_NList_ColWidthDrag_All
+#define DEFAULT_CMENU         1
+#define DEFAULT_MULTISELECT   0
+#define DEFAULT_DRAGTYPE      0
+#define DEFAULT_DRAGLINES     10
+#define DEFAULT_WHEELSTEP     3
+#define DEFAULT_WHEELFAST     5
+#define DEFAULT_WHEELMMB      FALSE
+#define DEFAULT_VCENTERED     FALSE
+#define DEFAULT_SMOOTHSCROLL  TRUE
+#define DEFAULT_SELECTPOINTER TRUE
+#define DEFAULT_PARTIALCHAR   FALSE
+#define DEFAULT_PARTIALCOL    TRUE
+#define DEFAULT_SERMOUSEFIX   FALSE
+#define DEFAULT_LIST_SELECT   TRUE
+#define DEFAULT_FORCEPEN      FALSE
 
 
 #define KEYTAG_QUALIFIER_MULTISELECT       0x9d51C001
