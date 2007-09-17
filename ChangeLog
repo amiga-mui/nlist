@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-17  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/Pointer.c: too much data was copied while setting up the bitmaps
+    for the pointers, which caused crashes with the OS3 build as soon as either
+    the move or size pointer should be displayed. Also fixed a coloring issue
+    with the size and move pointers.
+
 2007-09-16 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: removed all stackchecking functionality regardless if we can compile
