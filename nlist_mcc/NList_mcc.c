@@ -843,6 +843,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   INIT_PEN(MUIA_NList_SelectPen,  data->NList_SelectPen,  data->Pen_Select_init);
   INIT_PEN(MUIA_NList_CursorPen,  data->NList_CursorPen,  data->Pen_Cursor_init);
   INIT_PEN(MUIA_NList_UnselCurPen,data->NList_UnselCurPen,data->Pen_UnselCur_init);
+  INIT_PEN(MUIA_NList_InactivePen,data->NList_InactivePen,data->Pen_Inactive_init);
 
   INIT_BG(MUIA_NList_TitleBackground,   data->NList_TitleBackGround,   data->BG_Title_init);
   INIT_BG(MUIA_Background,              data->NList_ListBackGround,    data->BG_List_init);
@@ -851,6 +852,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   INIT_BG(MUIA_NList_SelectBackground,  data->NList_SelectBackground,  data->BG_Select_init);
   INIT_BG(MUIA_NList_CursorBackground,  data->NList_CursorBackground,  data->BG_Cursor_init);
   INIT_BG(MUIA_NList_UnselCurBackground,data->NList_UnselCurBackground,data->BG_UnselCur_init);
+  INIT_BG(MUIA_NList_InactiveBackground,data->NList_InactiveBackground,data->BG_Inactive_init);
 
 /*
  *   for (tags=((struct opSet *)msg)->ops_AttrList;tag=NextTagItem(&tags);)
@@ -1297,12 +1299,14 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   LOAD_PEN(data->Pen_Select_init,  data->NList_SelectPen,  MUICFG_NList_Pen_Select,  DEFAULT_PEN_SELECT);
   LOAD_PEN(data->Pen_Cursor_init,  data->NList_CursorPen,  MUICFG_NList_Pen_Cursor,  DEFAULT_PEN_CURSOR);
   LOAD_PEN(data->Pen_UnselCur_init,data->NList_UnselCurPen,MUICFG_NList_Pen_UnselCur,DEFAULT_PEN_UNSELCUR);
+  LOAD_PEN(data->Pen_Inactive_init,data->NList_InactivePen,MUICFG_NList_Pen_Inactive,DEFAULT_PEN_INACTIVE);
 
   LOAD_BG(data->BG_Title_init,   data->NList_TitleBackGround,   MUICFG_NList_BG_Title,   DEFAULT_BG_TITLE);
   LOAD_BG(data->BG_List_init,    data->NList_ListBackGround,    MUICFG_NList_BG_List,    DEFAULT_BG_LIST);
   LOAD_BG(data->BG_Select_init,  data->NList_SelectBackground,  MUICFG_NList_BG_Select,  DEFAULT_BG_SELECT);
   LOAD_BG(data->BG_Cursor_init,  data->NList_CursorBackground,  MUICFG_NList_BG_Cursor,  DEFAULT_BG_CURSOR);
   LOAD_BG(data->BG_UnselCur_init,data->NList_UnselCurBackground,MUICFG_NList_BG_UnselCur,DEFAULT_BG_UNSELCUR);
+  LOAD_BG(data->BG_Inactive_init,data->NList_InactiveBackground,MUICFG_NList_BG_Inactive,DEFAULT_BG_INACTIVE);
 
   if (data->NList_ForcePen == MUIV_NList_ForcePen_Default)
   {

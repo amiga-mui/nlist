@@ -268,11 +268,13 @@ struct NLData
   ULONG NList_SelectPen;
   ULONG NList_CursorPen;
   ULONG NList_UnselCurPen;
+  ULONG NList_InactivePen;
   ULONG NList_TitleBackGround;
   ULONG NList_ListBackGround;
   ULONG NList_SelectBackground;
   ULONG NList_CursorBackground;
   ULONG NList_UnselCurBackground;
+  ULONG NList_InactiveBackground;
   LONG  NList_DragType;
   LONG  NList_Dropable;
   LONG  NList_DragColOnly;
@@ -435,11 +437,13 @@ struct NLData
   LONG Pen_Select_init;
   LONG Pen_Cursor_init;
   LONG Pen_UnselCur_init;
+  LONG Pen_Inactive_init;
   LONG BG_Title_init;
   LONG BG_List_init;
   LONG BG_Select_init;
   LONG BG_Cursor_init;
   LONG BG_UnselCur_init;
+  LONG BG_Inactive_init;
 
   LONG old_prop_first;
   LONG old_prop_visible;
@@ -563,6 +567,7 @@ struct NLData
 };
 
 
+#define MUII_myListInactive  (data->NList_InactiveBackground)
 #define MUII_myListUnselCur  (data->NList_UnselCurBackground)
 #define MUII_myListCursor    (data->NList_CursorBackground)
 #define MUII_myListSelCur    (data->NList_CursorBackground)

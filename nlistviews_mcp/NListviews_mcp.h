@@ -52,14 +52,14 @@
 #define MUICFG_NList_Pen_Select     0x9d510003
 #define MUICFG_NList_Pen_Cursor     0x9d510004
 #define MUICFG_NList_Pen_UnselCur   0x9d510005
-#define MUICFG_NList_Pen_InactCur   0x9d510104
+#define MUICFG_NList_Pen_Inactive   0x9d510104
 
 #define MUICFG_NList_BG_Title       0x9d510006
 #define MUICFG_NList_BG_List        0x9d510007
 #define MUICFG_NList_BG_Select      0x9d510008
 #define MUICFG_NList_BG_Cursor      0x9d510009
 #define MUICFG_NList_BG_UnselCur    0x9d51000a
-#define MUICFG_NList_BG_InactCur    0x9d510105
+#define MUICFG_NList_BG_Inactive    0x9d510105
 
 #define MUICFG_NList_Font           0x9d51000b
 #define MUICFG_NList_Font_Little    0x9d51000c
@@ -106,13 +106,13 @@
 #define DEFAULT_PEN_SELECT    "m5"
 #define DEFAULT_PEN_CURSOR    "m5"
 #define DEFAULT_PEN_UNSELCUR  "m5"
-#define DEFAULT_PEN_INACTCUR  "m5"
+#define DEFAULT_PEN_INACTIVE  "m5"
 #define DEFAULT_BG_TITLE      "0:140"
 #define DEFAULT_BG_LIST       "2:m2"
 #define DEFAULT_BG_SELECT     "0:135"
 #define DEFAULT_BG_CURSOR     "0:131"
 #define DEFAULT_BG_UNSELCUR   "2:m3"
-#define DEFAULT_BG_INACTCUR   "2:m3"
+#define DEFAULT_BG_INACTIVE   "2:m3"
 #define DEFAULT_VERT_INC      0
 #define DEFAULT_HSB           MUIV_NListview_HSB_Auto
 #define DEFAULT_VSB           MUIV_NListview_VSB_Auto

@@ -62,13 +62,13 @@ struct NListviews_MCP_Data
   Object *mcp_PenSelect;
   Object *mcp_PenCursor;
   Object *mcp_PenUnselCur;
-  Object *mcp_PenInactCur;
+  Object *mcp_PenInactive;
   Object *mcp_BG_Title;
   Object *mcp_BG_List;
   Object *mcp_BG_Select;
   Object *mcp_BG_Cursor;
   Object *mcp_BG_UnselCur;
-  Object *mcp_BG_InactCur;
+  Object *mcp_BG_Inactive;
 
   Object *mcp_R_Multi;
   Object *mcp_B_MultiMMB;

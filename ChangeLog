@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-17 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc: changed all background and foreground pen relevant sections to
+    take note of the new upcoming inactive pen color configurable in NListviews.mcp
+    now.
+
 2007-09-17  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/Pointer.c: too much data was copied while setting up the bitmaps

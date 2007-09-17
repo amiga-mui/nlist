@@ -897,6 +897,9 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_UnselCurPen :
         SET_PEN(data->NList_UnselCurPen,data->Pen_UnselCur_init);
         break;
+      case MUIA_NList_InactivePen :
+        SET_PEN(data->NList_InactivePen,data->Pen_Inactive_init);
+        break;
       case MUIA_NList_TitleBackground :
         SET_BG(data->NList_TitleBackGround,data->BG_Title_init);
         break;
@@ -911,6 +914,9 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         break;
       case MUIA_NList_UnselCurBackground :
         SET_BG(data->NList_UnselCurBackground,data->BG_UnselCur_init);
+        break;
+      case MUIA_NList_InactiveBackground :
+        SET_BG(data->NList_InactiveBackground,data->BG_Inactive_init);
         break;
       case MUIA_NList_DefaultObjectOnClick :
         data->NList_DefaultObjectOnClick = (LONG) tag->ti_Data;
@@ -1171,11 +1177,13 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_NList_SelectPen:				*msg->opg_Storage = (ULONG) data->NList_SelectPen;			return( TRUE );
     case MUIA_NList_CursorPen:				*msg->opg_Storage = (ULONG) data->NList_CursorPen;			return( TRUE );
     case MUIA_NList_UnselCurPen:				*msg->opg_Storage = (ULONG) data->NList_UnselCurPen;		return( TRUE );
+    case MUIA_NList_InactivePen:				*msg->opg_Storage = (ULONG) data->NList_InactivePen;		return( TRUE );
     case MUIA_NList_TitleBackground:		*msg->opg_Storage = (ULONG) data->NList_TitleBackGround;	return( TRUE );
     case MUIA_NList_ListBackground:			*msg->opg_Storage = (ULONG) data->NList_ListBackGround;	return( TRUE );
     case MUIA_NList_SelectBackground:		*msg->opg_Storage = (ULONG) data->NList_SelectBackground;	return( TRUE );
     case MUIA_NList_CursorBackground:		*msg->opg_Storage = (ULONG) data->NList_CursorBackground;	return( TRUE );
     case MUIA_NList_UnselCurBackground:	*msg->opg_Storage = (ULONG) data->NList_UnselCurBackground;	return( TRUE );
+    case MUIA_NList_InactiveBackground:	*msg->opg_Storage = (ULONG) data->NList_InactiveBackground;	return( TRUE );
     case MUIA_Listview_Input:
     case MUIA_NList_Input:						*msg->opg_Storage = (ULONG) data->NList_Input;				return( TRUE );
     case MUIA_List_Format:

@@ -678,13 +678,13 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->mcp_PenSelect = NULL;
   data->mcp_PenCursor = NULL;
   data->mcp_PenUnselCur = NULL;
-  data->mcp_PenInactCur = NULL;
+  data->mcp_PenInactive = NULL;
   data->mcp_BG_Title = NULL;
   data->mcp_BG_List = NULL;
   data->mcp_BG_Select = NULL;
   data->mcp_BG_Cursor = NULL;
   data->mcp_BG_UnselCur = NULL;
-  data->mcp_BG_InactCur = NULL;
+  data->mcp_BG_Inactive = NULL;
   data->mcp_R_Multi = NULL;
   data->mcp_B_MultiMMB = NULL;
   data->mcp_R_Drag = NULL;
@@ -887,14 +887,14 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
                 MUIA_ShortHelp,         tr(MSG_UNSEL_BG_HELP),
               End,
 
-              Child, data->mcp_PenInactCur = PoppenObject,
+              Child, data->mcp_PenInactive = PoppenObject,
                 MUIA_CycleChain,    1,
                 MUIA_Window_Title,  tr(MSG_INACT_PEN_WIN),
                 MUIA_Draggable,     TRUE,
                 MUIA_ShortHelp,     tr(MSG_INACT_PEN_HELP),
               End,
               Child, VCenter(Label(tr(MSG_PBG_INACT))),
-              Child, data->mcp_BG_InactCur = PopimageObject,
+              Child, data->mcp_BG_Inactive = PopimageObject,
                 MUIA_CycleChain,        1,
                 MUIA_Imageadjust_Type,  MUIV_Imageadjust_Type_Background,
                 MUIA_Window_Title,      tr(MSG_INACT_BG_WIN),
@@ -1440,14 +1440,14 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenSelect,    MUICFG_NList_Pen_Select, 1, tr(MSG_SELECT_PEN_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenCursor,    MUICFG_NList_Pen_Cursor, 1, tr(MSG_CURSOR_PEN_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenUnselCur,  MUICFG_NList_Pen_UnselCur, 1, tr(MSG_UNSEL_PEN_WIN));
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenInactCur,  MUICFG_NList_Pen_InactCur, 1, tr(MSG_INACT_PEN_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PenInactive,  MUICFG_NList_Pen_Inactive, 1, tr(MSG_INACT_PEN_WIN));
 
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Title,     MUICFG_NList_BG_Title, 1, tr(MSG_TITLE_BG_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_List,      MUICFG_NList_BG_List, 1, tr(MSG_LIST_BG_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Select,    MUICFG_NList_BG_Select, 1, tr(MSG_SELECT_BG_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Cursor,    MUICFG_NList_BG_Cursor, 1, tr(MSG_CURSOR_BG_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_UnselCur,  MUICFG_NList_BG_UnselCur, 1, tr(MSG_UNSEL_BG_WIN));
-    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_InactCur,  MUICFG_NList_BG_InactCur, 1, tr(MSG_INACT_BG_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Inactive,  MUICFG_NList_BG_Inactive, 1, tr(MSG_INACT_BG_WIN));
 
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_Font,         MUICFG_NList_Font, 1, tr(MSG_NORMAL_FONT));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_Font_Little,  MUICFG_NList_Font_Little, 1, tr(MSG_SMALL_FONT));
@@ -1495,14 +1495,14 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   LOAD_DATASPEC(data->mcp_PenSelect,  MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_Select,  DEFAULT_PEN_SELECT);
   LOAD_DATASPEC(data->mcp_PenCursor,  MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_Cursor,  DEFAULT_PEN_CURSOR);
   LOAD_DATASPEC(data->mcp_PenUnselCur,MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_UnselCur,DEFAULT_PEN_UNSELCUR);
-  LOAD_DATASPEC(data->mcp_PenInactCur,MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_InactCur,DEFAULT_PEN_INACTCUR);
+  LOAD_DATASPEC(data->mcp_PenInactive,MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_Inactive,DEFAULT_PEN_INACTIVE);
 
   LOAD_DATASPEC(data->mcp_BG_Title,   MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Title,    DEFAULT_BG_TITLE);
   LOAD_DATASPEC(data->mcp_BG_List,    MUIA_Imagedisplay_Spec,MUICFG_NList_BG_List,     DEFAULT_BG_LIST);
   LOAD_DATASPEC(data->mcp_BG_Select,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Select,   DEFAULT_BG_SELECT);
   LOAD_DATASPEC(data->mcp_BG_Cursor,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Cursor,   DEFAULT_BG_CURSOR);
   LOAD_DATASPEC(data->mcp_BG_UnselCur,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_UnselCur, DEFAULT_BG_UNSELCUR);
-  LOAD_DATASPEC(data->mcp_BG_InactCur,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_InactCur, DEFAULT_BG_INACTCUR);
+  LOAD_DATASPEC(data->mcp_BG_Inactive,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Inactive, DEFAULT_BG_INACTIVE);
 
   LOAD_DATALONG(data->mcp_SL_VertInc, MUIA_Numeric_Value,    MUICFG_NList_VertInc,     DEFAULT_VERT_INC);
 
@@ -1703,14 +1703,14 @@ ULONG mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settings
   SAVE_DATASPEC(data->mcp_PenSelect,  MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Select);
   SAVE_DATASPEC(data->mcp_PenCursor,  MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Cursor);
   SAVE_DATASPEC(data->mcp_PenUnselCur,MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_UnselCur);
-  SAVE_DATASPEC(data->mcp_PenInactCur,MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_InactCur);
+  SAVE_DATASPEC(data->mcp_PenInactive,MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Inactive);
 
   SAVE_DATASPEC2(data->mcp_BG_Title,   MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Title);
   SAVE_DATASPEC2(data->mcp_BG_List,    MUIA_Imagedisplay_Spec,MUICFG_NList_BG_List);
   SAVE_DATASPEC2(data->mcp_BG_Select,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Select);
   SAVE_DATASPEC2(data->mcp_BG_Cursor,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Cursor);
   SAVE_DATASPEC2(data->mcp_BG_UnselCur,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_UnselCur);
-  SAVE_DATASPEC2(data->mcp_BG_InactCur,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_InactCur);
+  SAVE_DATASPEC2(data->mcp_BG_Inactive,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Inactive);
 
   SAVE_DATALONG(data->mcp_SL_VertInc, MUIA_Numeric_Value,     MUICFG_NList_VertInc);
 

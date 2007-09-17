@@ -68,12 +68,14 @@
 #define MUIA_NList_SelectPen                0x9d51003b /* GM  isg  LONG              */
 #define MUIA_NList_CursorPen                0x9d51003c /* GM  isg  LONG              */
 #define MUIA_NList_UnselCurPen              0x9d51003d /* GM  isg  LONG              */
+#define MUIA_NList_InactivePen              0x9d5100C1 /* GM  isg  LONG              */
 
 #define MUIA_NList_ListBackground           0x9d51003e /* GM  isg  LONG              */
 #define MUIA_NList_TitleBackground          0x9d51003f /* GM  isg  LONG              */
 #define MUIA_NList_SelectBackground         0x9d510040 /* GM  isg  LONG              */
 #define MUIA_NList_CursorBackground         0x9d510041 /* GM  isg  LONG              */
 #define MUIA_NList_UnselCurBackground       0x9d510042 /* GM  isg  LONG              */
+#define MUIA_NList_InactiveBackground       0x9d5100C2 /* GM  isg  LONG              */
 
 #define MUIA_NList_MultiClick               0x9d510043 /* GM  ..gn LONG              */
 
