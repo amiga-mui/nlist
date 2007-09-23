@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-09-23 Pär Boberg <pbobbenb@spray.se>
+
+  * nlistviews_mcp/locale: Added swedish translation for the new NListviews.mcp.
+  * nlistviews_mcp/Makefile: Added swedish to the available translations.
+
 2007-09-17 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: changed all background and foreground pen relevant sections to

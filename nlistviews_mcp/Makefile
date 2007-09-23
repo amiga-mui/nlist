@@ -233,7 +233,8 @@ TESTOBJS = $(OBJDIR)/NListviews-Prefs.o \
            $(OBJDIR)/Debug.o
 
 # available catalog translations
-CATALOGS = $(LOCALE)/deutsch.catalog
+CATALOGS = $(LOCALE)/deutsch.catalog \
+           $(LOCALE)/svenska.catalog \
 
 #
 
