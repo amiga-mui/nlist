@@ -334,10 +334,12 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   );
 
 
-  if (!obj)
+  if(obj == NULL || (data = INST_DATA(cl, obj)) == NULL)
     return(0);
-  data = INST_DATA(cl,obj);
+
   data->this = obj;
+  data->listviewobj = NULL;
+  data->scrollersobj = NULL;
   data->SETUP = FALSE;
   data->SHOW = FALSE;
   data->DRAW = 0;
@@ -382,6 +384,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_MultiSelect = MUIV_NList_MultiSelect_None;
   data->NList_Input = TRUE;
   data->NList_DefaultObjectOnClick = TRUE;
+  data->NList_ActiveObjectOnClick = FALSE;
   data->NList_KeepActive = 0;
   data->NList_MakeActive = 0;
   data->NList_AutoVisible = FALSE;
@@ -541,8 +544,6 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_MinColSortable = 1;
   data->NList_Imports = MUIV_NList_Imports_Active | MUIV_NList_Imports_First | MUIV_NList_Imports_Cols;
   data->NList_Exports = MUIV_NList_Exports_Active | MUIV_NList_Exports_First | MUIV_NList_Exports_Cols;
-  data->listobj = NULL;
-  data->scrollersobj = NULL;
   data->affover = -1; // RHP: Added for Shorthelp
   data->affbutton = -1;
   data->affbuttonline = -1;
@@ -557,6 +558,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->pad1 = -1;
   data->pad2 = TRUE;
   data->nlie = NULL;
+  data->isActiveObject = FALSE;
 
 /*D(bug("%lx|NEW 1 \n",obj));*/
 
@@ -776,6 +778,9 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
   if((tag = FindTagItem(MUIA_NList_DefaultObjectOnClick, taglist)))
     data->NList_DefaultObjectOnClick = (LONG) tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_NList_ActiveObjectOnClick, taglist)))
+    data->NList_ActiveObjectOnClick = (BOOL)tag->ti_Data;
 
   if((tag = FindTagItem(MUIA_NList_MinLineHeight, taglist)))
     data->NList_MinLineHeight = (LONG) tag->ti_Data;
@@ -1063,6 +1068,11 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     return(FALSE);
   }
 
+  // disable that the object will automatically get a border when
+  // the ActiveObjectOnClick option is active
+  if(data->NList_ActiveObjectOnClick == TRUE)
+    _flags(obj) |= (1<<7);
+
   data->rp = NULL;
 
   /*data->mri = msg->RenderInfo;*/
@@ -1171,7 +1181,10 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
   }
 
-  data->listobj = NULL;
+  // now we try to see if the parent listview object is
+  // an NListview or a plain Listview.mui object so that we
+  // can set the listviewobj pointer accordingly
+  data->listviewobj = NULL;
   {
     Object *o = obj;
 
@@ -1185,20 +1198,25 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
         {
           LONG tagval;
 
-          data->listobj = o;
+          data->listviewobj = o;
           WANT_NOTIFY(NTF_LV_Select);
           WANT_NOTIFY(NTF_LV_Doubleclick);
           WANT_NOTIFY(NTF_L_Active);
           WANT_NOTIFY(NTF_Entries);
 
           // check if we have a DragType attribute or not
-          if(GetAttr(MUIA_Listview_DragType, data->listobj, (ULONG *)&tagval) != FALSE)
+          if(GetAttr(MUIA_Listview_DragType, data->listviewobj, (ULONG *)&tagval) != FALSE)
             data->NList_DragType = tagval;
 
-          if (data->pad2)
-          { struct IClass *lcl,*lcl1,*lcl2,*lcl3,*lcl4;
+          // in case this is MUI 3.8 we can query more detailed information
+          // by directly accessing the raw instance data of the Listview.mui
+          // object. Puh, what a hack!
+          if(MUIMasterBase->lib_Version <= 19 && data->pad2)
+          {
+            struct IClass *lcl,*lcl1,*lcl2,*lcl3,*lcl4;
             UBYTE *ldata = ((UBYTE *) o) + 178;
             lcl = lcl1 = lcl2 = lcl3 = lcl4 = OCLASS(o);
+
             while (lcl->cl_Super)     /* when loop is finished : */
             { lcl4 = lcl3;            /*  Listview  */
               lcl3 = lcl2;            /*  Group     */
@@ -1206,6 +1224,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
               lcl1 = lcl;             /*  Notify    */
               lcl = lcl->cl_Super;    /*  rootclass */
             }
+
             if (lcl4->cl_InstSize == 68)  /* data size of Listview.mui class in 3.8 */
             {
               data->multiselect = data->NList_MultiSelect = (LONG) ldata[43];
@@ -1501,6 +1520,11 @@ ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
   release_pen(data->mri, &data->NList_SelectPen);
   release_pen(data->mri, &data->NList_CursorPen);
   release_pen(data->mri, &data->NList_UnselCurPen);
+
+  // enable that the object will automatically get a border when
+  // the ActiveObjectOnClick option is active
+  if(data->NList_ActiveObjectOnClick == TRUE)
+    _flags(obj) &= ~(1<<7);
 
   retval = DoSuperMethodA(cl,obj,(Msg) msg);
 

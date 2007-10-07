@@ -918,9 +918,29 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_InactiveBackground :
         SET_BG(data->NList_InactiveBackground,data->BG_Inactive_init);
         break;
+
       case MUIA_NList_DefaultObjectOnClick :
         data->NList_DefaultObjectOnClick = (LONG) tag->ti_Data;
-        break;
+      break;
+
+      case MUIA_NList_ActiveObjectOnClick :
+      {
+        data->NList_ActiveObjectOnClick = (BOOL)tag->ti_Data;
+        if(data->NList_ActiveObjectOnClick)
+        {
+          // disable that the object will automatically get a border when
+          // the ActiveObjectOnClick option is active
+          _flags(obj) |= (1<<7);
+        }
+        else
+        {
+          // enable that the object will automatically get a border when
+          // the ActiveObjectOnClick option is active
+          _flags(obj) &= ~(1<<7);
+        }
+      }
+      break;
+
       case MUIA_List_MinLineHeight :
       case MUIA_NList_MinLineHeight :
         data->NList_MinLineHeight = (LONG) tag->ti_Data;
@@ -1140,7 +1160,6 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
 
   switch (((struct opGet *)msg)->opg_AttrID)
   {
-
     case MUIA_Listview_SelectChange:
     case MUIA_NList_SelectChange:
     case MUIA_Listview_DoubleClick:			*msg->opg_Storage	= (ULONG) TRUE;								return( TRUE );

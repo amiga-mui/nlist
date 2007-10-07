@@ -125,14 +125,28 @@ void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WO
     }
   }
   if ((ent < 0) || (ent >= data->NList_Entries))
-  { SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
+  {
+    SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
     DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert1,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
   }
   else
-  { if (data->EntriesArray[ent]->Select == TE_Select_None)
-    { SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen; forcepen = FALSE;}
+  {
+    if (data->EntriesArray[ent]->Select == TE_Select_None)
+    {
+      SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen; forcepen = FALSE;
+    }
     else
-    { SetBackGround(MUII_myListSelect); mypen = data->NList_SelectPen; forcepen = data->ForcePen; }
+    {
+      if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+      {
+        SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
+      }
+      else
+      {
+        SetBackGround(MUII_myListSelect); mypen = data->NList_SelectPen; forcepen = data->ForcePen;
+      }
+    }
+
     DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert1,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
     if (drawtxt)
       DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
@@ -220,12 +234,15 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
       continue;
     }
     if (!data->NList_TypeSelect || ((ent != data->sel_pt[data->min_sel].ent) && (ent != data->sel_pt[data->max_sel].ent)))
-    { if (data->NList_TypeSelect)
+    {
+      if (data->NList_TypeSelect)
       {
         if ((ent > data->sel_pt[data->min_sel].ent) && (ent < data->sel_pt[data->max_sel].ent))
-        { ent3 = ent + 1;
+        {
+          ent3 = ent + 1;
           if (!not_all)
-          { while ((ent3 < ent2) && (ent3 < data->sel_pt[data->max_sel].ent))
+          {
+            while ((ent3 < ent2) && (ent3 < data->sel_pt[data->max_sel].ent))
               ent3++;
             dent = ent3 - ent;
             if (dent >= 14)
@@ -233,12 +250,22 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
             else if (dent >= 8)
               ent3 = ent + (dent / 2);
           }
-          SetBackGround(MUII_myListCursor); mypen = data->NList_CursorPen; forcepen = data->ForcePen;
+
+          if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+          {
+            SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
+          }
+          else
+          {
+            SetBackGround(MUII_myListCursor); mypen = data->NList_CursorPen; forcepen = data->ForcePen;
+          }
         }
         else
-        { ent3 = ent + 1;
+        {
+          ent3 = ent + 1;
           if (!not_all)
-          { while ((ent3 < ent2) && ((ent3 > data->sel_pt[data->max_sel].ent) || (ent3 < data->sel_pt[data->min_sel].ent)))
+          {
+            while ((ent3 < ent2) && ((ent3 > data->sel_pt[data->max_sel].ent) || (ent3 < data->sel_pt[data->min_sel].ent)))
               ent3++;
             dent = ent3 - ent;
             if (dent >= lim1)
@@ -246,16 +273,29 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
             else if (dent >= lim3)
               ent3 = ent + (dent / 2);
           }
+
           SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
         }
       }
       else
-      { if (ent == data->NList_Active)
-        { ent3 = ent + 1;
-          if (data->EntriesArray[ent]->Select == TE_Select_None)
-          { SetBackGround(MUII_myListUnselCur); mypen = data->NList_UnselCurPen; forcepen = data->ForcePen; }
+      {
+        if(ent == data->NList_Active)
+        {
+          ent3 = ent + 1;
+
+          if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+          {
+            SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
+          }
+          else if(data->EntriesArray[ent]->Select == TE_Select_None)
+          {
+            SetBackGround(MUII_myListUnselCur); mypen = data->NList_UnselCurPen; forcepen = data->ForcePen;
+          }
           else
-          { SetBackGround(MUII_myListCursor); mypen = data->NList_CursorPen; forcepen = data->ForcePen; }
+          {
+            SetBackGround(MUII_myListCursor); mypen = data->NList_CursorPen; forcepen = data->ForcePen;
+          }
+
           data->do_draw_active = FALSE;
         }
         else
@@ -270,10 +310,19 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
             else if (dent >= 8)
               ent3 = ent + (dent / 2);
           }
-          if (cursel == TE_Select_None)
-          { SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen; }
+
+          if(cursel == TE_Select_None)
+          {
+            SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
+          }
+          else if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+          {
+            SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
+          }
           else
-          { SetBackGround(MUII_myListSelect); mypen = data->NList_SelectPen; forcepen = data->ForcePen; }
+          {
+            SetBackGround(MUII_myListSelect); mypen = data->NList_SelectPen; forcepen = data->ForcePen;
+          }
         }
       }
 
@@ -355,7 +404,15 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
       }
       if (x2 < x3)
       {
-        SetBackGround(MUII_myListCursor);
+        if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+        {
+          SetBackGround(MUII_myListInactive);
+        }
+        else
+        {
+          SetBackGround(MUII_myListCursor);
+        }
+
         DoMethod(obj,MUIM_DrawBackground,(LONG) x2,vert3,(LONG) x3-x2,vertd,(LONG) x2+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
       }
       if (x3 < x4)
@@ -408,7 +465,8 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
   }
 
   if (ent < ent4)
-  { { SetBackGround(data->NList_ListBackGround) }
+  {
+    SetBackGround(data->NList_ListBackGround);
     vert3 = data->vpos+(data->vinc * (ent - data->NList_First));
     vert2 = data->vpos + (ent*data->vinc);
     vertd = data->vinc * (ent4 - ent);

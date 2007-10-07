@@ -210,7 +210,10 @@ struct NImgList
 
 struct NLData
 {
-  Object *this;
+  Object *this;         // pointer to the own object
+  Object *listviewobj;  // pointer to the parent/listview if listview is Listview.mui
+  Object *scrollersobj; // pointer to the scrollers object
+
   LONG SETUP;
   LONG SHOW;
 
@@ -258,7 +261,8 @@ struct NLData
   LONG  NList_Horiz_Visible;
   LONG  NList_Horiz_Entries;
   LONG  NList_MultiSelect;
-  LONG  NList_DefaultObjectOnClick;
+  BOOL  NList_DefaultObjectOnClick;
+  BOOL  NList_ActiveObjectOnClick;
   LONG  NList_MinLineHeight;
   LONG  NList_Input;
   LONG  NList_TypeSelect;
@@ -350,8 +354,6 @@ struct NLData
 
   struct IClass *ncl;
   struct IClass *ocl;
-  Object *listobj;
-  Object *scrollersobj;
 
   APTR  VertPropObject;
   Object *NL_Group;
@@ -392,6 +394,8 @@ struct NLData
 
   LONG TitleClick;
   LONG TitleClick2;
+
+  BOOL isActiveObject; // TRUE in case object is active object of window
 
   LONG MinImageHeight;
 

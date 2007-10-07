@@ -5,6 +5,16 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-10-07 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc: implemented a new MUIA_NList_ActiveObjectOnClick method which
+    will not only make sure that upon clicking into an NList object, this
+    object will become the currently active object of the window.
+  * nlist_mcc, nlistview_mcc: the NListview class will now catch the GoActive
+    and GoInactive methods of MUI and forward them to NList so that NList can
+    react on the activation/deactivation of the objects and show different
+    background colors for active and inactive listviews.
+
 2007-09-23 Pär Boberg <pbobbenb@spray.se>
 
   * nlistviews_mcp/locale: Added swedish translation for the new NListviews.mcp.

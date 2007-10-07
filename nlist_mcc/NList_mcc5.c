@@ -53,36 +53,6 @@ static struct NewMenu MenuData[] =
 };
 
 
-/* damato: do we really need that ? mhhh
-#ifdef MORPHOS
-LONG EasyRequest( struct Window *win, struct EasyStruct *es, ULONG *idcmpptr, ... )
-{
-	ULONG mav[50];
-	ULONG ret;
-	va_list tags;
-	int i=0;
-
-	va_start( tags, idcmpptr );
-
-	while( i < 50 )
-	{
-		mav[i] = va_arg(tags, ULONG);
-		if(mav[i] == TAG_DONE) break;
-		mav[i+1] = va_arg(tags, ULONG);
-		if(mav[i] == TAG_MORE) break;
-		i += 2;
-	}
-
-	va_end(tags);
-
-	ret = EasyRequestArgs( win, es, idcmpptr, &mav );
-
-	return ret;
-}
-#endif
-*/
-
-
 void NL_SetCols(Object *obj,struct NLData *data)
 {
   if (data->do_setcols)
@@ -264,10 +234,12 @@ LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which)
   { DONE_NOTIFY(NTF_Doubleclick);
     notdoset(obj,MUIA_NList_DoubleClick,data->click_line);
   }
-  if (NEED_NOTIFY(NTF_LV_Doubleclick) & which)
-  { DONE_NOTIFY(NTF_LV_Doubleclick);
-    if (data->listobj)
-      DoMethod(data->listobj,MUIM_Set,MUIA_Listview_DoubleClick,(LONG) TRUE);
+
+  if(NEED_NOTIFY(NTF_LV_Doubleclick) & which)
+  {
+    DONE_NOTIFY(NTF_LV_Doubleclick);
+    if(data->listviewobj)
+      DoMethod(data->listviewobj, MUIM_Set, MUIA_Listview_DoubleClick, (LONG)TRUE);
     else
       set(obj,MUIA_Listview_DoubleClick,(LONG) TRUE);
   }
@@ -305,10 +277,12 @@ LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which)
   { DONE_NOTIFY(NTF_Select);
     set(obj,MUIA_NList_SelectChange,(LONG) TRUE);
   }
+
   if (NEED_NOTIFY(NTF_LV_Select) & which)
-  { DONE_NOTIFY(NTF_LV_Select);
-    if (data->listobj)
-      DoMethod(data->listobj,MUIM_Set,MUIA_Listview_SelectChange,(LONG) TRUE);
+  {
+    DONE_NOTIFY(NTF_LV_Select);
+    if(data->listviewobj)
+      DoMethod(data->listviewobj, MUIM_Set, MUIA_Listview_SelectChange, (LONG)TRUE);
     else
       set(obj,MUIA_Listview_SelectChange,(LONG) TRUE);
   }

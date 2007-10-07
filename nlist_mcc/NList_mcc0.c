@@ -26,6 +26,7 @@
 #include <clib/alib_protos.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
+#include <proto/muimaster.h>
 
 #include "private.h"
 
@@ -451,19 +452,53 @@ static ULONG mNL_List_Display( struct IClass *cl, Object *obj, UNUSED struct MUI
 	}
 	return( 0 );
 }
+
+static ULONG mNL_GoActive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_GoActive *msg)
+{
+	struct NLData *data = INST_DATA(cl, obj);
+  ULONG result = 0;
+
+  ENTER();
+
+  data->isActiveObject = TRUE;
+
+  if(data->NList_ActiveObjectOnClick == TRUE)
+    DoMethod(obj, MUIM_NList_Redraw, MUIV_NList_Redraw_Active);
+
+  RETURN(result);
+  return result;
+}
+
+static ULONG mNL_GoInactive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_GoActive *msg)
+{
+	struct NLData *data = INST_DATA(cl, obj);
+  ULONG result = 0;
+
+  ENTER();
+
+  data->isActiveObject = FALSE;
+
+  if(data->NList_ActiveObjectOnClick == TRUE)
+    DoMethod(obj, MUIM_NList_Redraw, MUIV_NList_Redraw_Active);
+
+  RETURN(result);
+  return result;
+}
  
-#define FS       (data = INST_DATA(cl,obj)); (NotNotify = data->DoNotify)
+#define FS (data = INST_DATA(cl,obj)); (NotNotify = data->DoNotify)
 
 DISPATCHER(_Dispatcher)
 {
-  register struct NLData *data = NULL;
+  struct NLData *data = NULL;
   ULONG retval = 0;
   ULONG NotNotify = ~0;
 
-  switch (msg->MethodID)
+  switch(msg->MethodID)
   {
     case OM_NEW                        :     retval =                   mNL_New(cl,obj,(APTR)msg); break;
     case OM_DISPOSE                    :     retval =               mNL_Dispose(cl,obj,(APTR)msg); break;
+    case OM_GET                        : FS; retval =                   mNL_Get(cl,obj,(APTR)msg); break;
+    case OM_SET                        : FS; retval =                   mNL_Set(cl,obj,(APTR)msg); break;
     case MUIM_Setup                    :     retval =                 mNL_Setup(cl,obj,(APTR)msg); break;
     case MUIM_Cleanup                  :     retval =               mNL_Cleanup(cl,obj,(APTR)msg); break;
     case MUIM_AskMinMax                :     retval =             mNL_AskMinMax(cl,obj,(APTR)msg); break;
@@ -472,8 +507,6 @@ DISPATCHER(_Dispatcher)
     case MUIM_Draw                     :     retval =                  mNL_Draw(cl,obj,(APTR)msg); break;
     case MUIM_HandleInput              :     retval =           mNL_HandleInput(cl,obj,(APTR)msg); break;
     case MUIM_HandleEvent              :     retval =           mNL_HandleEvent(cl,obj,(APTR)msg); break;
-    case OM_SET                        : FS; retval =                   mNL_Set(cl,obj,(APTR)msg); break;
-    case OM_GET                        : FS; retval =                   mNL_Get(cl,obj,(APTR)msg); break;
     case MUIM_Notify                   :     retval =                mNL_Notify(cl,obj,(APTR)msg); break;
     case MUIM_DragQuery                :     retval =             mNL_DragQuery(cl,obj,(APTR)msg); break;
     case MUIM_DragBegin                :     retval =             mNL_DragBegin(cl,obj,(APTR)msg); break;
@@ -486,6 +519,7 @@ DISPATCHER(_Dispatcher)
     case MUIM_ContextMenuChoice        :     retval =     mNL_ContextMenuChoice(cl,obj,(APTR)msg); break;
     case MUIM_Import                   :     retval =                mNL_Import(cl,obj,(APTR)msg); break;
     case MUIM_Export                   :     retval =                mNL_Export(cl,obj,(APTR)msg); break;
+
     case MUIM_NList_ContextMenuBuild   :     retval = 0; break;
     case MUIM_NList_Trigger            :     retval =               mNL_Trigger(cl,obj,(APTR)msg); break;
     case MUIM_List_Sort :
@@ -545,35 +579,24 @@ DISPATCHER(_Dispatcher)
     case MUIM_NList_Destruct           :     retval =         mNL_List_Destruct(cl,obj,(APTR)msg); break;
     case MUIM_NList_Compare            :     retval =          mNL_List_Compare(cl,obj,(APTR)msg); break;
     case MUIM_NList_Display            :     retval =          mNL_List_Display(cl,obj,(APTR)msg); break;
-/*
- *   case MUIM_DrawBackground :
- *   case MUIM_HandleInput :
- *   case MUIM_GetConfigItem :
- *   case 0x80424d50 :
- *   case 0x8042845b :
- *   case 0x8042549a :
- *   case 0x8042f8a4 :  / * just before drag start ! * /
- *     break;
- */
-     default:
-/*       D(bug("NL: MethodID= 0x%lx \n",msg->MethodID));*/
-       return(DoSuperMethodA(cl,obj,msg));
-       break;
-  }
-  if (~NotNotify && data)
-  { ULONG DoNotify = ~NotNotify & data->DoNotify & data->Notify;
-    if (data->SETUP && DoNotify)
-    {
-/*D(bug("%lx|        DoNotify= %lx",obj,DoNotify));*/
 
+    case MUIM_GoActive                 : mNL_GoActive(cl,obj,(APTR)msg); return(DoSuperMethodA(cl,obj,msg));
+    case MUIM_GoInactive               : mNL_GoInactive(cl,obj,(APTR)msg); return(DoSuperMethodA(cl,obj,msg));
+    case MUIM_NList_GoActive           :     retval =              mNL_GoActive(cl,obj,(APTR)msg); break;
+    case MUIM_NList_GoInactive         :     retval =            mNL_GoInactive(cl,obj,(APTR)msg); break;
+
+    default:
+      return(DoSuperMethodA(cl,obj,msg));
+    break;
+  }
+
+  if(~NotNotify && data)
+  {
+    ULONG DoNotify = ~NotNotify & data->DoNotify & data->Notify;
+    if(data->SETUP && DoNotify)
       do_notifies(DoNotify);
-
-/*
- *DoNotify = ~NotNotify & data->DoNotify & data->Notify;
- *D(bug(" -> %lx (%lx)\n",DoNotify,data->DoNotify & data->Notify));
- */
-    }
   }
-  return (retval);
+
+  return retval;
 }
 

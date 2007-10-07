@@ -511,20 +511,6 @@ static ULONG mNLV_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg
 }
 
 
-/*
- * static ULONG mNLV_4d50(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
- * {
- *   register struct NLVData *data = INST_DATA(cl,obj);
- *   if (!data->sem)
- *   { data->sem = TRUE;
- *     NLV_Scrollers(obj,data,data->Vert_ScrollBar,data->Horiz_ScrollBar);
- *     data->sem = FALSE;
- *   }
- *   return (DoSuperMethodA(cl,obj,(Msg) msg));
- * }
- */
-
-
 static ULONG mNLV_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
 {
   register struct NLVData *data = INST_DATA(cl,obj);
@@ -642,23 +628,40 @@ static ULONG mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
 
 DISPATCHER(_Dispatcher)
 {
-  switch (msg->MethodID)
+  switch(msg->MethodID)
   {
-    case OM_NEW                  : return (                mNLV_New(cl,obj,(APTR)msg));
-    case OM_DISPOSE              : return (            mNLV_Dispose(cl,obj,(APTR)msg));
-    case MUIM_Setup              : return (              mNLV_Setup(cl,obj,(APTR)msg));
-    case MUIM_Cleanup            : return (            mNLV_Cleanup(cl,obj,(APTR)msg));
-/*    case 0x80424d50              : return (               mNLV_4d50(cl,obj,(APTR)msg));*/
-/*    case 0x8042845b              : return (               mNLV_845b(cl,obj,(APTR)msg));*/
-    case MUIM_HandleInput        : return (        mNLV_HandleInput(cl,obj,(APTR)msg));
-    case MUIM_HandleEvent        : return (        mNLV_HandleEvent(cl,obj,(APTR)msg));
-    case OM_SET                  : return (                mNLV_Set(cl,obj,(APTR)msg));
-    case OM_GET                  : return (                mNLV_Get(cl,obj,(APTR)msg));
-    case MUIM_KillNotify         :
-    case MUIM_KillNotifyObj      :
-    case MUIM_Notify             : return (             mNLV_Notify(cl,obj,(APTR)msg));
+    case OM_NEW                      : return(mNLV_New(cl,obj,(APTR)msg));
+    case OM_DISPOSE                  : return(mNLV_Dispose(cl,obj,(APTR)msg));
+    case OM_GET                      : return(mNLV_Get(cl,obj,(APTR)msg));
+    case OM_SET                      : return(mNLV_Set(cl,obj,(APTR)msg));
+    case MUIM_Setup                  : return(mNLV_Setup(cl,obj,(APTR)msg));
+    case MUIM_Cleanup                : return(mNLV_Cleanup(cl,obj,(APTR)msg));
+    case MUIM_HandleInput            : return(mNLV_HandleInput(cl,obj,(APTR)msg));
+    case MUIM_HandleEvent            : return(mNLV_HandleEvent(cl,obj,(APTR)msg));
     case MUIM_NList_QueryBeginning   : return(0);
     case MUIM_DragQuery              : return(MUIV_DragQuery_Refuse);
+
+    // we catch all notify relevant method
+    // calls in one function
+    case MUIM_KillNotify             :
+    case MUIM_KillNotifyObj          :
+    case MUIM_Notify                 : return (mNLV_Notify(cl,obj,(APTR)msg));
+
+    // in case the listview is receiving the
+    // active/inactive method we forward it to
+    // the nlist object itself
+    case MUIM_GoActive:
+    case MUIM_GoInactive:
+    {
+      struct NLVData *data = INST_DATA(cl,obj);
+
+      if(data->LI_NList)
+        DoMethod(data->LI_NList, msg->MethodID == MUIM_GoActive ? MUIM_NList_GoActive : MUIM_NList_GoInactive);
+    }
+    break;
+
+    // the following method calls are all forwarded
+    // to the corresponding NList object
     case MUIM_List_Sort              :
     case MUIM_List_Insert            :
     case MUIM_List_InsertSingle      :
@@ -705,9 +708,15 @@ DISPATCHER(_Dispatcher)
     case MUIM_NList_ColWidth         :
     case MUIM_NList_ColToColumn      :
     case MUIM_NList_ColumnToCol      :
-      { struct NLVData *data = INST_DATA(cl,obj);
-        return (DoMethodA(data->LI_NList,msg));
-      }
+    {
+      struct NLVData *data = INST_DATA(cl,obj);
+
+      if(data->LI_NList)
+        return(DoMethodA(data->LI_NList, msg));
+      else
+        return 0;
+    }
   }
+
   return(DoSuperMethodA(cl,obj,msg));
 }
