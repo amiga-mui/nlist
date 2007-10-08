@@ -455,7 +455,7 @@ static ULONG mNL_List_Display( struct IClass *cl, Object *obj, UNUSED struct MUI
 
 static ULONG mNL_GoActive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_GoActive *msg)
 {
-	struct NLData *data = INST_DATA(cl, obj);
+  struct NLData *data = INST_DATA(cl, obj);
   ULONG result = 0;
 
   ENTER();
@@ -471,7 +471,7 @@ static ULONG mNL_GoActive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NLi
 
 static ULONG mNL_GoInactive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_GoActive *msg)
 {
-	struct NLData *data = INST_DATA(cl, obj);
+  struct NLData *data = INST_DATA(cl, obj);
   ULONG result = 0;
 
   ENTER();
@@ -484,7 +484,7 @@ static ULONG mNL_GoInactive(struct IClass *cl, Object *obj, UNUSED struct MUIP_N
   RETURN(result);
   return result;
 }
- 
+
 #define FS (data = INST_DATA(cl,obj)); (NotNotify = data->DoNotify)
 
 DISPATCHER(_Dispatcher)
