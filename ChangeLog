@@ -5,6 +5,17 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-10-08  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: the latest changes revealed another bug in NList
+    when running under OS3. The HandleEvent method did not signal MUI that a
+    mouse click was eaten and upon changing the active object MUI issued the
+    same message again to the same object which in turn thought that the user
+    did a double click on the listview. Fixed this bug by returning the correct
+    value in this case. Caution: a similar effect may happen under different
+    circumstances again! We really need to check when MUI_EventHandlerRC_Eat
+    must be returned an when it must not!
+
 2007-10-07 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: implemented a new MUIA_NList_ActiveObjectOnClick method which

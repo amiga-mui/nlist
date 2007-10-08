@@ -728,6 +728,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
             }
             else
             {
+              BOOL modifyActiveObject = FALSE;
+              Object *newActiveObject = (Object *)MUIV_Window_ActiveObject_None;
+
               data->secs = msg->imsg->Seconds;
               data->micros = msg->imsg->Micros;
               data->click_line = lyl2;
@@ -875,32 +878,44 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
                 }
               }
 
-              if (data->NList_DefaultObjectOnClick)
+              if(data->NList_DefaultObjectOnClick)
               {
                 ULONG tst = xget(_win(obj), MUIA_Window_ActiveObject);
 
                 if((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (ULONG) obj))
                 {
                   if (data->NList_MakeActive)
-                    set(_win(obj), MUIA_Window_ActiveObject, data->NList_MakeActive);
+                    newActiveObject = (Object *)data->NList_MakeActive;
                   else
-                    set(_win(obj), MUIA_Window_ActiveObject, MUIV_Window_ActiveObject_None);
+                    newActiveObject = (Object *)MUIV_Window_ActiveObject_None;
+
+                  modifyActiveObject = TRUE;
                 }
 
                 set(_win(obj), MUIA_Window_DefaultObject, (LONG) obj);
               }
-              else if (data->NList_MakeActive)
-                set(_win(obj), MUIA_Window_ActiveObject, data->NList_MakeActive);
+              else if(data->NList_MakeActive)
+              {
+                newActiveObject = (Object *)data->NList_MakeActive;
+                modifyActiveObject = TRUE;
+              }
 
 
               // now we check if the user wants to set this object
               // as the active one or not.
               if(data->NList_ActiveObjectOnClick && data->isActiveObject == FALSE)
-                set(_win(obj), MUIA_Window_ActiveObject, obj);
+              {
+                newActiveObject = obj;
+                modifyActiveObject = TRUE;
+              }
+
+              // change the window's active object if necessary
+              if(modifyActiveObject == TRUE)
+                set(_win(obj), MUIA_Window_ActiveObject, newActiveObject);
 
               if(data->NList_TypeSelect && (data->adjustbar == -1))
               {
-                if (MultQual)
+                if(MultQual)
                   SelectSecondPoint(obj,data,data->click_x,data->click_y);
                 else
                 {
@@ -932,7 +947,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               NL_RequestIDCMP(obj,data,IDCMP_MOUSEMOVE);
             }
 
-            if (mclick)
+            if(mclick)
             {
               data->secs = msg->imsg->Seconds;
               data->micros = msg->imsg->Micros;
@@ -1011,6 +1026,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
                   data->drag_border = TRUE;
               }
             }
+
+            // the click happened inside our realm, so signal MUI that we ate that click
+            retval = MUI_EventHandlerRC_Eat;
           }
           else
           {
@@ -1025,7 +1043,8 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               {
                 /* click was not in _isinobject2() */
                 ULONG tst = xget(_win(obj), MUIA_Window_DefaultObject);
-                if(tst == (ULONG) obj)
+
+                if(tst == (ULONG)obj)
                   set(_win(obj), MUIA_Window_DefaultObject, NULL);
               }
             }
@@ -1156,7 +1175,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
             data->storebutton = FALSE;
           }
         }
-        /*retval = MUI_EventHandlerRC_Eat;*/
+        //retval = MUI_EventHandlerRC_Eat;
         break;
       case IDCMP_INTUITICKS:
         {
