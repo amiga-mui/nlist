@@ -1583,9 +1583,7 @@ ULONG mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *ms
       {
         // redraw visible columns only
         if(data->DRAW)
-        {
           NL_SetColsAdd(obj, data, -3, TRUE);
-        }
       }
       break;
 
@@ -1596,17 +1594,26 @@ ULONG mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *ms
         {
           BOOL doDraw = FALSE;
 
-          for(ent = 0; ent < data->NList_Entries; ent++)
+          if(data->NList_TypeSelect == MUIV_NList_TypeSelect_Line)
           {
-            // mark the selected entries as "to be redrawn"
-            if(data->EntriesArray[ent]->Select != TE_Select_None)
+            for(ent=0; ent < data->NList_Entries; ent++)
             {
-              NL_SetColsAdd(obj, data, ent, TRUE);
-              data->EntriesArray[ent]->PixLen = -1;
-              NL_Changed(data, ent);
-              doDraw = TRUE;
+              // mark the selected entries as "to be redrawn"
+              if(data->EntriesArray[ent]->Select != TE_Select_None)
+              {
+                NL_SetColsAdd(obj, data, ent, TRUE);
+                data->EntriesArray[ent]->PixLen = -1;
+                NL_Changed(data, ent);
+                doDraw = TRUE;
+              }
             }
           }
+          else
+          {
+            NL_SegChanged(data,data->sel_pt[data->min_sel].ent,data->sel_pt[data->max_sel].ent);
+            doDraw = TRUE;
+          }
+
           if(doDraw == TRUE)
           {
             // at least one entry must be redrawn
@@ -1633,9 +1640,12 @@ ULONG mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *ms
       break;
 
       case MUIV_NList_Redraw_Active:
+      {
         // redraw the active entry only
         ent = data->NList_Active;
-        // fall through to the default redraw
+      }
+      // fall through to the default redraw
+
       default:
       {
         // redraw a specific entry

@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-10-08 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/NList_func.c: the new MUIV_NList_Redraw_Selected wasn't updating
+    list objects which are in MUIV_NList_TypeSelect_Char mode.
+
 2007-10-08  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc0.c, nlist_mcc/NList_func.c: added new redraw type
