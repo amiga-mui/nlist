@@ -1525,8 +1525,10 @@ ULONG mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos
 
 ULONG mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   long ent;
+
+  ENTER();
 
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   ent = msg->pos;
@@ -1535,75 +1537,127 @@ ULONG mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *ms
 
   /*D(bug("%lx|List_Redraw1 pos=%ld Q=%ld D=%ld S=%ld\n",obj,msg->pos,data->NList_Quiet,data->DRAW,data->SETUP));*/
 
-  if (data->DRAW > 1)
+  if(data->DRAW > 1)
   {
+    // defer the redraw process
     /*D(bug("%lx|List_Redraw no! %ld %ld (push it)\n",obj,msg->pos,data->DRAW));*/
-    DoMethod(_app(obj),MUIM_Application_PushMethod,obj,2,msg->MethodID,msg->pos);
-    return (TRUE);
+    DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 2, msg->MethodID, msg->pos);
   }
-
-  if ((msg->MethodID == MUIM_List_Redraw) && (msg->pos == -2))
-    msg->pos = -4;
-  switch (msg->pos)
+  else
   {
-    case -4 :
-      if (data->DRAW)
+    if(msg->MethodID == MUIM_List_Redraw && msg->pos == MUIV_NList_Redraw_All)
+      msg->pos = -6;
+
+    switch(msg->pos)
+    {
+      case -6:
       {
-        NL_SetColsAdd(obj,data,-2,TRUE);
-        DoMethod(_app(obj),MUIM_Application_PushMethod,
-          obj,2,MUIM_NList_Redraw,MUIV_NList_Redraw_All);
-      }
-      break;
-    case MUIV_NList_Redraw_All :
-      if (data->DRAW)
-      {
-        NL_SetColsAdd(obj,data,-2,TRUE);
-        for (ent = 0;ent < data->NList_Entries;ent++)
-          data->EntriesArray[ent]->PixLen = -1;
-      }
-      data->Title_PixLen = -1;
-      data->do_draw_title = TRUE;
-      data->do_parse = TRUE;
-      data->do_setcols = TRUE;
-      data->do_updatesb = TRUE;
-      data->force_wwrap = TRUE;
-      REDRAW_ALL;
-      break;
-    case MUIV_NList_Redraw_VisibleCols :
-      if (data->DRAW)
-      {
-        NL_SetColsAdd(obj,data,-3,TRUE);
-      }
-      break;
-    case MUIV_NList_Redraw_Title :
-      if (data->DRAW)
-      {
-        NL_SetColsAdd(obj,data,-1,TRUE);
-        data->Title_PixLen = -1;
-      }
-      data->do_draw_title = TRUE;
-      data->do_setcols = TRUE;
-      REDRAW;
-      break;
-    case MUIV_NList_Redraw_Active :
-      ent = data->NList_Active;
-    default:
-      if ((ent >= 0) && (ent < data->NList_Entries))
-      {
-        if (data->DRAW)
+        if(data->DRAW)
         {
-          NL_SetColsAdd(obj,data,ent,TRUE);
-          data->EntriesArray[ent]->PixLen = -1;
+          NL_SetColsAdd(obj,data,-2,TRUE);
+          DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 2, MUIM_NList_Redraw, MUIV_NList_Redraw_All);
         }
-        NL_Changed(data,ent);
+      }
+      break;
+
+      case MUIV_NList_Redraw_All:
+      {
+        // redraw all entries
+        if(data->DRAW)
+        {
+          NL_SetColsAdd(obj,data,-2,TRUE);
+          for(ent = 0; ent < data->NList_Entries; ent++)
+            data->EntriesArray[ent]->PixLen = -1;
+        }
+        data->Title_PixLen = -1;
+        data->do_draw_title = TRUE;
+        data->do_parse = TRUE;
+        data->do_setcols = TRUE;
+        data->do_updatesb = TRUE;
+        data->force_wwrap = TRUE;
+        REDRAW_ALL;
+      }
+      break;
+
+      case MUIV_NList_Redraw_VisibleCols:
+      {
+        // redraw visible columns only
+        if(data->DRAW)
+        {
+          NL_SetColsAdd(obj, data, -3, TRUE);
+        }
+      }
+      break;
+
+      case MUIV_NList_Redraw_Selected:
+      {
+        // redraw selected entries only
+        if(data->DRAW)
+        {
+          BOOL doDraw = FALSE;
+
+          for(ent = 0; ent < data->NList_Entries; ent++)
+          {
+            // mark the selected entries as "to be redrawn"
+            if(data->EntriesArray[ent]->Select != TE_Select_None)
+            {
+              NL_SetColsAdd(obj, data, ent, TRUE);
+              data->EntriesArray[ent]->PixLen = -1;
+              NL_Changed(data, ent);
+              doDraw = TRUE;
+            }
+          }
+          if(doDraw == TRUE)
+          {
+            // at least one entry must be redrawn
+            data->display_ptr = NULL;
+            data->do_draw = TRUE;
+            REDRAW;
+          }
+        }
+      }
+      break;
+
+      case MUIV_NList_Redraw_Title:
+      {
+        // redraw title only
+        if(data->DRAW)
+        {
+          NL_SetColsAdd(obj, data, -1, TRUE);
+          data->Title_PixLen = -1;
+        }
+        data->do_draw_title = TRUE;
+        data->do_setcols = TRUE;
         REDRAW;
       }
       break;
+
+      case MUIV_NList_Redraw_Active:
+        // redraw the active entry only
+        ent = data->NList_Active;
+        // fall through to the default redraw
+      default:
+      {
+        // redraw a specific entry
+        if(ent >= 0 && ent < data->NList_Entries)
+        {
+          if(data->DRAW)
+          {
+            NL_SetColsAdd(obj, data, ent, TRUE);
+            data->EntriesArray[ent]->PixLen = -1;
+          }
+          NL_Changed(data, ent);
+          REDRAW;
+        }
+      }
+      break;
+    }
+
+    /*D(bug("%lx|List_Redraw2 pos=%ld Q=%ld D=%ld S=%ld\n",obj,msg->pos,data->NList_Quiet,data->DRAW,data->SETUP));*/
   }
 
-  /*D(bug("%lx|List_Redraw2 pos=%ld Q=%ld D=%ld S=%ld\n",obj,msg->pos,data->NList_Quiet,data->DRAW,data->SETUP));*/
-
-  return (TRUE);
+  RETURN(TRUE);
+  return TRUE;
 }
 
 

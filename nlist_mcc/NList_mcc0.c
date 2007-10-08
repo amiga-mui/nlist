@@ -463,7 +463,7 @@ static ULONG mNL_GoActive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NLi
   data->isActiveObject = TRUE;
 
   if(data->NList_ActiveObjectOnClick == TRUE)
-    DoMethod(obj, MUIM_NList_Redraw, MUIV_NList_Redraw_Active);
+    DoMethod(obj, MUIM_NList_Redraw, MUIV_NList_Redraw_Selected);
 
   RETURN(result);
   return result;
@@ -479,7 +479,7 @@ static ULONG mNL_GoInactive(struct IClass *cl, Object *obj, UNUSED struct MUIP_N
   data->isActiveObject = FALSE;
 
   if(data->NList_ActiveObjectOnClick == TRUE)
-    DoMethod(obj, MUIM_NList_Redraw, MUIV_NList_Redraw_Active);
+    DoMethod(obj, MUIM_NList_Redraw, MUIV_NList_Redraw_Selected);
 
   RETURN(result);
   return result;

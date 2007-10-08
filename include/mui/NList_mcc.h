@@ -239,6 +239,7 @@
 #define MUIV_NList_Redraw_Active         -1
 #define MUIV_NList_Redraw_All            -2
 #define MUIV_NList_Redraw_Title          -3
+#define MUIV_NList_Redraw_Selected       -4
 #define MUIV_NList_Redraw_VisibleCols    -5
 
 #define MUIV_NList_Move_Top               0

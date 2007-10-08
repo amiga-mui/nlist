@@ -7,6 +7,9 @@ $URL$
 
 2007-10-08  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlist_mcc/NList_mcc0.c, nlist_mcc/NList_func.c: added new redraw type
+    MUIV_NList_Redraw_Selected to redraw selected entries only. This new type
+    is needed by the recently added (in)active highlighting.
   * nlist_mcc/NList_mcc2.c: the latest changes revealed another bug in NList
     when running under OS3. The HandleEvent method did not signal MUI that a
     mouse click was eaten and upon changing the active object MUI issued the
