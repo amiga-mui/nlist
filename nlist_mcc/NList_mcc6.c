@@ -137,7 +137,7 @@ void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WO
     }
     else
     {
-      if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+      if(data->NList_ActiveObjectOnClick == TRUE && (data->isActiveObject == FALSE || xget(_win(obj), MUIA_Window_Activate) == FALSE))
       {
         SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
       }
@@ -251,7 +251,7 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
               ent3 = ent + (dent / 2);
           }
 
-          if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+          if(data->NList_ActiveObjectOnClick == TRUE && (data->isActiveObject == FALSE || xget(_win(obj), MUIA_Window_Activate) == FALSE))
           {
             SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
           }
@@ -283,7 +283,7 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
         {
           ent3 = ent + 1;
 
-          if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+          if(data->NList_ActiveObjectOnClick == TRUE && (data->isActiveObject == FALSE || xget(_win(obj), MUIA_Window_Activate) == FALSE))
           {
             SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
           }
@@ -315,7 +315,7 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
           {
             SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
           }
-          else if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+          else if(data->NList_ActiveObjectOnClick == TRUE && (data->isActiveObject == FALSE || xget(_win(obj), MUIA_Window_Activate) == FALSE))
           {
             SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
           }
@@ -404,7 +404,7 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
       }
       if (x2 < x3)
       {
-        if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
+        if(data->NList_ActiveObjectOnClick == TRUE && (data->isActiveObject == FALSE || xget(_win(obj), MUIA_Window_Activate) == FALSE))
         {
           SetBackGround(MUII_myListInactive);
         }
@@ -445,7 +445,8 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
 #endif
       {
         if (x1 < x2)
-        { mypen = data->NList_ListPen;
+        {
+          mypen = data->NList_ListPen;
           linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x1,x2-1,MUIPEN(mypen),0,FALSE);
         }
         if (x2 < x3)
@@ -454,7 +455,8 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
           linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x2,x3-1,MUIPEN(mypen),0,data->ForcePen);
         }
         if (x3 < x4)
-        { mypen = data->NList_ListPen;
+        {
+          mypen = data->NList_ListPen;
           linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x3,x4-1,MUIPEN(mypen),0,FALSE);
         }
         if (linelen > hmax)
@@ -1414,8 +1416,9 @@ static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *r
               }
             }
           }
-          if ((curclen > 0) && draw)
-          { Move(rp, x2, y);
+          if((curclen > 0) && draw)
+          {
+            Move(rp, x2, y);
             Text(rp, ptr1, curclen);
           }
         }
@@ -1480,7 +1483,8 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
       if (w < data->DragWidth)
         x += ((data->DragWidth - w) / 2);
       if (curclen > 0)
-      { Move(rp, x, data->voff);
+      {
+        Move(rp, x, data->voff);
         Text(rp, text, curclen);
       }
     }

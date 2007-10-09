@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-10-09  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc6.c: the inactive color is now also used if the list's
+    window is inactive. That means the list AND the window must be active to
+    let the list be drawn with its active colors.
+
 2007-10-08 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc/NList_func.c: the new MUIV_NList_Redraw_Selected wasn't updating

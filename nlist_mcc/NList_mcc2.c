@@ -900,7 +900,6 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
                 modifyActiveObject = TRUE;
               }
 
-
               // now we check if the user wants to set this object
               // as the active one or not.
               if(data->NList_ActiveObjectOnClick && data->isActiveObject == FALSE)
