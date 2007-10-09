@@ -2,7 +2,7 @@
 
  NListtree.mcc - New Listtree MUI Custom Class
  Copyright (C) 1999-2001 by Carsten Scholling
- Copyright (C) 2001-2005 by NList Open Source Team
+ Copyright (C) 2001-2007 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -6033,25 +6033,36 @@ ULONG _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg
     switch ( msg->muikey )
     {
       case MUIKEY_LEFT:
+      {
+        BOOL changed = FALSE;
 
         if ( data->ActiveNode )
         {
           if ( ( data->ActiveNode->tn_Flags & TNF_LIST ) && ( data->ActiveNode->tn_Flags & TNF_OPEN ) )
           {
             DoMethod( obj, MUIM_NListtree_Close, MUIV_NListtree_Close_ListNode_Active, MUIV_NListtree_Close_TreeNode_Active, 0 );
+            changed = TRUE;
           }
           else if ( (ULONG)GetParent( data->ActiveNode ) != (ULONG)&data->RootList )
           {
             set( obj, MUIA_NListtree_Active, GetParent( data->ActiveNode ) );
+            changed = TRUE;
           }
         }
         else
+        {
           set( obj, MUIA_NListtree_Active, MUIV_NListtree_Active_LastVisible );
+          changed = TRUE;
+        }
 
-        ret = MUI_EventHandlerRC_Eat;
-        break;
+        if(changed)
+          ret = MUI_EventHandlerRC_Eat;
+      }
+      break;
 
       case MUIKEY_RIGHT:
+      {
+        BOOL changed = FALSE;
 
         if ( data->ActiveNode )
         {
@@ -6060,21 +6071,28 @@ ULONG _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg
             if ( !( data->ActiveNode->tn_Flags & TNF_OPEN ) )
             {
               DoMethod( obj, MUIM_NListtree_Open, MUIV_NListtree_Open_ListNode_Active, MUIV_NListtree_Open_TreeNode_Active, 0 );
+              changed = TRUE;
             }
-            else
+            else if((tn = CTN(DoMethod(obj, MUIM_NListtree_GetEntry, data->ActiveNode, MUIV_NListtree_GetEntry_Position_Head, 0))))
             {
-              if((tn = CTN(DoMethod(obj, MUIM_NListtree_GetEntry, data->ActiveNode, MUIV_NListtree_GetEntry_Position_Head, 0))))
+              if(xget(obj, MUIA_NListtree_Active) != tn)
               {
                 set( obj, MUIA_NListtree_Active, tn );
+                changed = TRUE;
               }
             }
           }
         }
         else
+        {
           set( obj, MUIA_NListtree_Active, MUIV_NListtree_Active_FirstVisible );
+          changed = TRUE;
+        }
 
-        ret = MUI_EventHandlerRC_Eat;
-        break;
+        if(changed)
+          ret = MUI_EventHandlerRC_Eat;
+      }
+      break;
 
       case MUIKEY_UP:
         break;

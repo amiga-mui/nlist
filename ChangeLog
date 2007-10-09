@@ -7,6 +7,10 @@ $URL$
 
 2007-10-09 Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlisttree_mcc/NListtree.c: the MUIKEY_LEFT/RIGHT always ate the keyevent
+    instead of just eating it in case NListtree itself reacted upon the key
+    press. This prevented NListtree from being able to be horizontally scrollable
+    in addition to reacting upon the new KeyLeft/RightFocus attributes.
   * nlist_mcc: implemented new MUIA_NList_KeyXXXFocus attributes which can be
     set to another object in the same window the NList object resists. In case
     the corresponding key action (Up/Down/Left/Right) is processed with no actual
