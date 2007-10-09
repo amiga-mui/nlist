@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-10-09 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc: implemented new MUIA_NList_KeyXXXFocus attributes which can be
+    set to another object in the same window the NList object resists. In case
+    the corresponding key action (Up/Down/Left/Right) is processed with no actual
+    scrolling/changing action being performed, the selected object will become
+    the new active object of the window.
+
 2007-10-09  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc6.c: the inactive color is now also used if the list's

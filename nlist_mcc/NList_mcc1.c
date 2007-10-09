@@ -1124,6 +1124,23 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         if (do_things)
           data->NList_Font = tag->ti_Data;
         break;
+
+      case MUIA_NList_KeyUpFocus:
+        data->NList_KeyUpFocus = (Object *)tag->ti_Data;
+      break;
+
+      case MUIA_NList_KeyDownFocus:
+        data->NList_KeyDownFocus = (Object *)tag->ti_Data;
+      break;
+
+      case MUIA_NList_KeyLeftFocus:
+        data->NList_KeyLeftFocus = (Object *)tag->ti_Data;
+      break;
+
+      case MUIA_NList_KeyRightFocus:
+        data->NList_KeyRightFocus = (Object *)tag->ti_Data;
+      break;
+
 /*
  *       case 0x8042AC64 :
  *       case 0x8042BE50 :
@@ -1155,7 +1172,6 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
 // Fixed msg type to correct one.
 ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-
 	struct NLData	*data	= INST_DATA( cl, obj );
 
   switch (((struct opGet *)msg)->opg_AttrID)
@@ -1260,6 +1276,12 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_NList_TitleMark2:				*msg->opg_Storage = (ULONG) data->NList_TitleMark2;		return( TRUE );
     case MUIA_NList_AutoClip:				*msg->opg_Storage = (ULONG) data->NList_AutoClip;     return(TRUE);
     case MUIA_NList_PrivateData:		*msg->opg_Storage = (ULONG) data->NList_PrivateData;	return(TRUE);
+
+    case MUIA_NList_KeyUpFocus:     *msg->opg_Storage = (ULONG)data->NList_KeyUpFocus;    return(TRUE);
+    case MUIA_NList_KeyDownFocus:   *msg->opg_Storage = (ULONG)data->NList_KeyDownFocus;  return(TRUE);
+    case MUIA_NList_KeyLeftFocus:   *msg->opg_Storage = (ULONG)data->NList_KeyLeftFocus;  return(TRUE);
+    case MUIA_NList_KeyRightFocus:  *msg->opg_Storage = (ULONG)data->NList_KeyRightFocus; return(TRUE);
+
     case MUIA_Version:							*msg->opg_Storage = (ULONG) LIB_VERSION;						  return(TRUE);
     case MUIA_Revision:							*msg->opg_Storage = (ULONG) LIB_REVISION;						  return(TRUE);
 
@@ -1291,4 +1313,6 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
  *
   return(retval);
  */
+
+ return(0);
 }

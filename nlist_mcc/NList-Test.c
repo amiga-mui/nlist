@@ -124,7 +124,8 @@ static APTR APP_Main = NULL,
             LV_Text2,
             LI_Text2,
             PR_Horiz,
-            ST_string;
+            ST_string,
+            ST_string2;
 
 struct  MUI_CustomClass *MCC_Main = NULL;
 
@@ -839,7 +840,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
           End,
           MUIA_ShortHelp, "The nice multicolumn\ndraggable list\nwith char selection\npossibility :)",
         End,
-        Child, StringObject,
+        Child, ST_string2 = StringObject,
           StringFrame,
         End,
       End,
@@ -1000,11 +1001,12 @@ int main(UNUSED int argc, UNUSED char *argv[])
     APP_Main, 6, MUIM_Application_PushMethod,
     WIN_2, 3, MUIM_Set,MUIA_Window_Open,FALSE);
 
-  set(WIN_Main, MUIA_Window_DefaultObject, LV_Text);
-  set(WIN_Main, MUIA_Window_ActiveObject, LV_Text);
+  set(WIN_Main, MUIA_Window_DefaultObject, LI_Text);
+  set(WIN_Main, MUIA_Window_ActiveObject, LI_Text);
   set(WIN_2, MUIA_Window_ActiveObject, ST_string);
   set(WIN_2, MUIA_Window_DefaultObject, LV_Text2);
 
+  //set(LI_Text, MUIA_NList_KeyRightFocus, ST_string2);
 
   /* ************************************** */
 

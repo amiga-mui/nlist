@@ -155,18 +155,40 @@ ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
     SHOWVALUE(DBF_ALWAYS, msg->muikey);
     switch (msg->muikey)
     {
-      case MUIKEY_UP       :
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->NList_List_Select,FALSE);
+      case MUIKEY_UP:
+      {
+        BOOL changed;
+
+        if(data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+          changed = NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->NList_List_Select,FALSE);
         else
-          NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
-        break;
-      case MUIKEY_DOWN     :
+          changed = NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
+
+        // if we have an object that we should make the new active object
+        // of the window we do so in case this up key action didn't end up in
+        // a real scrolling
+        if(changed == FALSE && data->NList_KeyUpFocus != NULL)
+          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyUpFocus);
+      }
+      break;
+
+      case MUIKEY_DOWN:
+      {
+        BOOL changed;
+
         if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE);
+          changed = NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE);
         else
-          NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
-        break;
+          changed = NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
+
+        // if we have an object that we should make the new active object
+        // of the window we do so in case this down key action didn't end up in
+        // a real scrolling
+        if(changed == FALSE && data->NList_KeyDownFocus != NULL)
+          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyDownFocus);
+      }
+      break;
+
       case MUIKEY_PAGEUP   :
         if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
           NL_List_Active(obj,data,MUIV_NList_Active_PageUp,NULL,data->NList_List_Select,FALSE);
@@ -221,8 +243,31 @@ ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
           LESSQUIET;
         }
         break;
-      case MUIKEY_LEFT     : NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL); break;
-      case MUIKEY_RIGHT    : NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL); break;
+
+      case MUIKEY_LEFT:
+      {
+        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
+
+        // if we have an object that we should make the new active object
+        // of the window we do so in case this left key action didn't end up in
+        // a real scrolling
+        if(scrolled == FALSE && data->NList_KeyLeftFocus != NULL)
+          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyLeftFocus);
+      }
+      break;
+
+      case MUIKEY_RIGHT:
+      {
+        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
+
+        // if we have an object that we should make the new active object
+        // of the window we do so in case this right key action didn't end up in
+        // a real scrolling
+        if(scrolled == FALSE && data->NList_KeyRightFocus != NULL)
+          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyRightFocus);
+      }
+      break;
+
       case MUIKEY_WORDLEFT : NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageLeft,NULL); break;
       case MUIKEY_WORDRIGHT: NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageRight,NULL); break;
       case MUIKEY_LINESTART: NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Start,NULL); break;

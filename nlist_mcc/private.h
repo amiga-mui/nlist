@@ -318,6 +318,13 @@ struct NLData
   BOOL  NList_AutoClip;
   BOOL  NList_SelectPointer;
 
+  // object pointers for forwarding the
+  // key focus to other objects.
+  Object *NList_KeyUpFocus;
+  Object *NList_KeyDownFocus;
+  Object *NList_KeyLeftFocus;
+  Object *NList_KeyRightFocus;
+
   STRPTR NList_ShortHelp;
 
   LONG  ListCompatibility;
@@ -567,7 +574,6 @@ struct NLData
 
   struct InputEvent ievent;
   char rawtext[MAXRAWBUF];
-
 };
 
 

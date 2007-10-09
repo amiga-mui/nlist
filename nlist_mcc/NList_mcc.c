@@ -559,6 +559,10 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->pad2 = TRUE;
   data->nlie = NULL;
   data->isActiveObject = FALSE;
+  data->NList_KeyUpFocus = NULL;
+  data->NList_KeyDownFocus = NULL;
+  data->NList_KeyLeftFocus = NULL;
+  data->NList_KeyRightFocus = NULL;
 
 /*D(bug("%lx|NEW 1 \n",obj));*/
 
@@ -834,9 +838,19 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     data->NList_TitleMark2 = (LONG) tag->ti_Data;
 
   if((tag = FindTagItem(MUIA_NList_Columns, taglist)))
-  {
     NL_Columns(obj,data,(BYTE *) tag->ti_Data);
-  }
+
+  if((tag = FindTagItem(MUIA_NList_KeyUpFocus, taglist)))
+    data->NList_KeyUpFocus = (Object *)tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_NList_KeyDownFocus, taglist)))
+    data->NList_KeyDownFocus = (Object *)tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_NList_KeyLeftFocus, taglist)))
+    data->NList_KeyLeftFocus = (Object *)tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_NList_KeyRightFocus, taglist)))
+    data->NList_KeyRightFocus = (Object *)tag->ti_Data;
 
   if (data->NList_DragSortable)
     data->NList_ShowDropMarks = TRUE;

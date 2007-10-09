@@ -499,75 +499,111 @@ void SelectSecondPoint(Object *obj,struct NLData *data,WORD x,WORD y)
 }
 
 
-void NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag)
+BOOL NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag)
 {
   struct TagItem ltag;
+  BOOL scrolled = FALSE;
+
+  ENTER();
+
   if (!tag)
     tag = &ltag;
-  if ((data->NList_Entries > 0) && (lf != data->NList_First))
-  { switch (lf)
-    { case MUIV_NList_First_Top :
+
+  if((data->NList_Entries > 0) && (lf != data->NList_First))
+  {
+    switch (lf)
+    {
+      case MUIV_NList_First_Top:
         lf = 0;
-        break;
-      case MUIV_NList_First_Bottom :
+      break;
+
+      case MUIV_NList_First_Bottom:
+      {
         lf = data->NList_Entries - data->NList_Visible;
         if (lf < 0)
           lf = 0;
-        break;
-      case MUIV_NList_First_Up :
+      }
+      break;
+
+      case MUIV_NList_First_Up:
+      {
         lf = data->NList_First - 1;
         if (lf < 0)
           lf = 0;
-        break;
-      case MUIV_NList_First_Down :
+      }
+      break;
+
+      case MUIV_NList_First_Down:
+      {
         lf = data->NList_First + 1;
         if (lf + data->NList_Visible >= data->NList_Entries)
           lf = data->NList_Entries - data->NList_Visible;
         if (lf < 0)
           lf = 0;
-        break;
-      case MUIV_NList_First_PageUp :
+      }
+      break;
+
+      case MUIV_NList_First_PageUp:
+      {
         lf = data->NList_First - data->NList_Visible + 1;
         if (lf < 0)
           lf = 0;
-        break;
-      case MUIV_NList_First_PageDown :
+      }
+      break;
+
+      case MUIV_NList_First_PageDown:
+      {
         lf = data->NList_First + data->NList_Visible - 1;
         if (lf + data->NList_Visible >= data->NList_Entries)
           lf = data->NList_Entries - data->NList_Visible;
         if (lf < 0)
           lf = 0;
-        break;
-      case MUIV_NList_First_Up2 :
+      }
+      break;
+
+      case MUIV_NList_First_Up2:
+      {
         lf = data->NList_First - 2;
         if (lf < 0)
           lf = 0;
-        break;
-      case MUIV_NList_First_Down2 :
+      }
+      break;
+
+      case MUIV_NList_First_Down2:
+      {
         lf = data->NList_First + 2;
         if (lf + data->NList_Visible >= data->NList_Entries)
           lf = data->NList_Entries - data->NList_Visible;
         if (lf < 0)
           lf = 0;
-        break;
-      case MUIV_NList_First_Up4 :
+      }
+      break;
+
+      case MUIV_NList_First_Up4:
+      {
         lf = data->NList_First - 4;
         if (lf < 0)
           lf = 0;
-        break;
+      }
+      break;
+
       case MUIV_NList_First_Down4 :
+      {
         lf = data->NList_First + 4;
         if (lf + data->NList_Visible >= data->NList_Entries)
           lf = data->NList_Entries - data->NList_Visible;
         if (lf < 0)
           lf = 0;
-        break;
+      }
+      break;
     }
+
     if ((lf >= 0) && (lf < data->NList_Entries))
     {
       if (data->NList_First != lf)
       {
         DO_NOTIFY(NTF_First);
+        scrolled = TRUE;
       }
 
       data->NList_First = lf;
@@ -580,32 +616,48 @@ void NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag)
   }
   else
     tag->ti_Tag = TAG_IGNORE;
+
+  RETURN(scrolled);
+  return scrolled;
 }
 
 
-void NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame)
+BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame)
 {
   struct TagItem ltag,*tag2 = tag;
   LONG ent;
+  BOOL changed = FALSE;
+
+  ENTER();
 
 //	D(bug("0x%lx la=%ld newactsel=%ld acceptsame=%ld data->pad1=%ld\n",obj,la,newactsel,acceptsame,data->pad1));
 
   if (data->NList_TypeSelect || !data->NList_Input)
-  { if (tag2)
+  {
+    if (tag2)
       tag->ti_Data = MUIV_NList_Active_Off;
-    if ((la == MUIV_NList_Active_Off) || (data->NList_Entries <= 0))
-    { data->pad1 = MUIV_NList_Active_Off;
-      return;
+
+    if((la == MUIV_NList_Active_Off) || (data->NList_Entries <= 0))
+    {
+      data->pad1 = MUIV_NList_Active_Off;
+
+      RETURN(TRUE);
+      return TRUE;
     }
     else if (la < 0)
-    { if (!tag2)
-      { NL_List_First(obj,data,la,tag);
-        return;
+    {
+      if(!tag2)
+      {
+        changed = NL_List_First(obj,data,la,tag);
+
+        RETURN(changed);
+        return changed;
       }
       else if (data->NList_Entries > 0)
       {
         switch (la)
-        { case MUIV_NList_Active_Top :
+        {
+          case MUIV_NList_Active_Top :
           case MUIV_NList_Active_UntilTop :
             la = 0;
             break;
@@ -642,32 +694,48 @@ void NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
         }
       }
     }
+
     if (la < 0)
       la = 0;
     else if (la >= data->NList_Entries)
       la = data->NList_Entries - 1;
+
     data->pad1 = la;
-    if (la < data->NList_First)
-    { DO_NOTIFY(NTF_First);
+    if(la < data->NList_First)
+    {
+      DO_NOTIFY(NTF_First);
       data->NList_First = la;
       REDRAW;
+
+      changed = TRUE;
     }
     else if (la >= data->NList_First + data->NList_Visible)
-    { data->NList_First = la - data->NList_Visible + 1;
+    {
+      data->NList_First = la - data->NList_Visible + 1;
+
       if (data->NList_First < 0)
         data->NList_First = 0;
+
       DO_NOTIFY(NTF_First);
       REDRAW;
+
+      changed = TRUE;
     }
-    return;
+
+    RETURN(changed);
+    return changed;
   }
 
   if (!tag)
     tag = &ltag;
-  if (data->NList_Entries > 0)
-  { ent = -2;
+
+  if(data->NList_Entries > 0)
+  {
+    ent = -2;
+
     switch (la)
-    { case MUIV_NList_Active_Top :
+    {
+      case MUIV_NList_Active_Top :
         la = 0;
         break;
       case MUIV_NList_Active_Bottom :
@@ -737,31 +805,37 @@ void NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
         la = MUIV_NList_Active_Off;
         break;
     }
+
     if ((la != data->NList_Active) || (acceptsame &&
          !((newactsel == MUIV_NList_Select_On) && (la >= 0) && (la < data->NList_Entries) &&
            (data->EntriesArray[la]->Select != TE_Select_None))))
     {
       if ((la >= 0) && (la < data->NList_Entries))
-      { if ((data->NList_MultiSelect == MUIV_NList_MultiSelect_None)  && (la != data->NList_Active))
-        { DO_NOTIFY(NTF_Select | NTF_LV_Select);
+      {
+        if ((data->NList_MultiSelect == MUIV_NList_MultiSelect_None)  && (la != data->NList_Active))
+        {
+          DO_NOTIFY(NTF_Select | NTF_LV_Select);
+
           if ((data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
-          { SELECT2(data->NList_Active,TE_Select_None);
-          }
+            SELECT2(data->NList_Active,TE_Select_None);
         }
+
         if ((data->NList_MultiSelect != MUIV_NList_MultiSelect_None) && (newactsel == MUIV_NList_Select_List))
-        { DO_NOTIFY(NTF_Select | NTF_LV_Select);
-          if ((data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
-          { if (data->EntriesArray[data->NList_Active]->Select != TE_Select_None)
-            { SELECT2(data->NList_Active,TE_Select_None);
-            }
+        {
+          DO_NOTIFY(NTF_Select | NTF_LV_Select);
+          if((data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
+          {
+            if (data->EntriesArray[data->NList_Active]->Select != TE_Select_None)
+              SELECT2(data->NList_Active,TE_Select_None);
             else
-            { SELECT(data->NList_Active,TE_Select_Line);
-            }
+              SELECT(data->NList_Active,TE_Select_Line);
+
             data->lastselected = data->NList_Active;
             data->lastactived = data->NList_Active;
           }
         }
-        if ((ent < -1) || (data->multiselect == MUIV_NList_MultiSelect_None))
+
+        if((ent < -1) || (data->multiselect == MUIV_NList_MultiSelect_None))
           ent = la;
 
         if (ent < 0)
@@ -770,6 +844,7 @@ void NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
           ent = data->NList_Entries - 1;
 
         set_Active(la);
+        changed = TRUE;
 
         if (ent < la)
           NL_SegChanged(data,ent,la-1);
@@ -803,6 +878,7 @@ void NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
               data->lastselected = ent;
               data->lastactived = ent;
               break;
+
             case MUIV_NList_Select_List :
               if (data->NList_MultiSelect != MUIV_NList_MultiSelect_None)
               { ent = la;
@@ -816,7 +892,8 @@ void NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
                 data->lastactived = ent;
                 break;
               }
-            default :
+
+            default:
               if (data->NList_MultiSelect == MUIV_NList_MultiSelect_None)
               { SELECT(ent,TE_Select_Line);
                 data->lastselected = ent;
@@ -829,31 +906,37 @@ void NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
         tag->ti_Data = la;
         data->do_draw_active = TRUE;
         if (la < data->NList_First)
-        { DO_NOTIFY(NTF_First);
+        {
+          DO_NOTIFY(NTF_First);
           data->NList_First = la;
           REDRAW;
         }
         else if (la >= data->NList_First + data->NList_Visible)
-        { data->NList_First = la - data->NList_Visible + 1;
+        {
+          data->NList_First = la - data->NList_Visible + 1;
           if (data->NList_First < 0)
             data->NList_First = 0;
+
           DO_NOTIFY(NTF_First);
           REDRAW;
         }
         else
-        { REDRAW;
-        }
+          REDRAW;
       }
       else if (la == MUIV_NList_Active_Off)
-      { if ((data->NList_MultiSelect == MUIV_NList_MultiSelect_None)  && (la != data->NList_Active))
-        { DO_NOTIFY(NTF_Select | NTF_LV_Select);
+      {
+        if ((data->NList_MultiSelect == MUIV_NList_MultiSelect_None)  && (la != data->NList_Active))
+        {
+          DO_NOTIFY(NTF_Select | NTF_LV_Select);
           if ((data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
-          { SELECT2(data->NList_Active,TE_Select_None);
-          }
+            SELECT2(data->NList_Active,TE_Select_None);
         }
+
         set_Active(MUIV_NList_Active_Off);
         tag->ti_Data = MUIV_NList_Active_Off;
         REDRAW;
+
+        changed = TRUE;
       }
       else
         tag->ti_Tag = TAG_IGNORE;
@@ -862,83 +945,130 @@ void NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
       tag->ti_Tag = TAG_IGNORE;
   }
   else
-  { set_Active(MUIV_NList_Active_Off);
+  {
+    set_Active(MUIV_NList_Active_Off);
     tag->ti_Data = MUIV_NList_Active_Off;
     if (la >= 0)
       tag->ti_Tag = TAG_IGNORE;
   }
 /*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
+
+  RETURN(changed);
+  return changed;
 }
 
 
-void NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem *tag)
+BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem *tag)
 {
-  if (data->NList_Horiz_First != hf)
-  { struct TagItem ltag;
+  BOOL scrolled = FALSE;
+
+  ENTER();
+
+  if(data->NList_Horiz_First != hf)
+  {
+    struct TagItem ltag;
     BOOL tagnul = FALSE;
-    if (!tag)
-    { tag = &ltag;  tagnul = TRUE; }
+
+    if(!tag)
+    {
+      tag = &ltag;
+      tagnul = TRUE;
+    }
 
     switch (hf)
-    { case MUIV_NList_Horiz_First_Start :
+    {
+      case MUIV_NList_Horiz_First_Start :
         hf = 0;
-        break;
+      break;
+
       case MUIV_NList_Horiz_First_End :
+      {
         hf = data->NList_Horiz_Entries - data->NList_Horiz_Visible;
-        if (hf < 0)
+        if(hf < 0)
           hf = 0;
-        break;
+      }
+      break;
+
       case MUIV_NList_Horiz_First_Left :
+      {
         hf = data->NList_Horiz_First - _font(obj)->tf_XSize;
         if (hf < 0)
           hf = 0;
-        break;
+      }
+      break;
+
       case MUIV_NList_Horiz_First_Right :
+      {
         hf = data->NList_Horiz_First + _font(obj)->tf_XSize;
-        if (hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
+        if(hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
           hf = data->NList_Horiz_Entries - data->NList_Horiz_Visible;
-        break;
+      }
+      break;
+
       case MUIV_NList_Horiz_First_PageLeft :
+      {
         hf = data->NList_Horiz_First - data->NList_Horiz_Visible / 2;
         if (hf < 0)
           hf = 0;
-        break;
+      }
+      break;
+
       case MUIV_NList_Horiz_First_PageRight :
+      {
         hf = data->NList_Horiz_First + data->NList_Horiz_Visible / 2;
         if (hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
           hf = data->NList_Horiz_Entries - data->NList_Horiz_Visible;
-        break;
+      }
+      break;
+
       case MUIV_NList_Horiz_First_Left2 :
+      {
         hf = data->NList_Horiz_First - _font(obj)->tf_XSize*2;
         if (hf < 0)
           hf = 0;
-        break;
+      }
+      break;
+
       case MUIV_NList_Horiz_First_Right2 :
+      {
         hf = data->NList_Horiz_First + _font(obj)->tf_XSize*2;
         if (hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
           hf = data->NList_Horiz_Entries - data->NList_Horiz_Visible;
-        break;
+      }
+      break;
+
       case MUIV_NList_Horiz_First_Left4 :
+      {
         hf = data->NList_Horiz_First - _font(obj)->tf_XSize*4;
         if (hf < 0)
           hf = 0;
-        break;
+      }
+      break;
+
       case MUIV_NList_Horiz_First_Right4 :
+      {
         hf = data->NList_Horiz_First + _font(obj)->tf_XSize*4;
         if (hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
           hf = data->NList_Horiz_Entries - data->NList_Horiz_Visible;
-        break;
+      }
+      break;
     }
-    if (data->NList_Horiz_First != hf)
-    { if ((hf >= 0) && (hf < data->NList_Horiz_Entries))
-      { if (hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
+
+    if(data->NList_Horiz_First != hf)
+    {
+      if((hf >= 0) && (hf < data->NList_Horiz_Entries))
+      {
+        if(hf > data->NList_Horiz_Entries - data->NList_Horiz_Visible)
           hf = data->NList_Horiz_Entries - data->NList_Horiz_Visible;
+
         data->NList_Horiz_First = hf;
         REDRAW;
 
         tag->ti_Data = hf;
         if (tagnul /*&& data->Notify_HSB*/)
           notdoset(obj,MUIA_NList_Horiz_First,hf);
+
+        scrolled = TRUE;
       }
       else
         tag->ti_Tag = TAG_IGNORE;
@@ -946,6 +1076,9 @@ void NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem 
     else
       tag->ti_Tag = TAG_IGNORE;
   }
+
+  RETURN(scrolled);
+  return scrolled;
 }
 
 
