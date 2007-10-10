@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-10-10  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: removed the DefaultObjectOnClick workaround for
+    MUI3.8/m68k which is no longer necessary, as the corrent return of
+    MUI_EventHandlerRC_Eat for handled mouse clicks inside the object also
+    cured the "first click does not select" bug in YAM.
+
 2007-10-09 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcc/NListtree.c: the MUIKEY_LEFT/RIGHT always ate the keyevent

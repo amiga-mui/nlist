@@ -1076,21 +1076,16 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
           }
           else
           {
-            if(MUIMasterBase->lib_Version >= 20)
+            if((msg->imsg->Code==SELECTDOWN) && data->NList_DefaultObjectOnClick)
             {
-              // FIXME: this causes problems with MUI3.8/m68k if there are two NList objects
-              // in one window and both of them have MUIA_NList_DefaultObjectOnClick==TRUE.
-              // The not active list never gets active on the first click, probably because
-              // MUI chokes on setting the default object to NULL. At least with OS4 this
-              // does not cause any problems.
-              if((msg->imsg->Code==SELECTDOWN) && data->NList_DefaultObjectOnClick)
-              {
-                /* click was not in _isinobject2() */
-                ULONG tst = xget(_win(obj), MUIA_Window_DefaultObject);
+              /* click was not in _isinobject2() */
+              ULONG tst = xget(_win(obj), MUIA_Window_DefaultObject);
 
-                if(tst == (ULONG)obj)
-                  set(_win(obj), MUIA_Window_DefaultObject, NULL);
-              }
+              if(tst == (ULONG)obj)
+                set(_win(obj), MUIA_Window_DefaultObject, NULL);
+
+              // do not return MUI_EventHandlerRC_Eat, because this click happened outside
+              // of our realm and most probably needs to be handled by another object.
             }
 /*
             if (!(((msg->imsg->Code==MIDDLEDOWN) || (msg->imsg->Code==MIDDLEUP)) && (data->drag_qualifier & IEQUALIFIER_MIDBUTTON)) &&
