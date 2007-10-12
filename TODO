@@ -22,27 +22,5 @@
 
 ***************************************************************************/
 
-* Stack check can be activated again
-
-see NList_func.h for STACK_CHECK and STACK_ALERT macros
-    NList_mcc.c for Calc_Stack
-
-* move.c (replacement functions for memory copying)
-
-change them with memmove, etc
-
-* porting of other parts
-
-nlist_demo (in demo/ dir) and other test apps and rarely used
-classes (in misc/ dir) can be ported too.
-
-* cleaning up warnings
-
-there are many pointer to int without cast warnings.
-they are mostly harmless...
-
-* add preferences import/export to the mcp's
-  Implement the MUIM_Settingsgroup_ConfigToGadgets
-  and MUIM_Settingsgroup_GadgetsToConfig methods.
-
-* anything else? :)
+move.c (replacement functions for memory copying):
+- change them with memmove, etc
