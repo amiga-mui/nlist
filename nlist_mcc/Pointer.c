@@ -111,27 +111,73 @@ static const ULONG selectPointer[] =
 #define POINTERA_Height    (POINTERA_Dummy + 0x09) // <= 64
 #endif
 
-// the 32bit pointer image setup seems to require
-// to have a fake bitmap.
-static struct BitMap fakeSizeBitmap =
-{
-  2, 12, 0, 2, 0,
-  { NULL, NULL, NULL, NULL, NULL, NULL, NULL }
-};
-
-static struct BitMap fakeMoveBitmap =
-{
-  2, 6, 0, 2, 0,
-  { NULL, NULL, NULL, NULL, NULL, NULL, NULL }
-};
-
-static struct BitMap fakeSelectBitmap =
-{
-  2, 16, 0, 2, 0,
-  { NULL, NULL, NULL, NULL, NULL, NULL, NULL }
-};
-
 #else // __amigaos4__
+
+static const UWORD sizePointer[] =
+{
+//plane1    plane2
+  0x0000,   0x0000,
+
+  0x0480,   0x0000,
+  0x0480,   0x0240,
+  0x0480,   0x0240,
+  0x2490,   0x0240,
+  0x6498,   0x1240,
+  0xfcfc,   0x0200,
+  0x6498,   0x1a64,
+  0x2490,   0x1248,
+  0x0480,   0x1250,
+  0x0480,   0x0240,
+  0x0480,   0x0240,
+  0x0000,   0x0240,
+
+  0x0000,   0x0000
+};
+
+static const UWORD movePointer[] =
+{
+//plane1    plane2
+  0x0000,   0x0000,
+
+  0x3fe0,   0x0000,
+  0x6030,   0x1fc0,
+  0xe038,   0x1000,
+  0x6030,   0x100c,
+  0x3fe0,   0x0018,
+  0x0000,   0x1ff0,
+
+  0x0000,   0x0000
+};
+
+static const UWORD selectPointer[] =
+{
+//plane1    plane2
+  0x0000,   0x0000,
+
+  0x8800,   0x4600,
+  0x5000,   0x2800,
+  0x2000,   0x1000,
+  0x2000,   0x1000,
+  0x2000,   0x1000,
+  0x2000,   0x1000,
+  0x2000,   0x1000,
+  0x2000,   0x1000,
+  0x4000,   0x3800,
+  0x2000,   0x1000,
+  0x2000,   0x1000,
+  0x2000,   0x1000,
+  0x2000,   0x1000,
+  0x2000,   0x1000,
+  0x5000,   0x2800,
+  0x8800,   0x4600,
+
+  0x0000,   0x0000
+};
+
+#endif // __amigaos4__
+
+// Classic bitmap data for the pointers. These will be used for OS4 aswell,
+// if the graphic card cannot handle 32bit pointers.
 
 // the size pointer
 static const UWORD sizePointer_bp0[] =
@@ -182,27 +228,6 @@ static const UWORD sizePointer_bp2[] =
   0x0000   // ......#..#......
 };
 
-static const UWORD sizePointer[] =
-{
-//plane1    plane2
-  0x0000,   0x0000,
-
-  0x0480,   0x0000,
-  0x0480,   0x0240,
-  0x0480,   0x0240,
-  0x2490,   0x0240,
-  0x6498,   0x1240,
-  0xfcfc,   0x0200,
-  0x6498,   0x1a64,
-  0x2490,   0x1248,
-  0x0480,   0x1250,
-  0x0480,   0x0240,
-  0x0480,   0x0240,
-  0x0000,   0x0240,
-
-  0x0000,   0x0000
-};
-
 static struct BitMap sizePointerBitmap =
 {
   2, 12, 0, 2, 0,
@@ -240,21 +265,6 @@ static const UWORD movePointer_bp2[] =
   0x0000  // ...#########....
 };
 
-static const UWORD movePointer[] =
-{
-//plane1    plane2
-  0x0000,   0x0000,
-
-  0x3fe0,   0x0000,
-  0x6030,   0x1fc0,
-  0xe038,   0x1000,
-  0x6030,   0x100c,
-  0x3fe0,   0x0018,
-  0x0000,   0x1ff0,
-
-  0x0000,   0x0000
-};
-
 static struct BitMap movePointerBitmap =
 {
   2, 6, 0, 2, 0,
@@ -285,7 +295,7 @@ static const UWORD selectPointer_bp0[] =
 
 static const UWORD selectPointer_bp1[] =
 {
-  0x4600,    // .#...#..........
+  0x4600,    // .#...##.........
   0x2800,    // ..#.#...........
   0x1000,    // ...#............
   0x1000,    // ...#............
@@ -300,12 +310,12 @@ static const UWORD selectPointer_bp1[] =
   0x1000,    // ...#............
   0x1000,    // ...#............
   0x2800,    // ..#.#...........
-  0x4600,    // .#...#..........
+  0x4600,    // .#...##.........
 };
 
 static const UWORD selectPointer_bp2[] =
 {
-  0xce00,    // %#..%#..........
+  0xce00,    // %#..%##.........
   0x7800,    // .%#%#...........
   0x3000,    // ..%#............
   0x3000,    // ..%#............
@@ -320,32 +330,7 @@ static const UWORD selectPointer_bp2[] =
   0x3000,    // ..%#............
   0x3000,    // ..%#............
   0x7800,    // .%#%#...........
-  0xce00,    // %#..%#..........
-};
-
-static const UWORD selectPointer[] =
-{
-//plane1    plane2
-  0x0000,   0x0000,
-
-  0x8800,   0x4600,
-  0x5000,   0x2800,
-  0x2000,   0x1000,
-  0x2000,   0x1000,
-  0x2000,   0x1000,
-  0x2000,   0x1000,
-  0x2000,   0x1000,
-  0x2000,   0x1000,
-  0x4000,   0x3800,
-  0x2000,   0x1000,
-  0x2000,   0x1000,
-  0x2000,   0x1000,
-  0x2000,   0x1000,
-  0x2000,   0x1000,
-  0x5000,   0x2800,
-  0x8800,   0x4600,
-
-  0x0000,   0x0000
+  0xce00,    // %#..%##.........
 };
 
 static struct BitMap selectPointerBitmap =
@@ -494,7 +479,6 @@ static void IdentifyPointerColors(Object *obj)
 
   LEAVE();
 }
-#endif
 
 void SetupCustomPointers(struct NLData *data)
 {
@@ -507,7 +491,8 @@ void SetupCustomPointers(struct NLData *data)
       POINTERA_ImageData,   sizePointer,
       POINTERA_Width,       sizePointerWidth,
       POINTERA_Height,      sizePointerHeight,
-      POINTERA_BitMap,      &fakeSizeBitmap,
+      POINTERA_BitMap,      (LONG)&sizePointerBitmap,
+      POINTERA_WordWidth,   (ULONG)1,
       POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
       POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
       POINTERA_XOffset,     (LONG)sizePointerXOffset,
@@ -540,7 +525,8 @@ void SetupCustomPointers(struct NLData *data)
       POINTERA_ImageData,   movePointer,
       POINTERA_Width,       movePointerWidth,
       POINTERA_Height,      movePointerHeight,
-      POINTERA_BitMap,      &fakeMoveBitmap,
+      POINTERA_BitMap,      (LONG)&movePointerBitmap,
+      POINTERA_WordWidth,   (ULONG)1,
       POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
       POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
       POINTERA_XOffset,     (LONG)movePointerXOffset,
@@ -573,7 +559,8 @@ void SetupCustomPointers(struct NLData *data)
       POINTERA_ImageData,   selectPointer,
       POINTERA_Width,       selectPointerWidth,
       POINTERA_Height,      selectPointerHeight,
-      POINTERA_BitMap,      &fakeSelectBitmap,
+      POINTERA_BitMap,      (LONG)&selectPointerBitmap,
+      POINTERA_WordWidth,   (ULONG)1,
       POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
       POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
       POINTERA_XOffset,     (LONG)selectPointerXOffset,
@@ -684,17 +671,15 @@ void ShowCustomPointer(Object *obj, struct NLData *data, enum PointerType type)
 
     if(ptrObject != NULL)
     {
+      // try to identify the black/white colors
+      // of the current screen colormap
+      IdentifyPointerColors(obj);
+
       #if defined(__amigaos4__)
       SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
       #else
       if(((struct Library *)IntuitionBase)->lib_Version >= 39)
-      {
-        // try to identify the black/white colors
-        // of the current screen colormap
-        IdentifyPointerColors(obj);
-
         SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
-      }
       else
       {
         ULONG height = 0;

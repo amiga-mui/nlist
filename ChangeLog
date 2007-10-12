@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-10-12  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/Pointer.c: for OS4 the normal bitmap data are now used for the
+    fallback pointers in case the graphic card cannot handle 32bit hardware
+    sprites as pointer.
+
 2007-10-11  Thore Böckelmann <tboeckel@gmx.de>
 
   * nist_mcc/Pointer.c: the combinated bitplane is now also declared as constant
