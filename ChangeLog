@@ -5,6 +5,8 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.100 RELEASE ###########################################################
+
 2007-10-12  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/Pointer.c: for OS4 the normal bitmap data are now used for the
