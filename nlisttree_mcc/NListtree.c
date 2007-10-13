@@ -174,14 +174,6 @@ struct TreeImage_Data
   LONG  spec;
 };
 
-
-LONG xget(Object *obj, ULONG attribute)
-{
-  LONG x = 0;
-  get( obj, attribute, &x );
-  return( x );
-}
-
 #if !defined(__MORPHOS__)
 Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
@@ -2335,11 +2327,10 @@ VOID ActivateTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNod
 
   /* sba: set the new entry only if it really changes, otherwise we lose some
      MUIA_NList_Active notifications */
-    D(DBF_ALWAYS, "ActivateTreeNode: %ld %ld",newact,xget(data->Obj,MUIA_NList_Active));
-  if (newact != xget(data->Obj,MUIA_NList_Active))
-  {
+
+  D(DBF_ALWAYS, "ActivateTreeNode: %ld %ld",newact,xget(data->Obj,MUIA_NList_Active));
+  if(newact != (LONG)xget(data->Obj,MUIA_NList_Active))
     set(data->Obj, MUIA_NList_Active, newact);
-  }
 }
 
 
@@ -6075,7 +6066,7 @@ ULONG _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg
             }
             else if((tn = CTN(DoMethod(obj, MUIM_NListtree_GetEntry, data->ActiveNode, MUIV_NListtree_GetEntry_Position_Head, 0))))
             {
-              if(xget(obj, MUIA_NListtree_Active) != tn)
+              if(xget(obj, MUIA_NListtree_Active) != (ULONG)tn)
               {
                 set( obj, MUIA_NListtree_Active, tn );
                 changed = TRUE;
