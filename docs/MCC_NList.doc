@@ -2,6 +2,7 @@ TABLE OF CONTENTS
 
 NList.mcc/NList.mcc
 NList.mcc/MUIA_NList_Active
+NList.mcc/MUIA_NList_ActiveObjectOnClick
 NList.mcc/MUIA_NList_AdjustHeight
 NList.mcc/MUIA_NList_AdjustWidth
 NList.mcc/MUIA_NList_AutoCopyToClip
@@ -46,6 +47,10 @@ NList.mcc/MUIA_NList_Imports
 NList.mcc/MUIA_NList_Input
 NList.mcc/MUIA_NList_InsertPosition
 NList.mcc/MUIA_NList_KeepActive
+NList.mcc/MUIA_NList_KeyUpFocus
+NList.mcc/MUIA_NList_KeyDownFocus
+NList.mcc/MUIA_NList_KeyLeftFocus
+NList.mcc/MUIA_NList_KeyRightFocus
 NList.mcc/MUIA_NList_LineHeight
 NList.mcc/MUIA_NList_MakeActive
 NList.mcc/MUIA_NList_MinColSortable
@@ -71,7 +76,6 @@ NList.mcc/MUIA_NList_SortType2
 NList.mcc/MUIA_NList_SourceArray
 NList.mcc/MUIA_NList_SourceInsert
 NList.mcc/MUIA_NList_SourceString
-NList.mcc/MUIA_NList_StackCheck
 NList.mcc/MUIA_NList_TabSize
 NList.mcc/MUIA_NList_Title
 NList.mcc/MUIA_NList_TitleClick
@@ -127,29 +131,33 @@ NList.mcc/MUIM_NList_TestPos
 NList.mcc/MUIM_NList_UseImage
 NList.mcc/NList.mcc
 
-        That MCC public custom class is very similar to the
-        MUI's list class.
+    *******************************************************************
+    Copyright (C) 2001-2007 by NList Open Source Team
+    $Id$
 
-        It handles directly most attributes which are handled
-        by Listview in the original couple List/Listview.
+    This MCC public custom class is very similar to the MUI's list
+    class.
 
-        The NListview exist anyway to provide a complete
-        object with scrollbars, so you should use it as child
-        of NListview. Anyway, you can use NList without NListview
-        if you don't want any builtin scrollbar.
+    It handles directly most attributes which are handled by Listview
+    in the original couple List/Listview.
 
-        NOTE: NList class will not work with Listview without
-              some conflicts, and NListview class can't use List
-              as child but only NList or a NList subclass.
+    The NListview exist anyway to provide a complete object with
+    scrollbars, so you should use it as child of NListview. Anyway,
+    you can use NList without NListview if you don't want any builtin
+    scrollbar.
 
-              MUIM_NList_TestPos and MUIM_List_TestPos are similar
-              but use a different struct to store data.
-              MUIM_List_TestPos works like with a List object.
+    NOTE: NList class will not work with Listview without some
+          conflicts, and NListview class can't use List as child but
+          only NList or a NList subclass.
 
-        NOTE: Avoid as possible to do many things in MUIM_Show and
-              MUIM_Hide methods because when an object is in
-              a virtual group, your object will receive them
-              for each one of its moves !!!
+          MUIM_NList_TestPos and MUIM_List_TestPos are similar
+          but use a different struct to store data.
+          MUIM_List_TestPos works like with a List object.
+
+    NOTE: Avoid as possible to do many things in MUIM_Show and
+          MUIM_Hide methods because when an object is in
+          a virtual group, your object will receive them
+          for each one of its moves !!!
 
 
     Standard tags with NList special values :
@@ -177,7 +185,18 @@ NList.mcc/MUIM_NList_UseImage
         MUIM_ContextMenuChoice
                           read MUIM_NList_ContextMenuBuild.
 
-    Author: Gilles Masson    (c) 1996-1997    email: masson@iut-soph.unice.fr
+
+    The gadget was originally written in 1996 by Gilles Masson. In 2001
+    it was released under the LGPL license and is now maintained by a
+    free Open Source Team.
+
+    It is released and distributed under the terms of the GNU Lesser
+    General Public License (LGPL) and available free of charge.
+
+    Please visit http://www.sf.net/projects/nlist-classes/ for
+    the very latest version and information regarding NList
+    *******************************************************************
+
 NList.mcc/MUIA_NList_Active
 
     NAME
@@ -197,6 +216,27 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_NList_Entries, MUIA_NList_First, MUIA_NList_Visible
+NList.mcc/MUIA_NList_ActiveObjectOnClick
+
+    NAME
+        MUIA_NList_ActiveObjectOnClick -- [IS.], BOOL
+
+    FUNCTION
+        If set to TRUE, the NList object will become the
+        MUIA_Window_ActiveObject of its window when you
+        click on it. In addition, the active selected entries
+        will switch an inactive color (e.g. grey) in case the
+        NList object isn't currently active. As soon as the
+        object is active it will then also receive all user
+        keys pressed.
+
+    DEFAULT
+        FALSE
+
+    SEE ALSO
+        MUIA_NList_DefaultObjectOnClick
+        MUIA_NList_KeepActive
+        MUIA_NList_MakeActive
 NList.mcc/MUIA_NList_AdjustHeight
 
     NAME
@@ -1198,6 +1238,70 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_NList_DefaultObjectOnClick,MUIA_NList_MakeActive
+NList.mcc/MUIA_NList_KeyUpFocus
+
+    NAME
+        MUIA_NList_KeyUpFocus -- [ISG], Object *
+
+    FUNCTION
+        Allows to specify a specific object that will be set as the new
+        window's active object in case the user pressed the UP cursor key
+        and the NList object itself doesn't have anything further to
+        scroll up.
+
+    SEE ALSO
+        MUIA_NList_KeyDownFocus
+        MUIA_NList_KeyLeftFocus
+        MUIA_NList_KeyRightFocus
+
+NList.mcc/MUIA_NList_KeyDownFocus
+
+    NAME
+        MUIA_NList_KeyDownFocus -- [ISG], Object *
+
+    FUNCTION
+        Allows to specify a specific object that will be set as the new
+        window's active object in case the user pressed the DOWN cursor key
+        and the NList object itself doesn't have anything further to
+        scroll down.
+
+    SEE ALSO
+        MUIA_NList_KeyUpFocus
+        MUIA_NList_KeyLeftFocus
+        MUIA_NList_KeyRightFocus
+
+NList.mcc/MUIA_NList_KeyLeftFocus
+
+    NAME
+        MUIA_NList_KeyLeftFocus -- [ISG], Object *
+
+    FUNCTION
+        Allows to specify a specific object that will be set as the new
+        window's active object in case the user pressed the LEFT cursor key
+        and the NList object itself doesn't have anything further to
+        scroll to the left.
+
+    SEE ALSO
+        MUIA_NList_KeyUpFocus
+        MUIA_NList_KeyDownFocus
+        MUIA_NList_KeyRightFocus
+
+NList.mcc/MUIA_NList_KeyRightFocus
+
+    NAME
+        MUIA_NList_KeyRightFocus -- [ISG], Object *
+
+    FUNCTION
+        Allows to specify a specific object that will be set as the new
+        window's active object in case the user pressed the RIGHT cursor key
+        and the NList object itself doesn't have anything further to
+        scroll to the right.
+
+    SEE ALSO
+        MUIA_NList_KeyUpFocus
+        MUIA_NList_KeyDownFocus
+        MUIA_NList_KeyLeftFocus
+
 NList.mcc/MUIA_NList_LineHeight
 
     NAME
@@ -1557,23 +1661,6 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIM_List_Insert
-NList.mcc/MUIA_NList_StackCheck
-
-    NAME
-        MUIA_NList_StackCheck -- [I..], BOOL
-
-    FUNCTION
-        Can be used to disable the stack checking done by NList.
-        You should use it only if you make a stack exchange or if
-        the stack has been changed for some other reason and is
-        not compatible with the check.
-
-	NOTE
-        This tag is a no-op unless NList.mcc has been compiled with
-        stack checking active.
-
-    DEFAULT
-        TRUE
 NList.mcc/MUIA_NList_TabSize
 
     NAME
