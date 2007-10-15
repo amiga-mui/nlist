@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-10-14  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/Debug.c, nlisttree_mcc/NListtree.c: refined the debugging
+    flags a lot to get more detailed information.
+
 #### v0.100 RELEASE ###########################################################
 
 2007-10-12  Thore Böckelmann <tboeckel@gmx.de>

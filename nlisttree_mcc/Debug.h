@@ -76,7 +76,16 @@ void kprintf(const char *formatString,...);
 
 // debug flags
 #define DBF_ALWAYS   (1<<0)
-#define DBF_STARTUP  (1<<1)     // for startup/shutdown events (YAM.c)
+#define DBF_STARTUP  (1<<1)  // for startup/shutdown events (YAM.c)
+#define DBF_DRAW     (1<<2)  // drawing operations
+#define DBF_GETSET   (1<<3)  // getting/setting attributes
+#define DBF_MEMORY   (1<<4)  // memory handling
+#define DBF_LISTTREE (1<<5)  // modifications to the listtree
+#define DBF_SETUP    (1<<6)  // MUIM_Setup/Cleanup
+#define DBF_INPUT    (1<<7)  // input handling
+#define DBF_DRAGDROP (1<<8)  // drag'n'drop handling
+#define DBF_IMAGES   (1<<9)  // image handling
+#define DBF_NOTIFY   (1<<10) // notification handling
 #define DBF_ALL      0xffffffff
 
 void SetupDebug(void);
