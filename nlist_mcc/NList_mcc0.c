@@ -34,7 +34,7 @@
 
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 
-static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+static ULONG mNL_Show(struct IClass *cl,Object *obj,Msg msg)
 {
   ULONG retval;
   register struct NLData *data = INST_DATA(cl,obj);
@@ -50,7 +50,7 @@ static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
     data->NList_Disabled = 1;
 
   if (data->nodraw)
-    return (DoSuperMethodA(cl,obj,(Msg) msg));
+    return (DoSuperMethodA(cl,obj,msg));
 
   if (data->do_draw_all)
   { data->adjustbar_old = -1;
@@ -72,7 +72,7 @@ static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 
   data->do_updatesb = data->do_images = TRUE;
 
-  retval = DoSuperMethodA(cl,obj,(Msg) msg);
+  retval = DoSuperMethodA(cl,obj,msg);
 
   if (data->ScrollBarsPos == -3)
   { if (!(LIBVER(GfxBase) >= 39))
@@ -95,7 +95,7 @@ static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 }
 
 
-static ULONG mNL_Hide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+static ULONG mNL_Hide(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   ULONG retval;
@@ -104,7 +104,7 @@ static ULONG mNL_Hide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 
   data->badrport = FALSE;
 
-  retval = DoSuperMethodA(cl,obj,(Msg) msg);
+  retval = DoSuperMethodA(cl,obj,msg);
 
   data->rp = NULL;
   data->SHOW = FALSE;
@@ -505,7 +505,6 @@ DISPATCHER(_Dispatcher)
     case MUIM_Show                     :     retval =                  mNL_Show(cl,obj,(APTR)msg); break;
     case MUIM_Hide                     :     retval =                  mNL_Hide(cl,obj,(APTR)msg); break;
     case MUIM_Draw                     :     retval =                  mNL_Draw(cl,obj,(APTR)msg); break;
-    case MUIM_HandleInput              :     retval =           mNL_HandleInput(cl,obj,(APTR)msg); break;
     case MUIM_HandleEvent              :     retval =           mNL_HandleEvent(cl,obj,(APTR)msg); break;
     case MUIM_Notify                   :     retval =                mNL_Notify(cl,obj,(APTR)msg); break;
     case MUIM_DragQuery                :     retval =             mNL_DragQuery(cl,obj,(APTR)msg); break;

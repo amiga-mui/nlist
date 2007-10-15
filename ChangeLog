@@ -7,6 +7,10 @@ $URL$
 
 2007-10-14  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlist_mcc/NList_mcc0.c, nlist_mcc/NList_mcc2.c: moved the MUI key handling
+    to the HandleEvent() function, because this function can signal an "eaten"
+    key press to MUI. The now empty HandleInput() function has been removed
+    therefore. This fixes the strange folder listtree behaviour in YAM.
   * nlisttree_mcc/Debug.c, nlisttree_mcc/NListtree.c: refined the debugging
     flags a lot to get more detailed information.
 

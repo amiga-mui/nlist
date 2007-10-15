@@ -116,178 +116,6 @@ static void NL_RejectIDCMP(Object *obj,struct NLData *data,LONG IDCMP_val,BOOL r
   }
 }
 
-ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
-{
-  register struct NLData *data = INST_DATA(cl,obj);
-  ULONG NotNotify = data->DoNotify;
-/*
- *if (msg->imsg)
- *{
- *LONG ab = (LONG) data->adjustbar;
- *LONG co = (LONG) msg->imsg->Code;
- *LONG qu = (LONG) msg->imsg->Qualifier;
- *LONG mx = (LONG) msg->imsg->MouseX;
- *LONG my = (LONG) msg->imsg->MouseY;
- *D(bug("%lx|1ab %ld stop IntuiMessage :\n",obj,ab));
- *if (msg->imsg->Class == IDCMP_INACTIVEWINDOW)
- *D(bug("  Class=INACTIVEWINDOW Code=%lx Qualifier=%lx mx=%ld my=%ld\n",co,qu,mx,my));
- *else if (msg->imsg->Class == IDCMP_ACTIVEWINDOW)
- *D(bug("  Class=ACTIVEWINDOW Code=%lx Qualifier=%lx mx=%ld my=%ld\n",co,qu,mx,my));
- *else if (msg->imsg->Class == IDCMP_MOUSEMOVE)
- *D(bug("  Class=MOUSEMOVE Code=%lx Qualifier=%lx mx=%ld my=%ld\n",co,qu,mx,my));
- *else if (msg->imsg->Class == IDCMP_INTUITICKS)
- *D(bug("  Class=INTUITICKS Code=%lx Qualifier=%lx mx=%ld my=%ld\n",co,qu,mx,my));
- *else if (msg->imsg->Class == IDCMP_MOUSEBUTTONS)
- *D(bug("  Class=MOUSEBUTTONS Code=%lx Qualifier=%lx mx=%ld my=%ld\n",co,qu,mx,my));
- *else
- *D(bug("  Class=%lx Code=%lx Qualifier=%lx mx=%ld my=%ld\n",msg->imsg->Class,co,qu,mx,my));
- *}
-*/
-  if (!data->SHOW || !data->DRAW)
-    return (0);
-  if (data->NList_Disabled)
-    return (0);
-
-  if ((msg->muikey != MUIKEY_NONE) && !data->NList_Quiet && !data->NList_Disabled)
-  {
-    data->ScrollBarsTime = SCROLLBARSTIME;
-
-    SHOWVALUE(DBF_ALWAYS, msg->muikey);
-    switch (msg->muikey)
-    {
-      case MUIKEY_UP:
-      {
-        BOOL changed;
-
-        if(data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          changed = NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->NList_List_Select,FALSE);
-        else
-          changed = NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
-
-        // if we have an object that we should make the new active object
-        // of the window we do so in case this up key action didn't end up in
-        // a real scrolling
-        if(changed == FALSE && data->NList_KeyUpFocus != NULL)
-          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyUpFocus);
-      }
-      break;
-
-      case MUIKEY_DOWN:
-      {
-        BOOL changed;
-
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          changed = NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE);
-        else
-          changed = NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
-
-        // if we have an object that we should make the new active object
-        // of the window we do so in case this down key action didn't end up in
-        // a real scrolling
-        if(changed == FALSE && data->NList_KeyDownFocus != NULL)
-          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyDownFocus);
-      }
-      break;
-
-      case MUIKEY_PAGEUP   :
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          NL_List_Active(obj,data,MUIV_NList_Active_PageUp,NULL,data->NList_List_Select,FALSE);
-        else
-          NL_List_First(obj,data,MUIV_NList_First_PageUp,NULL);
-        break;
-      case MUIKEY_PAGEDOWN :
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          NL_List_Active(obj,data,MUIV_NList_Active_PageDown,NULL,data->NList_List_Select,FALSE);
-        else
-          NL_List_First(obj,data,MUIV_NList_First_PageDown,NULL);
-        break;
-      case MUIKEY_TOP      :
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          NL_List_Active(obj,data,MUIV_NList_Active_Top,NULL,data->NList_List_Select,FALSE);
-        else
-          NL_List_First(obj,data,MUIV_NList_First_Top,NULL);
-        break;
-      case MUIKEY_BOTTOM   :
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          NL_List_Active(obj,data,MUIV_NList_Active_Bottom,NULL,data->NList_List_Select,FALSE);
-        else
-          NL_List_First(obj,data,MUIV_NList_First_Bottom,NULL);
-        break;
-      case MUIKEY_PRESS   :
-        if (data->NList_Input && !data->NList_TypeSelect && data->NList_Active >= 0)
-        { data->click_x = data->hpos - data->NList_Horiz_First;
-          if ((data->NList_DefClickColumn > 0) && (data->NList_DefClickColumn < data->numcols))
-            data->click_x += data->cols[data->NList_DefClickColumn].c->minx;
-          else
-            data->click_x += data->cols[0].c->minx;
-          if (data->click_x < data->hpos)
-            data->click_x = data->hpos;
-          if (data->click_x >= data->hpos + data->NList_Horiz_Visible)
-            data->click_x = data->hpos + data->NList_Horiz_Visible - 1;
-          data->click_y = data->vpos + ((data->NList_Active-data->NList_First) * data->vinc) + (data->vinc/2);
-          data->click_line = data->NList_Active;
-
-          DO_NOTIFY(NTF_Doubleclick | NTF_LV_Doubleclick);
-
-          if (WANTED_NOTIFY(NTF_EntryClick) && !WANTED_NOTIFY(NTF_Doubleclick) && !WANTED_NOTIFY(NTF_LV_Doubleclick))
-          {
-            DO_NOTIFY(NTF_EntryClick);
-          }
-        }
-        break;
-      case MUIKEY_TOGGLE   :
-        if (data->multiselect && data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-        { MOREQUIET;
-          NL_List_Select(obj,data,MUIV_NList_Select_Active,MUIV_NList_Active_Off,MUIV_NList_Select_Toggle,NULL);
-          NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE);
-          LESSQUIET;
-        }
-        break;
-
-      case MUIKEY_LEFT:
-      {
-        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
-
-        // if we have an object that we should make the new active object
-        // of the window we do so in case this left key action didn't end up in
-        // a real scrolling
-        if(scrolled == FALSE && data->NList_KeyLeftFocus != NULL)
-          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyLeftFocus);
-      }
-      break;
-
-      case MUIKEY_RIGHT:
-      {
-        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
-
-        // if we have an object that we should make the new active object
-        // of the window we do so in case this right key action didn't end up in
-        // a real scrolling
-        if(scrolled == FALSE && data->NList_KeyRightFocus != NULL)
-          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyRightFocus);
-      }
-      break;
-
-      case MUIKEY_WORDLEFT : NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageLeft,NULL); break;
-      case MUIKEY_WORDRIGHT: NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageRight,NULL); break;
-      case MUIKEY_LINESTART: NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Start,NULL); break;
-      case MUIKEY_LINEEND  : NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_End,NULL); break;
-    }
-  }
-
-  {
-    ULONG DoNotify = ~NotNotify & data->DoNotify & data->Notify;
-    if (data->SETUP && DoNotify && !data->pushtrigger)
-    {
-      data->pushtrigger = 1;
-      DoMethod(_app(obj),MUIM_Application_PushMethod,obj,1,MUIM_NList_Trigger);
-    }
-  }
-
-  return(0);
-}
-
-
 
 ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
@@ -333,6 +161,198 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
   if ((data->left != _left(obj)) || (data->top != _top(obj)) ||
       (data->width != _width(obj)) || (data->height != _height(obj)))
     NL_SetObjInfos(obj,data,FALSE);
+
+  if ((msg->muikey != MUIKEY_NONE) && !data->NList_Quiet && !data->NList_Disabled)
+  {
+    data->ScrollBarsTime = SCROLLBARSTIME;
+
+    SHOWVALUE(DBF_ALWAYS, msg->muikey);
+    switch (msg->muikey)
+    {
+      case MUIKEY_UP:
+      {
+        BOOL changed;
+
+        if(data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+          changed = NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->NList_List_Select,FALSE);
+        else
+          changed = NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
+
+        // if we have an object that we should make the new active object
+        // of the window we do so in case this up key action didn't end up in
+        // a real scrolling
+        if(changed == FALSE && data->NList_KeyUpFocus != NULL)
+          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyUpFocus);
+
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_DOWN:
+      {
+        BOOL changed;
+
+        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+          changed = NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE);
+        else
+          changed = NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
+
+        // if we have an object that we should make the new active object
+        // of the window we do so in case this down key action didn't end up in
+        // a real scrolling
+        if(changed == FALSE && data->NList_KeyDownFocus != NULL)
+          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyDownFocus);
+
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_PAGEUP   :
+        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+        {
+          NL_List_Active(obj,data,MUIV_NList_Active_PageUp,NULL,data->NList_List_Select,FALSE);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        else
+        {
+          NL_List_First(obj,data,MUIV_NList_First_PageUp,NULL);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        break;
+      case MUIKEY_PAGEDOWN :
+        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+        {
+          NL_List_Active(obj,data,MUIV_NList_Active_PageDown,NULL,data->NList_List_Select,FALSE);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        else
+        {
+          NL_List_First(obj,data,MUIV_NList_First_PageDown,NULL);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        break;
+      case MUIKEY_TOP      :
+        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+        {
+          NL_List_Active(obj,data,MUIV_NList_Active_Top,NULL,data->NList_List_Select,FALSE);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        else
+        {
+          NL_List_First(obj,data,MUIV_NList_First_Top,NULL);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        break;
+      case MUIKEY_BOTTOM   :
+        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+        {
+          NL_List_Active(obj,data,MUIV_NList_Active_Bottom,NULL,data->NList_List_Select,FALSE);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        else
+        {
+          NL_List_First(obj,data,MUIV_NList_First_Bottom,NULL);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        break;
+      case MUIKEY_PRESS   :
+        if (data->NList_Input && !data->NList_TypeSelect && data->NList_Active >= 0)
+        {
+          data->click_x = data->hpos - data->NList_Horiz_First;
+          if ((data->NList_DefClickColumn > 0) && (data->NList_DefClickColumn < data->numcols))
+            data->click_x += data->cols[data->NList_DefClickColumn].c->minx;
+          else
+            data->click_x += data->cols[0].c->minx;
+          if (data->click_x < data->hpos)
+            data->click_x = data->hpos;
+          if (data->click_x >= data->hpos + data->NList_Horiz_Visible)
+            data->click_x = data->hpos + data->NList_Horiz_Visible - 1;
+          data->click_y = data->vpos + ((data->NList_Active-data->NList_First) * data->vinc) + (data->vinc/2);
+          data->click_line = data->NList_Active;
+
+          DO_NOTIFY(NTF_Doubleclick | NTF_LV_Doubleclick);
+
+          if (WANTED_NOTIFY(NTF_EntryClick) && !WANTED_NOTIFY(NTF_Doubleclick) && !WANTED_NOTIFY(NTF_LV_Doubleclick))
+          {
+            DO_NOTIFY(NTF_EntryClick);
+          }
+
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        break;
+      case MUIKEY_TOGGLE   :
+        if (data->multiselect && data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+        {
+          MOREQUIET;
+          NL_List_Select(obj,data,MUIV_NList_Select_Active,MUIV_NList_Active_Off,MUIV_NList_Select_Toggle,NULL);
+          NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE);
+          LESSQUIET;
+
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        break;
+
+      case MUIKEY_LEFT:
+      {
+        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
+
+        // if we have an object that we should make the new active object
+        // of the window we do so in case this left key action didn't end up in
+        // a real scrolling
+        if(scrolled == FALSE && data->NList_KeyLeftFocus != NULL)
+          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyLeftFocus);
+
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_RIGHT:
+      {
+        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
+
+        // if we have an object that we should make the new active object
+        // of the window we do so in case this right key action didn't end up in
+        // a real scrolling
+        if(scrolled == FALSE && data->NList_KeyRightFocus != NULL)
+          set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyRightFocus);
+
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_WORDLEFT :
+      {
+        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageLeft,NULL);
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_WORDRIGHT:
+      {
+        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageRight,NULL);
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_LINESTART:
+      {
+        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Start,NULL);
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_LINEEND  :
+      {
+        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_End,NULL);
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+    }
+
+    // return immediately if a key has been "used"
+    if(retval != 0)
+      return retval;
+  }
 
   /*D(bug("NL: mNL_HandleEvent() /before \n"));*/
 

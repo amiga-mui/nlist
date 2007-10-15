@@ -47,7 +47,6 @@ extern ULONG mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg);
 
 /* NList_mcc2.c */
 
-extern ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
 extern ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
 extern ULONG mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg);
 extern ULONG mNL_DeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg);
