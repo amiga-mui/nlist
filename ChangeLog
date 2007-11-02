@@ -7,6 +7,9 @@ $URL$
 
 2007-11-02  David Rey <tactica@users.sourceforge.net>
 
+  * nlisttree_mcp/NListtree.c: the URL in the Copyright window no longer
+    points to an empty homepage (fixes bug #1824552), also updated the
+    copyright dates and general indentation to make it more readable
   * docs/ReadMe: general rework and preparations for next release
 
 2007-10-14  Thore Böckelmann <tboeckel@gmx.de>

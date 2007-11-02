@@ -2,7 +2,7 @@
 
  NListtree.mcc - New Listtree MUI Custom Class
  Copyright (C) 1999-2001 by Carsten Scholling
- Copyright (C) 2001-2005 by NList Open Source Team
+ Copyright (C) 2001-2007 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -79,32 +79,32 @@ struct SampleArray
 static const struct SampleArray sa[] =
 {
   { "comp", TNF_LIST | TNF_OPEN           },
-  {    "sys", TNF_LIST | TNF_OPEN          },
-  {       "amiga", TNF_LIST | TNF_OPEN      },
-  {         "misc", 0x8000                  },
-  {       "mac", TNF_LIST                   },
-  {         "system", 0x8000                },
+  {    "sys", TNF_LIST | TNF_OPEN         },
+  {       "amiga", TNF_LIST | TNF_OPEN    },
+  {         "misc", 0x8000                },
+  {       "mac", TNF_LIST                 },
+  {         "system", 0x8000              },
 
   { "de", TNF_LIST | TNF_OPEN             },
-  {    "comm", TNF_LIST                    },
-  {      "software", TNF_LIST              },
-  {         "ums", 0x8000                   },
-  {    "comp", TNF_LIST | TNF_OPEN         },
-  {       "sys", TNF_LIST | TNF_OPEN        },
-  {         "amiga", TNF_LIST               },
-  {           "misc", 0x8000                },
-  {           "tech", 0x8000                },
-  {         "amiga", 0x8000                 },
+  {    "comm", TNF_LIST                   },
+  {      "software", TNF_LIST             },
+  {         "ums", 0x8000                 },
+  {    "comp", TNF_LIST | TNF_OPEN        },
+  {       "sys", TNF_LIST | TNF_OPEN      },
+  {         "amiga", TNF_LIST             },
+  {           "misc", 0x8000              },
+  {           "tech", 0x8000              },
+  {         "amiga", 0x8000               },
 
   { "m", TNF_LIST                         },
-  {     "i", TNF_LIST                       },
+  {     "i", TNF_LIST                     },
   {     "c", TNF_LIST                     },
-  {         "h", TNF_LIST                   },
-  {           "e", TNF_LIST                 },
-  {             "l", TNF_LIST               },
-  {               "a", TNF_LIST             },
-  {                 "n", TNF_LIST           },
-  {                   "g", TNF_LIST         },
+  {         "h", TNF_LIST                 },
+  {           "e", TNF_LIST               },
+  {             "l", TNF_LIST             },
+  {               "a", TNF_LIST           },
+  {                 "n", TNF_LIST         },
+  {                   "g", TNF_LIST       },
   {                   "e", TNF_LIST       },
   {                     "l", TNF_LIST     },
   {                       "o", 0          },
@@ -194,17 +194,17 @@ VOID TransferValues(struct NListtreeP_Data *data)
   /*
   **  Style
   */
-  get( data->CY_Style,      MUIA_Cycle_Active,  &v0 );
-  get( data->SL_Space,      MUIA_Slider_Level,  &v1 );
-  get( data->CH_RememberStatus,  MUIA_Selected,    &v2 );
-  get( data->CH_OpenAutoScroll,  MUIA_Selected,    &v3 );
+  get( data->CY_Style,           MUIA_Cycle_Active,  &v0 );
+  get( data->SL_Space,           MUIA_Slider_Level,  &v1 );
+  get( data->CH_RememberStatus,  MUIA_Selected,      &v2 );
+  get( data->CH_OpenAutoScroll,  MUIA_Selected,      &v3 );
 
 
   /*
   **  Images
   */
-  get( data->PI_ImageClosed,  MUIA_Imagedisplay_Spec,  &v4 );
-  get( data->PI_ImageOpen,  MUIA_Imagedisplay_Spec,  &v5 );
+  get( data->PI_ImageClosed,   MUIA_Imagedisplay_Spec,  &v4 );
+  get( data->PI_ImageOpen,     MUIA_Imagedisplay_Spec,  &v5 );
   get( data->PI_ImageSpecial,  MUIA_Imagedisplay_Spec,  &v6 );
 
 
@@ -214,22 +214,22 @@ VOID TransferValues(struct NListtreeP_Data *data)
   get( data->PP_LinePen,    MUIA_Pendisplay_Spec,  &v7 );
   get( data->PP_ShadowPen,  MUIA_Pendisplay_Spec,  &v8 );
   get( data->PP_DrawPen,    MUIA_Pendisplay_Spec,  &v9 );
-  get( data->PP_Draw2Pen,    MUIA_Pendisplay_Spec,  &v10 );
+  get( data->PP_Draw2Pen,   MUIA_Pendisplay_Spec,  &v10 );
 
 
   nnset( data->NLT_Sample, MUIA_NListtree_Quiet, TRUE );
 
-  SetAttrs( data->NLT_Sample,  MUICFG_NListtree_Style,        v0,
-                MUICFG_NListtree_Space,       v1,
-                MUICFG_NListtree_RememberStatus,  v2,
-                MUICFG_NListtree_OpenAutoScroll,  v3,
-                MUICFG_NListtree_ImageSpecClosed,  v4,
-                MUICFG_NListtree_ImageSpecOpen,    v5,
-                MUICFG_NListtree_ImageSpecSpecial,  v6,
-                MUICFG_NListtree_PenSpecLines,    v7,
-                MUICFG_NListtree_PenSpecShadow,    v8,
-                MUICFG_NListtree_PenSpecDraw,    v9,
-                MUICFG_NListtree_PenSpecDraw2,    v10,
+  SetAttrs( data->NLT_Sample,  MUICFG_NListtree_Style,            v0,
+                               MUICFG_NListtree_Space,            v1,
+                               MUICFG_NListtree_RememberStatus,   v2,
+                               MUICFG_NListtree_OpenAutoScroll,   v3,
+                               MUICFG_NListtree_ImageSpecClosed,  v4,
+                               MUICFG_NListtree_ImageSpecOpen,    v5,
+                               MUICFG_NListtree_ImageSpecSpecial, v6,
+                               MUICFG_NListtree_PenSpecLines,     v7,
+                               MUICFG_NListtree_PenSpecShadow,    v8,
+                               MUICFG_NListtree_PenSpecDraw,      v9,
+                               MUICFG_NListtree_PenSpecDraw2,     v10,
     TAG_DONE );
 
   nnset( data->NLT_Sample, MUIA_NListtree_Quiet, FALSE );
@@ -318,12 +318,12 @@ STATIC VOID StyleChanged( struct NListtreeP_Data *data, ULONG style )
   }
 
   nnset( data->PP_LinePen,    MUIA_Disabled, bp1 );
-  nnset( data->PP_ShadowPen,    MUIA_Disabled, bp2 );
+  nnset( data->PP_ShadowPen,  MUIA_Disabled, bp2 );
   nnset( data->PP_DrawPen,    MUIA_Disabled, bp3 );
-  nnset( data->PP_Draw2Pen,    MUIA_Disabled, bp4 );
+  nnset( data->PP_Draw2Pen,   MUIA_Disabled, bp4 );
 
-  nnset( data->PI_ImageClosed,  MUIA_Disabled, bi1 );
-  nnset( data->PI_ImageOpen,    MUIA_Disabled, bi2 );
+  nnset( data->PI_ImageClosed,   MUIA_Disabled, bi1 );
+  nnset( data->PI_ImageOpen,     MUIA_Disabled, bi2 );
   nnset( data->PI_ImageSpecial,  MUIA_Disabled, bi3 );
 
   return;
@@ -371,14 +371,14 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 
     OpenCat( Locale );
 
-    CY_Style_Entries[0] = LS( MSG_STYLE_NORMAL, "Normal" );
-    CY_Style_Entries[1] = LS( MSG_STYLE_INSERTED, "Inserted" );
-    CY_Style_Entries[2] = LS( MSG_STYLE_LINES, "Lines" );
-    CY_Style_Entries[3] = LS( MSG_STYLE_WIN98, "Win98" );
-    CY_Style_Entries[4] = LS( MSG_STYLE_MAC, "Mac" );
-    CY_Style_Entries[5] = LS( MSG_STYLE_LINES3D, "Lines 3D" );
+    CY_Style_Entries[0] = LS( MSG_STYLE_NORMAL,    "Normal" );
+    CY_Style_Entries[1] = LS( MSG_STYLE_INSERTED,  "Inserted" );
+    CY_Style_Entries[2] = LS( MSG_STYLE_LINES,     "Lines" );
+    CY_Style_Entries[3] = LS( MSG_STYLE_WIN98,     "Win98" );
+    CY_Style_Entries[4] = LS( MSG_STYLE_MAC,       "Mac" );
+    CY_Style_Entries[5] = LS( MSG_STYLE_LINES3D,   "Lines 3D" );
     CY_Style_Entries[6] = LS( MSG_STYLE_WIN98PLUS, "Win98+" );
-    CY_Style_Entries[7] = LS( MSG_STYLE_GLOW, "Glow" );
+    CY_Style_Entries[7] = LS( MSG_STYLE_GLOW,      "Glow" );
     CY_Style_Entries[8] = NULL;
 
     STR_GR_Prefs[0]    = LS( MSG_STR_PREFS_IMAGESLINES, "Images/Lines" );
@@ -392,24 +392,24 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
       "\033cAll rights reserved.\n\n"
       "For developer information, bug reports and suggestions please visit the "
       "official homepage of the NList classes project:\n\n"
-      "\033c\033bhttp://nlist-classes.sourceforge.net/\033n\n");
+      "\033c\033bhttp://www.sourceforge.net/projects/nlist-classes/\033n\n");
 
-    msg_bt_expand_key      = LSC( MSG_BT_EXPAND_KEY, "n" );
-    msg_bt_collapse_key      = LSC( MSG_BT_COLLAPSE_KEY, "e" );
-    msg_closed_key        = LSC( MSG_CLOSED_KEY, "c" );
-    msg_open_key        = LSC( MSG_OPEN_KEY, "o" );
-    msg_special_key        = LSC( MSG_SPECIAL_KEY, "a" );
-    msg_lines_key        = LSC( MSG_LINES_KEY, "l" );
-    msg_shadow_key        = LSC( MSG_SHADOW_KEY, "w" );
-    msg_draw_key        = LSC( MSG_DRAW_KEY, "d" );
-    msg_draw2_key        = LSC( MSG_DRAW2_KEY, "2" );
-    msg_style_key        = LSC( MSG_STYLE_KEY, "y" );
-    msg_space_key        = LSC( MSG_SPACE_KEY, "p" );
-    msg_remember_status_key    = LSC( MSG_REMEMBER_STATUS_KEY, "m" );
-    msg_open_autoscroll_key    = LSC( MSG_OPEN_AUTOSCROLL_KEY, "s" );
-    msg_bt_opensample_key    = LSC( MSG_BT_OPENSAMPLE_KEY, "b" );
+    msg_bt_expand_key         = LSC( MSG_BT_EXPAND_KEY, "n" );
+    msg_bt_collapse_key       = LSC( MSG_BT_COLLAPSE_KEY, "e" );
+    msg_closed_key            = LSC( MSG_CLOSED_KEY, "c" );
+    msg_open_key              = LSC( MSG_OPEN_KEY, "o" );
+    msg_special_key           = LSC( MSG_SPECIAL_KEY, "a" );
+    msg_lines_key             = LSC( MSG_LINES_KEY, "l" );
+    msg_shadow_key            = LSC( MSG_SHADOW_KEY, "w" );
+    msg_draw_key              = LSC( MSG_DRAW_KEY, "d" );
+    msg_draw2_key             = LSC( MSG_DRAW2_KEY, "2" );
+    msg_style_key             = LSC( MSG_STYLE_KEY, "y" );
+    msg_space_key             = LSC( MSG_SPACE_KEY, "p" );
+    msg_remember_status_key   = LSC( MSG_REMEMBER_STATUS_KEY, "m" );
+    msg_open_autoscroll_key   = LSC( MSG_OPEN_AUTOSCROLL_KEY, "s" );
+    msg_bt_opensample_key     = LSC( MSG_BT_OPENSAMPLE_KEY, "b" );
     msg_bt_opencopyright_key  = LSC( MSG_BT_OPENCOPYRIGHT_KEY, "r" );
-    msg_bt_close_key      = LSC( MSG_BT_CLOSE_KEY, "c" );
+    msg_bt_close_key          = LSC( MSG_BT_CLOSE_KEY, "c" );
 
 
     data->WI_Sample = WindowObject,
@@ -420,25 +420,25 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
         Child, MUI_MakeObject( MUIO_BarTitle, LS( MSG_SAMPLE, "NListtree sample" ) ),
 
         Child, NListviewObject,
-          MUIA_ShortHelp,      LS( MSG_LV_SHORTHELP, "This NListtree object reacts on\npreferences changes on the right." ),
-          MUIA_NListview_NList,  data->NLT_Sample = NListtreeObject,
-            MUIA_Frame,          MUIV_Frame_InputList,
-            MUIA_CycleChain,      TRUE,
-            MUIA_NListtree_IsMCP,    TRUE,
+          MUIA_ShortHelp,                LS( MSG_LV_SHORTHELP, "This NListtree object reacts on\npreferences changes on the right." ),
+          MUIA_NListview_NList,          data->NLT_Sample = NListtreeObject,
+            MUIA_Frame,                  MUIV_Frame_InputList,
+            MUIA_CycleChain,             TRUE,
+            MUIA_NListtree_IsMCP,        TRUE,
             MUIA_NListtree_DisplayHook,  &dsphook,
             MUIA_NListtree_CompareHook,  MUIV_NListtree_CompareHook_LeavesTop,
             MUIA_NListtree_DoubleClick,  MUIV_NListtree_DoubleClick_All,
-            MUIA_NListtree_EmptyNodes,  FALSE,
-            MUIA_NListtree_TreeColumn,  0,
-            MUIA_NListtree_Title,    TRUE,
-            MUIA_NListtree_Format,    ",",
+            MUIA_NListtree_EmptyNodes,   FALSE,
+            MUIA_NListtree_TreeColumn,   0,
+            MUIA_NListtree_Title,        TRUE,
+            MUIA_NListtree_Format,       ",",
           End,
         End,
 
         Child, HGroup,
-          Child, data->BT_Sample_Expand  = KeyButton( LS( MSG_BT_EXPAND, "Expand" ), msg_bt_expand_key ),
+          Child, data->BT_Sample_Expand    = KeyButton( LS( MSG_BT_EXPAND,   "Expand" ),   msg_bt_expand_key ),
           Child, data->BT_Sample_Collapse  = KeyButton( LS( MSG_BT_COLLAPSE, "Collapse" ), msg_bt_collapse_key ),
-          Child, data->BT_Sample_Close  = KeyButton( LS( MSG_BT_CLOSE, "Close" ), msg_bt_close_key ),
+          Child, data->BT_Sample_Close     = KeyButton( LS( MSG_BT_CLOSE,    "Close" ),    msg_bt_close_key ),
         End,
       End,
     End;
@@ -488,39 +488,39 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 
             Child, FreeKeyCLabel( LS( MSG_CLOSED, "Closed:" ), msg_closed_key ),
 
-            Child, data->PI_ImageClosed = MUI_NewObject( MUIC_Popimage,
+            Child, data->PI_ImageClosed     = MUI_NewObject( MUIC_Popimage,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,    MUIV_Imageadjust_Type_All,
-              MUIA_ControlChar,      msg_closed_key,
-              MUIA_CycleChain,      TRUE,
-              MUIA_Draggable,        TRUE,
-              MUIA_Window_Title,      LS( MSG_WIN_TITLE_CLOSED_IMAGE, "Adjust 'closed node' image" ),
-              MUIA_ShortHelp,        LS( MSG_SHORTHELP_CLOSED_IMAGE, "Image for a closed node." ),
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_ControlChar,               msg_closed_key,
+              MUIA_CycleChain,                TRUE,
+              MUIA_Draggable,                 TRUE,
+              MUIA_Window_Title,              LS( MSG_WIN_TITLE_CLOSED_IMAGE, "Adjust 'closed node' image" ),
+              MUIA_ShortHelp,                 LS( MSG_SHORTHELP_CLOSED_IMAGE, "Image for a closed node." ),
             End,
 
 
             Child, FreeKeyCLabel( LS( MSG_OPEN, "Open:" ), msg_open_key ),
 
-            Child, data->PI_ImageOpen = MUI_NewObject( MUIC_Popimage,
+            Child, data->PI_ImageOpen       = MUI_NewObject( MUIC_Popimage,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,    MUIV_Imageadjust_Type_All,
-              MUIA_ControlChar,      msg_open_key,
-              MUIA_CycleChain,      TRUE,
-              MUIA_Draggable,        TRUE,
-              MUIA_Window_Title,      LS( MSG_WIN_TITLE_OPEN_IMAGE, "Adjust 'opened node' image" ),
-              MUIA_ShortHelp,        LS( MSG_SHORTHELP_OPEN_IMAGE, "Image for an opened node." ),
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_ControlChar,               msg_open_key,
+              MUIA_CycleChain,                TRUE,
+              MUIA_Draggable,                 TRUE,
+              MUIA_Window_Title,              LS( MSG_WIN_TITLE_OPEN_IMAGE, "Adjust 'opened node' image" ),
+              MUIA_ShortHelp,                 LS( MSG_SHORTHELP_OPEN_IMAGE, "Image for an opened node." ),
             End,
 
             Child, FreeKeyCLabel( LS( MSG_SPECIAL, "Special:" ), msg_special_key ),
 
-            Child, data->PI_ImageSpecial = MUI_NewObject( MUIC_Popimage,
+            Child, data->PI_ImageSpecial    = MUI_NewObject( MUIC_Popimage,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,    MUIV_Imageadjust_Type_All,
-              MUIA_ControlChar,      msg_special_key,
-              MUIA_CycleChain,      TRUE,
-              MUIA_Draggable,        TRUE,
-              MUIA_Window_Title,      LS( MSG_WIN_TITLE_SPECIAL_IMAGE, "Adjust special image" ),
-              MUIA_ShortHelp,        LS( MSG_SHORTHELP_SPECIAL_IMAGE, "Special image." ),
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_ControlChar,               msg_special_key,
+              MUIA_CycleChain,                TRUE,
+              MUIA_Draggable,                 TRUE,
+              MUIA_Window_Title,              LS( MSG_WIN_TITLE_SPECIAL_IMAGE, "Adjust special image" ),
+              MUIA_ShortHelp,                 LS( MSG_SHORTHELP_SPECIAL_IMAGE, "Special image." ),
             End,
 
           End,
@@ -531,41 +531,41 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
             Child, FreeKeyCLabel( LS( MSG_LINES, "Lines:" ), msg_lines_key ),
 
             Child, data->PP_LinePen = MUI_NewObject( MUIC_Poppen,
-              MUIA_ControlChar,  msg_lines_key,
-              MUIA_CycleChain,  TRUE,
+              MUIA_ControlChar,   msg_lines_key,
+              MUIA_CycleChain,    TRUE,
               MUIA_Window_Title,  LS( MSG_WIN_TITLE_LINEPEN, "Adjust `Lines' pen" ),
-              MUIA_ShortHelp,    LS( MSG_SHORTHELP_LINEPEN, "Custom line color." ),
+              MUIA_ShortHelp,     LS( MSG_SHORTHELP_LINEPEN, "Custom line color." ),
             End,
 
 
             Child, FreeKeyCLabel( LS( MSG_SHADOW, "Shadow:" ), msg_shadow_key ),
 
             Child, data->PP_ShadowPen = MUI_NewObject( MUIC_Poppen,
-              MUIA_ControlChar,  msg_shadow_key,
-              MUIA_CycleChain,  TRUE,
+              MUIA_ControlChar,   msg_shadow_key,
+              MUIA_CycleChain,    TRUE,
               MUIA_Window_Title,  LS( MSG_WIN_TITLE_SHADOWPEN, "Adjust `Shadow' pen" ),
-              MUIA_ShortHelp,    LS( MSG_SHORTHELP_SHADOWPEN, "Custom shadow color." ),
+              MUIA_ShortHelp,     LS( MSG_SHORTHELP_SHADOWPEN, "Custom shadow color." ),
             End,
 
             Child, FreeKeyCLabel( LS( MSG_DRAW, "Draw:" ), msg_draw_key ),
 
             Child, data->PP_DrawPen = MUI_NewObject( MUIC_Poppen,
-              MUIA_Disabled,    TRUE,
-              MUIA_ControlChar,  msg_draw_key,
-              MUIA_CycleChain,  TRUE,
-              MUIA_Window_Title,  LS( MSG_WIN_TITLE_DRAWPEN, "Adjust `Draw' pen" ),
-              MUIA_ShortHelp,    LS( MSG_SHORTHELP_DRAWPEN, "Custom draw color." ),
+              MUIA_Disabled,          TRUE,
+              MUIA_ControlChar,       msg_draw_key,
+              MUIA_CycleChain,        TRUE,
+              MUIA_Window_Title,      LS( MSG_WIN_TITLE_DRAWPEN, "Adjust `Draw' pen" ),
+              MUIA_ShortHelp,         LS( MSG_SHORTHELP_DRAWPEN, "Custom draw color." ),
             End,
 
             //Child, FreeKeyCLabel( LS( MSG_DRAW2, "Draw2:" ), msg_draw2_key ),
 
             Child, data->PP_Draw2Pen = MUI_NewObject( MUIC_Poppen,
-              MUIA_ShowMe,    FALSE,
-              MUIA_Disabled,    TRUE,
-              MUIA_ControlChar,  msg_draw2_key,
-              MUIA_CycleChain,  TRUE,
-              MUIA_Window_Title,  LS( MSG_WIN_TITLE_DRAWPEN, "Adjust `Draw2' pen" ),
-              MUIA_ShortHelp,    LS( MSG_SHORTHELP_DRAWPEN, "Custom draw color 2." ),
+              MUIA_ShowMe,             FALSE,
+              MUIA_Disabled,           TRUE,
+              MUIA_ControlChar,        msg_draw2_key,
+              MUIA_CycleChain,         TRUE,
+              MUIA_Window_Title,       LS( MSG_WIN_TITLE_DRAWPEN, "Adjust `Draw2' pen" ),
+              MUIA_ShortHelp,          LS( MSG_SHORTHELP_DRAWPEN, "Custom draw color 2." ),
             End,
 
           End,
@@ -584,20 +584,20 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 
             Child, data->CY_Style = CycleObject,
               MUIA_Cycle_Entries,  CY_Style_Entries,
-              MUIA_Cycle_Active,  0,
-              MUIA_ShortHelp,    LS( MSG_SHORTHELP_STYLE, "Global style of the tree." ),
+              MUIA_Cycle_Active,   0,
+              MUIA_ShortHelp,      LS( MSG_SHORTHELP_STYLE, "Global style of the tree." ),
             End,
 
 
             Child, KeyLabel( LS( MSG_SPACE, "Space:" ), msg_space_key ),
 
             Child, data->SL_Space = SliderObject,
-              MUIA_Group_Horiz,    TRUE,
-              MUIA_Slider_Min,    0,
-              MUIA_Slider_Max,    16,
+              MUIA_Group_Horiz,     TRUE,
+              MUIA_Slider_Min,      0,
+              MUIA_Slider_Max,      16,
               MUIA_Slider_Level,    0,
               MUIA_Numeric_Format,  "%ldpx",
-              MUIA_ShortHelp,      LS( MSG_SHORTHELP_SPACE, "Number of space pixels." ),
+              MUIA_ShortHelp,       LS( MSG_SHORTHELP_SPACE, "Number of space pixels." ),
             End,
 
           End,
@@ -609,13 +609,13 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 
             Child, data->CH_RememberStatus = ImageObject,
               MUIA_Image_Spec,    MUII_CheckMark,
-              MUIA_InputMode,      MUIV_InputMode_Toggle,
+              MUIA_InputMode,     MUIV_InputMode_Toggle,
               MUIA_Selected,      FALSE,
-              MUIA_ShowSelState,    FALSE,
-              MUIA_ControlChar,    msg_remember_status_key,
+              MUIA_ShowSelState,  FALSE,
+              MUIA_ControlChar,   msg_remember_status_key,
               MUIA_Background,    MUII_ButtonBack,
               ImageButtonFrame,
-              MUIA_ShortHelp,      LS( MSG_SHORTHELP_REMEMBER_STATUS, "Remember status of nodes\nafter closing." ),
+              MUIA_ShortHelp,     LS( MSG_SHORTHELP_REMEMBER_STATUS, "Remember status of nodes\nafter closing." ),
             End,
 
 
@@ -623,13 +623,13 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 
             Child, data->CH_OpenAutoScroll = ImageObject,
               MUIA_Image_Spec,    MUII_CheckMark,
-              MUIA_InputMode,      MUIV_InputMode_Toggle,
+              MUIA_InputMode,     MUIV_InputMode_Toggle,
               MUIA_Selected,      FALSE,
-              MUIA_ShowSelState,    FALSE,
-              MUIA_ControlChar,    msg_open_autoscroll_key,
+              MUIA_ShowSelState,  FALSE,
+              MUIA_ControlChar,   msg_open_autoscroll_key,
               MUIA_Background,    MUII_ButtonBack,
               ImageButtonFrame,
-              MUIA_ShortHelp,      LS( MSG_SHORTHELP_OPEN_AUTOSCROLL, "Auto scroll listview when opening\nnodes to fit in visible area." ),
+              MUIA_ShortHelp,     LS( MSG_SHORTHELP_OPEN_AUTOSCROLL, "Auto scroll listview when opening\nnodes to fit in visible area." ),
             End,
 
           End,
@@ -640,9 +640,9 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 
       Child, HGroup,
         MUIA_Frame, MUIV_Frame_Group,
-        Child, data->BT_OpenSample    = KeyButton( LS( MSG_BT_OPENSAMPLE, "Sample (b)" ), msg_bt_opensample_key ),
+        Child, data->BT_OpenSample     = KeyButton( LS( MSG_BT_OPENSAMPLE, "Sample (b)" ), msg_bt_opensample_key ),
         Child, data->BT_OpenCopyright  = KeyButton( LS( MSG_BT_OPENCOPYRIGHT, "Copyright" ), msg_bt_opencopyright_key ),
-        //Child, data->BT_Test      = KeyButton( "TEST", "" ),
+        //Child, data->BT_Test           = KeyButton( "TEST", "" ),
       End,
 
     End;
