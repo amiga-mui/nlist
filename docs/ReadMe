@@ -35,6 +35,29 @@ NListtree.mcp     18.14     13.10.2007
 NBitmap.mcc       15.3      13.10.2007 (currently only for OS4)
 
 
+INSTALLATION
+************
+
+1. Extract the archive to a temporary directory:
+
+   > cd RAM:
+   > lha x MCC_NList.lha
+
+2. Go to the "MCC_NList/Libs/MUI/<OS>" directory where <OS> is the directory
+   matching the operating system you want to install the NList classes for,
+   e.g.:
+
+   > cd MCC_NList/Libs/MUI/AmigaOS4
+
+3. Copy all the #?.mcc and #?.mcp files found in that directory to the
+   global "MUI:libs/mui/" directory on your system partition.
+
+   > copy #?.mcc MUI:Libs/mui/
+   > copy #?.mcp MUI:Libs/mui/
+
+4. Reboot and enjoy the new version ;)
+
+
 LEGALESE
 ********
 
