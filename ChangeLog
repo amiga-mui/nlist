@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-11-02  David Rey <tactica@users.sourceforge.net>
+
+  * docs/ReadMe: general rework and preparations for next release
+
 2007-10-14  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc0.c, nlist_mcc/NList_mcc2.c: moved the MUI key handling
