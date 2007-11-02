@@ -477,6 +477,7 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
       Child, MUI_MakeObject( MUIO_BarTitle, LS( MSG_PREFS, "Preferences" ) ),
 
       Child, RegisterObject,
+        MUIA_CycleChain,      TRUE,
         MUIA_Register_Titles, STR_GR_Prefs,
 
         /*
@@ -585,6 +586,7 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
             Child, data->CY_Style = CycleObject,
               MUIA_Cycle_Entries,  CY_Style_Entries,
               MUIA_Cycle_Active,   0,
+              MUIA_CycleChain,     TRUE,
               MUIA_ShortHelp,      LS( MSG_SHORTHELP_STYLE, "Global style of the tree." ),
             End,
 
@@ -597,6 +599,7 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_Slider_Max,      16,
               MUIA_Slider_Level,    0,
               MUIA_Numeric_Format,  "%ldpx",
+              MUIA_CycleChain,      TRUE,
               MUIA_ShortHelp,       LS( MSG_SHORTHELP_SPACE, "Number of space pixels." ),
             End,
 
@@ -615,6 +618,7 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_ControlChar,   msg_remember_status_key,
               MUIA_Background,    MUII_ButtonBack,
               ImageButtonFrame,
+              MUIA_CycleChain,    TRUE,
               MUIA_ShortHelp,     LS( MSG_SHORTHELP_REMEMBER_STATUS, "Remember status of nodes\nafter closing." ),
             End,
 
@@ -629,6 +633,7 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_ControlChar,   msg_open_autoscroll_key,
               MUIA_Background,    MUII_ButtonBack,
               ImageButtonFrame,
+              MUIA_CycleChain,    TRUE,
               MUIA_ShortHelp,     LS( MSG_SHORTHELP_OPEN_AUTOSCROLL, "Auto scroll listview when opening\nnodes to fit in visible area." ),
             End,
 
@@ -654,6 +659,8 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
       return( 0 );
     }
 
+    set(data->BT_OpenSample, MUIA_CycleChain, TRUE);
+    set(data->BT_OpenCopyright, MUIA_CycleChain, TRUE);
 
     DrawSampleTree( data->NLT_Sample );
 

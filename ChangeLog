@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-11-02  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcp/NListtree.c: added all buttons to the cycle chain. This fixes
+    bug #1824550.
+
 2007-11-02  David Rey <tactica@users.sourceforge.net>
 
   * nlisttree_mcp/NListtree.c: the URL in the Copyright window no longer
