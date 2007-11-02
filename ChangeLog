@@ -9,6 +9,8 @@ $URL$
 
   * nlisttree_mcp/NListtree.c: added all buttons to the cycle chain. This fixes
     bug #1824550.
+  * nlisttree_mcp/NListtree.c: added the missing control chars for the style and
+    space sliders.
 
 2007-11-02  David Rey <tactica@users.sourceforge.net>
 

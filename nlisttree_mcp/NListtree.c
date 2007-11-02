@@ -587,6 +587,7 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_Cycle_Entries,  CY_Style_Entries,
               MUIA_Cycle_Active,   0,
               MUIA_CycleChain,     TRUE,
+              MUIA_ControlChar,    msg_style_key,
               MUIA_ShortHelp,      LS( MSG_SHORTHELP_STYLE, "Global style of the tree." ),
             End,
 
@@ -600,6 +601,7 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_Slider_Level,    0,
               MUIA_Numeric_Format,  "%ldpx",
               MUIA_CycleChain,      TRUE,
+              MUIA_ControlChar,     msg_space_key,
               MUIA_ShortHelp,       LS( MSG_SHORTHELP_SPACE, "Number of space pixels." ),
             End,
 
