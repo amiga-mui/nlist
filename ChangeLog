@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-11-03 Pär Boberg <pbobbenb@spray.se>
+
+  * nlisttree_mcp/locale/svenska.ct: Just upped the version number.
+
 2007-11-02  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcp/NListtree.c: added all buttons to the cycle chain. This fixes
