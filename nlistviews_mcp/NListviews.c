@@ -663,6 +663,13 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   struct NListviews_MCP_Data *data;
   APTR group1, group2, group3, group4, group5;
 
+  static const char infotext[] = "\033bNListviews.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
+                                 "Copyright (c) 1996-2001 Gilles Masson\n"
+                                 LIB_COPYRIGHT "\n\n"
+                                 "Distributed under the terms of the LGPL2.\n\n"
+                                 "For the latest version, check out:\n"
+                                 "http://www.sf.net/projects/nlist-classes/\n\n";
+
   if(!(obj = (Object *)DoSuperMethodA(cl, obj,(Msg) msg)))
     return(0);
 
@@ -1372,7 +1379,8 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   Pages[3] = tr(MSG_PAGE_OPTIONS);
   Pages[4] = tr(MSG_PAGE_KEYBINDINGS);
 
-  data->mcp_group = GroupObject,
+  data->mcp_group = VGroup,
+
     Child, RegisterObject,
       MUIA_Register_Titles, Pages,
       MUIA_Register_Frame,  TRUE,
@@ -1382,6 +1390,23 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
       Child, group4,
       Child, group5,
     End,
+
+    Child, CrawlingObject,
+      TextFrame,
+      MUIA_FixHeightTxt, "\n\n",
+      MUIA_Background,   "m1",
+
+      Child, TextObject,
+        MUIA_Text_PreParse, "\033c",
+        MUIA_Text_Contents, infotext,
+      End,
+
+      Child, TextObject,
+        MUIA_Text_PreParse, "\033c",
+        MUIA_Text_Contents, infotext,
+      End,
+    End,
+
   End;
 
   if(!data->mcp_group)
