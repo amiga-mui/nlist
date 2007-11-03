@@ -238,7 +238,7 @@ CATALOGS = \
 
 #
 
-all: $(BINDIR) $(OBJDIR) $(MCCTARGET) #$(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) locale.c $(MCCTARGET) #$(TESTTARGET)
 
 # make the object directories
 $(OBJDIR):
@@ -260,6 +260,10 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@printf '\033[32mCompiling $<\033[0m\n'
 	@$(CC) $(CFLAGS) $< -o $@
 
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+	@printf '\033[33mGenerating $@\033[0m\n'
+	@$(FC) $(LOCALE)/NListtree_mcp.cd $< CATALOG $@
+
 #
 
 $(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
@@ -274,6 +278,11 @@ $(TESTTARGET): $(TESTOBJS)
 
 $(OBJDIR)/library.o: library.c ../include/mccinit.c \
   ../include/mui/NListtree_mcc.h private.h rev.h
+
+locale.h: locale.c
+locale.c: $(LOCALE)/NListtree_mcp.cd C_h.sd C_c.sd
+	@printf '\033[33mGenerating locale file $@...\033[0m\n'
+	@$(FC) $(LOCALE)/NListtree_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
 
 ## CATALOG GENERATION #################
 
@@ -295,5 +304,7 @@ clean:
 
 .PHONY: distclean
 distclean: clean
+	-$(RM) locale.?
+	-$(RM) $(LOCALE)/*.catalog
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)

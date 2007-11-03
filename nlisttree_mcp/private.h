@@ -26,6 +26,7 @@
 #include "amiga-align.h"
 #include "../nlisttree_mcc/private.h"
 #include "default-align.h"
+
 #include "Debug.h"
 
 #include <mcc_common.h>
@@ -48,37 +49,21 @@
 
 struct NListtreeP_Data
 {
-	Object
-			*WI_Sample,
-				*NLT_Sample,
-				*BT_Sample_Expand,
-				*BT_Sample_Collapse,
-				*BT_Sample_Close,
-
-			*WI_Copyright,
-				*BT_Copyright_Close,
-
-			*GR_Prefs,
-				*PI_ImageClosed,
-				*PI_ImageOpen,
-				*PI_ImageSpecial,
-
-				*PP_LinePen,
-				*PP_ShadowPen,
-				*PP_DrawPen,
-				*PP_Draw2Pen,
-
-				*CY_Style,
-				*SL_Space,
-				*CH_RememberStatus,
-				*CH_OpenAutoScroll,
-
-			*BT_OpenSample,
-			*BT_OpenCopyright;
-	//Object	*BT_Test;
-
-	BOOL	SampleWasOpen,
-			CopyrightWasOpen;
+	Object *NLT_Sample;
+  Object *BT_Sample_Expand;
+  Object *BT_Sample_Collapse;
+  Object *GR_Prefs;
+	Object *PI_ImageClosed;
+	Object *PI_ImageOpen;
+  Object *PI_ImageSpecial;
+  Object *PP_LinePen;
+  Object *PP_ShadowPen;
+  Object *PP_DrawPen;
+  Object *PP_Draw2Pen;
+  Object *CY_Style;
+  Object *SL_Space;
+  Object *CH_RememberStatus;
+  Object *CH_OpenAutoScroll;
 };
 
 #endif /* MUI_NLISTTREE_priv_MCP_H */

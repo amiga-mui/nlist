@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-11-03 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcp/NListtree.c: reworked the whole mcp GUI to not fire up a
+    sub window for the copyright and/or example listtree. In addition, the
+    locale translation stuff now uses FlexCat instead of the old, obsolete
+    and properitary Localizer stuff. However, new translation are now
+    required.
+
 2007-11-03 Pär Boberg <pbobbenb@spray.se>
 
   * nlisttree_mcp/locale/svenska.ct: Just upped the version number.

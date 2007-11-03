@@ -1,0 +1,170 @@
+;
+; NListtree_mcp.cd - NListtree MUI custom prefs catalog description file
+; $Id$
+;
+#version 2
+#language english
+;
+;
+MSG_STYLE_NORMAL (1//)
+Normal
+;
+MSG_STYLE_INSERTED (2//)
+Inserted
+;
+MSG_STYLE_LINES (3//)
+Lines
+;
+MSG_STYLE_WIN98 (4//)
+Win98
+;
+MSG_STYLE_MAC (5//)
+Mac
+;
+MSG_STYLE_LINES3D (6//)
+Lines 3D
+;
+MSG_STYLE_WIN98PLUS (7//)
+Win98+
+;
+MSG_STYLE_GLOW (8//)
+Glow
+;
+MSG_GROUP_LAYOUT (9//)
+Layout
+;
+MSG_GROUP_EXAMPLE (10//)
+Example
+;
+MSG_CLOSED (11//)
+Closed
+;
+MSG_CLOSED_KEY (12//)
+c
+;
+MSG_WIN_TITLE_CLOSED_IMAGE (13//)
+Adjust 'closed node' image
+;
+MSG_SHORTHELP_CLOSED_IMAGE (14//)
+Image for a closed node.
+;
+MSG_OPEN (15//)
+Open
+;
+MSG_OPEN_KEY (16//)
+o
+;
+MSG_WIN_TITLE_OPEN_IMAGE (17//)
+Adjust 'opened node' image
+;
+MSG_SHORTHELP_OPEN_IMAGE (18//)
+Image for an opened node.
+;
+MSG_SPECIAL (19//)
+Special
+;
+MSG_SPECIAL_KEY (20//)
+a
+;
+MSG_IMAGES_COLORS (21//)
+Images/Colors
+;
+MSG_WIN_TITLE_SPECIAL_IMAGE (22//)
+Adjust special image
+;
+MSG_SHORTHELP_SPECIAL_IMAGE (23//)
+Special image.
+;
+MSG_LINES (24//)
+Lines
+;
+MSG_LINES_KEY (25//)
+l
+;
+MSG_WIN_TITLE_LINEPEN (26//)
+Adjust `Lines' pen
+;
+MSG_SHORTHELP_LINEPEN (27//)
+Custom line color.
+;
+MSG_SHADOW (28//)
+Shadow
+;
+MSG_SHADOW_KEY (29//)
+w
+;
+MSG_WIN_TITLE_SHADOWPEN (30//)
+Adjust `Shadow' pen
+;
+MSG_SHORTHELP_SHADOWPEN (31//)
+Custom shadow color.
+;
+MSG_DRAW (32//)
+Draw
+;
+MSG_DRAW_KEY (33//)
+d
+;
+MSG_WIN_TITLE_DRAWPEN (34//)
+Adjust `Draw' pen
+;
+MSG_SHORTHELP_DRAWPEN (35//)
+Custom draw color.
+;
+MSG_GROUP_STYLE (36//)
+Style
+;
+MSG_STYLE (37//)
+Style
+;
+MSG_STYLE_KEY (38//)
+y
+;
+MSG_SHORTHELP_STYLE (39//)
+Global style of the tree.
+;
+MSG_SPACE (40//)
+Space
+;
+MSG_SPACE_KEY (41//)
+p
+;
+MSG_SHORTHELP_SPACE (42//)
+Number of space pixels.
+;
+MSG_REMEMBER_STATUS (43//)
+Remember
+;
+MSG_REMEMBER_STATUS_KEY (44//)
+m
+;
+MSG_SHORTHELP_REMEMBER_STATUS (45//)
+Remember status of nodes\n\
+after closing.
+;
+MSG_OPEN_AUTOSCROLL (46//)
+Open scroll
+;
+MSG_OPEN_AUTOSCROLL_KEY (47//)
+s
+;
+MSG_SHORTHELP_OPEN_AUTOSCROLL (48//)
+Auto scroll listview when opening\n\
+nodes to fit in visible area.
+;
+MSG_LV_SHORTHELP (49//)
+This NListtree object reacts on\n\
+preferences changes on the right.
+;
+MSG_BT_EXPAND (50//)
+Expand
+;
+MSG_BT_EXPAND_KEY (51//)
+n
+;
+MSG_BT_COLLAPSE (52//)
+Collapse
+;
+MSG_BT_COLLAPSE_KEY (53//)
+e
+;

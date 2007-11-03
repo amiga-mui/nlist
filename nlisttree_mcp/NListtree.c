@@ -46,24 +46,6 @@
 
 #include "locale.h"
 
-#define MSG_DRAW2      MSG_DUMMY
-#define MSG_DRAW2_KEY  MSG_DUMMY
-
-static struct Locale *Locale = NULL;
-
-#if defined(__amigaos4__)
-struct Library *LocaleBase = NULL;
-struct LocaleIFace *ILocale = NULL;
-#elif defined(__MORPHOS__)
-struct Library *LocaleBase = NULL;
-#else
-struct LocaleBase *LocaleBase = NULL;
-#endif
-
-#ifndef MAKE_ID
-#define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
-#endif
-
 // some undocumented MUI tags we are going to use
 #define MUIA_Imagedisplay_UseDefSize  0x8042186d /* V11 i.. BOOL */
 
@@ -116,19 +98,6 @@ static const struct SampleArray sa[] =
   { NULL, 0 }
 };
 
-/*********************************************************************************************/
-
-UBYTE GetChar( APTR CatStr )
-{
-  STRPTR Str;
-
-  Str = GetString( CatStr );
-
-  return( *Str );
-}
-
-#define LSC(a,b) GetChar(a)
-
 /*****************************************************************************\
 *******************************************************************************
 **
@@ -136,14 +105,6 @@ UBYTE GetChar( APTR CatStr )
 **
 *******************************************************************************
 \*****************************************************************************/
-
-LONG xget( Object *obj, ULONG attribute )
-{
-  LONG x = 0;
-
-  get( obj, attribute, &x );
-  return( x );
-}
 
 static VOID DrawSampleTree( Object *ltobj )
 {
@@ -189,7 +150,7 @@ static VOID DrawSampleTree( Object *ltobj )
 
 VOID TransferValues(struct NListtreeP_Data *data)
 {
-  LONG v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10;
+  LONG v0, v1, v2, v3, v4, v5, v6, v7, v8, v9;
 
   /*
   **  Style
@@ -214,7 +175,6 @@ VOID TransferValues(struct NListtreeP_Data *data)
   get( data->PP_LinePen,    MUIA_Pendisplay_Spec,  &v7 );
   get( data->PP_ShadowPen,  MUIA_Pendisplay_Spec,  &v8 );
   get( data->PP_DrawPen,    MUIA_Pendisplay_Spec,  &v9 );
-  get( data->PP_Draw2Pen,   MUIA_Pendisplay_Spec,  &v10 );
 
 
   nnset( data->NLT_Sample, MUIA_NListtree_Quiet, TRUE );
@@ -229,7 +189,6 @@ VOID TransferValues(struct NListtreeP_Data *data)
                                MUICFG_NListtree_PenSpecLines,     v7,
                                MUICFG_NListtree_PenSpecShadow,    v8,
                                MUICFG_NListtree_PenSpecDraw,      v9,
-                               MUICFG_NListtree_PenSpecDraw2,     v10,
     TAG_DONE );
 
   nnset( data->NLT_Sample, MUIA_NListtree_Quiet, FALSE );
@@ -249,11 +208,11 @@ VOID TransferValues(struct NListtreeP_Data *data)
 
 HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
 {
-  static const char *t1 = "\033b\033uNewsgroups";
-  static const char *t2 = "\033b\033uFlags";
+  static const char *t1 = "\033bNewsgroups";
+  static const char *t2 = "\033bFlags";
   static const char *t3 = "subscribed";
   static const char *t4 = "\0";
-  static const char *t5 = "\033b\033uCnt";
+  static const char *t5 = "\033bCnt";
   static char buf[10];
 
   if ( msg->TreeNode != NULL )
@@ -280,7 +239,7 @@ HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
 }
 MakeStaticHook(dsphook, dspfunc);
 
-STATIC VOID StyleChanged( struct NListtreeP_Data *data, ULONG style )
+static VOID StyleChanged( struct NListtreeP_Data *data, ULONG style )
 {
   BOOL bp1=FALSE, bp2=FALSE, bp3=FALSE, bp4=FALSE, bi1=FALSE, bi2=FALSE, bi3=FALSE;
 
@@ -320,7 +279,6 @@ STATIC VOID StyleChanged( struct NListtreeP_Data *data, ULONG style )
   nnset( data->PP_LinePen,    MUIA_Disabled, bp1 );
   nnset( data->PP_ShadowPen,  MUIA_Disabled, bp2 );
   nnset( data->PP_DrawPen,    MUIA_Disabled, bp3 );
-  nnset( data->PP_Draw2Pen,   MUIA_Disabled, bp4 );
 
   nnset( data->PI_ImageClosed,   MUIA_Disabled, bi1 );
   nnset( data->PI_ImageOpen,     MUIA_Disabled, bi2 );
@@ -335,21 +293,30 @@ HOOKPROTONHNO(StyleChangedFunc, VOID, ULONG **para)
 }
 MakeStaticHook(StyleChangedHook, StyleChangedFunc);
 
-
-HOOKPROTONHNO(TransferFunc, VOID, ULONG **para)
-{
-  TransferValues( (struct NListtreeP_Data *)para[0] );
-}
-MakeStaticHook(TransferHook, TransferFunc);
-
-ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
+static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtreeP_Data *data;
-  STATIC TEXT copytext[512];
-  STATIC STRPTR CY_Style_Entries[9], STR_GR_Prefs[3];
-  STATIC UBYTE  msg_bt_expand_key, msg_bt_collapse_key, msg_closed_key, msg_open_key, msg_special_key, msg_lines_key,
-          msg_shadow_key, msg_draw_key, msg_draw2_key, msg_style_key, msg_space_key, msg_remember_status_key, msg_open_autoscroll_key,
-          msg_bt_opensample_key, msg_bt_opencopyright_key, msg_bt_close_key;
+  static const char *CY_Style_Entries[9];
+  static const char *STR_GR_Prefs[3];
+  static const char infotext[] = "\033bNListtree.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
+                                 "Copyright (c) 1999-2001 Carsten Scholling\n"
+                                 LIB_COPYRIGHT "\n\n"
+                                 "Distributed under the terms of the LGPL2.\n\n"
+                                 "For the latest version, check out:\n"
+                                 "http://www.sf.net/projects/nlist-classes/\n\n";
+
+  static unsigned char msg_closed_key;
+  static unsigned char msg_open_key;
+  static unsigned char msg_special_key;
+  static unsigned char msg_lines_key;
+  static unsigned char msg_shadow_key;
+  static unsigned char msg_draw_key;
+  static unsigned char msg_style_key;
+  static unsigned char msg_space_key;
+  static unsigned char msg_remember_status_key;
+  static unsigned char msg_open_autoscroll_key;
+  static unsigned char msg_bt_expand_key;
+  static unsigned char msg_bt_collapse_key;
 
   ENTER();
 
@@ -364,63 +331,190 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
   */
   data = INST_DATA( cl, obj );
 
-  if((LocaleBase = (APTR)OpenLibrary( "locale.library", 38)) &&
-     GETINTERFACE(ILocale, LocaleBase))
-  {
-    Locale = OpenLocale( NULL );
+  CY_Style_Entries[0] = tr(MSG_STYLE_NORMAL);
+  CY_Style_Entries[1] = tr(MSG_STYLE_INSERTED);
+  CY_Style_Entries[2] = tr(MSG_STYLE_LINES);
+  CY_Style_Entries[3] = tr(MSG_STYLE_WIN98);
+  CY_Style_Entries[4] = tr(MSG_STYLE_MAC);
+  CY_Style_Entries[5] = tr(MSG_STYLE_LINES3D);
+  CY_Style_Entries[6] = tr(MSG_STYLE_WIN98PLUS);
+  CY_Style_Entries[7] = tr(MSG_STYLE_GLOW);
+  CY_Style_Entries[8] = NULL;
 
-    OpenCat( Locale );
+  STR_GR_Prefs[0] = tr(MSG_GROUP_LAYOUT);
+  STR_GR_Prefs[1] = tr(MSG_GROUP_EXAMPLE);
+  STR_GR_Prefs[2] = NULL;
 
-    CY_Style_Entries[0] = LS( MSG_STYLE_NORMAL,    "Normal" );
-    CY_Style_Entries[1] = LS( MSG_STYLE_INSERTED,  "Inserted" );
-    CY_Style_Entries[2] = LS( MSG_STYLE_LINES,     "Lines" );
-    CY_Style_Entries[3] = LS( MSG_STYLE_WIN98,     "Win98" );
-    CY_Style_Entries[4] = LS( MSG_STYLE_MAC,       "Mac" );
-    CY_Style_Entries[5] = LS( MSG_STYLE_LINES3D,   "Lines 3D" );
-    CY_Style_Entries[6] = LS( MSG_STYLE_WIN98PLUS, "Win98+" );
-    CY_Style_Entries[7] = LS( MSG_STYLE_GLOW,      "Glow" );
-    CY_Style_Entries[8] = NULL;
+  msg_closed_key          = tr(MSG_CLOSED_KEY)[0];
+  msg_open_key            = tr(MSG_OPEN_KEY)[0];
+  msg_special_key         = tr(MSG_SPECIAL_KEY)[0];
+  msg_lines_key           = tr(MSG_LINES_KEY)[0];
+  msg_shadow_key          = tr(MSG_SHADOW_KEY)[0];
+  msg_draw_key            = tr(MSG_DRAW_KEY)[0];
+  msg_style_key           = tr(MSG_STYLE_KEY)[0];
+  msg_space_key           = tr(MSG_SPACE_KEY)[0];
+  msg_remember_status_key = tr(MSG_REMEMBER_STATUS_KEY)[0];
+  msg_open_autoscroll_key = tr(MSG_OPEN_AUTOSCROLL_KEY)[0];
+  msg_bt_expand_key       = tr(MSG_BT_EXPAND_KEY)[0];
+  msg_bt_collapse_key     = tr(MSG_BT_COLLAPSE_KEY)[0];
 
-    STR_GR_Prefs[0]    = LS( MSG_STR_PREFS_IMAGESLINES, "Images/Lines" );
-    STR_GR_Prefs[1]    = LS( MSG_STR_PREFS_STYLE, "Style" );
-    STR_GR_Prefs[2]    = NULL;
+  /*
+  **  Preferences group.
+  */
+  data->GR_Prefs = VGroup,
+    MUIA_Group_VertSpacing, 5,
 
-    /* FIXME: this seems unnecessary! */
-    snprintf(copytext, sizeof(copytext),
-      "\033c\033bNListtree.mcp " LIB_REV_STRING " (" LIB_DATE ") \033n\n"
-      "\033c" LIB_COPYRIGHT "\n"
-      "\033cAll rights reserved.\n\n"
-      "For developer information, bug reports and suggestions please visit the "
-      "official homepage of the NList classes project:\n\n"
-      "\033c\033bhttp://www.sourceforge.net/projects/nlist-classes/\033n\n");
+    Child, RegisterObject,
+      MUIA_CycleChain,      TRUE,
+      MUIA_Register_Titles, STR_GR_Prefs,
 
-    msg_bt_expand_key         = LSC( MSG_BT_EXPAND_KEY, "n" );
-    msg_bt_collapse_key       = LSC( MSG_BT_COLLAPSE_KEY, "e" );
-    msg_closed_key            = LSC( MSG_CLOSED_KEY, "c" );
-    msg_open_key              = LSC( MSG_OPEN_KEY, "o" );
-    msg_special_key           = LSC( MSG_SPECIAL_KEY, "a" );
-    msg_lines_key             = LSC( MSG_LINES_KEY, "l" );
-    msg_shadow_key            = LSC( MSG_SHADOW_KEY, "w" );
-    msg_draw_key              = LSC( MSG_DRAW_KEY, "d" );
-    msg_draw2_key             = LSC( MSG_DRAW2_KEY, "2" );
-    msg_style_key             = LSC( MSG_STYLE_KEY, "y" );
-    msg_space_key             = LSC( MSG_SPACE_KEY, "p" );
-    msg_remember_status_key   = LSC( MSG_REMEMBER_STATUS_KEY, "m" );
-    msg_open_autoscroll_key   = LSC( MSG_OPEN_AUTOSCROLL_KEY, "s" );
-    msg_bt_opensample_key     = LSC( MSG_BT_OPENSAMPLE_KEY, "b" );
-    msg_bt_opencopyright_key  = LSC( MSG_BT_OPENCOPYRIGHT_KEY, "r" );
-    msg_bt_close_key          = LSC( MSG_BT_CLOSE_KEY, "c" );
+      /*
+      **  Images and Lines
+      */
+      Child, VGroup,
+
+        Child, HGroup, GroupFrameT(tr(MSG_IMAGES_COLORS)),
+
+          Child, VGroup,
+
+            Child, FreeKeyCLabel(tr(MSG_CLOSED), msg_closed_key),
+            Child, data->PI_ImageClosed     = PopimageObject,
+              MUIA_Imagedisplay_UseDefSize,   TRUE,
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_ControlChar,               msg_closed_key,
+              MUIA_CycleChain,                TRUE,
+              MUIA_Draggable,                 TRUE,
+              MUIA_Window_Title,              tr(MSG_WIN_TITLE_CLOSED_IMAGE),
+              MUIA_ShortHelp,                 tr(MSG_SHORTHELP_CLOSED_IMAGE),
+            End,
 
 
-    data->WI_Sample = WindowObject,
-      MUIA_Window_Title, LS( MSG_SAMPLE, "NListtree sample" ),
-      MUIA_Window_ID, MAKE_ID( 'N','L','T','S' ),
-      MUIA_Window_RootObject, VGroup,
+            Child, FreeKeyCLabel(tr(MSG_OPEN), msg_open_key),
+            Child, data->PI_ImageOpen       = PopimageObject,
+              MUIA_Imagedisplay_UseDefSize,   TRUE,
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_ControlChar,               msg_open_key,
+              MUIA_CycleChain,                TRUE,
+              MUIA_Draggable,                 TRUE,
+              MUIA_Window_Title,              tr(MSG_WIN_TITLE_OPEN_IMAGE),
+              MUIA_ShortHelp,                 tr(MSG_SHORTHELP_OPEN_IMAGE),
+            End,
 
-        Child, MUI_MakeObject( MUIO_BarTitle, LS( MSG_SAMPLE, "NListtree sample" ) ),
+            Child, FreeKeyCLabel(tr(MSG_SPECIAL), msg_special_key),
+            Child, data->PI_ImageSpecial    = PopimageObject,
+              MUIA_Imagedisplay_UseDefSize,   TRUE,
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_ControlChar,               msg_special_key,
+              MUIA_CycleChain,                TRUE,
+              MUIA_Draggable,                 TRUE,
+              MUIA_Window_Title,              tr(MSG_WIN_TITLE_SPECIAL_IMAGE),
+              MUIA_ShortHelp,                 tr(MSG_SHORTHELP_SPECIAL_IMAGE),
+            End,
+
+          End,
+
+
+          Child, VGroup,
+
+            Child, FreeKeyCLabel(tr(MSG_LINES), msg_lines_key),
+            Child, data->PP_LinePen = PoppenObject,
+              MUIA_ControlChar,   msg_lines_key,
+              MUIA_CycleChain,    TRUE,
+              MUIA_Window_Title,  tr(MSG_WIN_TITLE_LINEPEN),
+              MUIA_ShortHelp,     tr(MSG_SHORTHELP_LINEPEN),
+            End,
+
+            Child, FreeKeyCLabel(tr(MSG_SHADOW), msg_shadow_key),
+            Child, data->PP_ShadowPen = PoppenObject,
+              MUIA_ControlChar,   msg_shadow_key,
+              MUIA_CycleChain,    TRUE,
+              MUIA_Window_Title,  tr(MSG_WIN_TITLE_SHADOWPEN),
+              MUIA_ShortHelp,     tr(MSG_SHORTHELP_SHADOWPEN),
+            End,
+
+            Child, FreeKeyCLabel(tr(MSG_DRAW), msg_draw_key),
+            Child, data->PP_DrawPen = MUI_NewObject( MUIC_Poppen,
+              MUIA_Disabled,          TRUE,
+              MUIA_ControlChar,       msg_draw_key,
+              MUIA_CycleChain,        TRUE,
+              MUIA_Window_Title,      tr(MSG_WIN_TITLE_DRAWPEN),
+              MUIA_ShortHelp,         tr(MSG_SHORTHELP_DRAWPEN),
+            End,
+
+          End,
+
+        End,
+
+        Child, HGroup, GroupFrameT(tr(MSG_GROUP_STYLE)),
+
+          Child, ColGroup( 2 ),
+
+            Child, KeyLabel(tr(MSG_STYLE), msg_style_key),
+            Child, data->CY_Style = CycleObject,
+              MUIA_Cycle_Entries,  CY_Style_Entries,
+              MUIA_Cycle_Active,   0,
+              MUIA_CycleChain,     TRUE,
+              MUIA_ControlChar,    msg_style_key,
+              MUIA_ShortHelp,      tr(MSG_SHORTHELP_STYLE),
+            End,
+
+            Child, KeyLabel(tr(MSG_SPACE), msg_space_key),
+            Child, data->SL_Space = SliderObject,
+              MUIA_Group_Horiz,     TRUE,
+              MUIA_Slider_Min,      0,
+              MUIA_Slider_Max,      16,
+              MUIA_Slider_Level,    0,
+              MUIA_Numeric_Format,  "%ldpx",
+              MUIA_CycleChain,      TRUE,
+              MUIA_ControlChar,     msg_space_key,
+              MUIA_ShortHelp,       tr(MSG_SHORTHELP_SPACE),
+            End,
+
+          End,
+
+
+          Child, ColGroup( 2 ),
+
+            Child, KeyLabel(tr(MSG_REMEMBER_STATUS), msg_remember_status_key),
+            Child, data->CH_RememberStatus = ImageObject,
+              ImageButtonFrame,
+              MUIA_Image_Spec,    MUII_CheckMark,
+              MUIA_InputMode,     MUIV_InputMode_Toggle,
+              MUIA_Selected,      FALSE,
+              MUIA_ShowSelState,  FALSE,
+              MUIA_ControlChar,   msg_remember_status_key,
+              MUIA_Background,    MUII_ButtonBack,
+              MUIA_CycleChain,    TRUE,
+              MUIA_ShortHelp,     tr(MSG_SHORTHELP_REMEMBER_STATUS),
+            End,
+
+            Child, KeyLabel(tr(MSG_OPEN_AUTOSCROLL), msg_open_autoscroll_key),
+            Child, data->CH_OpenAutoScroll = ImageObject,
+              ImageButtonFrame,
+              MUIA_Image_Spec,    MUII_CheckMark,
+              MUIA_InputMode,     MUIV_InputMode_Toggle,
+              MUIA_Selected,      FALSE,
+              MUIA_ShowSelState,  FALSE,
+              MUIA_ControlChar,   msg_open_autoscroll_key,
+              MUIA_Background,    MUII_ButtonBack,
+              MUIA_CycleChain,    TRUE,
+              MUIA_ShortHelp,     tr(MSG_SHORTHELP_OPEN_AUTOSCROLL),
+            End,
+
+          End,
+
+        End,
+
+      End,
+
+
+      /*
+      **  Example
+      */
+      Child, VGroup,
 
         Child, NListviewObject,
-          MUIA_ShortHelp,                LS( MSG_LV_SHORTHELP, "This NListtree object reacts on\npreferences changes on the right." ),
+          MUIA_ShortHelp,                tr(MSG_LV_SHORTHELP),
           MUIA_NListview_NList,          data->NLT_Sample = NListtreeObject,
             MUIA_Frame,                  MUIV_Frame_InputList,
             MUIA_CycleChain,             TRUE,
@@ -436,357 +530,125 @@ ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
         End,
 
         Child, HGroup,
-          Child, data->BT_Sample_Expand    = KeyButton( LS( MSG_BT_EXPAND,   "Expand" ),   msg_bt_expand_key ),
-          Child, data->BT_Sample_Collapse  = KeyButton( LS( MSG_BT_COLLAPSE, "Collapse" ), msg_bt_collapse_key ),
-          Child, data->BT_Sample_Close     = KeyButton( LS( MSG_BT_CLOSE,    "Close" ),    msg_bt_close_key ),
-        End,
-      End,
-    End;
-
-    data->WI_Copyright = WindowObject,
-      MUIA_Window_Title, LS( MSG_COPYRIGHT, "Copyright" ),
-      MUIA_Window_ID, MAKE_ID( 'N','L','T','C' ),
-      MUIA_Window_RootObject, VGroup,
-
-        Child, NListviewObject,
-          MUIA_NListview_Horiz_ScrollBar, MUIV_NListview_HSB_None,
-          MUIA_NListview_Vert_ScrollBar, MUIV_NListview_VSB_None,
-          MUIA_NListview_NList, NFloattextObject,
-            MUIA_NFloattext_Text, copytext,
-            MUIA_NFloattext_TabSize, 4,
-            MUIA_NFloattext_Justify, TRUE,
-          End,
-        End,
-
-        Child, HGroup,
-          Child, HVSpace,
-          Child, data->BT_Copyright_Close = KeyButton( LS( MSG_BT_CLOSE, "Close" ), msg_bt_close_key ),
-          Child, HVSpace,
-        End,
-      End,
-
-    End;
-
-
-    /*
-    **  Preferences group.
-    */
-    data->GR_Prefs = VGroup,
-      MUIA_Group_VertSpacing, 5,
-
-      Child, MUI_MakeObject( MUIO_BarTitle, LS( MSG_PREFS, "Preferences" ) ),
-
-      Child, RegisterObject,
-        MUIA_CycleChain,      TRUE,
-        MUIA_Register_Titles, STR_GR_Prefs,
-
-        /*
-        **  Images and Lines
-        */
-        Child, HGroup,
-
-          Child, VGroup,
-
-            Child, FreeKeyCLabel( LS( MSG_CLOSED, "Closed:" ), msg_closed_key ),
-
-            Child, data->PI_ImageClosed     = MUI_NewObject( MUIC_Popimage,
-              MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
-              MUIA_ControlChar,               msg_closed_key,
-              MUIA_CycleChain,                TRUE,
-              MUIA_Draggable,                 TRUE,
-              MUIA_Window_Title,              LS( MSG_WIN_TITLE_CLOSED_IMAGE, "Adjust 'closed node' image" ),
-              MUIA_ShortHelp,                 LS( MSG_SHORTHELP_CLOSED_IMAGE, "Image for a closed node." ),
-            End,
-
-
-            Child, FreeKeyCLabel( LS( MSG_OPEN, "Open:" ), msg_open_key ),
-
-            Child, data->PI_ImageOpen       = MUI_NewObject( MUIC_Popimage,
-              MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
-              MUIA_ControlChar,               msg_open_key,
-              MUIA_CycleChain,                TRUE,
-              MUIA_Draggable,                 TRUE,
-              MUIA_Window_Title,              LS( MSG_WIN_TITLE_OPEN_IMAGE, "Adjust 'opened node' image" ),
-              MUIA_ShortHelp,                 LS( MSG_SHORTHELP_OPEN_IMAGE, "Image for an opened node." ),
-            End,
-
-            Child, FreeKeyCLabel( LS( MSG_SPECIAL, "Special:" ), msg_special_key ),
-
-            Child, data->PI_ImageSpecial    = MUI_NewObject( MUIC_Popimage,
-              MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
-              MUIA_ControlChar,               msg_special_key,
-              MUIA_CycleChain,                TRUE,
-              MUIA_Draggable,                 TRUE,
-              MUIA_Window_Title,              LS( MSG_WIN_TITLE_SPECIAL_IMAGE, "Adjust special image" ),
-              MUIA_ShortHelp,                 LS( MSG_SHORTHELP_SPECIAL_IMAGE, "Special image." ),
-            End,
-
-          End,
-
-
-          Child, VGroup,
-
-            Child, FreeKeyCLabel( LS( MSG_LINES, "Lines:" ), msg_lines_key ),
-
-            Child, data->PP_LinePen = MUI_NewObject( MUIC_Poppen,
-              MUIA_ControlChar,   msg_lines_key,
-              MUIA_CycleChain,    TRUE,
-              MUIA_Window_Title,  LS( MSG_WIN_TITLE_LINEPEN, "Adjust `Lines' pen" ),
-              MUIA_ShortHelp,     LS( MSG_SHORTHELP_LINEPEN, "Custom line color." ),
-            End,
-
-
-            Child, FreeKeyCLabel( LS( MSG_SHADOW, "Shadow:" ), msg_shadow_key ),
-
-            Child, data->PP_ShadowPen = MUI_NewObject( MUIC_Poppen,
-              MUIA_ControlChar,   msg_shadow_key,
-              MUIA_CycleChain,    TRUE,
-              MUIA_Window_Title,  LS( MSG_WIN_TITLE_SHADOWPEN, "Adjust `Shadow' pen" ),
-              MUIA_ShortHelp,     LS( MSG_SHORTHELP_SHADOWPEN, "Custom shadow color." ),
-            End,
-
-            Child, FreeKeyCLabel( LS( MSG_DRAW, "Draw:" ), msg_draw_key ),
-
-            Child, data->PP_DrawPen = MUI_NewObject( MUIC_Poppen,
-              MUIA_Disabled,          TRUE,
-              MUIA_ControlChar,       msg_draw_key,
-              MUIA_CycleChain,        TRUE,
-              MUIA_Window_Title,      LS( MSG_WIN_TITLE_DRAWPEN, "Adjust `Draw' pen" ),
-              MUIA_ShortHelp,         LS( MSG_SHORTHELP_DRAWPEN, "Custom draw color." ),
-            End,
-
-            //Child, FreeKeyCLabel( LS( MSG_DRAW2, "Draw2:" ), msg_draw2_key ),
-
-            Child, data->PP_Draw2Pen = MUI_NewObject( MUIC_Poppen,
-              MUIA_ShowMe,             FALSE,
-              MUIA_Disabled,           TRUE,
-              MUIA_ControlChar,        msg_draw2_key,
-              MUIA_CycleChain,         TRUE,
-              MUIA_Window_Title,       LS( MSG_WIN_TITLE_DRAWPEN, "Adjust `Draw2' pen" ),
-              MUIA_ShortHelp,          LS( MSG_SHORTHELP_DRAWPEN, "Custom draw color 2." ),
-            End,
-
-          End,
-
-        End,
-
-
-        /*
-        **  Style
-        */
-        Child, HGroup,
-
-          Child, ColGroup( 2 ),
-
-            Child, KeyLabel( LS( MSG_STYLE, "Style:" ), msg_style_key ),
-
-            Child, data->CY_Style = CycleObject,
-              MUIA_Cycle_Entries,  CY_Style_Entries,
-              MUIA_Cycle_Active,   0,
-              MUIA_CycleChain,     TRUE,
-              MUIA_ControlChar,    msg_style_key,
-              MUIA_ShortHelp,      LS( MSG_SHORTHELP_STYLE, "Global style of the tree." ),
-            End,
-
-
-            Child, KeyLabel( LS( MSG_SPACE, "Space:" ), msg_space_key ),
-
-            Child, data->SL_Space = SliderObject,
-              MUIA_Group_Horiz,     TRUE,
-              MUIA_Slider_Min,      0,
-              MUIA_Slider_Max,      16,
-              MUIA_Slider_Level,    0,
-              MUIA_Numeric_Format,  "%ldpx",
-              MUIA_CycleChain,      TRUE,
-              MUIA_ControlChar,     msg_space_key,
-              MUIA_ShortHelp,       LS( MSG_SHORTHELP_SPACE, "Number of space pixels." ),
-            End,
-
-          End,
-
-
-          Child, ColGroup( 2 ),
-
-            Child, KeyLabel( LS( MSG_REMEMBER_STATUS, "Remember:" ), msg_remember_status_key ),
-
-            Child, data->CH_RememberStatus = ImageObject,
-              MUIA_Image_Spec,    MUII_CheckMark,
-              MUIA_InputMode,     MUIV_InputMode_Toggle,
-              MUIA_Selected,      FALSE,
-              MUIA_ShowSelState,  FALSE,
-              MUIA_ControlChar,   msg_remember_status_key,
-              MUIA_Background,    MUII_ButtonBack,
-              ImageButtonFrame,
-              MUIA_CycleChain,    TRUE,
-              MUIA_ShortHelp,     LS( MSG_SHORTHELP_REMEMBER_STATUS, "Remember status of nodes\nafter closing." ),
-            End,
-
-
-            Child, KeyLabel( LS( MSG_OPEN_AUTOSCROLL, "Open scroll:" ), msg_open_autoscroll_key ),
-
-            Child, data->CH_OpenAutoScroll = ImageObject,
-              MUIA_Image_Spec,    MUII_CheckMark,
-              MUIA_InputMode,     MUIV_InputMode_Toggle,
-              MUIA_Selected,      FALSE,
-              MUIA_ShowSelState,  FALSE,
-              MUIA_ControlChar,   msg_open_autoscroll_key,
-              MUIA_Background,    MUII_ButtonBack,
-              ImageButtonFrame,
-              MUIA_CycleChain,    TRUE,
-              MUIA_ShortHelp,     LS( MSG_SHORTHELP_OPEN_AUTOSCROLL, "Auto scroll listview when opening\nnodes to fit in visible area." ),
-            End,
-
-          End,
-
+          Child, data->BT_Sample_Expand    = KeyButton(tr(MSG_BT_EXPAND), msg_bt_expand_key),
+          Child, data->BT_Sample_Collapse  = KeyButton(tr(MSG_BT_COLLAPSE), msg_bt_collapse_key),
         End,
 
       End,
 
-      Child, HGroup,
-        MUIA_Frame, MUIV_Frame_Group,
-        Child, data->BT_OpenSample     = KeyButton( LS( MSG_BT_OPENSAMPLE, "Sample (b)" ), msg_bt_opensample_key ),
-        Child, data->BT_OpenCopyright  = KeyButton( LS( MSG_BT_OPENCOPYRIGHT, "Copyright" ), msg_bt_opencopyright_key ),
-        //Child, data->BT_Test           = KeyButton( "TEST", "" ),
+    End,
+
+    Child, CrawlingObject,
+      TextFrame,
+      MUIA_FixHeightTxt, "\n\n",
+      MUIA_Background,   "m1",
+
+      Child, TextObject,
+        MUIA_Text_PreParse, "\033c",
+        MUIA_Text_Contents, infotext,
       End,
 
-    End;
+      Child, TextObject,
+        MUIA_Text_PreParse, "\033c",
+        MUIA_Text_Contents, infotext,
+      End,
+    End,
 
+	End;
 
-    if ( data->GR_Prefs == NULL )
-    {
-      CoerceMethod( cl, obj, OM_DISPOSE );
-      return( 0 );
-    }
-
-    set(data->BT_OpenSample, MUIA_CycleChain, TRUE);
-    set(data->BT_OpenCopyright, MUIA_CycleChain, TRUE);
-
-    DrawSampleTree( data->NLT_Sample );
-
-    DoMethod( obj, OM_ADDMEMBER, data->GR_Prefs );
-
-
-    /*
-    **  Sub windows
-    */
-    DoMethod( data->BT_OpenSample, MUIM_Notify, MUIA_Pressed, FALSE,
-      data->WI_Sample, 3, MUIM_Set, MUIA_Window_Open, TRUE );
-
-    DoMethod( data->BT_OpenSample, MUIM_Notify, MUIA_Pressed, FALSE,
-      data->WI_Sample, 4, MUIM_CallHook, &TransferHook, data );
-
-    DoMethod( data->BT_OpenCopyright, MUIM_Notify, MUIA_Pressed, FALSE,
-      data->WI_Copyright, 3, MUIM_Set, MUIA_Window_Open, TRUE );
-
-    DoMethod( data->WI_Sample, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
-      data->WI_Sample, 3, MUIM_Set, MUIA_Window_Open, FALSE );
-
-    DoMethod( data->WI_Copyright, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
-      data->WI_Copyright, 3, MUIM_Set, MUIA_Window_Open, FALSE );
-
-    DoMethod( data->BT_Sample_Close, MUIM_Notify, MUIA_Pressed, FALSE,
-      data->WI_Sample, 3, MUIM_Set, MUIA_Window_Open, FALSE );
-
-    DoMethod( data->BT_Copyright_Close, MUIM_Notify, MUIA_Pressed, FALSE,
-      data->WI_Copyright, 3, MUIM_Set, MUIA_Window_Open, FALSE );
-
-
-    /*
-    **  Open/close all nodes
-    */
-    DoMethod( data->BT_Sample_Expand, MUIM_Notify, MUIA_Pressed, FALSE,
-      data->NLT_Sample, 4, MUIM_NListtree_Open, MUIV_NListtree_Open_ListNode_Root, MUIV_NListtree_Open_TreeNode_All, 0 );
-
-    DoMethod( data->BT_Sample_Collapse, MUIM_Notify, MUIA_Pressed, FALSE,
-      data->NLT_Sample, 4, MUIM_NListtree_Close, MUIV_NListtree_Close_ListNode_Root, MUIV_NListtree_Close_TreeNode_All, 0 );
-
-    /*
-    DoMethod( data->BT_Test, MUIM_Notify, MUIA_Pressed, FALSE,
-      data->NLT_Sample, 4, MUIM_NListtree_Close, MUIV_NListtree_Close_ListNode_Root, MUIV_NListtree_Close_TreeNode_All, 0 );
-    */
-
-    /*
-    **  Open/closed node and special images
-    */
-    DoMethod( data->PI_ImageClosed, MUIM_Notify, MUIA_Imagedisplay_Spec, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_ImageSpecClosed, MUIV_TriggerValue );
-
-    DoMethod( data->PI_ImageOpen, MUIM_Notify, MUIA_Imagedisplay_Spec, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_ImageSpecOpen, MUIV_TriggerValue );
-
-    DoMethod( data->PI_ImageSpecial, MUIM_Notify, MUIA_Imagedisplay_Spec, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_ImageSpecSpecial, MUIV_TriggerValue );
-
-
-    /*
-    **  Colors
-    */
-    DoMethod( data->PP_LinePen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecLines, MUIV_TriggerValue );
-
-    DoMethod( data->PP_ShadowPen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecShadow, MUIV_TriggerValue );
-
-    DoMethod( data->PP_DrawPen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecDraw, MUIV_TriggerValue );
-
-    DoMethod( data->PP_Draw2Pen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecDraw2, MUIV_TriggerValue );
-
-
-    /*
-    **  Values
-    */
-    DoMethod( data->CY_Style, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_Style, MUIV_TriggerValue );
-
-    DoMethod( data->CY_Style, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-      data->NLT_Sample, 4, MUIM_CallHook, &StyleChangedHook, MUIV_TriggerValue, data );
-
-    DoMethod( data->SL_Space, MUIM_Notify, MUIA_Slider_Level, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_Space, MUIV_TriggerValue );
-
-    DoMethod( data->CH_RememberStatus, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_RememberStatus, MUIV_TriggerValue );
-
-    DoMethod( data->CH_OpenAutoScroll, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
-      data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_OpenAutoScroll, MUIV_TriggerValue );
-
-    return( (ULONG)obj );
+  if ( data->GR_Prefs == NULL )
+  {
+    CoerceMethod( cl, obj, OM_DISPOSE );
+    return( 0 );
   }
 
-  return(0);
+  DrawSampleTree( data->NLT_Sample );
+
+  DoMethod( obj, OM_ADDMEMBER, data->GR_Prefs );
+
+
+  /*
+  **  Open/close all nodes
+  */
+
+  DoMethod( data->BT_Sample_Expand, MUIM_Notify, MUIA_Pressed, FALSE,
+    data->NLT_Sample, 4, MUIM_NListtree_Open, MUIV_NListtree_Open_ListNode_Root, MUIV_NListtree_Open_TreeNode_All, 0 );
+
+  DoMethod( data->BT_Sample_Collapse, MUIM_Notify, MUIA_Pressed, FALSE,
+    data->NLT_Sample, 4, MUIM_NListtree_Close, MUIV_NListtree_Close_ListNode_Root, MUIV_NListtree_Close_TreeNode_All, 0 );
+
+  /*
+  **  Open/closed node and special images
+  */
+  DoMethod( data->PI_ImageClosed, MUIM_Notify, MUIA_Imagedisplay_Spec, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_ImageSpecClosed, MUIV_TriggerValue );
+
+  DoMethod( data->PI_ImageOpen, MUIM_Notify, MUIA_Imagedisplay_Spec, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_ImageSpecOpen, MUIV_TriggerValue );
+
+  DoMethod( data->PI_ImageSpecial, MUIM_Notify, MUIA_Imagedisplay_Spec, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_ImageSpecSpecial, MUIV_TriggerValue );
+
+  /*
+  **  Colors
+  */
+
+  DoMethod( data->PP_LinePen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecLines, MUIV_TriggerValue );
+
+  DoMethod( data->PP_ShadowPen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecShadow, MUIV_TriggerValue );
+
+  DoMethod( data->PP_DrawPen, MUIM_Notify, MUIA_Pendisplay_Spec, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_PenSpecDraw, MUIV_TriggerValue );
+
+  /*
+  **  Values
+  */
+  DoMethod( data->CY_Style, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_Style, MUIV_TriggerValue );
+
+  DoMethod( data->CY_Style, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
+    data->NLT_Sample, 4, MUIM_CallHook, &StyleChangedHook, MUIV_TriggerValue, data );
+
+  DoMethod( data->SL_Space, MUIM_Notify, MUIA_Slider_Level, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_Space, MUIV_TriggerValue );
+
+  DoMethod( data->CH_RememberStatus, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_RememberStatus, MUIV_TriggerValue );
+
+  DoMethod( data->CH_OpenAutoScroll, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+    data->NLT_Sample, 3, MUIM_Set, MUICFG_NListtree_OpenAutoScroll, MUIV_TriggerValue );
+
+
+  // in case we are running for a newer MUI version we can register
+  // our mcc gadgets accordingly
+  if(MUIMasterBase->lib_Version >= 20)
+  {
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PI_ImageClosed,   MUICFG_NListtree_ImageSpecClosed, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PI_ImageOpen,     MUICFG_NListtree_ImageSpecOpen, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PI_ImageSpecial,  MUICFG_NListtree_ImageSpecSpecial, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PP_LinePen,       MUICFG_NListtree_PenSpecLines, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PP_ShadowPen,     MUICFG_NListtree_PenSpecShadow, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->PP_DrawPen,       MUICFG_NListtree_PenSpecDraw, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->CY_Style,         MUICFG_NListtree_Style, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->SL_Space,         MUICFG_NListtree_Space, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->CH_RememberStatus,MUICFG_NListtree_RememberStatus, 1, "");
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->CH_OpenAutoScroll,MUICFG_NListtree_OpenAutoScroll, 1, "");
+  }
+
+  return((ULONG)obj);
 }
 
 
-ULONG _DisposeP( struct IClass *cl, Object *obj, Msg msg )
+static ULONG _DisposeP( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtreeP_Data *data = INST_DATA( cl, obj );
     ULONG result;
 
   ENTER();
 
-  if(LocaleBase)
-  {
-    CloseCat();
-
-    if ( Locale )
-      CloseLocale( Locale );
-
-    DROPINTERFACE(ILocale);
-    CloseLibrary((struct Library *)LocaleBase);
-  }
-
   DoMethod( obj, OM_REMMEMBER, data->GR_Prefs );
-
-  if ( data->WI_Sample )
-    MUI_DisposeObject( data->WI_Sample );
-
-  if ( data->WI_Copyright )
-    MUI_DisposeObject( data->WI_Copyright );
 
   if ( data->GR_Prefs )
     MUI_DisposeObject( data->GR_Prefs );
@@ -798,29 +660,17 @@ ULONG _DisposeP( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-ULONG _SetupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
+static ULONG _SetupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 {
   struct NListtreeP_Data *data = INST_DATA( cl, obj );
 
-    ENTER();
+  ENTER();
 
-  if ( !( DoSuperMethodA( cl, obj, (Msg)msg ) ) )
-    {
-        RETURN(FALSE);
+  if(!DoSuperMethodA(cl, obj, (Msg)msg))
+  {
+    RETURN(FALSE);
     return( FALSE );
-    }
-
-  DoMethod( _app( obj ), OM_ADDMEMBER, data->WI_Sample );
-  DoMethod( _app( obj ), OM_ADDMEMBER, data->WI_Copyright );
-
-  if ( data->SampleWasOpen )
-    set( data->WI_Sample, MUIA_Window_Open, TRUE );
-
-  if ( data->CopyrightWasOpen )
-    set( data->WI_Copyright, MUIA_Window_Open, TRUE );
-
-  data->SampleWasOpen = FALSE;
-  data->CopyrightWasOpen = FALSE;
+  }
 
   /*
   **  Values
@@ -830,38 +680,10 @@ ULONG _SetupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
   TransferValues( data );
 
   RETURN(TRUE);
-    return( TRUE );
+  return( TRUE );
 }
 
-
-ULONG _CleanupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
-{
-  struct NListtreeP_Data *data = INST_DATA(cl, obj);
-    ULONG result;
-
-  ENTER();
-
-  if((data->SampleWasOpen = xget(data->WI_Sample, MUIA_Window_Open)))
-  {
-    set( data->WI_Sample, MUIA_Window_Open, FALSE );
-  }
-
-  if((data->CopyrightWasOpen = xget( data->WI_Copyright, MUIA_Window_Open)))
-  {
-    set( data->WI_Copyright, MUIA_Window_Open, FALSE );
-  }
-
-  DoMethod( _app( obj ), OM_REMMEMBER, data->WI_Sample );
-  DoMethod( _app( obj ), OM_REMMEMBER, data->WI_Copyright );
-
-  result = DoSuperMethodA( cl, obj, (Msg)msg );
-
-    RETURN(result);
-    return result;
-}
-
-
-ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_ConfigToGadgets *msg )
+static ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_ConfigToGadgets *msg )
 {
   struct NListtreeP_Data *data = INST_DATA(cl, obj);
   Object *pdobj, *idobj;
@@ -1003,27 +825,6 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
     }
   }
 
-
-  if((d = DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListtree_PenSpecDraw2)))
-  {
-    set( data->PP_Draw2Pen, MUIA_Pendisplay_Spec, d );
-
-    D(DBF_ALWAYS, "Draw color 2: '%s'", (STRPTR)d);
-  }
-  else
-  {
-    if( pdobj )
-    {
-      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, DEFAULT_PEN_DRAW );
-
-      get( pdobj, MUIA_Pendisplay_Spec, &pen );
-      set( data->PP_Draw2Pen, MUIA_Pendisplay_Spec, pen );
-
-      D(DBF_ALWAYS, "Draw color 2: '%s'", pen);
-    }
-  }
-
-
   /*
   **  Set values
   */
@@ -1089,12 +890,12 @@ ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
   if( pdobj )
     MUI_DisposeObject( pdobj );
 
-    RETURN(0);
+  RETURN(0);
   return( 0 );
 }
 
 
-ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_GadgetsToConfig *msg )
+static ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_GadgetsToConfig *msg )
 {
   struct NListtreeP_Data *data = INST_DATA( cl, obj );
   char buf[8];
@@ -1149,14 +950,6 @@ ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 
   D(DBF_ALWAYS, "Draw color: '%s'", (STRPTR)d);
 
-
-  get( data->PP_Draw2Pen, MUIA_Pendisplay_Spec, &d );
-  if(d != 0)
-    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecDraw2 );
-
-  D(DBF_ALWAYS, "Draw color 2: '%s'", (STRPTR)d);
-
-
   /*
   **  Values
   */
@@ -1192,7 +985,7 @@ ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgrou
 }
 
 
-ULONG _HandleInputP( struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg )
+static ULONG _HandleInputP( struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg )
 {
   if( msg->imsg )
   {
@@ -1208,18 +1001,16 @@ ULONG _HandleInputP( struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
 DISPATCHER(_DispatcherP)
 {
-  switch( msg->MethodID )
+  switch(msg->MethodID)
   {
-    case OM_NEW:                return( _NewP        ( cl, obj, (APTR)msg ) );
-    case OM_DISPOSE:              return( _DisposeP      ( cl, obj, (APTR)msg ) );
+    case OM_NEW:              return(_NewP(cl, obj, (APTR)msg));
+    case OM_DISPOSE:          return(_DisposeP(cl, obj, (APTR)msg));
 
-    case MUIM_Setup:              return( _SetupP        ( cl, obj, (APTR)msg ) );
-    case MUIM_Cleanup:              return( _CleanupP      ( cl, obj, (APTR)msg ) );
+    case MUIM_Setup:          return(_SetupP(cl, obj, (APTR)msg));
+    case MUIM_HandleInput:    return(_HandleInputP(cl, obj, (APTR)msg));
 
-    case MUIM_HandleInput:            return( _HandleInputP    ( cl, obj, (APTR)msg ) );
-
-    case MUIM_Settingsgroup_ConfigToGadgets:  return( _ConfigToGadgets  ( cl, obj, (APTR)msg ) );
-    case MUIM_Settingsgroup_GadgetsToConfig:  return( _GadgetsToConfig  ( cl, obj, (APTR)msg ) );
+    case MUIM_Settingsgroup_ConfigToGadgets:  return(_ConfigToGadgets(cl, obj, (APTR)msg));
+    case MUIM_Settingsgroup_GadgetsToConfig:  return(_GadgetsToConfig(cl, obj, (APTR)msg));
   }
 
   return( DoSuperMethodA( cl, obj, msg ) );
