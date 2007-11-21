@@ -37,24 +37,24 @@
 #include "NBitmap.h"
 
 /* private definitions */
-#define MUIV_NBitmap_Normal				0
-#define MUIV_NBitmap_Ghosted				1
-#define MUIV_NBitmap_Selected				2
+#define MUIV_NBitmap_Normal       0
+#define MUIV_NBitmap_Ghosted      1
+#define MUIV_NBitmap_Selected     2
 
 /* global definitions - as included in developers material */
-#define MUIA_NBitmap_Type					(TAG_USER | (2044078415<<16) | 0x0000)
-#define MUIA_NBitmap_Label					(TAG_USER | (2044078415<<16) | 0x0001)
-#define MUIA_NBitmap_Button				(TAG_USER | (2044078415<<16) | 0x0002)
-#define MUIA_NBitmap_Normal				(TAG_USER | (2044078415<<16) | 0x0003)
-#define MUIA_NBitmap_Ghosted				(TAG_USER | (2044078415<<16) | 0x0004)
-#define MUIA_NBitmap_Selected				(TAG_USER | (2044078415<<16) | 0x0005)
-#define MUIA_NBitmap_Width					(TAG_USER | (2044078415<<16) | 0x0006)
-#define MUIA_NBitmap_Height				(TAG_USER | (2044078415<<16) | 0x0007)
-#define MUIA_NBitmap_MaxWidth				(TAG_USER | (2044078415<<16) | 0x0008)
-#define MUIA_NBitmap_MaxHeight			(TAG_USER | (2044078415<<16) | 0x0009)
+#define MUIA_NBitmap_Type         (TAG_USER | (2044078415<<16) | 0x0000)
+#define MUIA_NBitmap_Label        (TAG_USER | (2044078415<<16) | 0x0001)
+#define MUIA_NBitmap_Button       (TAG_USER | (2044078415<<16) | 0x0002)
+#define MUIA_NBitmap_Normal       (TAG_USER | (2044078415<<16) | 0x0003)
+#define MUIA_NBitmap_Ghosted      (TAG_USER | (2044078415<<16) | 0x0004)
+#define MUIA_NBitmap_Selected     (TAG_USER | (2044078415<<16) | 0x0005)
+#define MUIA_NBitmap_Width        (TAG_USER | (2044078415<<16) | 0x0006)
+#define MUIA_NBitmap_Height       (TAG_USER | (2044078415<<16) | 0x0007)
+#define MUIA_NBitmap_MaxWidth     (TAG_USER | (2044078415<<16) | 0x0008)
+#define MUIA_NBitmap_MaxHeight    (TAG_USER | (2044078415<<16) | 0x0009)
 
-#define MUIV_NBitmap_Type_File			0
-#define MUIV_NBitmap_Type_DTObject		1
+#define MUIV_NBitmap_Type_File      0
+#define MUIV_NBitmap_Type_DTObject  1
 
 #ifndef uint8
 typedef unsigned char uint8;
@@ -138,5 +138,23 @@ VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj);
 VOID NBitmap_SetupImage(struct IClass *cl, Object *obj);
 VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj);
 BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj);
+
+#if defined(__MORPHOS__)
+#ifndef WritePixelArrayAlpha
+#define WritePixelArrayAlpha(__p0, __p1, __p2, __p3, __p4, __p5, __p6, __p7, __p8, __p9) \
+  LP10(216, ULONG , WritePixelArrayAlpha, \
+    APTR , __p0, a0, \
+    UWORD , __p1, d0, \
+    UWORD , __p2, d1, \
+    UWORD , __p3, d2, \
+    struct RastPort *, __p4, a1, \
+    UWORD , __p5, d3, \
+    UWORD , __p6, d4, \
+    UWORD , __p7, d5, \
+    UWORD , __p8, d6, \
+    ULONG , __p9, d7, \
+    , CYBERGRAPHICS_BASE_NAME, 0, 0, 0, 0, 0, 0)
+#endif
+#endif
 
 #endif /* NBITMAP_MCC_PRIV_H */

@@ -5,6 +5,17 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-11-21 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nbitmap_mcc: integrated a patch kindly provided by Ilkka Lehtoranta
+    which makes the bitmap class compile/link for MorphOS and OS3 as well.
+    Now cybergraphics.library calls are used for all platforms instead of
+    forcing the class to P96 only. Please note, however, that we still
+    need a test application for that new class as currently the only
+    application using that new class is Epistula and that's unfortunatly
+    available for OS4 only :(. So we should at least put a NBitmap-Test
+    app into our repository for testing it directly from here.
+
 2007-11-03 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlistviews_mcp/NListviews.c: added a copyright crawling object to the
