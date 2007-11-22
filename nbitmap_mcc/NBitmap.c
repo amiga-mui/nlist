@@ -26,18 +26,6 @@
 #include <string.h>
 #include <math.h>
 
-// system includes
-#include <proto/cybergraphics.h>
-#include <proto/datatypes.h>
-#include <proto/dos.h>
-#include <proto/exec.h>
-#include <proto/gadtools.h>
-#include <proto/graphics.h>
-#include <proto/intuition.h>
-#include <proto/layers.h>
-#include <proto/muimaster.h>
-#include <proto/utility.h>
-
 // system
 #include <cybergraphx/cybergraphics.h>
 #include <datatypes/pictureclass.h>
@@ -51,6 +39,18 @@
 #if defined(__amigaos4__)
 #include <graphics/blitattr.h>
 #endif
+
+// system includes
+#include <proto/cybergraphics.h>
+#include <proto/datatypes.h>
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <proto/gadtools.h>
+#include <proto/graphics.h>
+#include <proto/intuition.h>
+#include <proto/layers.h>
+#include <proto/muimaster.h>
+#include <proto/utility.h>
 
 // libraries
 #include <libraries/gadtools.h>
@@ -533,7 +533,9 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
     /* draw image */
     if(data->fmt == PBPAFMT_LUT8)
     {
+      #if defined(__amigaos4__)
       uint32 error;
+      #endif
 
       /* select bitmap */
       if(data->button && data->pressed && data->overlay && data->dt_bitmap[2] != NULL)
@@ -557,9 +559,9 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
                             BLITA_MaskPlane, data->dt_mask[item],
                             TAG_DONE);
       SHOWVALUE(DBF_DRAW, error);
-    
+
       #else
-    
+
       if(data->dt_mask[item])
       {
         BltMaskBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),

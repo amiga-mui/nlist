@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-11-22 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: moved the inclusion of the proto/#?.h files a few
+    lines further down to avoid unnecessary warnings when compiling for OS3.
+    The OS3 proto files don't seem to include the necessary stuff to define
+    Bitmaps, etc, themself.
+
 2007-11-21 Jens Langner <Jens.Langner@light-speed.de>
 
   * nbitmap_mcc: integrated a patch kindly provided by Ilkka Lehtoranta
