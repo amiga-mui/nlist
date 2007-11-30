@@ -231,7 +231,7 @@ TESTOBJS = $(OBJDIR)/NBitmap-Test.o \
 
 #
 
-all: $(BINDIR) $(OBJDIR) $(MCCTARGET) #$(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) $(MCCTARGET) $(TESTTARGET)
 
 # make the object directories
 $(OBJDIR):
