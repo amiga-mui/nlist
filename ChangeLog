@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-11-30 Ilkka Lehtoranta <ilkleht@isoveli.org>
+
+  * nbitmap_mcc/NBitmap-Test.c: added simple test application for nbitmap.mcc.
+    It requires icon.png file which is not included for copyright reasons.
+  * nbitmap_mcc/NBitmap.c: fixed rendering bugs caused by my CGX patch.
+  * nbitmap_mcc/dispatcher.c: removed obsolete MUI_RequestIDCMP()/MUI_RejectIDCMP()
+    calls. Event handlers are used instead.
+
 2007-11-22 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: moved the inclusion of the proto/#?.h files a few

@@ -113,6 +113,8 @@ struct InstData
   struct PrefsData prefs;
   struct BitMap *dt_bitmap[3];
   struct BitMapHeader *dt_header[3];
+
+  struct MUI_EventHandlerNode ehnode;
 };
 
 /* macros */
@@ -126,6 +128,10 @@ struct InstData
 
 #ifndef max
 #define max(a, b) (((a) > (b)) ? (a):(b))
+#endif
+
+#ifndef MUI_EHF_GUIMODE
+#define MUI_EHF_GUIMODE     (1<<1)  /* set this if you dont want your handler to be called when your object is disabled or invisible */
 #endif
 
 /* prototypes */

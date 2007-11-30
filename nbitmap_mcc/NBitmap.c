@@ -202,17 +202,17 @@ VOID NBitmap_UpdateImage(uint32 item, STRPTR filename, struct IClass *cl, Object
 BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object *obj)
   {
     BOOL result = FALSE;
-      uint32 arraysize;
+    ULONG arraysize;
 
     struct pdtBlitPixelArray pbpa;
-    struct FrameInfo fri;
     struct InstData *data = INST_DATA(cl, obj);
 
     if(dt_obj != NULL)
     {
-      memset(&fri, 0, sizeof(struct FrameInfo));
-      DoMethod(dt_obj, DTM_FRAMEBOX, NULL, &fri, &fri, sizeof(struct FrameInfo), 0);
-      data->depth = fri.fri_Dimensions.Depth;
+      /* bitmap header */
+      GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
+
+      data->depth = data->dt_header[item]->bmh_Depth;
 
       if(data->depth>0 && data->depth<=8)
       {
@@ -220,7 +220,6 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
         data->fmt = PBPAFMT_LUT8;
 
         /* bitmap header */
-        GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
         data->width =  data->dt_header[0]->bmh_Width;
         data->height =  data->dt_header[0]->bmh_Height;
 
@@ -231,9 +230,6 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
         /* true colour bitmap */
         if(data->depth == 24) data->fmt = PBPAFMT_RGB;
         if(data->depth == 32) data->fmt = PBPAFMT_ARGB;
-
-        /* bitmap header */
-        GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
 
         data->width =  data->dt_header[0]->bmh_Width;
         data->height =  data->dt_header[0]->bmh_Height;
@@ -300,7 +296,7 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
   /* need at least the normal image */
   if((data = INST_DATA(cl, obj)) !=NULL && data->dt_obj[0] != NULL)
   {
-    uint32 i;
+    ULONG i;
 
     for(i = 0; i < 3; i++)
     {
@@ -330,7 +326,7 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
         }
         else if(data->depth > 8)
         {
-          uint32 arraysize;
+          ULONG arraysize;
 
           /* correct read buffer */
           if(data->depth == 24)
@@ -374,7 +370,7 @@ VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj)
 
   if((data = INST_DATA(cl, obj))!=NULL)
   {
-    uint32 i;
+    ULONG i;
 
     /* free datatype object */
     if(data->type == MUIV_NBitmap_Type_File)
@@ -431,12 +427,20 @@ VOID NBitmap_SetupImage(struct IClass *cl, Object *obj)
 
     /* input */
     if(data->button)
-      MUI_RequestIDCMP(obj, IDCMP_MOUSEBUTTONS | IDCMP_GADGETUP | IDCMP_GADGETDOWN | IDCMP_MOUSEMOVE);
+    {
+      data->ehnode.ehn_Priority = 0;
+      data->ehnode.ehn_Flags = MUI_EHF_GUIMODE;
+      data->ehnode.ehn_Object = obj;
+      data->ehnode.ehn_Class = cl;
+      data->ehnode.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE;
+
+      DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
+    }
 
     /* 8-bit data */
     if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
     {
-      uint32 i;
+      ULONG i;
 
       /* layout image */
       for(i = 0; i < 3; i++)
@@ -470,11 +474,11 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
   {
     // input
     if(data->button)
-      MUI_RejectIDCMP(obj, IDCMP_MOUSEBUTTONS | IDCMP_GADGETUP | IDCMP_GADGETDOWN | IDCMP_MOUSEMOVE);
+      DoMethod(_win(obj), MUIM_Window_RemEventHandler, &data->ehnode);
 
     if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
     {
-      uint32 i;
+      ULONG i;
 
       /* layout image */
       for(i = 0; i < 3; i++)
@@ -517,8 +521,8 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
-    int32 item;
-    uint32 twidth, theight;
+    LONG item;
+    ULONG twidth, theight;
 
     /* coordinates */
     item = 0;
@@ -648,10 +652,10 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
       }
       else
       {
-        uint8 r, g, b;
-        double shade;
-        uint32 size;
-        uint8 *array;
+        UBYTE r, g, b;
+        DOUBLE shade;
+        ULONG size;
+        UBYTE *array;
 
         /* shaded overlay */
         r = data->prefs.overlay_r;
@@ -667,11 +671,11 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
         size = (twidth * theight) * 3;
         if((array = AllocVec(size, MEMF_ANY|MEMF_CLEAR)) != NULL)
         {
-          uint32 h;
-          uint8 *p = array;
-          uint32 pxl;
+          ULONG h;
+          UBYTE *p = array;
+          ULONG pxl;
 
-          ReadPixelArray(array, 0, 0, twidth * 3, _rp(obj), _left(obj) + 1, _top(obj) + 1, twidth, theight, RECTFMT_RGB);
+          ReadPixelArray(array, 0, 0, twidth * 3, _rp(obj), _left(obj), _top(obj), twidth, theight, RECTFMT_RGB);
 
           for(h = 0; h < theight; h++)
           {
@@ -689,8 +693,8 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
           }
 
           pxl = ((uint32)r << 16) | ((uint32)g << 8) | (uint32)b;
-          FillPixelArray(_rp(obj), _left(obj), _top(obj), _left(obj) + twidth + 1, _top(obj) + theight + 1, pxl);
-          WritePixelArray(array, 0, 0, twidth * 3, _rp(obj), _left(obj) + 1, _top(obj) + 1, twidth, theight, RECTFMT_RGB);
+          //FillPixelArray(_rp(obj), _left(obj), _top(obj), twidth, theight, pxl);
+          WritePixelArray(array, 0, 0, twidth * 3, _rp(obj), _left(obj), _top(obj), twidth, theight, RECTFMT_RGB);
 
           FreeVec(array);
         }

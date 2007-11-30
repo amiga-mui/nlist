@@ -86,6 +86,7 @@ ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
 
       if((obj = (Object *)DoSuperNew(cl, obj,
         MUIA_CycleChain, TRUE,
+        MUIA_FillArea, FALSE,
       TAG_MORE, msg->ops_AttrList))!=NULL)
         {
           if((data = INST_DATA(cl, obj))!=NULL)
@@ -290,13 +291,15 @@ ULONG NBitmap_Hide(struct IClass *cl, Object *obj, Msg msg)
   return result;
 }
 
-/* ULONG NBitmap_HandleInput() */
-ULONG NBitmap_HandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg)
+/* ULONG NBitmap_HandleEvent() */
+ULONG NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
   struct InstData *data;
   ULONG result;
 
   ENTER();
+
+  result = 0;
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
@@ -322,12 +325,14 @@ ULONG NBitmap_HandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInpu
               if(data->overlay && data->pressed)
               {
                 data->pressed = FALSE;
-                data->overlay = FALSE;
+                //data->overlay = FALSE;
 
                 MUI_Redraw(obj, MADF_DRAWUPDATE);
                 SetAttrs(obj, MUIA_Pressed, FALSE, TAG_DONE);
               }
             }
+
+            result = MUI_EventHandlerRC_Eat;
           }
           else
           {
@@ -347,6 +352,8 @@ ULONG NBitmap_HandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInpu
 
               MUI_Redraw(obj, MADF_DRAWUPDATE);
             }
+
+            result = MUI_EventHandlerRC_Eat;
           }
           else
           {
@@ -362,7 +369,8 @@ ULONG NBitmap_HandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInpu
     }
   }
 
-  result = DoSuperMethodA(cl, obj, (Msg)msg);
+  if (!result)
+    result = DoSuperMethodA(cl, obj, (Msg)msg);
 
   RETURN(result);
   return result;
@@ -469,8 +477,8 @@ DISPATCHER(_Dispatcher)
       result = NBitmap_Hide(cl, obj, msg);
     break;
 
-    case MUIM_HandleInput:
-      result = NBitmap_HandleInput(cl, obj, (APTR)msg);
+    case MUIM_HandleEvent:
+      result = NBitmap_HandleEvent(cl, obj, (APTR)msg);
     break;
 
     case MUIM_Cleanup:
