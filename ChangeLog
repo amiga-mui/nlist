@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-12-01 Pär Boberg <pbobbenb@spray.se>
+
+  * nlisttree_mcp/locale/svenska.ct: Updated according to the new .cd file.
+
 2007-11-30 Ilkka Lehtoranta <ilkleht@isoveli.org>
 
   * nbitmap_mcc/NBitmap-Test.c: added simple test application for nbitmap.mcc.
