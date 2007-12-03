@@ -50,9 +50,9 @@ struct Library *MUIMasterBase = NULL;
 
 #if defined(__amigaos4__)
 struct IntuitionIFace *IIntuition = NULL;
-struct UtilitfyIFace *IUtility = NULL;
+struct UtilityIFace *IUtility = NULL;
 struct GraphicsIFace *IGraphics = NULL;
-struct CyberGraphicsIFace *ICyberGfx = NULL;
+struct CyberGfxIFace *ICyberGfx = NULL;
 struct DataTypesIFace *IDataTypes = NULL;
 struct MUIMasterIFace *IMUIMaster = NULL;
 #endif
