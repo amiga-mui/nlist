@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-12-03 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: fixed some indentations.
+
 2007-12-01 Pär Boberg <pbobbenb@spray.se>
 
   * nlisttree_mcp/locale/svenska.ct: Updated according to the new .cd file.

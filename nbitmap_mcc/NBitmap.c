@@ -152,15 +152,16 @@ VOID NBitmap_UpdateImage(uint32 item, STRPTR filename, struct IClass *cl, Object
     {
       if(filename != NULL)
       {
-            if(data->dt_obj[item] != NULL)
+        if(data->dt_obj[item] != NULL)
         {
-               /* free old image data */
-          if(data->fmt == PBPAFMT_LUT8) SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+          /* free old image data */
+          if(data->fmt == PBPAFMT_LUT8)
+            SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
 
-               DisposeDTObject(data->dt_obj[item]);
+          DisposeDTObject(data->dt_obj[item]);
           data->dt_obj[item] = NULL;
 
-               if(data->arraypixels[item])
+          if(data->arraypixels[item] != NULL)
           {
             FreeVec(data->arraypixels[item]);
             data->arraypixels[item] = NULL;
@@ -238,7 +239,7 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
         arraysize = (data->arraybpr) * data->height;
 
         /* get array of pixels */
-        if((data->arraypixels[item] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR))!=NULL)
+        if((data->arraypixels[item] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
         {
           memset(&pbpa, 0, sizeof(struct pdtBlitPixelArray));
 
@@ -274,7 +275,7 @@ VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj)
       DisposeDTObject(data->dt_obj[item]);
       data->dt_obj[item] = NULL;
 
-      if(data->arraypixels[item])
+      if(data->arraypixels[item] != NULL)
       {
         FreeVec(data->arraypixels[item]);
         data->arraypixels[item] = NULL;
@@ -308,50 +309,50 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
         DoMethod(data->dt_obj[0], DTM_FRAMEBOX, NULL, &fri, &fri, sizeof(struct FrameInfo), 0);
         data->depth = fri.fri_Dimensions.Depth;
 
-      if(data->maxwidth == 0 || (data->maxwidth <= data->dt_header[i]->bmh_Width))
+        if(data->maxwidth == 0 || (data->maxwidth <= data->dt_header[i]->bmh_Width))
         {
-        if(data->maxheight == 0 || (data->maxheight <= data->dt_header[i]->bmh_Height))
+          if(data->maxheight == 0 || (data->maxheight <= data->dt_header[i]->bmh_Height))
           {
-        if(data->depth > 0 && data->depth <= 8)
-        {
-          /* colour lookup bitmap */
-          data->fmt = PBPAFMT_LUT8;
+            if(data->depth > 0 && data->depth <= 8)
+            {
+              /* colour lookup bitmap */
+              data->fmt = PBPAFMT_LUT8;
 
-          /* bitmap header */
-          GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
-          data->width =  data->dt_header[0]->bmh_Width;
-          data->height =  data->dt_header[0]->bmh_Height;
+              /* bitmap header */
+              GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
+              data->width =  data->dt_header[0]->bmh_Width;
+              data->height =  data->dt_header[0]->bmh_Height;
 
-          result = TRUE;
-        }
-        else if(data->depth > 8)
-        {
-          ULONG arraysize;
+              result = TRUE;
+            }
+            else if(data->depth > 8)
+            {
+              ULONG arraysize;
 
-          /* correct read buffer */
-          if(data->depth == 24)
-            data->fmt = PBPAFMT_RGB;
-          else
-            data->fmt = PBPAFMT_ARGB;
+              /* correct read buffer */
+              if(data->depth == 24)
+                data->fmt = PBPAFMT_RGB;
+              else
+                data->fmt = PBPAFMT_ARGB;
 
-          /* bitmap header */
-          GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
-          data->width =  data->dt_header[0]->bmh_Width;
-          data->height =  data->dt_header[0]->bmh_Height;
-          data->arraybpp = data->depth / 8;
-          data->arraybpr = data->arraybpp * data->width;
-          arraysize = (data->arraybpr) * data->height;
+              /* bitmap header */
+              GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
+              data->width =  data->dt_header[0]->bmh_Width;
+              data->height =  data->dt_header[0]->bmh_Height;
+              data->arraybpp = data->depth / 8;
+              data->arraybpr = data->arraybpp * data->width;
+              arraysize = (data->arraybpr) * data->height;
 
-          /* get array of pixels */
-          if((data->arraypixels[i] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
-          {
-            DoMethod(data->dt_obj[i], PDTM_READPIXELARRAY, data->arraypixels[i], data->fmt, data->arraybpr, 0, 0, data->width, data->height);
+              /* get array of pixels */
+              if((data->arraypixels[i] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
+              {
+                DoMethod(data->dt_obj[i], PDTM_READPIXELARRAY, data->arraypixels[i], data->fmt, data->arraybpr, 0, 0, data->width, data->height);
 
-            result = TRUE;
+                result = TRUE;
+              }
+            }
           }
         }
-       }
-      }
       }
     }
   }
@@ -368,7 +369,7 @@ VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj)
 
   ENTER();
 
-  if((data = INST_DATA(cl, obj))!=NULL)
+  if((data = INST_DATA(cl, obj)) != NULL)
   {
     ULONG i;
 
@@ -566,7 +567,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
       #else
 
-      if(data->dt_mask[item])
+      if(data->dt_mask[item] != NULL)
       {
         BltMaskBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
           _left(obj) + (data->border_horiz / 2),
@@ -633,7 +634,6 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
           WritePixelArrayAlpha(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
         }
         #else
-
         WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, data->depth == 24 ? RECTFMT_RGB : RECTFMT_ARGB);
         #endif
       }
