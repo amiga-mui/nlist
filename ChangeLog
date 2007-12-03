@@ -8,6 +8,7 @@ $URL$
 2007-12-03 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: fixed some indentations.
+  * nbitmap_mcc/NBitmap-Test.c: added missing includes and library definitions.
 
 2007-12-01 Pär Boberg <pbobbenb@spray.se>
 
