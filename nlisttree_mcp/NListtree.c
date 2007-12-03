@@ -79,14 +79,14 @@ static const struct SampleArray sa[] =
   {         "amiga", 0x8000               },
 
   { "m", TNF_LIST                         },
-  {     "i", TNF_LIST                     },
+  {   "i", TNF_LIST                       },
   {     "c", TNF_LIST                     },
-  {         "h", TNF_LIST                 },
-  {           "e", TNF_LIST               },
-  {             "l", TNF_LIST             },
-  {               "a", TNF_LIST           },
-  {                 "n", TNF_LIST         },
-  {                   "g", TNF_LIST       },
+  {       "h", TNF_LIST                   },
+  {         "e", TNF_LIST                 },
+  {           "l", TNF_LIST               },
+  {             "a", TNF_LIST             },
+  {               "n", TNF_LIST           },
+  {                 "g", TNF_LIST         },
   {                   "e", TNF_LIST       },
   {                     "l", TNF_LIST     },
   {                       "o", 0          },
@@ -331,32 +331,32 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
   */
   data = INST_DATA( cl, obj );
 
-  CY_Style_Entries[0] = tr(MSG_STYLE_NORMAL);
-  CY_Style_Entries[1] = tr(MSG_STYLE_INSERTED);
-  CY_Style_Entries[2] = tr(MSG_STYLE_LINES);
-  CY_Style_Entries[3] = tr(MSG_STYLE_WIN98);
-  CY_Style_Entries[4] = tr(MSG_STYLE_MAC);
-  CY_Style_Entries[5] = tr(MSG_STYLE_LINES3D);
-  CY_Style_Entries[6] = tr(MSG_STYLE_WIN98PLUS);
-  CY_Style_Entries[7] = tr(MSG_STYLE_GLOW);
+  CY_Style_Entries[0] = tr(MSG_CYCLE_ITEM_STYLE_NORMAL);
+  CY_Style_Entries[1] = tr(MSG_CYCLE_ITEM_STYLE_INSERTED);
+  CY_Style_Entries[2] = tr(MSG_CYCLE_ITEM_STYLE_LINES);
+  CY_Style_Entries[3] = tr(MSG_CYCLE_ITEM_STYLE_WIN98);
+  CY_Style_Entries[4] = tr(MSG_CYCLE_ITEM_STYLE_MAC);
+  CY_Style_Entries[5] = tr(MSG_CYCLE_ITEM_STYLE_LINES3D);
+  CY_Style_Entries[6] = tr(MSG_CYCLE_ITEM_STYLE_WIN98PLUS);
+  CY_Style_Entries[7] = tr(MSG_CYCLE_ITEM_STYLE_GLOW);
   CY_Style_Entries[8] = NULL;
 
-  STR_GR_Prefs[0] = tr(MSG_GROUP_LAYOUT);
-  STR_GR_Prefs[1] = tr(MSG_GROUP_EXAMPLE);
+  STR_GR_Prefs[0] = tr(MSG_TAB_LAYOUT);
+  STR_GR_Prefs[1] = tr(MSG_TAB_EXAMPLE);
   STR_GR_Prefs[2] = NULL;
 
-  msg_closed_key          = tr(MSG_CLOSED_KEY)[0];
-  msg_open_key            = tr(MSG_OPEN_KEY)[0];
-  msg_special_key         = tr(MSG_SPECIAL_KEY)[0];
-  msg_lines_key           = tr(MSG_LINES_KEY)[0];
-  msg_shadow_key          = tr(MSG_SHADOW_KEY)[0];
-  msg_draw_key            = tr(MSG_DRAW_KEY)[0];
-  msg_style_key           = tr(MSG_STYLE_KEY)[0];
-  msg_space_key           = tr(MSG_SPACE_KEY)[0];
-  msg_remember_status_key = tr(MSG_REMEMBER_STATUS_KEY)[0];
-  msg_open_autoscroll_key = tr(MSG_OPEN_AUTOSCROLL_KEY)[0];
-  msg_bt_expand_key       = tr(MSG_BT_EXPAND_KEY)[0];
-  msg_bt_collapse_key     = tr(MSG_BT_COLLAPSE_KEY)[0];
+  msg_closed_key          = tr(MSG_BUTTON_SHORTCUT_CLOSED)[0];
+  msg_open_key            = tr(MSG_BUTTON_SHORTCUT_OPEN)[0];
+  msg_special_key         = tr(MSG_BUTTON_SHORTCUT_SPECIAL)[0];
+  msg_lines_key           = tr(MSG_BUTTON_SHORTCUT_LINES)[0];
+  msg_shadow_key          = tr(MSG_BUTTON_SHORTCUT_SHADOW)[0];
+  msg_draw_key            = tr(MSG_BUTTON_SHORTCUT_DRAW)[0];
+  msg_style_key           = tr(MSG_CYCLE_SHORTCUT_STYLE)[0];
+  msg_space_key           = tr(MSG_BUTTON_SHORTCUT_SPACE)[0];
+  msg_remember_status_key = tr(MSG_BUTTON_SHORTCUT_REMEMBER)[0];
+  msg_open_autoscroll_key = tr(MSG_BUTTON_SHORTCUT_AUTOSCROLL)[0];
+  msg_bt_expand_key       = tr(MSG_BUTTON_SHORTCUT_EXPAND)[0];
+  msg_bt_collapse_key     = tr(MSG_BUTTON_SHORTCUT_COLLAPSE)[0];
 
   /*
   **  Preferences group.
@@ -373,11 +373,11 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
       */
       Child, VGroup,
 
-        Child, HGroup, GroupFrameT(tr(MSG_IMAGES_COLORS)),
+        Child, HGroup, GroupFrameT(tr(MSG_GROUP_IMAGES_COLORS)),
 
           Child, VGroup,
 
-            Child, FreeKeyCLabel(tr(MSG_CLOSED), msg_closed_key),
+            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_CLOSED), msg_closed_key),
             Child, data->PI_ImageClosed     = PopimageObject,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
               MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
@@ -385,11 +385,11 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_CycleChain,                TRUE,
               MUIA_Draggable,                 TRUE,
               MUIA_Window_Title,              tr(MSG_WIN_TITLE_CLOSED_IMAGE),
-              MUIA_ShortHelp,                 tr(MSG_SHORTHELP_CLOSED_IMAGE),
+              MUIA_ShortHelp,                 tr(MSG_HELP_CLOSED_IMAGE),
             End,
 
 
-            Child, FreeKeyCLabel(tr(MSG_OPEN), msg_open_key),
+            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_OPEN), msg_open_key),
             Child, data->PI_ImageOpen       = PopimageObject,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
               MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
@@ -397,10 +397,10 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_CycleChain,                TRUE,
               MUIA_Draggable,                 TRUE,
               MUIA_Window_Title,              tr(MSG_WIN_TITLE_OPEN_IMAGE),
-              MUIA_ShortHelp,                 tr(MSG_SHORTHELP_OPEN_IMAGE),
+              MUIA_ShortHelp,                 tr(MSG_HELP_OPEN_IMAGE),
             End,
 
-            Child, FreeKeyCLabel(tr(MSG_SPECIAL), msg_special_key),
+            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_SPECIAL), msg_special_key),
             Child, data->PI_ImageSpecial    = PopimageObject,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
               MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
@@ -408,7 +408,7 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_CycleChain,                TRUE,
               MUIA_Draggable,                 TRUE,
               MUIA_Window_Title,              tr(MSG_WIN_TITLE_SPECIAL_IMAGE),
-              MUIA_ShortHelp,                 tr(MSG_SHORTHELP_SPECIAL_IMAGE),
+              MUIA_ShortHelp,                 tr(MSG_HELP_SPECIAL_IMAGE),
             End,
 
           End,
@@ -416,29 +416,29 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 
           Child, VGroup,
 
-            Child, FreeKeyCLabel(tr(MSG_LINES), msg_lines_key),
+            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_LINES), msg_lines_key),
             Child, data->PP_LinePen = PoppenObject,
               MUIA_ControlChar,   msg_lines_key,
               MUIA_CycleChain,    TRUE,
-              MUIA_Window_Title,  tr(MSG_WIN_TITLE_LINEPEN),
-              MUIA_ShortHelp,     tr(MSG_SHORTHELP_LINEPEN),
+              MUIA_Window_Title,  tr(MSG_WIN_TITLE_LINES_COLOR),
+              MUIA_ShortHelp,     tr(MSG_HELP_LINES_COLOR),
             End,
 
-            Child, FreeKeyCLabel(tr(MSG_SHADOW), msg_shadow_key),
+            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_SHADOW), msg_shadow_key),
             Child, data->PP_ShadowPen = PoppenObject,
               MUIA_ControlChar,   msg_shadow_key,
               MUIA_CycleChain,    TRUE,
-              MUIA_Window_Title,  tr(MSG_WIN_TITLE_SHADOWPEN),
-              MUIA_ShortHelp,     tr(MSG_SHORTHELP_SHADOWPEN),
+              MUIA_Window_Title,  tr(MSG_WIN_TITLE_SHADOW_COLOR),
+              MUIA_ShortHelp,     tr(MSG_HELP_SHADOW_COLOR),
             End,
 
-            Child, FreeKeyCLabel(tr(MSG_DRAW), msg_draw_key),
+            Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_DRAW), msg_draw_key),
             Child, data->PP_DrawPen = MUI_NewObject( MUIC_Poppen,
               MUIA_Disabled,          TRUE,
               MUIA_ControlChar,       msg_draw_key,
               MUIA_CycleChain,        TRUE,
-              MUIA_Window_Title,      tr(MSG_WIN_TITLE_DRAWPEN),
-              MUIA_ShortHelp,         tr(MSG_SHORTHELP_DRAWPEN),
+              MUIA_Window_Title,      tr(MSG_WIN_TITLE_DRAW_COLOR),
+              MUIA_ShortHelp,         tr(MSG_HELP_DRAW_COLOR),
             End,
 
           End,
@@ -449,16 +449,16 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 
           Child, ColGroup( 2 ),
 
-            Child, KeyLabel(tr(MSG_STYLE), msg_style_key),
+            Child, KeyLabel(tr(MSG_CYCLE_LABEL_STYLE), msg_style_key),
             Child, data->CY_Style = CycleObject,
               MUIA_Cycle_Entries,  CY_Style_Entries,
               MUIA_Cycle_Active,   0,
               MUIA_CycleChain,     TRUE,
               MUIA_ControlChar,    msg_style_key,
-              MUIA_ShortHelp,      tr(MSG_SHORTHELP_STYLE),
+              MUIA_ShortHelp,      tr(MSG_HELP_STYLE),
             End,
 
-            Child, KeyLabel(tr(MSG_SPACE), msg_space_key),
+            Child, KeyLabel(tr(MSG_BUTTON_LABEL_SPACE), msg_space_key),
             Child, data->SL_Space = SliderObject,
               MUIA_Group_Horiz,     TRUE,
               MUIA_Slider_Min,      0,
@@ -467,7 +467,7 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_Numeric_Format,  "%ldpx",
               MUIA_CycleChain,      TRUE,
               MUIA_ControlChar,     msg_space_key,
-              MUIA_ShortHelp,       tr(MSG_SHORTHELP_SPACE),
+              MUIA_ShortHelp,       tr(MSG_HELP_SPACE),
             End,
 
           End,
@@ -475,7 +475,7 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
 
           Child, ColGroup( 2 ),
 
-            Child, KeyLabel(tr(MSG_REMEMBER_STATUS), msg_remember_status_key),
+            Child, KeyLabel(tr(MSG_BUTTON_LABEL_REMEMBER), msg_remember_status_key),
             Child, data->CH_RememberStatus = ImageObject,
               ImageButtonFrame,
               MUIA_Image_Spec,    MUII_CheckMark,
@@ -485,10 +485,10 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_ControlChar,   msg_remember_status_key,
               MUIA_Background,    MUII_ButtonBack,
               MUIA_CycleChain,    TRUE,
-              MUIA_ShortHelp,     tr(MSG_SHORTHELP_REMEMBER_STATUS),
+              MUIA_ShortHelp,     tr(MSG_HELP_REMEMBER),
             End,
 
-            Child, KeyLabel(tr(MSG_OPEN_AUTOSCROLL), msg_open_autoscroll_key),
+            Child, KeyLabel(tr(MSG_BUTTON_LABEL_AUTOSCROLL), msg_open_autoscroll_key),
             Child, data->CH_OpenAutoScroll = ImageObject,
               ImageButtonFrame,
               MUIA_Image_Spec,    MUII_CheckMark,
@@ -498,7 +498,7 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
               MUIA_ControlChar,   msg_open_autoscroll_key,
               MUIA_Background,    MUII_ButtonBack,
               MUIA_CycleChain,    TRUE,
-              MUIA_ShortHelp,     tr(MSG_SHORTHELP_OPEN_AUTOSCROLL),
+              MUIA_ShortHelp,     tr(MSG_HELP_AUTOSCROLL),
             End,
 
           End,
@@ -514,7 +514,7 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
       Child, VGroup,
 
         Child, NListviewObject,
-          MUIA_ShortHelp,                tr(MSG_LV_SHORTHELP),
+          MUIA_ShortHelp,                tr(MSG_HELP_LISTVIEW_EXAMPLE),
           MUIA_NListview_NList,          data->NLT_Sample = NListtreeObject,
             MUIA_Frame,                  MUIV_Frame_InputList,
             MUIA_CycleChain,             TRUE,
@@ -530,8 +530,8 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
         End,
 
         Child, HGroup,
-          Child, data->BT_Sample_Expand    = KeyButton(tr(MSG_BT_EXPAND), msg_bt_expand_key),
-          Child, data->BT_Sample_Collapse  = KeyButton(tr(MSG_BT_COLLAPSE), msg_bt_collapse_key),
+          Child, data->BT_Sample_Expand    = KeyButton(tr(MSG_BUTTON_LABEL_EXPAND), msg_bt_expand_key),
+          Child, data->BT_Sample_Collapse  = KeyButton(tr(MSG_BUTTON_LABEL_COLLAPSE), msg_bt_collapse_key),
         End,
 
       End,

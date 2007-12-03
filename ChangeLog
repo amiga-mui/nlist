@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-12-03 David Rey <tactica@users.sourceforge.net>
+
+  * nlisttree_mcp/NListtree.c, nlisttree_mcp/locale/NListtree_mcp.cd:
+    reworked catalog descriptor from the ground up, now only help bubbles
+    for the "Expand" and "Collapse" buttons are missing (hint :).
+
 2007-12-03 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: fixed some indentations.
