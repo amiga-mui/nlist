@@ -71,25 +71,20 @@ int main(void)
     if((UtilityBase = OpenLibrary("utility.library", 36)) &&
       GETINTERFACE(IUtility, UtilityBase))
     {
-    	Printf("utility %08lx\n", UtilityBase);
       if((GfxBase = (APTR)OpenLibrary("graphics.library", 36)) &&
         GETINTERFACE(IGraphics, GfxBase))
       {
-    	Printf("gfx %08lx\n", GfxBase);
         if((CyberGfxBase = OpenLibrary("cybergraphics.library", 40)) &&
           GETINTERFACE(ICyberGfx, CyberGfxBase))
         {
-    	Printf("cgfx %08lx\n", CyberGfxBase);
           if((DataTypesBase = OpenLibrary("datatypes.library", 36)) &&
             GETINTERFACE(IDataTypes, DataTypesBase))
           {
-    	Printf("dt %08lx\n", DataTypesBase);
             if((MUIMasterBase = OpenLibrary("muimaster.library", 19)) &&
               GETINTERFACE(IMUIMaster, MUIMasterBase))
             {
               struct MUI_CustomClass *mcc;
 
-    	Printf("mui %08lx\n", MUIMasterBase);
               mcc = MUI_CreateCustomClass(NULL, "Area.mui", NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
 
               if(mcc != NULL)
