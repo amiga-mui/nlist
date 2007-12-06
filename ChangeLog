@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-12-06 Pär Boberg <pbobbenb@spray.se>
+
+  * nlisttree_mcp/locale/svenska.ct: Updated according to changes.
+
 2007-12-03 David Rey <tactica@users.sourceforge.net>
 
   * nlisttree_mcp/NListtree.c, nlisttree_mcp/locale/NListtree_mcp.cd:

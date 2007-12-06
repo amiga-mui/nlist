@@ -1,215 +1,215 @@
 ## chunk AUTH Pär Boberg
 ## language svenska
-## version $VER: NListtree_mcp.ct 2.0 (26.11.07)
-MSG_STYLE_NORMAL
-Normal
-;#DEF Normal
-;#SET (1//)
-MSG_STYLE_INSERTED
-Inmatad
-;#DEF Inserted
-;#SET (2//)
-MSG_STYLE_LINES
-Linjer
-;#DEF Lines
-;#SET (3//)
-MSG_STYLE_WIN98
-Win98
-;#DEF Win98
-;#SET (4//)
-MSG_STYLE_MAC
-Mac
-;#DEF Mac
-;#SET (5//)
-MSG_STYLE_LINES3D
-Linjer 3D
-;#DEF Lines 3D
-;#SET (6//)
-MSG_STYLE_WIN98PLUS
-Win98+
-;#DEF Win98+
-;#SET (7//)
-MSG_STYLE_GLOW
-Glöd
-;#DEF Glow
-;#SET (8//)
-MSG_GROUP_LAYOUT
+## version $VER: NListtree_mcp.ct 2.1 (06.12.07)
+MSG_TAB_LAYOUT
 Layout
 ;#DEF Layout
-;#SET (9//)
-MSG_GROUP_EXAMPLE
-Exempel
-;#DEF Example
-;#SET (10//)
-MSG_CLOSED
+;#SET (1//)
+MSG_GROUP_IMAGES_COLORS
+Bilder/färger
+;#DEF Images/Colors
+;#SET (2//)
+MSG_BUTTON_LABEL_CLOSED
 Stängd
 ;#DEF Closed
-;#SET (11//)
-MSG_CLOSED_KEY
+;#SET (3//)
+MSG_BUTTON_SHORTCUT_CLOSED
 c
 ;#DEF c
-;#SET (12//)
+;#SET (4//)
+MSG_HELP_CLOSED_IMAGE
+Bild att använda för stängda noder.
+;#DEF Image to use for closed nodes.
+;#SET (5//)
 MSG_WIN_TITLE_CLOSED_IMAGE
-Justera 'stängd nod' bild
-;#DEF Adjust 'closed node' image
-;#SET (13//)
-MSG_SHORTHELP_CLOSED_IMAGE
-Bild för en stängd nod.
-;#DEF Image for a closed node.
-;#SET (14//)
-MSG_OPEN
+Justera bild för stängda noder
+;#DEF Adjust image for closed nodes
+;#SET (6//)
+MSG_BUTTON_LABEL_LINES
+Linjer
+;#DEF Lines
+;#SET (7//)
+MSG_BUTTON_SHORTCUT_LINES
+l
+;#DEF l
+;#SET (8//)
+MSG_HELP_LINES_COLOR
+Färg att använda för linjer.
+;#DEF Color to use for lines.
+;#SET (9//)
+MSG_WIN_TITLE_LINES_COLOR
+Justera linje färg
+;#DEF Adjust lines color
+;#SET (10//)
+MSG_BUTTON_LABEL_OPEN
 Öppen
 ;#DEF Open
-;#SET (15//)
-MSG_OPEN_KEY
+;#SET (11//)
+MSG_BUTTON_SHORTCUT_OPEN
 o
 ;#DEF o
-;#SET (16//)
+;#SET (12//)
+MSG_HELP_OPEN_IMAGE
+Bild att använda för öppna noder.
+;#DEF Image to use for open nodes.
+;#SET (13//)
 MSG_WIN_TITLE_OPEN_IMAGE
-Justera 'öppen nod' bild
-;#DEF Adjust 'opened node' image
+Justera bild för öppna noder
+;#DEF Adjust image for open nodes
+;#SET (14//)
+MSG_BUTTON_LABEL_SHADOW
+Skugga
+;#DEF Shadow
+;#SET (15//)
+MSG_BUTTON_SHORTCUT_SHADOW
+w
+;#DEF w
+;#SET (16//)
+MSG_HELP_SHADOW_COLOR
+Färg att använda för\natt kasta skugga efter linjer.
+;#DEF Color to use to cast\nshadows after lines.
 ;#SET (17//)
-MSG_SHORTHELP_OPEN_IMAGE
-Bild för en öppen nod.
-;#DEF Image for an opened node.
+MSG_WIN_TITLE_SHADOW_COLOR
+Justera skugg färg
+;#DEF Adjust shadow color
 ;#SET (18//)
-MSG_SPECIAL
+MSG_BUTTON_LABEL_SPECIAL
 Special
 ;#DEF Special
 ;#SET (19//)
-MSG_SPECIAL_KEY
-a
-;#DEF a
+MSG_BUTTON_SHORTCUT_SPECIAL
+i
+;#DEF i
 ;#SET (20//)
-MSG_IMAGES_COLORS
-Bilder/färger
-;#DEF Images/Colors
+MSG_HELP_SPECIAL_IMAGE
+En speciell bild att visa\nefter varje <nod.
+;#DEF A special image to be\ndisplayed after every <node.
 ;#SET (21//)
 MSG_WIN_TITLE_SPECIAL_IMAGE
 Justera special bild
 ;#DEF Adjust special image
 ;#SET (22//)
-MSG_SHORTHELP_SPECIAL_IMAGE
-Special bild.
-;#DEF Special image.
-;#SET (23//)
-MSG_LINES
-Linjer
-;#DEF Lines
-;#SET (24//)
-MSG_LINES_KEY
-l
-;#DEF l
-;#SET (25//)
-MSG_WIN_TITLE_LINEPEN
-Justera 'linje' penna
-;#DEF Adjust `Lines' pen
-;#SET (26//)
-MSG_SHORTHELP_LINEPEN
-Egen linjefärg.
-;#DEF Custom line color.
-;#SET (27//)
-MSG_SHADOW
-Skugga
-;#DEF Shadow
-;#SET (28//)
-MSG_SHADOW_KEY
-w
-;#DEF w
-;#SET (29//)
-MSG_WIN_TITLE_SHADOWPEN
-Justera 'skugg' penna
-;#DEF Adjust `Shadow' pen
-;#SET (30//)
-MSG_SHORTHELP_SHADOWPEN
-Egen skuggfärg.
-;#DEF Custom shadow color.
-;#SET (31//)
-MSG_DRAW
+MSG_BUTTON_LABEL_DRAW
 Rita
 ;#DEF Draw
-;#SET (32//)
-MSG_DRAW_KEY
+;#SET (23//)
+MSG_BUTTON_SHORTCUT_DRAW
 d
 ;#DEF d
-;#SET (33//)
-MSG_WIN_TITLE_DRAWPEN
-Justera 'rit' penna
-;#DEF Adjust `Draw' pen
-;#SET (34//)
-MSG_SHORTHELP_DRAWPEN
-Egen rit färg.
-;#DEF Custom draw color.
-;#SET (35//)
+;#SET (24//)
+MSG_HELP_DRAW_COLOR
+En rit färg att kombinera\nmed linje färgen.
+;#DEF A draw color to be combined\nwith the lines color.
+;#SET (25//)
+MSG_WIN_TITLE_DRAW_COLOR
+Justera rit färg
+;#DEF Adjust draw color
+;#SET (26//)
 MSG_GROUP_STYLE
 Stil
 ;#DEF Style
-;#SET (36//)
-MSG_STYLE
+;#SET (27//)
+MSG_CYCLE_LABEL_STYLE
 Stil
 ;#DEF Style
-;#SET (37//)
-MSG_STYLE_KEY
-y
-;#DEF y
-;#SET (38//)
-MSG_SHORTHELP_STYLE
-Listträdets globala stil.
-;#DEF Global style of the tree.
-;#SET (39//)
-MSG_SPACE
-Mellanrum
-;#DEF Space
-;#SET (40//)
-MSG_SPACE_KEY
-p
-;#DEF p
-;#SET (41//)
-MSG_SHORTHELP_SPACE
-Antal pixlar i mellanrum.
-;#DEF Number of space pixels.
-;#SET (42//)
-MSG_REMEMBER_STATUS
-Kom ihåg
-;#DEF Remember
-;#SET (43//)
-MSG_REMEMBER_STATUS_KEY
-m
-;#DEF m
-;#SET (44//)
-MSG_SHORTHELP_REMEMBER_STATUS
-Kom ihåg status för noder\nefter stängning.
-;#DEF Remember status of nodes\nafter closing.
-;#SET (45//)
-MSG_OPEN_AUTOSCROLL
-Rull öppning
-;#DEF Open scroll
-;#SET (46//)
-MSG_OPEN_AUTOSCROLL_KEY
+;#SET (28//)
+MSG_CYCLE_SHORTCUT_STYLE
 s
 ;#DEF s
+;#SET (29//)
+MSG_HELP_STYLE
+Välj här global stil för trädet.\n\nBeroende på ditt val, så kan\nvissa av alternativen ovan\nbli otillgängliga.
+;#DEF Select here the global style of the tree.\n\nDepending on your choice, some of the\noptions above may become (un)available.
+;#SET (30//)
+MSG_CYCLE_ITEM_STYLE_NORMAL
+Normal
+;#DEF Normal
+;#SET (31//)
+MSG_CYCLE_ITEM_STYLE_INSERTED
+Inmatad
+;#DEF Inserted
+;#SET (32//)
+MSG_CYCLE_ITEM_STYLE_LINES
+Linjer
+;#DEF Lines
+;#SET (33//)
+MSG_CYCLE_ITEM_STYLE_WIN98
+Win98
+;#DEF Win98
+;#SET (34//)
+MSG_CYCLE_ITEM_STYLE_MAC
+Mac
+;#DEF Mac
+;#SET (35//)
+MSG_CYCLE_ITEM_STYLE_LINES3D
+Linjer 3D
+;#DEF Lines 3D
+;#SET (36//)
+MSG_CYCLE_ITEM_STYLE_WIN98PLUS
+Win98+
+;#DEF Win98+
+;#SET (37//)
+MSG_CYCLE_ITEM_STYLE_GLOW
+Glöd
+;#DEF Glow
+;#SET (38//)
+MSG_BUTTON_LABEL_SPACE
+Mellanrum
+;#DEF Spacing
+;#SET (39//)
+MSG_BUTTON_SHORTCUT_SPACE
+p
+;#DEF p
+;#SET (40//)
+MSG_HELP_SPACE
+Ju mer mellanrum, desto\nvidare blir listträdet.
+;#DEF The more spacing, the wider\nthe listtree will be.
+;#SET (41//)
+MSG_BUTTON_LABEL_REMEMBER
+Kom ihåg status?
+;#DEF Remember status?
+;#SET (42//)
+MSG_BUTTON_SHORTCUT_REMEMBER
+r
+;#DEF r
+;#SET (43//)
+MSG_HELP_REMEMBER
+Om vald, kommer öppen/stängd statusen\nför noder att 'kommas-ihåg' efter att listträdet\nstängs nästa gång det öppnas igen.\n\nVar god notera att, en applikation kan\nåsidosätta ditt val här.
+;#DEF If enabled, the open/closed status of nodes\nwill be 'remembered' after the listtree is closed\nthe next time it is opened again.\n\nPlease note, however, that an application\ncan override your choice here.
+;#SET (44//)
+MSG_BUTTON_LABEL_AUTOSCROLL
+Autorulla?
+;#DEF Autoscroll?
+;#SET (45//)
+MSG_BUTTON_SHORTCUT_AUTOSCROLL
+a
+;#DEF a
+;#SET (46//)
+MSG_HELP_AUTOSCROLL
+Om vald, kommer listvyn att autorulla\ndess innehåll vid öppning av noder\nför att försöka passa i det synliga området.
+;#DEF If enabled, the listview will auto-scroll its\ncontents when opening nodes to try and fit the\nvisible area.
 ;#SET (47//)
-MSG_SHORTHELP_OPEN_AUTOSCROLL
-Autorulla listvy vid öppning av\nnoder för att få plats i synlig vy.
-;#DEF Auto scroll listview when opening\nnodes to fit in visible area.
+MSG_TAB_EXAMPLE
+Exempel
+;#DEF Example
 ;#SET (48//)
-MSG_LV_SHORTHELP
-Detta NListtree objekt reagerar på\ninställningsändringar till höger.
-;#DEF This NListtree object reacts on\npreferences changes on the right.
+MSG_HELP_LISTVIEW_EXAMPLE
+Detta NListtree objekt, reagerar i realtid\ntill ändringarna som du gör under 'Layout' fliken.\n\nPröva så får du se! :)
+;#DEF This NListtree object reacts in real time to\nthe changes you apply under the 'Layout' tab.\n\nGive it a try! :)
 ;#SET (49//)
-MSG_BT_EXPAND
+MSG_BUTTON_LABEL_EXPAND
 Expandera
 ;#DEF Expand
 ;#SET (50//)
-MSG_BT_EXPAND_KEY
+MSG_BUTTON_SHORTCUT_EXPAND
 n
 ;#DEF n
 ;#SET (51//)
-MSG_BT_COLLAPSE
+MSG_BUTTON_LABEL_COLLAPSE
 Kollapsa
 ;#DEF Collapse
 ;#SET (52//)
-MSG_BT_COLLAPSE_KEY
+MSG_BUTTON_SHORTCUT_COLLAPSE
 e
 ;#DEF e
 ;#SET (53//)
