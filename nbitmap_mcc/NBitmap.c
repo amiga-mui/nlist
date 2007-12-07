@@ -212,6 +212,7 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
     {
       /* bitmap header */
       GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
+      D(DBF_DATATYPE, "examine: BMHD dimensions %ldx%ldx%ld", data->dt_header[item]->bmh_Width, data->dt_header[item]->bmh_Height, data->dt_header[item]->bmh_Depth);
 
       data->depth = data->dt_header[item]->bmh_Depth;
 
@@ -225,12 +226,21 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
         data->height =  data->dt_header[0]->bmh_Height;
 
         result = TRUE;
+        D(DBF_DATATYPE, "examine: using LUT8 bitmaps");
       }
       else if(data->depth >=24)
       {
         /* true colour bitmap */
-        if(data->depth == 24) data->fmt = PBPAFMT_RGB;
-        if(data->depth == 32) data->fmt = PBPAFMT_ARGB;
+        if(data->depth == 24)
+        {
+          data->fmt = PBPAFMT_RGB;
+          D(DBF_DATATYPE, "examine: using 24bit RGB data");
+        }
+        else if(data->depth == 32)
+        {
+          data->fmt = PBPAFMT_ARGB;
+          D(DBF_DATATYPE, "examine: using 32bit ARGB data");
+        }
 
         data->width =  data->dt_header[0]->bmh_Width;
         data->height =  data->dt_header[0]->bmh_Height;
@@ -241,6 +251,8 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
         /* get array of pixels */
         if((data->arraypixels[item] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
         {
+          ULONG error;
+
           memset(&pbpa, 0, sizeof(struct pdtBlitPixelArray));
 
           pbpa.MethodID = PDTM_READPIXELARRAY;
@@ -252,7 +264,8 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
           pbpa.pbpa_Width = data->width;
           pbpa.pbpa_Height = data->height;
 
-          DoMethodA(dt_obj, (Msg)(VOID*)&pbpa);
+          error = DoMethodA(dt_obj, (Msg)(VOID*)&pbpa);
+          D(DBF_DATATYPE, "examine: READPIXELARRAY returned %ld", error);
 
           result = TRUE;
         }
@@ -308,6 +321,7 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
         memset(&fri, 0, sizeof(struct FrameInfo));
         DoMethod(data->dt_obj[0], DTM_FRAMEBOX, NULL, &fri, &fri, sizeof(struct FrameInfo), 0);
         data->depth = fri.fri_Dimensions.Depth;
+        D(DBF_DATATYPE, "new: framebox dimensions %ldx%ldx%ld", fri.fri_Dimensions.Width, fri.fri_Dimensions.Height, fri.fri_Dimensions.Depth);
 
         if(data->maxwidth == 0 || (data->maxwidth <= data->dt_header[i]->bmh_Width))
         {
@@ -322,6 +336,7 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
               GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
               data->width =  data->dt_header[0]->bmh_Width;
               data->height =  data->dt_header[0]->bmh_Height;
+              D(DBF_DATATYPE, "new: using LUT8 bitmaps");
 
               result = TRUE;
             }
@@ -331,9 +346,15 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
 
               /* correct read buffer */
               if(data->depth == 24)
+              {
                 data->fmt = PBPAFMT_RGB;
+                D(DBF_DATATYPE, "new: using 24bit RGB data");
+              }
               else
+              {
                 data->fmt = PBPAFMT_ARGB;
+                D(DBF_DATATYPE, "new: using 32bit ARGB data");
+              }
 
               /* bitmap header */
               GetDTAttrs(data->dt_obj[i], PDTA_BitMapHeader, &data->dt_header[i], TAG_DONE);
@@ -346,7 +367,10 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
               /* get array of pixels */
               if((data->arraypixels[i] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
               {
-                DoMethod(data->dt_obj[i], PDTM_READPIXELARRAY, data->arraypixels[i], data->fmt, data->arraybpr, 0, 0, data->width, data->height);
+                ULONG error;
+
+                error = DoMethod(data->dt_obj[i], PDTM_READPIXELARRAY, data->arraypixels[i], data->fmt, data->arraybpr, 0, 0, data->width, data->height);
+                D(DBF_DATATYPE, "new: READPIXELARRAY returned %ld", error);
 
                 result = TRUE;
               }

@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-12-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: added some debug output to track down transparency
+    problems with OS3.
+
 2007-12-07  David Rey <tactica@users.sourceforge.net>
 
   * nlisttree_mcp/locale/NListtree_mcp.cd: fixed typo.
