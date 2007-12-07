@@ -7,6 +7,7 @@ $URL$
 
 2007-12-07 Thore Böckelmann <tboeckel@gmx.de>
 
+  * nbitmap_mcc/icon.png: added example picture with alpha channel.
   * nbitmap_mcc/NBitmap.c: added some debug output to track down transparency
     problems with OS3.
 
