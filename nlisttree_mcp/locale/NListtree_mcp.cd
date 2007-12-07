@@ -69,7 +69,7 @@ i
 ;
 MSG_HELP_SPECIAL_IMAGE (21//)
 A special image to be\n\
-displayed after every <node.
+displayed after every node.
 ;
 MSG_WIN_TITLE_SPECIAL_IMAGE (22//)
 Adjust special image

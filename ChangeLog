@@ -5,26 +5,35 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
-2007-12-06 Pär Boberg <pbobbenb@spray.se>
+2007-12-07  David Rey <tactica@users.sourceforge.net>
+
+  * nlisttree_mcp/locale/NListtree_mcp.cd: fixed typo.
+  * nlisttree_mcp/locale/english-british.ct: added, OS4 only for now.
+  * nlisttree_mcp/locale/svenska.ct: fixed version string, added the
+    missing codeset, removed all the Localizer junk, fixed the artificial
+    typo in MSG_HELP_SPECIAL_IMAGE.
+  * ChangeLog: minor cleanup.
+
+2007-12-06  Pär Boberg <pbobbenb@spray.se>
 
   * nlisttree_mcp/locale/svenska.ct: Updated according to changes.
 
-2007-12-03 David Rey <tactica@users.sourceforge.net>
+2007-12-03  David Rey <tactica@users.sourceforge.net>
 
   * nlisttree_mcp/NListtree.c, nlisttree_mcp/locale/NListtree_mcp.cd:
     reworked catalog descriptor from the ground up, now only help bubbles
     for the "Expand" and "Collapse" buttons are missing (hint :).
 
-2007-12-03 Thore Böckelmann <tboeckel@gmx.de>
+2007-12-03  Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: fixed some indentations.
   * nbitmap_mcc/NBitmap-Test.c: added missing includes and library definitions.
 
-2007-12-01 Pär Boberg <pbobbenb@spray.se>
+2007-12-01  Pär Boberg <pbobbenb@spray.se>
 
   * nlisttree_mcp/locale/svenska.ct: Updated according to the new .cd file.
 
-2007-11-30 Ilkka Lehtoranta <ilkleht@isoveli.org>
+2007-11-30  Ilkka Lehtoranta <ilkleht@isoveli.org>
 
   * nbitmap_mcc/NBitmap-Test.c: added simple test application for nbitmap.mcc.
     It requires icon.png file which is not included for copyright reasons.
@@ -32,14 +41,14 @@ $URL$
   * nbitmap_mcc/dispatcher.c: removed obsolete MUI_RequestIDCMP()/MUI_RejectIDCMP()
     calls. Event handlers are used instead.
 
-2007-11-22 Thore Böckelmann <tboeckel@gmx.de>
+2007-11-22  Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: moved the inclusion of the proto/#?.h files a few
     lines further down to avoid unnecessary warnings when compiling for OS3.
     The OS3 proto files don't seem to include the necessary stuff to define
     Bitmaps, etc, themself.
 
-2007-11-21 Jens Langner <Jens.Langner@light-speed.de>
+2007-11-21  Jens Langner <Jens.Langner@light-speed.de>
 
   * nbitmap_mcc: integrated a patch kindly provided by Ilkka Lehtoranta
     which makes the bitmap class compile/link for MorphOS and OS3 as well.
@@ -50,7 +59,7 @@ $URL$
     available for OS4 only :(. So we should at least put a NBitmap-Test
     app into our repository for testing it directly from here.
 
-2007-11-03 Jens Langner <Jens.Langner@light-speed.de>
+2007-11-03  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlistviews_mcp/NListviews.c: added a copyright crawling object to the
     bottom of the mcp to match the Look&Feel to our other classes.
@@ -60,7 +69,7 @@ $URL$
     and properitary Localizer stuff. However, new translation are now
     required.
 
-2007-11-03 Pär Boberg <pbobbenb@spray.se>
+2007-11-03  Pär Boberg <pbobbenb@spray.se>
 
   * nlisttree_mcp/locale/svenska.ct: Just upped the version number.
 
@@ -107,7 +116,7 @@ $URL$
     MUI_EventHandlerRC_Eat for handled mouse clicks inside the object also
     cured the "first click does not select" bug in YAM.
 
-2007-10-09 Jens Langner <Jens.Langner@light-speed.de>
+2007-10-09  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcc/NListtree.c: the MUIKEY_LEFT/RIGHT always ate the keyevent
     instead of just eating it in case NListtree itself reacted upon the key
@@ -125,7 +134,7 @@ $URL$
     window is inactive. That means the list AND the window must be active to
     let the list be drawn with its active colors.
 
-2007-10-08 Jens Langner <Jens.Langner@light-speed.de>
+2007-10-08  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc/NList_func.c: the new MUIV_NList_Redraw_Selected wasn't updating
     list objects which are in MUIV_NList_TypeSelect_Char mode.
@@ -144,7 +153,7 @@ $URL$
     circumstances again! We really need to check when MUI_EventHandlerRC_Eat
     must be returned an when it must not!
 
-2007-10-07 Jens Langner <Jens.Langner@light-speed.de>
+2007-10-07  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: implemented a new MUIA_NList_ActiveObjectOnClick method which
     will not only make sure that upon clicking into an NList object, this
@@ -154,12 +163,12 @@ $URL$
     react on the activation/deactivation of the objects and show different
     background colors for active and inactive listviews.
 
-2007-09-23 Pär Boberg <pbobbenb@spray.se>
+2007-09-23  Pär Boberg <pbobbenb@spray.se>
 
   * nlistviews_mcp/locale: Added swedish translation for the new NListviews.mcp.
   * nlistviews_mcp/Makefile: Added swedish to the available translations.
 
-2007-09-17 Jens Langner <Jens.Langner@light-speed.de>
+2007-09-17  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: changed all background and foreground pen relevant sections to
     take note of the new upcoming inactive pen color configurable in NListviews.mcp
@@ -172,7 +181,7 @@ $URL$
     the move or size pointer should be displayed. Also fixed a coloring issue
     with the size and move pointers.
 
-2007-09-16 Jens Langner <Jens.Langner@light-speed.de>
+2007-09-16  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: removed all stackchecking functionality regardless if we can compile
     them conditionally via DO_STACK_CHECK or not. It was about time to do a cleanup
@@ -216,7 +225,7 @@ $URL$
     Nevertheless, stack checking can be enabled again by compiling NList.mcc
     with DO_STACK_CHECK #define'd.
 
-2007-09-13 Jens Langner <Jens.Langner@light-speed.de>
+2007-09-13  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlistviews_mcp: added a new 'Inactive' Pen and FrameSpec pop object for the
     upcoming inactive cursor color being introduced to e.g. NList itself. In
@@ -224,7 +233,7 @@ $URL$
     item to manually select the black color has been removed - minor cleanups
     included.
 
-2007-09-09 Jens Langner <Jens.Langner@light-speed.de>
+2007-09-09  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc/Pointer.c: fixed an issue where in case some other gadget/process
     set the window pointer to something else we might have ended up with the
@@ -235,7 +244,7 @@ $URL$
     more obvious and intuitive and be in line what TextEditor.mcc now does as
     well.
 
-2007-09-07 Jens Langner <Jens.Langner@light-speed.de>
+2007-09-07  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc/Pointer.c, misc: reworked the whole mouse pointer setup/cleanup
     routines from scratch and adapted them to use 32bit ARGB pointer images in
@@ -245,12 +254,12 @@ $URL$
     pointer color in the NList configuration as well as showing a specialized
     select pointer in case the mouse is above a read-only floattext object.
 
-2007-09-02 Pär Boberg <pbobbenb@spray.se>
+2007-09-02  Pär Boberg <pbobbenb@spray.se>
 
   * nlisttree_mcp/locale/svenska.ct: Just bumped the version number to match
     v18.13 release of nlisttree.mcp.
 
-2007-08-19 Jens Langner <Jens.Langner@light-speed.de>
+2007-08-19  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc/NList_mcc6.c: partly fixed bug #1172351 where due to consequtive
     DrawText() calls at the very same position the font display is messed
@@ -267,7 +276,7 @@ $URL$
     charwise selection. More work is required here, but due to the ugly source
     code it would be hard to find/fix the issues quickly.
 
-2007-08-18 Jens Langner <Jens.Langner@light-speed.de>
+2007-08-18  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: added new MUIA_NList_AutoClip attribute which allows to disable
     the default behaviour of an NList object where in read-only (NoInput) mode
@@ -298,7 +307,7 @@ $URL$
   * include/mccinit.c: updated to latest 1.8 version which really uses the
     GETINTERFACE() macro with 3 parameters.
 
-2007-07-25 Jens Langner <Jens.Langner@light-speed.de>
+2007-07-25  Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mccinit.c: updated to latest 1.7 version
 
@@ -307,7 +316,7 @@ $URL$
   * include/mccinit.c: updated to latest 1.6 version which fixes an unbalanced
     if statement.
 
-2007-07-23 Jens Langner <Jens.Langner@light-speed.de>
+2007-07-23  Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mccinit.c: updated to latest 1.5 version which should take care
     of stack issues.
@@ -317,7 +326,7 @@ $URL$
   * nlisttree_mcp/NListtree.c: added platform dependend type definition of
     LocaleBase.
 
-2007-07-05 Jens Langner <Jens.Langner@light-speed.de>
+2007-07-05  Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mccinit.c: updated to latest 1.4 version and adapted all our
     library.c files to make use out of the new stack enforcing mechanisms.
@@ -390,7 +399,7 @@ $URL$
     buffer overruns impossible. Additionally the buffer pointer no longer needs
     to be passed around to all functions.
 
-2007-06-10 Jens Langner <Jens.Langner@light-speed.de>
+2007-06-10  Jens Langner <Jens.Langner@light-speed.de>
 
   * #?/Makefile: replaced all platform specific makefiles with a single
     platform flexible one which can be called by a simple 'make' call and
@@ -400,7 +409,7 @@ $URL$
     during the LibOpen() phase instead while maintaining an own mutual exclusive
     locking variable.
 
-2007-06-09 Jens Langner <Jens.Langner@light-speed.de>
+2007-06-09  Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mccinit.c, mcc/library.c, mcp/library.c: replaced the old obsolete
     mccheader.c by the new mccinit.c which should come with a much more clear
@@ -880,7 +889,7 @@ $URL$
   * tagged all classes within the CVS with their respect
     release version, so that they can be identified later.
 
-2002-04-02 Richard Poser <whomiga@missingpiece.com>
+2002-04-02  Richard Poser <whomiga@missingpiece.com>
 
   * Minor Modifications for the Include files/CPU I have
     * Modified lines 256 and 687 in common/mccheader.h
@@ -908,12 +917,12 @@ $URL$
   * Bumped version of NList.mcc to 20.104
   * Obviously added info to ChangeLog :-)
 
-2002-03-05 Sebastian Bauer <sebauer@t-online.de>
+2002-03-05  Sebastian Bauer <sebauer@t-online.de>
 
   * Added a define MUIV_NList_UseImage_All for MUIM_NList_UseImage
     which stands now for -1
 
-2001-12-24 Sebastian Bauer <sebauer@t-online.de>
+2001-12-24  Sebastian Bauer <sebauer@t-online.de>
 
   * Merged aphaso and sensei changes and commited all files to the
     cvs (only tried the SAS compile)
