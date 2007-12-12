@@ -1,0 +1,229 @@
+## version $VER: NListtree_mcp.catalog 2.1 (29.11.2007)
+## language czech
+## codeset 0
+;
+;
+; NListtree_mcp.cd - NListtree MUI custom prefs catalog description file
+; $Id: nlisttree_mcp_czech.ct 5549 2007-11-29 13:46:50Z sindlarv $
+;
+;#version 2
+;#language english
+;
+;
+MSG_STYLE_NORMAL
+Základní
+; Normal
+;
+MSG_STYLE_INSERTED
+Odsazené polo¾ky
+; Inserted
+;
+MSG_STYLE_LINES
+Linky
+; Lines
+;
+MSG_STYLE_WIN98
+Windows 98
+; Win98
+;
+MSG_STYLE_MAC
+Mac Classic
+; Mac
+;
+MSG_STYLE_LINES3D
+Linky plastické
+; Lines 3D
+;
+MSG_STYLE_WIN98PLUS
+Windows 98 +
+; Win98+
+;
+MSG_STYLE_GLOW
+Glow
+; Glow
+;
+MSG_GROUP_LAYOUT
+Rozvr¾ení
+; Layout
+;
+MSG_GROUP_EXAMPLE
+Ukázka vzhledu
+; Example
+;
+MSG_CLOSED
+Sbalená vìtev
+; Closed
+;
+MSG_CLOSED_KEY
+b
+; c
+;
+MSG_WIN_TITLE_CLOSED_IMAGE
+Vyberte obrázek pro sbalenou vìtev
+; Adjust 'closed node' image
+;
+MSG_SHORTHELP_CLOSED_IMAGE
+Obrázek pro sbalenou èást seznamu.
+; Image for a closed node.
+;
+MSG_OPEN
+Rozbalená vìtev
+; Open
+;
+MSG_OPEN_KEY
+o
+; o
+;
+MSG_WIN_TITLE_OPEN_IMAGE
+Vyberte obrázek pro rozbalenou vìtev
+; Adjust 'opened node' image
+;
+MSG_SHORTHELP_OPEN_IMAGE
+Obrázek pro rozbalenou èást seznamu.
+; Image for an opened node.
+;
+MSG_SPECIAL
+Speciální obrázek
+; Special
+;
+MSG_SPECIAL_KEY
+p
+; a
+;
+MSG_IMAGES_COLORS
+Obrázky a barvy
+; Images/Colors
+;
+MSG_WIN_TITLE_SPECIAL_IMAGE
+Vyberte speciální obrázek
+; Adjust special image
+;
+MSG_SHORTHELP_SPECIAL_IMAGE
+Symbol pro koncovou èást ka¾dé vìtve.
+; Special image.
+;
+MSG_LINES
+Barva linek
+; Lines
+;
+MSG_LINES_KEY
+l
+; l
+;
+MSG_WIN_TITLE_LINEPEN
+Vyberte barvu linek
+; Adjust `Lines' pen
+;
+MSG_SHORTHELP_LINEPEN
+Definuje barvu jednotlivých linek.
+; Custom line color.
+;
+MSG_SHADOW
+Barva stínu
+; Shadow
+;
+MSG_SHADOW_KEY
+s
+; w
+;
+MSG_WIN_TITLE_SHADOWPEN
+Vyberte barvu stínu linek
+; Adjust `Shadow' pen
+;
+MSG_SHORTHELP_SHADOWPEN
+Definuje barvu stínu linek.
+; Custom shadow color.
+;
+MSG_DRAW
+Doplòková barva
+; Draw
+;
+MSG_DRAW_KEY
+d
+; d
+;
+MSG_WIN_TITLE_DRAWPEN
+Vyberte doplòkovou barvu
+; Adjust `Draw' pen
+;
+MSG_SHORTHELP_DRAWPEN
+Definuje doplòkovou barvu.
+; Custom draw color.
+;
+MSG_GROUP_STYLE
+Styl
+; Style
+;
+MSG_STYLE
+Styl
+; Style
+;
+MSG_STYLE_KEY
+y
+; y
+;
+MSG_SHORTHELP_STYLE
+Globálnì definuje styl celého stromu.
+; Global style of the tree.
+;
+MSG_SPACE
+Rozestup
+; Space
+;
+MSG_SPACE_KEY
+o
+; p
+;
+MSG_SHORTHELP_SPACE
+Poèet pixelù mezi polo¾kami (vodorovnì).
+; Number of space pixels.
+;
+MSG_REMEMBER_STATUS
+Pamatovat stav
+; Remember
+;
+MSG_REMEMBER_STATUS_KEY
+m
+; m
+;
+MSG_SHORTHELP_REMEMBER_STATUS
+Ulo¾í naposledy platný stav.
+; Remember status of nodes\n\
+; after closing.
+;
+MSG_OPEN_AUTOSCROLL
+Vyplnit prostor
+; Open scroll
+;
+MSG_OPEN_AUTOSCROLL_KEY
+s
+; s
+;
+MSG_SHORTHELP_OPEN_AUTOSCROLL
+Automaticky posune a optimálnì vyplní prostor\n\
+pøi otevøení vìtve stromu.
+; Auto scroll listview when opening\n\
+; nodes to fit in visible area.
+;
+MSG_LV_SHORTHELP
+Tento objekt tøídy NListtree zobrazuje aktuální\n\
+zmìny v nastavení.
+; This NListtree object reacts on\n\
+; preferences changes on the right.
+;
+MSG_BT_EXPAND
+Rozbalit
+; Expand
+;
+MSG_BT_EXPAND_KEY
+r
+; n
+;
+MSG_BT_COLLAPSE
+Sbalit
+; Collapse
+;
+MSG_BT_COLLAPSE_KEY
+s
+; e
+;

@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-12-12 Vit Sindlar <sindlarv at centrum dot cz>
+
+   * nlistviews_mcp/locale/czech.ct
+   * nlisttree_mcp/locale/czech.ct
+   - added Czech catalogs translation
+
 2007-12-07 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/icon.png: added example picture with alpha channel.
