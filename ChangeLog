@@ -5,11 +5,18 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2007-12-12 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c, nlist_mcc/NList_mcc0.c, nlist_mcc/Pointer.c: the
+    custom pointers will now be set and hidden in the Show/Hide methods. Hiding
+    them in the Cleanup method is forbidden, because the necessary window is not
+    existing anymore then.
+
 2007-12-12 Vit Sindlar <sindlarv at centrum dot cz>
 
-   * nlistviews_mcp/locale/czech.ct
-   * nlisttree_mcp/locale/czech.ct
-   - added Czech catalogs translation
+  * nlistviews_mcp/locale/czech.ct
+  * nlisttree_mcp/locale/czech.ct
+  * added Czech catalogs translation
 
 2007-12-07 Thore Böckelmann <tboeckel@gmx.de>
 

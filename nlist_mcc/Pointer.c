@@ -589,43 +589,49 @@ void SetupCustomPointers(struct NLData *data)
   LEAVE();
 }
 
-void CleanupCustomPointers(Object *obj, struct NLData *data)
+void CleanupCustomPointers(struct NLData *data)
 {
   ENTER();
-
-  // restore the original default WB pointer
-  if(((struct Library *)IntuitionBase)->lib_Version >= 39)
-    SetWindowPointer(_window(obj), TAG_DONE);
-  else
-    ClearPointer(_window(obj));
 
   // dispose the different pointer objects
   if(data->SizePointerObj != NULL)
   {
+    #if defined(__amigaos4__)
+    DisposeObject(data->SizePointerObj);
+    #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->SizePointerObj);
     else
       FreeVec(data->SizePointerObj);
+    #endif
 
     data->SizePointerObj = NULL;
   }
 
   if(data->MovePointerObj != NULL)
   {
+    #if defined(__amigaos4__)
+    DisposeObject(data->MovePointerObj);
+    #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->MovePointerObj);
     else
       FreeVec(data->MovePointerObj);
+    #endif
 
     data->MovePointerObj = NULL;
   }
 
   if(data->SelectPointerObj != NULL)
   {
+    #if defined(__amigaos4__)
+    DisposeObject(data->SelectPointerObj);
+    #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->SelectPointerObj);
     else
       FreeVec(data->SelectPointerObj);
+    #endif
 
     data->SelectPointerObj = NULL;
   }
@@ -740,10 +746,14 @@ void HideCustomPointer(Object *obj, struct NLData *data)
 
   if(data->activeCustomPointer != PT_NONE)
   {
+    #if defined(__amigaos4__)
+    SetWindowPointer(_window(obj), TAG_DONE);
+    #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       SetWindowPointer(_window(obj), TAG_DONE);
     else
       ClearPointer(_window(obj));
+    #endif
 
     data->activeCustomPointer = PT_NONE;
   }

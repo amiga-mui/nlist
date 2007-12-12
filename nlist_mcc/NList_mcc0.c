@@ -104,6 +104,9 @@ static ULONG mNL_Hide(struct IClass *cl,Object *obj,Msg msg)
 
   data->badrport = FALSE;
 
+  // remove any custom pointer
+  HideCustomPointer(obj, data);
+
   retval = DoSuperMethodA(cl,obj,msg);
 
   data->rp = NULL;

@@ -1495,8 +1495,6 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   return(TRUE);
 }
 
-
-
 ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
@@ -1510,7 +1508,7 @@ ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
   data->DRAW = 0;
 
   // cleanup our custom mouse pointers
-  CleanupCustomPointers(obj, data);
+  CleanupCustomPointers(data);
 
   DoMethod(_app(obj),MUIM_Application_RemInputHandler,&data->ihnode);
 
