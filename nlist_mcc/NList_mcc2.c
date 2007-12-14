@@ -1531,18 +1531,20 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
           }
           else
           {
+            BOOL onWindow = NL_OnWindow(obj, data, msg->imsg->MouseX, msg->imsg->MouseY);
+
             if (((data->adjustbar >= 0) ||
                  ((!data->moves) && (data->adjustbar >= -1) &&
                   (res.flags & MUI_NLPR_BAR) && (res.flags & MUI_NLPR_ONTOP) &&
                   (res.column < data->numcols) && (res.column >= 0))) &&
-                (NL_OnWindow(obj,data,msg->imsg->MouseX,msg->imsg->MouseY)))
+                (onWindow == TRUE))
             {
               // set a custom mouse pointer
               ShowCustomPointer(obj, data, PT_SIZE);
             }
             else if(data->NList_SelectPointer == TRUE &&
                     (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char) &&
-                    _isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
+                    (onWindow == TRUE))
             {
               // in case the NList object is in charwise selection mode and the mouse
               // is above the object itself we show a specialized selection pointer

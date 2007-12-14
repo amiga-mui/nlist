@@ -33,6 +33,7 @@
 #include <proto/muimaster.h>
 #include <proto/intuition.h>
 #include <proto/exec.h>
+#include <proto/layers.h>
 
 #include "private.h"
 
@@ -50,10 +51,29 @@ LONG ObtainBestPen( struct ColorMap *cm, ULONG r, ULONG g, ULONG b, ULONG tag1Ty
 /****************************************************************************************/
 /****************************************************************************************/
 
-LONG NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y)
+BOOL NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y)
 {
-  if (data->SHOW && muiRenderInfo(obj) && _screen(obj) && _window(obj) && _window(obj)->WLayer)
-  { struct Window *win;
+  BOOL onWindow = FALSE;
+
+  if (data->SHOW && muiRenderInfo(obj) && _screen(obj) != NULL && _window(obj) != NULL)
+  {
+    // first check whether the mouse is over the object itself
+    if(x >= _mleft(obj) && x <= _mright(obj) && y >= _mtop(obj) && y <= _mbottom(obj))
+    {
+      // now check if the mouse is currently over the object and over the object's window
+      struct Layer_Info *li = &(_screen(obj)->LayerInfo);
+      struct Layer *layer;
+
+      // get the layer that belongs to the current mouse coordinates
+      LockLayerInfo(li);
+      layer = WhichLayer(li, _window(obj)->LeftEdge + x, _window(obj)->TopEdge + y);
+      UnlockLayerInfo(li);
+
+      if(layer != NULL && layer->Window == _window(obj))
+        onWindow = TRUE;
+    }
+/*
+    struct Window *win;
     struct Layer *wlay,*lay;
     ULONG lkib = LockIBase( 0 );
     x += _window(obj)->LeftEdge;
@@ -72,8 +92,9 @@ LONG NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y)
       }
     }
     UnlockIBase( lkib );
+*/
   }
-  return (TRUE);
+  return onWindow;
 }
 
 

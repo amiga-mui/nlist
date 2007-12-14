@@ -202,7 +202,7 @@ extern ULONG mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *
 extern void  NL_SpecPointerColors(LONG blacknum);
 extern void  NL_SetPointer(Object *obj,struct NLData *data,LONG type);
 extern void  NL_ClearPointer(Object *obj,struct NLData *data);
-extern LONG  NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y);
+extern BOOL NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y);
 extern struct NImgList *GetNImage(Object *obj,struct NLData *data,char *ImgName);
 extern void DeleteNImages(Object *obj,struct NLData *data);
 extern struct NImgList *GetNImage2(Object *obj,struct NLData *data,APTR imgobj);
