@@ -290,7 +290,7 @@ locale.c: $(LOCALE)/NListtree_mcp.cd C_h.sd C_c.sd
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 	@printf '\033[33mGenerating $@\033[0m\n'
-	@$(FC) $(LOCALE)/NListtree.mcp.cd $< CATALOG $@
+	@$(FC) $(LOCALE)/NListtree_mcp.cd $< CATALOG $@
 
 .IGNORE: $(CATALOGS)
 
