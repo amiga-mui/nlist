@@ -235,6 +235,8 @@ CATALOGS = \
   $(LOCALE)/deutsch.catalog \
   $(LOCALE)/russian.catalog \
   $(LOCALE)/svenska.catalog \
+  $(LOCALE)/english-british.catalog \
+  $(LOCALE)/czech.catalog
 
 #
 
