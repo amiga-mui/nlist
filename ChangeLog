@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.101 RELEASE ###########################################################
+
+2007-12-19  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: last final release preparations.
+
 2007-12-18  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlistviews_mcp, nlisttree_mcp: added czech catalog generation to build

@@ -1,10 +1,11 @@
-Short:    NList custom classes for MUI, V0.XXX
-Author:   NList Open Source Team
-Uploader: Jens Langner <Jens.Langner@light-speed.de>
-Type:     dev/mui
-Version:  0.XXX
-Replaces: dev/mui/MCC_NList-0.100.lha
-Requires: AmigaOS V37+ or MorphOS, MUI 3.8+, HotkeyString.mcc
+Short:        NList custom classes for MUI, V0.101
+Author:       NList Open Source Team
+Uploader:     Jens Langner <Jens.Langner@light-speed.de>
+Type:         dev/mui
+Version:      0.101
+Replaces:     dev/mui/MCC_NList-0.100.lha
+Requires:     AmigaOS V37+ or MorphOS, MUI 3.8+, HotkeyString.mcc
+Architecture: ppc-amigaos >= 4.0.0; m68k-amigaos >= 3.0; ppc-morphos >= 1.4.2
 
 ABOUT NList
 ***********
@@ -26,13 +27,13 @@ enabling copy to clipboard and key moving.
 
 This package includes:
 
-NList.mcc         20.119    13.10.2007
-NListview.mcc     19.74     13.10.2007
-NFloattext.mcc    19.55     13.10.2007
-NListviews.mcp    19.70     13.10.2007
-NListtree.mcc     18.26     13.10.2007
-NListtree.mcp     18.14     13.10.2007
-NBitmap.mcc       15.3      13.10.2007 (currently only for OS4)
+NList.mcc         20.120    19.12.2007
+NListview.mcc     19.75     19.12.2007
+NFloattext.mcc    19.56     19.12.2007
+NListviews.mcp    19.71     19.12.2007
+NListtree.mcc     18.27     19.12.2007
+NListtree.mcp     18.15     19.12.2007
+NBitmap.mcc       15.4      19.12.2007
 
 
 INSTALLATION
@@ -79,9 +80,13 @@ about the licensing of the classes and their source code.
 CHANGES SINCE THE LAST RELEASE
 ******************************
 
-(fill this in before the next public version is released)
-
-
 Please refer to the included ChangeLog in the archive for more detailed
 information on the changes since the last public release.
 
+         __
+        / /
+   __  / /   Only Amiga makes it possible...
+   \ \/ /
+    \__/
+
+Amiga is a trademark of Amiga, Inc.
