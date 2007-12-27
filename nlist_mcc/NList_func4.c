@@ -25,6 +25,7 @@
 
 #include <string.h>
 
+#include <exec/execbase.h>
 #include <exec/memory.h>
 #include <intuition/pointerclass.h>
 #include <datatypes/pictureclass.h>
@@ -54,6 +55,12 @@ LONG ObtainBestPen( struct ColorMap *cm, ULONG r, ULONG g, ULONG b, ULONG tag1Ty
 BOOL NL_OnWindow(Object *obj,struct NLData *data,LONG x,LONG y)
 {
   BOOL onWindow = FALSE;
+
+  #if defined(__MORPHOS__)
+  /* No need for hit test in MorphOS 2.0 */
+  if (SysBase->LibNode.lib_Version >= 51)
+    return TRUE;
+  #endif
 
   if (data->SHOW && muiRenderInfo(obj) && _screen(obj) != NULL && _window(obj) != NULL)
   {
