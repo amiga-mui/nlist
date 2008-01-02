@@ -1,229 +1,245 @@
-## version $VER: NListtree_mcp.catalog 2.1 (29.11.2007)
+## version $VER: NListtree_mcp.catalog 2.2 (2.1.2008)
 ## language czech
-## codeset 0
+## codeset 5
 ;
 ;
 ; NListtree_mcp.cd - NListtree MUI custom prefs catalog description file
-; $Id: nlisttree_mcp_czech.ct 5549 2007-11-29 13:46:50Z sindlarv $
+; $Id: NListtree_mcp.cd 264 2007-12-07 01:04:15Z tactica $
 ;
 ;#version 2
 ;#language english
 ;
 ;
-MSG_STYLE_NORMAL
-Základní
-; Normal
-;
-MSG_STYLE_INSERTED
-Odsazené polo¾ky
-; Inserted
-;
-MSG_STYLE_LINES
-Linky
-; Lines
-;
-MSG_STYLE_WIN98
-Windows 98
-; Win98
-;
-MSG_STYLE_MAC
-Mac Classic
-; Mac
-;
-MSG_STYLE_LINES3D
-Linky plastické
-; Lines 3D
-;
-MSG_STYLE_WIN98PLUS
-Windows 98 +
-; Win98+
-;
-MSG_STYLE_GLOW
-Glow
-; Glow
-;
-MSG_GROUP_LAYOUT
+MSG_TAB_LAYOUT
 Rozvr¾ení
 ; Layout
 ;
-MSG_GROUP_EXAMPLE
-Ukázka vzhledu
-; Example
+MSG_GROUP_IMAGES_COLORS
+Obrázky a barvy
+; Images/Colors
 ;
-MSG_CLOSED
+MSG_BUTTON_LABEL_CLOSED
 Sbalená vìtev
 ; Closed
 ;
-MSG_CLOSED_KEY
+MSG_BUTTON_SHORTCUT_CLOSED
 b
 ; c
 ;
+MSG_HELP_CLOSED_IMAGE
+Obrázek pro sbalenou èást seznamu.
+; Image to use for closed nodes.
+;
 MSG_WIN_TITLE_CLOSED_IMAGE
 Vyberte obrázek pro sbalenou vìtev
-; Adjust 'closed node' image
+; Adjust image for closed nodes
 ;
-MSG_SHORTHELP_CLOSED_IMAGE
-Obrázek pro sbalenou èást seznamu.
-; Image for a closed node.
+MSG_BUTTON_LABEL_LINES
+Barva linek
+; Lines
 ;
-MSG_OPEN
+MSG_BUTTON_SHORTCUT_LINES
+l
+; l
+;
+MSG_HELP_LINES_COLOR
+Definuje barvu jednotlivých linek.
+; Color to use for lines.
+;
+MSG_WIN_TITLE_LINES_COLOR
+Vyberte barvu linek
+; Adjust lines color
+;
+MSG_BUTTON_LABEL_OPEN
 Rozbalená vìtev
 ; Open
 ;
-MSG_OPEN_KEY
+MSG_BUTTON_SHORTCUT_OPEN
 o
 ; o
 ;
+MSG_HELP_OPEN_IMAGE
+Obrázek pro rozbalenou èást seznamu.
+; Image to use for open nodes.
+;
 MSG_WIN_TITLE_OPEN_IMAGE
 Vyberte obrázek pro rozbalenou vìtev
-; Adjust 'opened node' image
+; Adjust image for open nodes
 ;
-MSG_SHORTHELP_OPEN_IMAGE
-Obrázek pro rozbalenou èást seznamu.
-; Image for an opened node.
+MSG_BUTTON_LABEL_SHADOW
+Barva stínu
+; Shadow
 ;
-MSG_SPECIAL
+MSG_BUTTON_SHORTCUT_SHADOW
+s
+; w
+;
+MSG_HELP_SHADOW_COLOR
+Definuje barvu stínu linek.
+; Color to use to cast\n\
+; shadows after lines.
+;
+MSG_WIN_TITLE_SHADOW_COLOR
+Vyberte barvu stínu linek
+; Adjust shadow color
+;
+MSG_BUTTON_LABEL_SPECIAL
 Speciální obrázek
 ; Special
 ;
-MSG_SPECIAL_KEY
+MSG_BUTTON_SHORTCUT_SPECIAL
 p
-; a
+; i
 ;
-MSG_IMAGES_COLORS
-Obrázky a barvy
-; Images/Colors
+MSG_HELP_SPECIAL_IMAGE
+Symbol pro koncovou èást ka¾dé vìtve.
+; A special image to be\n\
+; displayed after every node.
 ;
 MSG_WIN_TITLE_SPECIAL_IMAGE
 Vyberte speciální obrázek
 ; Adjust special image
 ;
-MSG_SHORTHELP_SPECIAL_IMAGE
-Symbol pro koncovou èást ka¾dé vìtve.
-; Special image.
-;
-MSG_LINES
-Barva linek
-; Lines
-;
-MSG_LINES_KEY
-l
-; l
-;
-MSG_WIN_TITLE_LINEPEN
-Vyberte barvu linek
-; Adjust `Lines' pen
-;
-MSG_SHORTHELP_LINEPEN
-Definuje barvu jednotlivých linek.
-; Custom line color.
-;
-MSG_SHADOW
-Barva stínu
-; Shadow
-;
-MSG_SHADOW_KEY
-s
-; w
-;
-MSG_WIN_TITLE_SHADOWPEN
-Vyberte barvu stínu linek
-; Adjust `Shadow' pen
-;
-MSG_SHORTHELP_SHADOWPEN
-Definuje barvu stínu linek.
-; Custom shadow color.
-;
-MSG_DRAW
+MSG_BUTTON_LABEL_DRAW
 Doplòková barva
 ; Draw
 ;
-MSG_DRAW_KEY
+MSG_BUTTON_SHORTCUT_DRAW
 d
 ; d
 ;
-MSG_WIN_TITLE_DRAWPEN
-Vyberte doplòkovou barvu
-; Adjust `Draw' pen
-;
-MSG_SHORTHELP_DRAWPEN
+MSG_HELP_DRAW_COLOR
 Definuje doplòkovou barvu.
-; Custom draw color.
+; A draw color to be combined\n\
+; with the lines color.
+;
+MSG_WIN_TITLE_DRAW_COLOR
+Vyberte doplòkovou barvu
+; Adjust draw color
 ;
 MSG_GROUP_STYLE
 Styl
 ; Style
 ;
-MSG_STYLE
+MSG_CYCLE_LABEL_STYLE
 Styl
 ; Style
 ;
-MSG_STYLE_KEY
+MSG_CYCLE_SHORTCUT_STYLE
 y
-; y
+; s
 ;
-MSG_SHORTHELP_STYLE
+MSG_HELP_STYLE
 Globálnì definuje styl celého stromu.
-; Global style of the tree.
+; Select here the global style of the tree.\n\
+; \n\
+; Depending on your choice, some of the\n\
+; options above may become (un)available.
 ;
-MSG_SPACE
+MSG_CYCLE_ITEM_STYLE_NORMAL
+Základní
+; Normal
+;
+MSG_CYCLE_ITEM_STYLE_INSERTED
+Odsazené polo¾ky
+; Inserted
+;
+MSG_CYCLE_ITEM_STYLE_LINES
+Linky
+; Lines
+;
+MSG_CYCLE_ITEM_STYLE_WIN98
+Windows 98
+; Win98
+;
+MSG_CYCLE_ITEM_STYLE_MAC
+Mac Classic
+; Mac
+;
+MSG_CYCLE_ITEM_STYLE_LINES3D
+Linky plastické
+; Lines 3D
+;
+MSG_CYCLE_ITEM_STYLE_WIN98PLUS
+Windows 98+
+; Win98+
+;
+MSG_CYCLE_ITEM_STYLE_GLOW
+Glow
+; Glow
+;
+MSG_BUTTON_LABEL_SPACE
 Rozestup
-; Space
+; Spacing
 ;
-MSG_SPACE_KEY
+MSG_BUTTON_SHORTCUT_SPACE
 o
 ; p
 ;
-MSG_SHORTHELP_SPACE
-Poèet pixelù mezi polo¾kami (vodorovnì).
-; Number of space pixels.
+MSG_HELP_SPACE
+Poèet bodù mezi polo¾kami (vodorovnì).
+; The more spacing, the wider\n\
+; the listtree will be.
 ;
-MSG_REMEMBER_STATUS
+MSG_BUTTON_LABEL_REMEMBER
 Pamatovat stav
-; Remember
+; Remember status?
 ;
-MSG_REMEMBER_STATUS_KEY
+MSG_BUTTON_SHORTCUT_REMEMBER
 m
-; m
+; r
 ;
-MSG_SHORTHELP_REMEMBER_STATUS
+MSG_HELP_REMEMBER
 Ulo¾í naposledy platný stav.
-; Remember status of nodes\n\
-; after closing.
+; If enabled, the open/closed status of nodes\n\
+; will be 'remembered' after the listtree is closed\n\
+; the next time it is opened again.\n\
+; \n\
+; Please note, however, that an application\n\
+; can override your choice here.
 ;
-MSG_OPEN_AUTOSCROLL
+MSG_BUTTON_LABEL_AUTOSCROLL
 Vyplnit prostor
-; Open scroll
+; Autoscroll?
 ;
-MSG_OPEN_AUTOSCROLL_KEY
+MSG_BUTTON_SHORTCUT_AUTOSCROLL
 s
-; s
+; a
 ;
-MSG_SHORTHELP_OPEN_AUTOSCROLL
+MSG_HELP_AUTOSCROLL
 Automaticky posune a optimálnì vyplní prostor\n\
 pøi otevøení vìtve stromu.
-; Auto scroll listview when opening\n\
-; nodes to fit in visible area.
+; If enabled, the listview will auto-scroll its\n\
+; contents when opening nodes to try and fit the\n\
+; visible area.
 ;
-MSG_LV_SHORTHELP
-Tento objekt tøídy NListtree zobrazuje aktuální\n\
-zmìny v nastavení.
-; This NListtree object reacts on\n\
-; preferences changes on the right.
+MSG_TAB_EXAMPLE
+Ukázka vzhledu
+; Example
 ;
-MSG_BT_EXPAND
+MSG_HELP_LISTVIEW_EXAMPLE
+Tento prvek reaguje okam¾itì na zmìny provedené\n\
+na panelu 'Rozvr¾ení'.\n\
+\n\
+Vyzkou¹ejte! :)
+; This NListtree object reacts in real time to\n\
+; the changes you apply under the 'Layout' tab.\n\
+; \n\
+; Give it a try! :)
+;
+MSG_BUTTON_LABEL_EXPAND
 Rozbalit
 ; Expand
 ;
-MSG_BT_EXPAND_KEY
+MSG_BUTTON_SHORTCUT_EXPAND
 r
 ; n
 ;
-MSG_BT_COLLAPSE
+MSG_BUTTON_LABEL_COLLAPSE
 Sbalit
 ; Collapse
 ;
-MSG_BT_COLLAPSE_KEY
+MSG_BUTTON_SHORTCUT_COLLAPSE
 s
 ; e
 ;
