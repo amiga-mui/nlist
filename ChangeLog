@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-01-03  Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?_mcp/locale/#?.ct: changed all .ct file names to english names instead of
+    translated ones.
+
 2008-01-02 Vit Sindlar <sindlarv at centrum dot cz>
 
   * nlisttree_mcp/locale/czech.ct: Updated to match the latest .cd file.

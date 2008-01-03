@@ -232,9 +232,9 @@ TESTOBJS = $(OBJDIR)/NListtree-Test.o \
 
 # available catalog translations
 CATALOGS = \
-  $(LOCALE)/deutsch.catalog \
+  $(LOCALE)/german.catalog \
   $(LOCALE)/russian.catalog \
-  $(LOCALE)/svenska.catalog \
+  $(LOCALE)/swedish.catalog \
   $(LOCALE)/english-british.catalog \
   $(LOCALE)/czech.catalog
 
