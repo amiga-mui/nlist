@@ -103,6 +103,7 @@ struct InstData
   uint32 width, height, depth;
   uint32 maxwidth, maxheight;
   uint32 border_horiz, border_vert;
+  uint32 label_horiz, label_vert;
   uint32 arraybpp, arraybpr, arraysize;
   APTR arraypixels[3];
 
@@ -113,6 +114,7 @@ struct InstData
   struct PrefsData prefs;
   struct BitMap *dt_bitmap[3];
   struct BitMapHeader *dt_header[3];
+  struct TextExtent labelte;
 
   struct MUI_EventHandlerNode ehnode;
 };

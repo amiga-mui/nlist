@@ -21,10 +21,10 @@
 ***************************************************************************/
 
 #define LIB_VERSION    15
-#define LIB_REVISION   4
+#define LIB_REVISION   5
 
-#define LIB_REV_STRING "15.4"
-#define LIB_DATE       "19.12.2007"
+#define LIB_REV_STRING "15.5"
+#define LIB_DATE       "27.01.2008"
 
 #if defined(__PPC__)
   #if defined(__MORPHOS__)
@@ -44,5 +44,5 @@
   #define CPU ""
 #endif
 
-#define LIB_COPYRIGHT  "Copyright (c) 2007 NList Open Source Team"
+#define LIB_COPYRIGHT  "Copyright (c) 2007-2008 NList Open Source Team"
 

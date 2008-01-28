@@ -86,7 +86,8 @@ ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
 
       if((obj = (Object *)DoSuperNew(cl, obj,
         MUIA_CycleChain, TRUE,
-        MUIA_FillArea, FALSE,
+		  //MUIA_FillArea, FALSE,
+		  MUIA_Font, MUIV_Font_Tiny,
       TAG_MORE, msg->ops_AttrList))!=NULL)
         {
           if((data = INST_DATA(cl, obj))!=NULL)
@@ -325,7 +326,7 @@ ULONG NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEven
               if(data->overlay && data->pressed)
               {
                 data->pressed = FALSE;
-                //data->overlay = FALSE;
+					 data->overlay = FALSE;
 
                 MUI_Redraw(obj, MADF_DRAWUPDATE);
                 SetAttrs(obj, MUIA_Pressed, FALSE, TAG_DONE);
@@ -353,7 +354,7 @@ ULONG NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEven
               MUI_Redraw(obj, MADF_DRAWUPDATE);
             }
 
-            result = MUI_EventHandlerRC_Eat;
+				//result = MUI_EventHandlerRC_Eat;
           }
           else
           {
@@ -370,7 +371,7 @@ ULONG NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEven
   }
 
   if (!result)
-    result = DoSuperMethodA(cl, obj, (Msg)msg);
+	 result = DoSuperMethodA(cl, obj, (Msg)msg);
 
   RETURN(result);
   return result;
@@ -400,14 +401,33 @@ ULONG NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *m
       data->border_vert += data->prefs.spacing_vert * 2;
     }
 
-    // standard width & height
-    msg->MinMaxInfo->MinWidth = data->width + data->border_horiz;
-    msg->MinMaxInfo->DefWidth = data->width + data->border_horiz;
-    msg->MinMaxInfo->MaxWidth = data->width + data->border_horiz;
+    /* label */
+	 data->label_horiz = 0;
+	 data->label_vert = 0;
 
-    msg->MinMaxInfo->MinHeight = data->height + data->border_vert;
-    msg->MinMaxInfo->DefHeight = data->height + data->border_vert;
-    msg->MinMaxInfo->MaxHeight = data->height + data->border_vert;
+	 if(data->label != NULL && data->button != FALSE)
+	 {
+	   struct RastPort rp;
+
+		memcpy(&rp, &_screen(obj)->RastPort, sizeof(rp));
+
+		SetFont(&rp, _font(obj));
+		TextExtent(&rp, (STRPTR)data->label, strlen(data->label), &data->labelte);
+
+		if(data->width < (uint32)data->labelte.te_Width) data->border_horiz += (data->labelte.te_Width - data->width);
+		data->label_vert = data->labelte.te_Height;
+		data->border_vert += data->labelte.te_Height;
+		data->border_vert += 2;
+	 }
+
+    // standard width & height
+	 msg->MinMaxInfo->MinWidth = data->width + data->border_horiz;
+	 msg->MinMaxInfo->DefWidth = data->width + data->border_horiz;
+	 msg->MinMaxInfo->MaxWidth = data->width + data->border_horiz;
+
+	 msg->MinMaxInfo->MinHeight = data->height + data->border_vert;
+	 msg->MinMaxInfo->DefHeight = data->height + data->border_vert;
+	 msg->MinMaxInfo->MaxHeight = data->height + data->border_vert;
   }
 
   RETURN(0);

@@ -90,9 +90,9 @@ VOID InitConfig(Object *obj, struct InstData *data)
   {
     data->prefs.show_label = 0;
     data->prefs.overlay_type = 0;
-    data->prefs.overlay_r = 10;
-    data->prefs.overlay_g = 36;
-    data->prefs.overlay_b = 106;
+	 data->prefs.overlay_r = 10;
+	 data->prefs.overlay_g = 36;
+	 data->prefs.overlay_b = 106;
     data->prefs.overlay_shadeover = 1.5;
     data->prefs.overlay_shadepress = 2.5;
     data->prefs.spacing_horiz = 2;
@@ -206,15 +206,19 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
     ULONG arraysize;
 
     struct pdtBlitPixelArray pbpa;
+	 //struct FrameInfo fri;
     struct InstData *data = INST_DATA(cl, obj);
 
     if(dt_obj != NULL)
     {
       /* bitmap header */
-      GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
-      D(DBF_DATATYPE, "examine: BMHD dimensions %ldx%ldx%ld", data->dt_header[item]->bmh_Width, data->dt_header[item]->bmh_Height, data->dt_header[item]->bmh_Depth);
+		GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
+		D(DBF_DATATYPE, "examine: BMHD dimensions %ldx%ldx%ld", data->dt_header[item]->bmh_Width, data->dt_header[item]->bmh_Height, data->dt_header[item]->bmh_Depth);
+		data->depth = data->dt_header[item]->bmh_Depth;
 
-      data->depth = data->dt_header[item]->bmh_Depth;
+		//memset(&fri, 0, sizeof(struct FrameInfo));
+		//DoMethod(dt_obj, DTM_FRAMEBOX, NULL, &fri, &fri, sizeof(struct FrameInfo), 0);
+		//data->depth = fri.fri_Dimensions.Depth;
 
       if(data->depth>0 && data->depth<=8)
       {
@@ -307,6 +311,25 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
 
   ENTER();
 
+  if(((data = INST_DATA(cl, obj))!=NULL) && (data->dt_obj[0]))
+  {
+	 ULONG i;
+
+    for(i=0;i<3;i++)
+	 {
+		if(data->dt_obj[i] != NULL) result = NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
+    }
+  }
+
+  RETURN(result);
+  return result;
+}
+
+BOOL NBitmap_OldNewImage(struct IClass *cl, Object *obj)
+{
+  BOOL result = FALSE;
+  struct InstData *data;
+  
   /* need at least the normal image */
   if((data = INST_DATA(cl, obj)) !=NULL && data->dt_obj[0] != NULL)
   {
@@ -541,23 +564,40 @@ VOID NBitmap_DrawSimpleFrame(Object *obj, uint32 x, uint32 y, uint32 w, uint32 h
 BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
 {
   struct InstData *data;
+  struct MUI_AreaData *areadata = NULL;
 
   ENTER();
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
     LONG item;
-    ULONG twidth, theight;
+	 ULONG x, y, twidth, theight;
+
+    areadata = muiAreaData(obj);
 
     /* coordinates */
     item = 0;
-
-    twidth = (data->width + data->border_horiz) - 2;      /* subtract standard 1 pixel border */
+	 x = areadata->mad_Box.Left;
+	 y = areadata->mad_Box.Top;
+	 twidth = (data->width + data->border_horiz) - 2;      /* subtract standard 1 pixel border */
     theight = (data->height + data->border_vert) - 2;
 
-    /* clear */
-    if(data->button)
-      DoMethod(obj, MUIM_DrawBackground, _left(obj), _top(obj), _width(obj), _height(obj), 0, 0);
+	 /* clear */
+	 if(data->button) DoMethod(obj, MUIM_DrawBackground, areadata->mad_Box.Left, areadata->mad_Box.Top, areadata->mad_Box.Width, areadata->mad_Box.Height, 0, 0);
+
+	 /* label */
+	 if(data->label != NULL && data->button != FALSE)
+	 {
+	   uint32 labelx;
+
+	   SetFont(_rp(obj), _font(obj));
+	   SetAPen(_rp(obj), 1);
+
+	   labelx = (twidth/2) - (data->labelte.te_Width/2);
+
+	   Move(_rp(obj), x + labelx, _bottom(obj) - 3);
+	   Text(_rp(obj), data->label, strlen(data->label));
+	 }
 
     /* draw image */
     if(data->fmt == PBPAFMT_LUT8)
@@ -567,7 +607,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
       #endif
 
       /* select bitmap */
-      if(data->button && data->pressed && data->overlay && data->dt_bitmap[2] != NULL)
+		if(data->button && data->pressed && data->overlay && data->dt_bitmap[2])
         item = 2;
 
       SHOWVALUE(DBF_DRAW, item);
@@ -576,11 +616,11 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
       #if defined(__amigaos4__)
       error = BltBitMapTags(BLITA_Source, data->dt_bitmap[item],
-                            BLITA_Dest, _rp(obj),
+									 BLITA_Dest, _rp(obj),
                             BLITA_SrcX, 0,
                             BLITA_SrcY, 0,
-                            BLITA_DestX, _left(obj) + (data->border_horiz / 2),
-                            BLITA_DestY, _top(obj) + (data->border_vert / 2),
+									 BLITA_DestX, x + (data->border_horiz / 2),
+									 BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
                             BLITA_Width, data->width,
                             BLITA_Height, data->height,
                             BLITA_SrcType, BLITT_BITMAP,
@@ -615,7 +655,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
     else
     {
       /* select bitmap */
-      if(data->button && data->pressed && data->overlay && data->arraypixels[2] != NULL)
+		if(data->button && data->pressed && data->overlay && data->arraypixels[2])
         item = 2;
 
       SHOWVALUE(DBF_DRAW, item);
@@ -632,12 +672,13 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
         else
          srctype = BLITT_ARGB32;
 
+		  /* graphic */
         error = BltBitMapTags(BLITA_Source, data->arraypixels[item],
-                              BLITA_Dest, _rp(obj),
+										BLITA_Dest, _rp(obj),
                               BLITA_SrcX, 0,
                               BLITA_SrcY, 0,
-                              BLITA_DestX, _left(obj) + (data->border_horiz / 2),
-                              BLITA_DestY, _top(obj) + (data->border_vert / 2),
+										BLITA_DestX, x + (data->border_horiz / 2),
+										BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
                               BLITA_Width, data->width,
                               BLITA_Height, data->height,
                               BLITA_SrcType, srctype,
@@ -651,7 +692,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
         #elif defined (__MORPHOS__)
         if(data->depth == 24)
         {
-          WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
+			 WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
         }
         else
         {
@@ -699,7 +740,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
           UBYTE *p = array;
           ULONG pxl;
 
-          ReadPixelArray(array, 0, 0, twidth * 3, _rp(obj), _left(obj), _top(obj), twidth, theight, RECTFMT_RGB);
+			 ReadPixelArray(array, 0, 0, twidth * 3, _rp(obj), x+1, y+1, twidth, theight, RECTFMT_RGB);
 
           for(h = 0; h < theight; h++)
           {
@@ -717,8 +758,9 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
           }
 
           pxl = ((uint32)r << 16) | ((uint32)g << 8) | (uint32)b;
-          //FillPixelArray(_rp(obj), _left(obj), _top(obj), twidth, theight, pxl);
-          WritePixelArray(array, 0, 0, twidth * 3, _rp(obj), _left(obj), _top(obj), twidth, theight, RECTFMT_RGB);
+
+			 FillPixelArray(_rp(obj), x, y, twidth+2, theight+2, pxl);
+			 WritePixelArray(array, 0, 0, twidth * 3, _rp(obj), x+1, y+1, twidth, theight, RECTFMT_RGB);
 
           FreeVec(array);
         }
