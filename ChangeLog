@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-02-02  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mccinit.c: updated to latest version available which fixes some
+    MorphOS specific compiler warnings.
+
 2008-01-03  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?_mcp/locale/#?.ct: changed all .ct file names to english names instead of
