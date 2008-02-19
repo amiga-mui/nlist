@@ -63,6 +63,10 @@
 #include "rev.h"
 #include "Debug.h"
 
+#if defined(__M68K__)
+#include "WritePixelArrayAlpha.c"
+#endif
+
 // functions
 /// GetConfigItem()
 //
@@ -234,6 +238,16 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
       }
       else if(data->depth >=24)
       {
+        #if defined(__MORPHOS__)
+        /* XXX: Check out is this needed in OS 3 */
+        IPTR use_alpha;
+
+        GetDTAttrs(dt_obj, PDTA_AlphaChannel, (IPTR)&use_alpha, TAG_DONE);
+
+        if (use_alpha)
+          data->depth = 32;
+        #endif
+
         /* true colour bitmap */
         if(data->depth == 24)
         {
@@ -689,7 +703,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
         SHOWVALUE(DBF_DRAW, error);
 
-        #elif defined (__MORPHOS__)
+        #else
         if(data->depth == 24)
         {
 			 WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
@@ -698,8 +712,6 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
         {
           WritePixelArrayAlpha(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
         }
-        #else
-        WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, data->depth == 24 ? RECTFMT_RGB : RECTFMT_ARGB);
         #endif
       }
     }

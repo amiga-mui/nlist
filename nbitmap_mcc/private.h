@@ -165,4 +165,13 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj);
 #endif
 #endif
 
+#if defined(__M68K__)
+VOID WritePixelArrayAlpha(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha);
+#endif
+
+#ifndef PDTA_AlphaChannel
+/* Seems this V43 extension is not in the Amiga SDK */
+#define PDTA_AlphaChannel     (DTA_Dummy + 256)
+#endif
+
 #endif /* NBITMAP_MCC_PRIV_H */

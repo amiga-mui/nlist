@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-02-19  Ilkka Lehtoranta <ilkleht@isoveli.org>
+
+  * nbitmap_mcc/WritePixelArrayAlpha.c: implemented WritePixelArrayAlpha() for
+    M68k builds. Not very efficient but does its job.
+
 2008-02-19  Thore Böckelmann <tboeckel@gmx.de>
 
   * Debug.h: replaced all abort() usages in our ASSERT() macros with the
