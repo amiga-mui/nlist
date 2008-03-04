@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-03-04  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: replaced the shading factors by integers to avoid
+    floating point math.
+
 2008-02-19  Ilkka Lehtoranta <ilkleht@isoveli.org>
 
   * nbitmap_mcc/WritePixelArrayAlpha.c: implemented WritePixelArrayAlpha() for

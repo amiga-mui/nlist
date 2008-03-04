@@ -83,8 +83,8 @@ struct PrefsData
   uint8 overlay_r;
   uint8 overlay_g;
   uint8 overlay_b;
-  double overlay_shadeover;
-  double overlay_shadepress;
+  uint16 overlay_shadeover;
+  uint16 overlay_shadepress;
   uint8 spacing_horiz;
   uint8 spacing_vert;
 };
