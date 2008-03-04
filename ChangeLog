@@ -7,6 +7,8 @@ $URL$
 
 2008-03-04  Thore Böckelmann <tboeckel@gmx.de>
 
+  * #?/Makefile: removed -lm from the linker libs as nothing needs floating
+    point math. Also added dump as target.
   * nbitmap_mcc/NBitmap.c: replaced the shading factors by integers to avoid
     floating point math.
 

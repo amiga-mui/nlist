@@ -140,7 +140,7 @@ DEBUGSYM = -gstabs
 CFLAGS   = -I. -I../nlisttree_mcp -I../include $(CPU) $(WARN) \
            $(OPTFLAGS) $(DEBUG) $(DEBUGSYM) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM)
-LDLIBS   = -lm
+LDLIBS   =
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -155,7 +155,7 @@ ifeq ($(OS), os4)
 
   # Compiler/Linker flags
   CRT      = newlib
-  CPU      = -mcpu=powerpc 
+  CPU      = -mcpu=powerpc
   CFLAGS   += -mcrt=$(CRT) -D__USE_INLINE__ -D__NEW_TIMEVAL_DEFINITION_USED__ \
               -DNO_PPCINLINE_STDARG -Wa,-mregnames
   LDFLAGS  += -mcrt=$(CRT)
@@ -297,6 +297,10 @@ $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 catalogs: $(CATALOGS)
 
 #
+
+.PHONY: dump
+dump:
+	-$(OBJDUMP) --section-headers --all-headers --reloc --disassemble-all $(MCPTARGET) > $(MCPTARGET).dump
 
 .PHONY: clean
 clean:
