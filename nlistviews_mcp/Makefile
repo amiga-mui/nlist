@@ -225,11 +225,13 @@ endif
 MCCOBJS = $(OBJDIR)/library.o \
           $(OBJDIR)/locale.o \
           $(OBJDIR)/NListviews.o \
+          $(OBJDIR)/vastubs.o \
           $(OBJDIR)/Debug.o
 
 TESTOBJS = $(OBJDIR)/NListviews-Prefs.o \
            $(OBJDIR)/locale.o \
            $(OBJDIR)/NListviews.o \
+           $(OBJDIR)/vastubs.o \
            $(OBJDIR)/Debug.o
 
 # available catalog translations

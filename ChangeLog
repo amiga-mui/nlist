@@ -7,6 +7,8 @@ $URL$
 
 2008-03-07  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlistviews_mcp/Makefile, nlistviews/vastubs.c: added vararg stubs for
+    certain functions to be able to links against clib2.
   * nlistviews_mcp/NListviews.c: the example text is localizable now. This
     fulfills feature request #1851580.
 
