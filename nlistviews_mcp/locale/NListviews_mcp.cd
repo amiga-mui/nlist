@@ -503,3 +503,54 @@ Key
 MSG_HOTKEYS_ACTION (140//)
 Action
 ;
+MSG_EXAMPLE_TEXT (141//)
+If you have problems, try to increase the stack value,\n\
+in the icon infos if you launch the program from icon,\n\
+stack of CLI if you start it from CLI/Shell,\n\
+and if you launch it from some utility read its docs\n\
+to see how to increase it.\n\
+A stack of 12Kb, 16Kb or 20Kb is most of time a good idea.\n\
+\n\
+If you still have problems, try to see if they happen with the Demo prog, then tell me.\n\
+\033C\n\
+Latest public release can be found on aminet (dev/mui).\n\
+All releases are available on\n\
+http://www.sourceforge.net/projects/nlist-classes/\n\
+\033C\n\
+\033r\0333(C) 2001-2007 by NList Open Source Team\n\
+\033r\0333(C) 1996-1998 by Gilles Masson\n\
+\033r\0333http://www.sourceforge.net/projects/nlist-classes/\n\
+\033C\n\
+\033cThis new list/listview custom class\n\
+\033chandles its own configurable backgrounds,\n\
+\033cpens, fonts, scrollbars, keys and qualifiers\n\
+\033C\n\
+\033cThe way used to handle cursor with multiselection\n\
+\033cis not exactly as the listview one !\n\
+\033cDrag&Drop is supported, both scrollbars\n\
+\033ccan be configured to disappear automatically\n\
+\033cwhen not needed because all is visible.\n\
+\033cJust try it...\n\
+\033C\n\
+\033cYou can horizontaly scroll with cursor keys,\n\
+\033cor going on the right and left of the list\n\
+\033cwhile selecting with the mouse.\n\
+\033cTry just clicking on the left/right borders !\n\
+\033C\n\
+\033cYou can change columns widths just dragging\n\
+\033cthe vertical separator between columns titles\n\
+\033c(try it using the balancing qualifier too).\n\
+\033C\n\
+\033cYou can change columns order just dragging\n\
+\033cthe column titles.\n\
+\033C\n\
+\033cThere is builtin copy to clipboard stuff\n\
+\033cand classic char selection capability.\n\
+\033C\n\
+\033cTry the Demo program to test all that...\n\
+\n\
+\n\
+\033r\033bGive some feedback about it ! :-)\n\
+\033C\n\
+**************************************************************************************************\n
+;

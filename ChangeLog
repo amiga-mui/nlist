@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-03-07  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistviews_mcp/NListviews.c: the example text is localizable now. This
+    fulfills feature request #1851580.
+
 2008-03-04  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?/Makefile: removed -lm from the linker libs as nothing needs floating

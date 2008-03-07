@@ -24,6 +24,7 @@
 ***************************************************************************/
 
 #include <string.h>
+#include <stdlib.h>
 
 #include <devices/inputevent.h>
 #include <libraries/asl.h>
@@ -223,6 +224,7 @@ static struct KeyBinding empty_key = { 0, (UWORD)-1, 0 };
 
 /* *********************************************************************** */
 
+/*
 static const char *MainTextArray[] =
 {
   "If you have problems, try to increase the stack value,",
@@ -276,6 +278,7 @@ static const char *MainTextArray[] =
   "**************************************************************************************************",
   NULL
 };
+*/
 
 // static arrays which we fill up later on
 static const char *Pages[6];
@@ -662,6 +665,7 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   struct NListviews_MCP_Data *data;
   APTR group1, group2, group3, group4, group5;
+  char *exampleText;
 
   static const char infotext[] = "\033bNListviews.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
                                  "Copyright (c) 1996-2001 Gilles Masson\n"
@@ -731,11 +735,45 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
                           MUIA_Disabled,TRUE,
                         End;
 
-  if(!data->mcp_stringkey)
+  if(data->mcp_stringkey == NULL)
   {
     data->mcp_stringkey = StringObject,
                             StringFrame, MUIA_CycleChain, 1,
                           End;
+  }
+
+  // create a duplicate of the translated text
+  if((exampleText = strdup(tr(MSG_EXAMPLE_TEXT))) != NULL)
+  {
+    char *p;
+    LONG numLines = 0;
+
+    // count the number of lines
+    p = exampleText;
+    while((p = strchr(p, '\n')) != NULL)
+    {
+      numLines++;
+      p++;
+    }
+
+    // finally split the text into separate lines
+    if((data->exampleText = calloc(numLines + 2, sizeof(char *))) != NULL)
+    {
+      LONG line;
+
+      p = exampleText;
+      for(line = 0; line < numLines; line++)
+      {
+        char *q;
+
+        q = strchr(p, '\n');
+        *q++ = '\0';
+        data->exampleText[line] = strdup(p);
+        p = q;
+      }
+    }
+
+    free(exampleText);
   }
 
   group1 = GroupObject,
@@ -750,7 +788,7 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
               MUIA_NListview_Vert_ScrollBar, MUIV_NListview_VSB_Default,
               MUIA_NListview_Horiz_ScrollBar, MUIV_NListview_HSB_Default,
               MUIA_NList_DefaultObjectOnClick, TRUE,
-              MUIA_NList_SourceArray, MainTextArray,
+              MUIA_NList_SourceArray, data->exampleText/*MainTextArray*/,
             End,
           End,
 
@@ -1508,6 +1546,24 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   return ((ULONG)obj);
 }
 
+static ULONG mNL_MCP_Dispose(struct IClass *cl, Object *obj, Msg msg)
+{
+  struct NListviews_MCP_Data *data = INST_DATA(cl, obj);
+
+  if(data->exampleText != NULL)
+  {
+  	LONG i = 0;
+
+  	while(data->exampleText[i] != NULL)
+    {
+      free(data->exampleText[i]);
+      i++;
+    }
+    free(data->exampleText);
+  }
+
+  return DoSuperMethodA(cl, obj, msg);
+}
 
 ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigToGadgets *msg)
 {
@@ -1895,6 +1951,7 @@ DISPATCHER(_DispatcherP)
   switch (msg->MethodID)
   {
     case OM_NEW:                             return(mNL_MCP_New(cl,obj,(APTR)msg));
+    case OM_DISPOSE:                         return(mNL_MCP_Dispose(cl,obj,(APTR)msg));
     case OM_GET:                             return(mNL_MCP_Get(cl,obj,(APTR)msg));
     case MUIM_Settingsgroup_ConfigToGadgets: return(mNL_MCP_ConfigToGadgets(cl,obj,(APTR)msg));
     case MUIM_Settingsgroup_GadgetsToConfig: return(mNL_MCP_GadgetsToConfig(cl,obj,(APTR)msg));
