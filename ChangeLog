@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-03-08  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistviews_mcp/private.h: added missing variable
+
 2008-03-07  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/Makefile, nlistviews/vastubs.c: added vararg stubs for

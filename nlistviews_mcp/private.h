@@ -113,6 +113,7 @@ struct NListviews_MCP_Data
   char QualifierString[192];
 
   char rawtext[MCPMAXRAWBUF];
+  char **exampleText;
 
   struct InputEvent ievent;
 
