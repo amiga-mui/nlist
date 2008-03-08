@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-03-08  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nbitmap_mcc/NBitmap.c: converted all TABs to spaces and cleanup the
+    sources a bit.
+
 2008-03-08  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/private.h: added missing variable
@@ -39,12 +44,17 @@ $URL$
   * mccinit.c: updated to latest version available which fixes some
     MorphOS specific compiler warnings.
 
+2008-01-28  Daniel Allsopp <daniel@the-snakepit.co.uk>
+
+  * nbitmap_mcc: Fixed various layout and redraw errors introduced with 15.4
+    and implemented button labels.
+
 2008-01-03  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?_mcp/locale/#?.ct: changed all .ct file names to english names instead of
     translated ones.
 
-2008-01-02 Vit Sindlar <sindlarv at centrum dot cz>
+2008-01-02  Vit Sindlar <sindlarv at centrum dot cz>
 
   * nlisttree_mcp/locale/czech.ct: Updated to match the latest .cd file.
 

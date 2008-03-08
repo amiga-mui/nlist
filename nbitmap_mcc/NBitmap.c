@@ -2,7 +2,7 @@
 
  NBitmap.mcc - New Bitmap MUI Custom Class
  Copyright (C) 2006 by Daniel Allsopp
- Copyright (C) 2007 by NList Open Source Team
+ Copyright (C) 2007-2008 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -210,19 +210,14 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
     ULONG arraysize;
 
     struct pdtBlitPixelArray pbpa;
-	 //struct FrameInfo fri;
     struct InstData *data = INST_DATA(cl, obj);
 
     if(dt_obj != NULL)
     {
       /* bitmap header */
-		GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
-		D(DBF_DATATYPE, "examine: BMHD dimensions %ldx%ldx%ld", data->dt_header[item]->bmh_Width, data->dt_header[item]->bmh_Height, data->dt_header[item]->bmh_Depth);
-		data->depth = data->dt_header[item]->bmh_Depth;
-
-		//memset(&fri, 0, sizeof(struct FrameInfo));
-		//DoMethod(dt_obj, DTM_FRAMEBOX, NULL, &fri, &fri, sizeof(struct FrameInfo), 0);
-		//data->depth = fri.fri_Dimensions.Depth;
+      GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
+      D(DBF_DATATYPE, "examine: BMHD dimensions %ldx%ldx%ld", data->dt_header[item]->bmh_Width, data->dt_header[item]->bmh_Height, data->dt_header[item]->bmh_Depth);
+      data->depth = data->dt_header[item]->bmh_Depth;
 
       if(data->depth>0 && data->depth<=8)
       {
@@ -327,11 +322,11 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
 
   if(((data = INST_DATA(cl, obj))!=NULL) && (data->dt_obj[0]))
   {
-	 ULONG i;
+   ULONG i;
 
     for(i=0;i<3;i++)
-	 {
-		if(data->dt_obj[i] != NULL) result = NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
+   {
+    if(data->dt_obj[i] != NULL) result = NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
     }
   }
 
@@ -596,22 +591,22 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
     twidth = (data->width + data->border_horiz) - 2;      /* subtract standard 1 pixel border */
     theight = (data->height + data->border_vert) - 2;
 
-	 /* clear */
-	 if(data->button) DoMethod(obj, MUIM_DrawBackground, areadata->mad_Box.Left, areadata->mad_Box.Top, areadata->mad_Box.Width, areadata->mad_Box.Height, 0, 0);
+   /* clear */
+   if(data->button) DoMethod(obj, MUIM_DrawBackground, areadata->mad_Box.Left, areadata->mad_Box.Top, areadata->mad_Box.Width, areadata->mad_Box.Height, 0, 0);
 
-	 /* label */
-	 if(data->label != NULL && data->button != FALSE)
-	 {
-	   uint32 labelx;
+   /* label */
+   if(data->label != NULL && data->button != FALSE)
+   {
+     uint32 labelx;
 
-	   SetFont(_rp(obj), _font(obj));
-	   SetAPen(_rp(obj), 1);
+     SetFont(_rp(obj), _font(obj));
+     SetAPen(_rp(obj), 1);
 
-	   labelx = (twidth/2) - (data->labelte.te_Width/2);
+     labelx = (twidth/2) - (data->labelte.te_Width/2);
 
-	   Move(_rp(obj), x + labelx, _bottom(obj) - 3);
-	   Text(_rp(obj), data->label, strlen(data->label));
-	 }
+     Move(_rp(obj), x + labelx, _bottom(obj) - 3);
+     Text(_rp(obj), data->label, strlen(data->label));
+   }
 
     /* draw image */
     if(data->fmt == PBPAFMT_LUT8)
@@ -669,7 +664,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
     else
     {
       /* select bitmap */
-		if(data->button && data->pressed && data->overlay && data->arraypixels[2])
+      if(data->button && data->pressed && data->overlay && data->arraypixels[2] != NULL)
         item = 2;
 
       SHOWVALUE(DBF_DRAW, item);
