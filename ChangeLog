@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-03-09  Pär Boberg <pbobbenb@spray.se>
+
+  * nlistviews_mcp/locale/swedish.ct: Updated according to changes.
+
 2008-03-08  Jens Langner <Jens.Langner@light-speed.de>
 
   * nbitmap_mcc/NBitmap.c: converted all TABs to spaces and cleanup the
