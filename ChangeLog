@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-03-17  Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/vastubs.c, #?/Makefile: added vararg stubs for OS3 to be able to link
+    against clib2 which misses these stubs. Also added Lib#?Pooled()
+    replacements which are missing in clib2 aswell.
+
 2008-03-09  Pär Boberg <pbobbenb@spray.se>
 
   * nlistviews_mcp/locale/swedish.ct: Updated according to changes.

@@ -222,12 +222,14 @@ endif
 MCCOBJS = $(OBJDIR)/library.o \
           $(OBJDIR)/dispatcher.o \
           $(OBJDIR)/NBitmap.o \
-          $(OBJDIR)/Debug.o
+          $(OBJDIR)/Debug.o \
+          $(OBJDIR)/vastubs.o
 
 TESTOBJS = $(OBJDIR)/NBitmap-Test.o \
            $(OBJDIR)/dispatcher.o \
            $(OBJDIR)/NBitmap.o \
-           $(OBJDIR)/Debug.o
+           $(OBJDIR)/Debug.o \
+          $(OBJDIR)/vastubs.o
 
 #
 

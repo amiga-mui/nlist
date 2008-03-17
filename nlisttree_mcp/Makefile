@@ -223,12 +223,14 @@ endif
 MCCOBJS = $(OBJDIR)/library.o \
           $(OBJDIR)/locale.o \
           $(OBJDIR)/NListtree.o \
-          $(OBJDIR)/Debug.o
+          $(OBJDIR)/Debug.o \
+          $(OBJDIR)/vastubs.o
 
 TESTOBJS = $(OBJDIR)/NListtree-Test.o \
            $(OBJDIR)/locale.o \
            $(OBJDIR)/NListtree.o \
-           $(OBJDIR)/Debug.o
+           $(OBJDIR)/Debug.o \
+          $(OBJDIR)/vastubs.o
 
 # available catalog translations
 CATALOGS = \

@@ -222,12 +222,14 @@ endif
 MCCOBJS = $(OBJDIR)/library.o \
           $(OBJDIR)/NListtree.o \
           $(OBJDIR)/QuickSort.o \
-          $(OBJDIR)/Debug.o
+          $(OBJDIR)/Debug.o \
+          $(OBJDIR)/vastubs.o
 
 TESTOBJS = $(OBJDIR)/NListtree-Test.o \
            $(OBJDIR)/NListtree.o \
            $(OBJDIR)/QuickSort.o \
-           $(OBJDIR)/Debug.o
+           $(OBJDIR)/Debug.o \
+           $(OBJDIR)/vastubs.o
 
 #
 

@@ -223,11 +223,13 @@ endif
 
 MCCOBJS = $(OBJDIR)/library.o \
           $(OBJDIR)/NListview.o \
-          $(OBJDIR)/Debug.o
+          $(OBJDIR)/Debug.o \
+          $(OBJDIR)/vastubs.o
 
 TESTOBJS = $(OBJDIR)/NListview-Test.o \
            $(OBJDIR)/NListview.o \
-           $(OBJDIR)/Debug.o
+           $(OBJDIR)/Debug.o \
+          $(OBJDIR)/vastubs.o
 
 #
 
