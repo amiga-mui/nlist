@@ -232,6 +232,13 @@ struct MUI_DragImage
 /* Attributes */
 
 #define MUIA_Group_Forward    0x80421422 /* V11 .s. BOOL */
+#define MUIA_Group_Type       0x8042e866 /* V11 ..g LONG */
+
+#define MUIV_Group_Type_Vert    0
+#define MUIV_Group_Type_Horiz   1
+#define MUIV_Group_Type_Columns 2
+#define MUIV_Group_Type_Rows    3
+#define MUIV_Group_Type_Page    4
 
 /****************************************************************************/
 /** List                                                                   **/

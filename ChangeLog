@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-06-12  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nbalance_mcc: added sources of new custom class which enhances the standard
+    mui MUIC_Balance custom class by adding a mouseover identification to show a
+    different mouse pointer to signal that the mouse is over a balance object.
+    In future we can even add new styles (look&feel) to this class to make it
+    look more unique and how a balance object should look today.
+
 2008-03-17  Thore Böckelmann <tboeckel@gmx.de>
 
   * #?/vastubs.c, #?/Makefile: added vararg stubs for OS3 to be able to link
