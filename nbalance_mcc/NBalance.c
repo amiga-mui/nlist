@@ -29,6 +29,7 @@
 #include <proto/exec.h>
 #include <proto/layers.h>
 #include <proto/muimaster.h>
+#include <libraries/mui.h>
 #include <mui/muiundoc.h>
 
 // local includes
@@ -138,7 +139,7 @@ ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
         }
 
         if(isOverObject == TRUE)
-          ShowCustomPointer(obj, data, data->groupType == MUIV_Group_Type_Horiz ? PT_HORIZ : PT_VERT);
+          ShowCustomPointer(obj, data);
         else
           HideCustomPointer(obj, data);
       }

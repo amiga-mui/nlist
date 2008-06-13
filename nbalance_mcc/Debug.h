@@ -78,8 +78,7 @@ void kprintf(const char *formatString,...);
 // debug flags
 #define DBF_ALWAYS              (1<<0)
 #define DBF_STARTUP             (1<<1)     // for startup/shutdown events
-#define DBF_DATATYPE            (1<<2)
-#define DBF_DRAW                (1<<3)
+#define DBF_INPUT               (1<<2)
 #define DBF_ALL                 0xffffffff
 
 void SetupDebug(void);

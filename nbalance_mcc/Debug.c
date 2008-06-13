@@ -58,7 +58,7 @@ void SetupDebug(void)
   kprintf("** NBalance.mcc v" LIB_REV_STRING " startup ***********************\n");
   kprintf("Initializing runtime debugging:\n");
 
-  if(GetVar("nbitmap.mcc.debug", var, sizeof(var), 0) > 0)
+  if(GetVar("nbalance.mcc.debug", var, sizeof(var), 0) > 0)
   {
     char *tok;
     char *debug = var;
@@ -82,8 +82,7 @@ void SetupDebug(void)
     {
       { "always",   DBF_ALWAYS   },
       { "startup",  DBF_STARTUP  },
-      { "datatype", DBF_DATATYPE },
-      { "draw",     DBF_DRAW     },
+      { "input",    DBF_INPUT    },
       { "all",      DBF_ALL      },
       { NULL,       0            }
     };

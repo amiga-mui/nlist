@@ -29,6 +29,8 @@
 #include <proto/intuition.h>
 #include <proto/exec.h>
 #include <proto/graphics.h>
+#include <libraries/mui.h>
+#include <mui/muiundoc.h>
 
 #include "private.h"
 
@@ -119,7 +121,7 @@ static const UWORD horizSizePointer[] =
   0x0240,   0x0180,
   0x0240,   0x0180,
   0x03c0,   0x0000,
-  
+
   0x0000,   0x0000
 };
 
@@ -529,7 +531,7 @@ void CleanupCustomPointers(struct InstData *data)
   LEAVE();
 }
 
-void ShowCustomPointer(Object *obj, struct InstData *data, enum PointerType type)
+void ShowCustomPointer(Object *obj, struct InstData *data)
 {
   ENTER();
 
@@ -542,6 +544,7 @@ void ShowCustomPointer(Object *obj, struct InstData *data, enum PointerType type
   // sleep status here :(
   if(xget(_win(obj), MUIA_Window_Sleep) == FALSE)
   {
+    enum PointerType type = (data->groupType == MUIV_Group_Type_Horiz) ? PT_HORIZ : PT_VERT;
     Object *ptrObject = NULL;
 
     switch(type)
