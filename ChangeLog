@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-06-14  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nbalance_mcc/NBalance.c: modified the mouse pointer show/hide functionality
+    so that the custom mouse pointer is also shown when the balance object is
+    being resized. This is, however, still not perfect because as soon as the
+    resize operation is finished the custom pointer stays, which we need to
+    solve before we can release a first version of the new NBalance class.
+
 2008-06-13  Thore Böckelmann <tboeckel@gmx.de>
 
   * nbalance_mcc/Pointer.c: fixed the wrong transparency of the horizontal

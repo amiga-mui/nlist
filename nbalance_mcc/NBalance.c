@@ -63,7 +63,7 @@ ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
     data->ehnode.ehn_Flags    = MUI_EHF_GUIMODE;
     data->ehnode.ehn_Object   = obj;
     data->ehnode.ehn_Class    = cl;
-    data->ehnode.ehn_Events   = IDCMP_MOUSEMOVE;
+    data->ehnode.ehn_Events   = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE;
     DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
 
     result = TRUE;
@@ -98,7 +98,8 @@ ULONG mHide(struct IClass *cl, Object *obj, Msg msg)
 
   ENTER();
 
-  HideCustomPointer(obj, data);
+  if(data->mouseSelectDown == FALSE)
+    HideCustomPointer(obj, data);
 
   result = DoSuperMethodA(cl, obj, msg);
 
@@ -116,20 +117,22 @@ ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
   if((data = INST_DATA(cl, obj)) != NULL &&
      msg->imsg != NULL)
   {
-    switch(msg->imsg->Class)
+    struct IntuiMessage *imsg = msg->imsg;
+
+    switch(imsg->Class)
     {
       case IDCMP_MOUSEMOVE:
       {
         BOOL isOverObject = FALSE;
 
-        if(_isinobject(msg->imsg->MouseX, msg->imsg->MouseY))
+        if(_isinobject(imsg->MouseX, imsg->MouseY))
         {
           struct Layer_Info *li = &(_screen(obj)->LayerInfo);
           struct Layer *layer;
 
           // get the layer that belongs to the current mouse coordinates
           LockLayerInfo(li);
-          layer = WhichLayer(li, _window(obj)->LeftEdge + msg->imsg->MouseX, _window(obj)->TopEdge + msg->imsg->MouseY);
+          layer = WhichLayer(li, _window(obj)->LeftEdge + imsg->MouseX, _window(obj)->TopEdge + imsg->MouseY);
           UnlockLayerInfo(li);
 
           // if the mouse is currently over the object and over the object's
@@ -141,7 +144,25 @@ ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
         if(isOverObject == TRUE)
           ShowCustomPointer(obj, data);
         else
+        {
+          if(data->mouseSelectDown == FALSE)
+            HideCustomPointer(obj, data);
+        }
+      }
+      break;
+
+      case IDCMP_MOUSEBUTTONS:
+      {
+        if(imsg->Code == SELECTUP)
+        {
+          data->mouseSelectDown = FALSE;
           HideCustomPointer(obj, data);
+        }
+        else if(imsg->Code == SELECTDOWN)
+        {
+          if(_isinobject(imsg->MouseX, imsg->MouseY))
+            data->mouseSelectDown = TRUE;
+        }
       }
       break;
     }

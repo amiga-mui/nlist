@@ -44,6 +44,7 @@
 struct InstData
 {
   ULONG groupType;
+  BOOL mouseSelectDown;
 
   Object *horizSizePointerObj;
   Object *vertSizePointerObj;
