@@ -7,6 +7,8 @@ $URL$
 
 2008-06-13  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nbalance_mcc/Pointer.c: fixed the wrong transparency of the horizontal
+    pointer image.
   * nbalance_mcc: corrected the debug classes and simplified the setting
     of the different pointer images a little bit.
 
