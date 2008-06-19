@@ -7,6 +7,8 @@ $URL$
 
 2008-06-19  Jens Langner <Jens.Langner@light-speed.de>
 
+  * nbitmap_mcc: unified the global definitions for the attributes and
+    variables to be taken from the global NBitmap_mcc.h file instead.
   * nlist_mcc/Pointer.c: changed the sizepointer image to be the very same as
     in the new NBalance class. This should make the whole custom pointer
     look&feel more consistent.

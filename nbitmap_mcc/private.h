@@ -41,21 +41,6 @@
 #define MUIV_NBitmap_Ghosted      1
 #define MUIV_NBitmap_Selected     2
 
-/* global definitions - as included in developers material */
-#define MUIA_NBitmap_Type         (TAG_USER | (2044078415<<16) | 0x0000)
-#define MUIA_NBitmap_Label        (TAG_USER | (2044078415<<16) | 0x0001)
-#define MUIA_NBitmap_Button       (TAG_USER | (2044078415<<16) | 0x0002)
-#define MUIA_NBitmap_Normal       (TAG_USER | (2044078415<<16) | 0x0003)
-#define MUIA_NBitmap_Ghosted      (TAG_USER | (2044078415<<16) | 0x0004)
-#define MUIA_NBitmap_Selected     (TAG_USER | (2044078415<<16) | 0x0005)
-#define MUIA_NBitmap_Width        (TAG_USER | (2044078415<<16) | 0x0006)
-#define MUIA_NBitmap_Height       (TAG_USER | (2044078415<<16) | 0x0007)
-#define MUIA_NBitmap_MaxWidth     (TAG_USER | (2044078415<<16) | 0x0008)
-#define MUIA_NBitmap_MaxHeight    (TAG_USER | (2044078415<<16) | 0x0009)
-
-#define MUIV_NBitmap_Type_File      0
-#define MUIV_NBitmap_Type_DTObject  1
-
 #ifndef uint8
 typedef unsigned char uint8;
 #endif

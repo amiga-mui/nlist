@@ -29,6 +29,7 @@
 #include <proto/graphics.h>
 #include <proto/cybergraphics.h>
 #include <proto/datatypes.h>
+#include <mui/NBitmap_mcc.h>
 
 #include "private.h"
 

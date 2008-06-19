@@ -31,6 +31,7 @@
 #include <proto/graphics.h>
 #include <proto/utility.h>
 #include <proto/locale.h>
+#include <mui/NBitmap_mcc.h>
 
 /* local includes */
 #include "NBitmap.h"

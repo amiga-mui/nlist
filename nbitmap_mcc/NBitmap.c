@@ -51,6 +51,7 @@
 #include <proto/layers.h>
 #include <proto/muimaster.h>
 #include <proto/utility.h>
+#include <mui/NBitmap_mcc.h>
 
 // libraries
 #include <libraries/gadtools.h>
