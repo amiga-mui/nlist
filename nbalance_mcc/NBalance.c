@@ -62,7 +62,7 @@ ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
     data->ehnode.ehn_Flags    = MUI_EHF_GUIMODE;
     data->ehnode.ehn_Object   = obj;
     data->ehnode.ehn_Class    = cl;
-    data->ehnode.ehn_Events   = IDCMP_MOUSEMOVE;
+    data->ehnode.ehn_Events   = IDCMP_MOUSEMOVE | IDCMP_MOUSEBUTTONS;
     DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
 
     result = TRUE;
@@ -97,12 +97,8 @@ ULONG mHide(struct IClass *cl, Object *obj, Msg msg)
 
   ENTER();
 
-/*
-  if(data->mouseSelectDown == FALSE && data->mouseOverObject == TRUE)
-  {
-    HideCustomPointer(obj, data);
-  }
-*/
+  //if(data->mouseOverObject == TRUE)
+  //  HideCustomPointer(obj, data);
 
   result = DoSuperMethodA(cl, obj, msg);
 
@@ -161,18 +157,10 @@ ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 
       case IDCMP_MOUSEBUTTONS:
       {
-        if(imsg->Code == SELECTDOWN)
+        if(imsg->Code == SELECTUP && _isinobject(imsg->MouseX, imsg->MouseY) == FALSE)
         {
-          if(_isinobject(imsg->MouseX, imsg->MouseY))
-          {
-            data->mouseSelectDown = TRUE;
-            ShowCustomPointer(obj, data);
-          }
-        }
-        else
-        {
-          data->mouseSelectDown = FALSE;
           HideCustomPointer(obj, data);
+          data->mouseOverObject = FALSE;
         }
       }
       break;
