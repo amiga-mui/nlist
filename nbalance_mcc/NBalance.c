@@ -62,7 +62,7 @@ ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
     data->ehnode.ehn_Flags    = MUI_EHF_GUIMODE;
     data->ehnode.ehn_Object   = obj;
     data->ehnode.ehn_Class    = cl;
-    data->ehnode.ehn_Events   = IDCMP_MOUSEMOVE | IDCMP_MOUSEBUTTONS;
+    data->ehnode.ehn_Events   = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE;
     DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
 
     result = TRUE;
@@ -97,8 +97,13 @@ ULONG mHide(struct IClass *cl, Object *obj, Msg msg)
 
   ENTER();
 
-  //if(data->mouseOverObject == TRUE)
-  //  HideCustomPointer(obj, data);
+  if(data->mouseSelectDown == TRUE && data->mouseOverObject == FALSE)
+  {
+    D(DBF_INPUT, "mHide: HIDEPTR %ld", xget(obj, MUIA_ObjectID));
+
+    data->mouseSelectDown = FALSE;
+    HideCustomPointer(obj, data);
+  }
 
   result = DoSuperMethodA(cl, obj, msg);
 
@@ -144,23 +149,42 @@ ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 
         if(isOverObject == TRUE && data->mouseOverObject == FALSE)
         {
+          D(DBF_INPUT, "SHOWPTR %ld, %ld->%ld", xget(obj, MUIA_ObjectID), data->mouseOverObject, isOverObject);
+
           ShowCustomPointer(obj, data);
           data->mouseOverObject = TRUE;
         }
         else if(isOverObject == FALSE && data->mouseOverObject == TRUE)
         {
-          HideCustomPointer(obj, data);
-          data->mouseOverObject = FALSE;
+          if(data->ignoreNextHidePointer == FALSE)
+          {
+            D(DBF_INPUT, "HIDEPTR %ld, %ld->%ld", xget(obj, MUIA_ObjectID), data->mouseOverObject, isOverObject);
+            HideCustomPointer(obj, data);
+            data->mouseOverObject = FALSE;
+          }
+          else
+            data->ignoreNextHidePointer = FALSE;
         }
       }
       break;
 
       case IDCMP_MOUSEBUTTONS:
       {
-        if(imsg->Code == SELECTUP && _isinobject(imsg->MouseX, imsg->MouseY) == FALSE)
+        if(imsg->Code == SELECTDOWN)
         {
+          if(_isinobject(imsg->MouseX, imsg->MouseY))
+          {
+            D(DBF_INPUT, "SELECTDOWN %ld, %ld", xget(obj, MUIA_ObjectID), data->mouseOverObject);
+            data->mouseSelectDown = TRUE;
+            data->ignoreNextHidePointer = TRUE;
+            ShowCustomPointer(obj, data);
+          }
+        }
+        else if(data->mouseSelectDown == TRUE)
+        {
+          D(DBF_INPUT, "SELECTUP %ld, %ld", xget(obj, MUIA_ObjectID), data->mouseOverObject);
+          data->mouseSelectDown = FALSE;
           HideCustomPointer(obj, data);
-          data->mouseOverObject = FALSE;
         }
       }
       break;
