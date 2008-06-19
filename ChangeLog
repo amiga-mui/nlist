@@ -7,6 +7,9 @@ $URL$
 
 2008-06-19  Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlist_mcc/Pointer.c: changed the sizepointer image to be the very same as
+    in the new NBalance class. This should make the whole custom pointer
+    look&feel more consistent.
   * nbalance_mcc/NBalance.c: it seems I finally fixed the custom mouse pointer
     handling by using a correct logic of IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE
     events. Lets see how this performes in practice.
