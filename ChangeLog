@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-06-19  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbalance_mcc/NBalance.c: fixed the "reappearing normal pointer" problem, at
+    least most of the time it works. Sometimes the last move event right before
+    the balancing process starts yields that the mouse is no longer over the
+    object, while in fact it still is.
+
 2008-06-14  Jens Langner <Jens.Langner@light-speed.de>
 
   * nbalance_mcc/NBalance.c: modified the mouse pointer show/hide functionality

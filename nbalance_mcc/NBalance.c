@@ -57,13 +57,12 @@ ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
     // setup all pointers
     SetupCustomPointers(data);
 
-    // create/add an event handler to the window the object belongs
-    // to
+    // create/add an event handler to the window the object belongs to
     data->ehnode.ehn_Priority = 0;
     data->ehnode.ehn_Flags    = MUI_EHF_GUIMODE;
     data->ehnode.ehn_Object   = obj;
     data->ehnode.ehn_Class    = cl;
-    data->ehnode.ehn_Events   = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE;
+    data->ehnode.ehn_Events   = IDCMP_MOUSEMOVE;
     DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
 
     result = TRUE;
@@ -98,8 +97,12 @@ ULONG mHide(struct IClass *cl, Object *obj, Msg msg)
 
   ENTER();
 
-  if(data->mouseSelectDown == FALSE)
+/*
+  if(data->mouseSelectDown == FALSE && data->mouseOverObject == TRUE)
+  {
     HideCustomPointer(obj, data);
+  }
+*/
 
   result = DoSuperMethodA(cl, obj, msg);
 
@@ -109,8 +112,8 @@ ULONG mHide(struct IClass *cl, Object *obj, Msg msg)
 
 ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
-  struct InstData *data;
   ULONG result = 0;
+  struct InstData *data;
 
   ENTER();
 
@@ -141,34 +144,40 @@ ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
             isOverObject = TRUE;
         }
 
-        if(isOverObject == TRUE)
-          ShowCustomPointer(obj, data);
-        else
+        D(DBF_INPUT, "mouse move object %ld, %ld->%ld", xget(obj, MUIA_ObjectID), data->mouseOverObject, isOverObject);
+
+        if(isOverObject == TRUE && data->mouseOverObject == FALSE)
         {
-          if(data->mouseSelectDown == FALSE)
-            HideCustomPointer(obj, data);
+          ShowCustomPointer(obj, data);
+          data->mouseOverObject = TRUE;
+        }
+        else if(isOverObject == FALSE && data->mouseOverObject == TRUE)
+        {
+          HideCustomPointer(obj, data);
+          data->mouseOverObject = FALSE;
         }
       }
       break;
 
       case IDCMP_MOUSEBUTTONS:
       {
-        if(imsg->Code == SELECTUP)
+        if(imsg->Code == SELECTDOWN)
+        {
+          if(_isinobject(imsg->MouseX, imsg->MouseY))
+          {
+            data->mouseSelectDown = TRUE;
+            ShowCustomPointer(obj, data);
+          }
+        }
+        else
         {
           data->mouseSelectDown = FALSE;
           HideCustomPointer(obj, data);
-        }
-        else if(imsg->Code == SELECTDOWN)
-        {
-          if(_isinobject(imsg->MouseX, imsg->MouseY))
-            data->mouseSelectDown = TRUE;
         }
       }
       break;
     }
   }
-
-  result = DoSuperMethodA(cl, obj, (Msg)msg);
 
   RETURN(result);
   return result;
