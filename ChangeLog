@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-06-20  Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mui/NBitmap_mcc.h: fixed some strange characters which prevented
+    a successful build.
+
 2008-06-19  Jens Langner <Jens.Langner@light-speed.de>
 
   * nbitmap_mcc: unified the global definitions for the attributes and
