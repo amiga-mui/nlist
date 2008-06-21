@@ -58,7 +58,7 @@ ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
     SetupCustomPointers(data);
 
     // create/add an event handler to the window the object belongs to
-    data->ehnode.ehn_Priority = 0;
+    data->ehnode.ehn_Priority = -2;
     data->ehnode.ehn_Flags    = MUI_EHF_GUIMODE;
     data->ehnode.ehn_Object   = obj;
     data->ehnode.ehn_Class    = cl;

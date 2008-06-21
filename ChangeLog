@@ -5,6 +5,18 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-06-21  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbalance_mcc/NBalance.c: changed the eventhandler's priority to -2 to make
+    it called after Balance.mui's eventhandler. According to Jens this one has
+    a priority of -1 and starts the balancing process after having received an
+    IDCMP_MOUSEMOVE message. With pri 0 it could happen in some very rare cases
+    that NBalance's eventhandler was called when the mouse pointer just left the
+    object by one pixel and restore the standard pointer, but Balance.mui's
+    eventhandler would start the balancing process from the very same message.
+    Hence the balance process would happen with the standard mouse pointer
+    instead of our custom one.
+
 2008-06-20  Thore Böckelmann <tboeckel@gmx.de>
 
   * include/mui/NBitmap_mcc.h: fixed some strange characters which prevented
