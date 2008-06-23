@@ -150,9 +150,8 @@ ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
 /* ULONG NBitmap_Get() */
 ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
 {
-  ULONG result;
+  ULONG result = FALSE;
   ULONG *store = ((struct opGet *)msg)->opg_Storage;
-
   struct InstData *data = INST_DATA(cl, obj);
 
   ENTER();
@@ -161,22 +160,27 @@ ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
   {
     case MUIA_NBitmap_Width:
       *store = (LONG) data->width;
-      return (TRUE);
+      result = TRUE;
+    break;
 
     case MUIA_NBitmap_Height:
       *store = (LONG) data->height;
-      return (TRUE);
+      result = TRUE;
+    break;
 
     case MUIA_NBitmap_MaxWidth:
       *store = (LONG) data->maxwidth;
-      return (TRUE);
+      result = TRUE;
+    break;
 
     case MUIA_NBitmap_MaxHeight:
       *store = (LONG) data->maxheight;
-      return (TRUE);
+      result = TRUE;
+    break;
   }
 
-  result = DoSuperMethodA(cl,obj,msg);
+  if(result == FALSE)
+    result = DoSuperMethodA(cl,obj,msg);
 
   RETURN(result);
   return result;
@@ -196,20 +200,26 @@ ULONG NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
     switch(tag->ti_Tag)
     {
       case MUIA_NBitmap_Normal:
+      {
         if(data->type == MUIV_NBitmap_Type_File)
         {
           data->data[0] = (uint32*)tag->ti_Data;
           NBitmap_UpdateImage(0, (STRPTR)data->data[0], cl, obj);
           MUI_Redraw(obj, MADF_DRAWOBJECT);
         }
-        break;
+
+        tag->ti_Tag = TAG_IGNORE;
+      }
+      break;
 
       case MUIA_NBitmap_MaxWidth:
         data->maxwidth = (uint32)tag->ti_Data;
+        tag->ti_Tag = TAG_IGNORE;
       break;
 
       case MUIA_NBitmap_MaxHeight:
         data->maxheight = (uint32)tag->ti_Data;
+        tag->ti_Tag = TAG_IGNORE;
       break;
     }
   }
@@ -456,7 +466,7 @@ ULONG NBitmap_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 /* DISPATCHER() */
 DISPATCHER(_Dispatcher)
 {
-  ULONG result = TRUE;
+  ULONG result;
 
   ENTER();
 
