@@ -29,8 +29,10 @@
 #include <proto/exec.h>
 #include <proto/layers.h>
 #include <proto/muimaster.h>
+#include <proto/utility.h>
 #include <libraries/mui.h>
 #include <mui/muiundoc.h>
+#include <mui/NBalance_mcc.h>
 
 // local includes
 #include "NBalance.h"
@@ -42,6 +44,109 @@
 // functions
 
 // methods
+ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
+{
+  BOOL result = FALSE;
+  ENTER();
+
+  if((obj = (Object *)DoSuperMethodA(cl, obj, (Msg)msg)) != NULL)
+  {
+    struct InstData *data;
+
+    if((data = INST_DATA(cl, obj)) != NULL)
+    {
+      struct TagItem *tags = NULL;
+      struct TagItem *tag = NULL;
+
+      // set some default values
+      data->pointerType = MUIV_NBalance_Pointer_Standard;
+
+      for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
+      {
+        switch(tag->ti_Tag)
+        {
+          case MUIA_NBalance_Pointer:
+            data->pointerType = tag->ti_Data;
+          break;
+        }
+      }
+
+      result = TRUE;
+    }
+  }
+
+  if(result == FALSE)
+  {
+    CoerceMethod(cl, obj, OM_DISPOSE);
+    obj = NULL;
+  }
+
+  RETURN((ULONG)obj);
+  return (ULONG)obj;
+}
+
+ULONG mGet(struct IClass *cl, Object *obj, Msg msg)
+{
+  ULONG result = FALSE;
+  ULONG *store = ((struct opGet *)msg)->opg_Storage;
+  struct InstData *data = INST_DATA(cl, obj);
+
+  ENTER();
+
+  switch(((struct opGet *)msg)->opg_AttrID)
+  {
+    case MUIA_NBalance_Pointer:
+      *store = (LONG)data->pointerType;
+      result = TRUE;
+    break;
+  }
+
+  if(result == FALSE)
+    result = DoSuperMethodA(cl,obj,msg);
+
+  RETURN(result);
+  return result;
+}
+
+ULONG mSet(struct IClass *cl,Object *obj, Msg msg)
+{
+  struct InstData *data = INST_DATA(cl, obj);
+  struct TagItem *tags, *tag;
+  ULONG result = FALSE;
+
+  ENTER();
+
+  for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
+  {
+    switch(tag->ti_Tag)
+    {
+      case MUIA_NBalance_Pointer:
+      {
+        data->pointerType = (LONG)tag->ti_Data;
+
+        // hide the mouse pointer if necessary
+        if(data->pointerType == MUIV_NBalance_Pointer_Off &&
+           data->mouseSelectDown == TRUE)
+        {
+          D(DBF_INPUT, "mSet: HIDEPTR %ld", xget(obj, MUIA_ObjectID));
+
+          data->mouseSelectDown = FALSE;
+          HideCustomPointer(obj, data);
+        }
+
+        tag->ti_Tag = TAG_IGNORE;
+      }
+      break;
+    }
+  }
+
+  result = DoSuperMethodA(cl, obj, msg);
+
+  RETURN(result);
+  return result;
+}
+
+
 ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
 {
   ULONG result = FALSE;
@@ -119,7 +224,7 @@ ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
   ENTER();
 
   if((data = INST_DATA(cl, obj)) != NULL &&
-     msg->imsg != NULL)
+     msg->imsg != NULL && data->pointerType != MUIV_NBalance_Pointer_Off)
   {
     struct IntuiMessage *imsg = msg->imsg;
 

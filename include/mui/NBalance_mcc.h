@@ -26,13 +26,16 @@
 #include <exec/types.h>
 #endif
 
-#define MUIC_NBalance               "NBalance.mcc"
-#define NBalanceObject              MUI_NewObject(MUIC_NBalance
+#define MUIC_NBalance                   "NBalance.mcc"
+#define NBalanceObject                  MUI_NewObject(MUIC_NBalance
 
 /* attributes */
+#define MUIA_NBalance_Pointer           0xa95f0000
 
-/* source types */
+/* attribute values */
+#define MUIV_NBalance_Pointer_Off       0
+#define MUIV_NBalance_Pointer_Standard  1
 
-/* macros */
+/* methods */
 
 #endif /* NBALANCE_MCC_H */

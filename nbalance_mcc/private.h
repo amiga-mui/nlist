@@ -36,10 +36,6 @@
 #include "NBalance.h"
 #include "Pointer.h"
 
-/* private definitions */
-
-/* global definitions - as included in developers material */
-
 /* private structures */
 struct InstData
 {
@@ -47,6 +43,8 @@ struct InstData
   BOOL mouseSelectDown;
   BOOL mouseOverObject;
   BOOL ignoreNextHidePointer;
+
+  LONG pointerType;
 
   Object *horizSizePointerObj;
   Object *vertSizePointerObj;
@@ -73,6 +71,9 @@ ULONG xget(Object *obj, const ULONG attr);
 ///
 
 /* prototypes */
+ULONG mNew(struct IClass *cl, Object *obj, struct opSet *set);
+ULONG mSet(struct IClass *cl, Object *obj, Msg msg);
+ULONG mGet(struct IClass *cl, Object *obj, Msg msg);
 ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo);
 ULONG mCleanup(struct IClass *cl, Object *obj, Msg msg);
 ULONG mHide(struct IClass *cl, Object *obj, Msg msg);

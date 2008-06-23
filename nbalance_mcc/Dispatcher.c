@@ -38,12 +38,24 @@
 
 DISPATCHER(_Dispatcher)
 {
-  ULONG result = TRUE;
+  ULONG result;
 
   ENTER();
 
   switch(msg->MethodID)
   {
+    case OM_NEW:
+      result = mNew(cl, obj, (struct opSet *)msg);
+    break;
+
+    case OM_SET:
+      result = mSet(cl, obj, msg);
+    break;
+
+    case OM_GET:
+      result = mGet(cl, obj, msg);
+    break;
+
     case MUIM_Setup:
       result = mSetup(cl, obj, (struct MUI_RenderInfo *)msg);
     break;

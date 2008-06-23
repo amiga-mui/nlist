@@ -30,6 +30,8 @@
 #include <proto/layers.h>
 #include <proto/datatypes.h>
 
+#include <mui/NBalance_mcc.h>
+
 #include "private.h"
 
 #if defined(__amigaos4__)
@@ -121,6 +123,7 @@ int main(void)
                           Child, NewObject(mcc->mcc_Class, NULL,
                           //Child, BalanceObject,
                               MUIA_ObjectID, 2,
+                              //MUIA_NBalance_Pointer, MUIV_NBalance_Pointer_Off,
                           End,
                           Child, HGroup,
                             Child, FloattextObject,

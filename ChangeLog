@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-06-23  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nbalance_mcc: added a new MUIA_NBalance_Pointer attribute to enable/disable
+    the custom pointer for a NBalance object.
+  * nbitmap_mcc/dispatcher.c: upon OM_SET our own tags will be set to TAG_IGNORE
+    which should be more correct for tags parsing.
+
 2008-06-21  Thore Böckelmann <tboeckel@gmx.de>
 
   * nbalance_mcc/NBalance.c: changed the eventhandler's priority to -2 to make
