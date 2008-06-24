@@ -5,17 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
-2008-06-24  Jens Langner <Jens.Langner@light-speed.de>
-
-  * nbalance_mcc/NBalance.c: damn, forgot to return MUIA_Version and
-    MUIA_Revision for checking the version application-wise. Well, the next
-    release in some months will have it then ;)
-
 #### v0.102 RELEASE ###########################################################
 
 2008-06-24  Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: final v0.102 release preparations
+  * nbalance_mcc/NBalance.c: forgot to return MUIA_Version and
+    MUIA_Revision for checking the version application-wise.
   * nlistviews_mcp: replaced the calloc() and free() usage against AllocVec()
     and FreeVec() because the alloc function can't be used in shared libraries.
   * Makefile: added a top-level makefile for easily compiling all things in

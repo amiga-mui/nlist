@@ -20,9 +20,9 @@
 ***************************************************************************/
 
 #define LIB_VERSION    15
-#define LIB_REVISION   1
+#define LIB_REVISION   2
 
-#define LIB_REV_STRING "15.1"
+#define LIB_REV_STRING "15.2"
 #define LIB_DATE       "24.06.2008"
 
 #if defined(__PPC__)
