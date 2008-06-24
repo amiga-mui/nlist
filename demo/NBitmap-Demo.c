@@ -10,9 +10,13 @@
 #include <exec/lists.h>
 #include <exec/nodes.h>
 #include <datatypes/pictureclass.h>
+#include <clib/alib_protos.h>
 
 /* prototypes */
+#if defined(__amigaos4__)
 #include <proto/application.h>
+#endif
+
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/gadtools.h>
@@ -26,6 +30,9 @@
 #include <mui/NListview_mcc.h>
 #include <mui/NListtree_mcc.h>
 #include <mui/NBitmap_mcc.h>
+
+#include "SDI_compiler.h"
+#include "SDI_stdarg.h"
 
 /* local prototypes */
 int openlibs(void);
@@ -52,19 +59,28 @@ struct MUI_CustomClass *MCC_Main = NULL;
 /* hook prototypes */
 
 /* libraries & interfaces */
+#if defined(__amigaos4__)
 struct Library			*ApplicationBase = NULL;
 struct Library 		*ElfBase = NULL;
 struct Library			*GadToolsBase = NULL;
 struct Library			*MUIMasterBase	= NULL;
 struct Library			*IntuitionBase = NULL;
 struct Library			*UtilityBase = NULL;
+#else
+struct Library			*GadToolsBase = NULL;
+struct Library			*MUIMasterBase	= NULL;
+struct IntuitionBase *IntuitionBase = NULL;
+struct Library			*UtilityBase = NULL;
+#endif
 
+#if defined(__amigaos4__)
 struct ApplicationIFace *IApplication = NULL;
 struct GadToolsIFace	*IGadTools = NULL;
 struct ElfIFace 		*IElf = NULL;
 struct IntuitionIFace *IIntuition = NULL;
 struct MUIMasterIFace *IMUIMaster = NULL;
 struct UtilityIFace *IUtility = NULL;
+#endif
 
 /* startup functions */
 int main(int argc, char *argv[])
@@ -88,7 +104,8 @@ int main(int argc, char *argv[])
 						
 						if(app) MUI_DisposeObject(app);
 					}
-				else DebugPrintF("buildapp() failed\n");
+				else
+          printf("buildapp() failed\n");
 
 				freeclasses();
 				closelibs();
@@ -99,12 +116,14 @@ int main(int argc, char *argv[])
 
 /* open libraries */
 int openlibs(void)
-	{
-		if((ApplicationBase = (struct Library*)OpenLibrary("application.library", 50))==0)
+{
+    #if defined(__amigaos4__)
+    if((ApplicationBase = (struct Library*)OpenLibrary("application.library", 50))==0)
 			fail("couldn't open application.library");
 
 		if((ElfBase = (struct Library*)OpenLibrary("elf.library", 50))==0)
 			fail("couldn't open elf.library");
+    #endif
 
 		if((IntuitionBase = (struct Library*)OpenLibrary("intuition.library", 50))==0)
 			fail("couldn't open intuition.library");
@@ -118,6 +137,7 @@ int openlibs(void)
 		if((MUIMasterBase = (struct Library*)OpenLibrary(MUIMASTER_NAME, MUIMASTER_VMIN))==0)
 			fail("couldn't open muimaster.library");
 
+#if defined(__amigaos4__)
 		/* get interfaces */
 		if((IApplication  = (struct ApplicationIFace *)GetInterface(ApplicationBase, "application", 1, NULL))==0)
 			fail("couldn't obtain main interface from application.library");
@@ -136,11 +156,13 @@ int openlibs(void)
 
 		if((IMUIMaster = (struct MUIMasterIFace *)GetInterface(MUIMasterBase, "main", 1, NULL))==0)
 			fail("couldn't obtain main interface from muimaster.library");
-	}
+#endif
+}
 
 /* close libraries */
 int closelibs(void)
-	{
+{
+#if defined(__amigaos4__)
 		/* drop interfaces */
 		if(IApplication) DropInterface((struct Interface *)IApplication);
 		if(IElf) DropInterface((struct Interface *)IElf);
@@ -148,19 +170,24 @@ int closelibs(void)
 		if(IGadTools) DropInterface((struct Interface *)IGadTools);
 		if(IUtility) DropInterface((struct Interface *)IUtility);
 		if(IMUIMaster) DropInterface((struct Interface *)IMUIMaster);
+#endif
 
-		if(ApplicationBase) CloseLibrary((struct Library*)ApplicationBase);
+#if defined(__amigaos4__)
+    if(ApplicationBase) CloseLibrary((struct Library*)ApplicationBase);
 		if(ElfBase) CloseLibrary((struct Library*)ElfBase);
+#endif
+
 		if(IntuitionBase) CloseLibrary((struct Library*)IntuitionBase);
 		if(GadToolsBase) CloseLibrary((struct Library *)GadToolsBase);
 		if(UtilityBase) CloseLibrary((struct Library *)UtilityBase);
 		if(MUIMasterBase) CloseLibrary(MUIMasterBase);
-	}
+}
 
 /* fail */
 int fail(STRPTR str)
 	{
-		if(str) DebugPrintF("NBitmap-Demo Failed: %s\n");
+		if(str)
+      printf("NBitmap-Demo Failed: %s\n", str);
 
 		/* close libraries & exit */
 		closelibs();
@@ -182,32 +209,19 @@ void freeclasses(void)
 	}
 
 /* mui support functions */
-ULONG DoSuperNew(struct IClass *cl, Object *obj, ...)
-	{
-		ULONG mav[50];
-		ULONG ret;
-		va_list tags;
-		struct opSet myopSet;
-		int i=0;
+#if !defined(__MORPHOS__)
+static Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
+{
+  Object *rc;
+  VA_LIST args;
 
-		va_start(tags, obj);
-		while(i<50)
-			{
-				mav[i] = va_arg(tags, ULONG);
-				if(mav[i] == TAG_DONE) break;
-				mav[i+1] = va_arg(tags, ULONG);
-				if(mav[i] == TAG_MORE) break;
-				i += 2;
-			}
-		va_end(tags);
+  VA_START(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  VA_END(args);
 
-		myopSet.MethodID = OM_NEW;
-		myopSet.ops_AttrList = (struct TagItem *) &mav;
-		myopSet.ops_GInfo = NULL;
-		ret = DoSuperMethodA(cl, obj, (APTR)&myopSet);
-
-		return(ret);
-	}
+  return rc;
+}
+#endif
 
 /* build app */
 BOOL buildapp(void)
@@ -240,7 +254,7 @@ ULONG SAVEDS ASM MCC_Main_Despatch(REG(a0,struct IClass *cl), REG(a2,Object *obj
 					return MCC_Main_New(cl,obj,(APTR)msg);
 
 				case MCC_NBitmap_Test:
-					Printf("Hello\n");
+					printf("Hello\n");
 				break;
 			}
 

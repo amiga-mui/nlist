@@ -743,10 +743,13 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   }
 
   // create a duplicate of the translated text
-  if((exampleText = strdup(tr(MSG_EXAMPLE_TEXT))) != NULL)
+  if((exampleText = AllocVec((strlen(tr(MSG_EXAMPLE_TEXT))+1)*sizeof(char), MEMF_ANY)) != NULL)
   {
     char *p;
     LONG numLines = 0;
+
+    // copy the text
+    strcpy(exampleText, tr(MSG_EXAMPLE_TEXT));
 
     // count the number of lines
     p = exampleText;
@@ -757,7 +760,7 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
     }
 
     // finally split the text into separate lines
-    if((data->exampleText = calloc(numLines + 2, sizeof(char *))) != NULL)
+    if((data->exampleText = AllocVec((numLines+2)*sizeof(char *), MEMF_ANY|MEMF_CLEAR)) != NULL)
     {
       LONG line;
 
@@ -768,12 +771,13 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
         q = strchr(p, '\n');
         *q++ = '\0';
-        data->exampleText[line] = strdup(p);
+        data->exampleText[line] = AllocVec((strlen(p)+1)*sizeof(char), MEMF_ANY);
+        strcpy(data->exampleText[line], p);
         p = q;
       }
     }
 
-    free(exampleText);
+    FreeVec(exampleText);
   }
 
   group1 = GroupObject,
@@ -1556,10 +1560,11 @@ static ULONG mNL_MCP_Dispose(struct IClass *cl, Object *obj, Msg msg)
 
   	while(data->exampleText[i] != NULL)
     {
-      free(data->exampleText[i]);
+      FreeVec(data->exampleText[i]);
       i++;
     }
-    free(data->exampleText);
+
+    FreeVec(data->exampleText);
   }
 
   return DoSuperMethodA(cl, obj, msg);

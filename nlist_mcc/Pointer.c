@@ -35,6 +35,7 @@
 #include <proto/graphics.h>
 
 #include "private.h"
+#include "Debug.h"
 
 // the meta data of our pointers
 #define sizePointerWidth      16
