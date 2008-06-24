@@ -76,6 +76,9 @@ install: $(SUBDIRS)
 	$(CP) demo/bin_os4/*-Demo release/MCC_NList/Demo/AmigaOS4/
 	$(CP) demo/bin_os3/*-Demo release/MCC_NList/Demo/AmigaOS3/
 	$(CP) demo/bin_mos/*-Demo release/MCC_NList/Demo/MorphOS/
+	$(CP) demo/*.c release/MCC_NList/Developer/C/Examples/
+	$(CP) demo/*.h release/MCC_NList/Developer/C/Examples/
+	$(CP) demo/Makefile release/MCC_NList/Developer/C/Examples/
 	$(CP) nlisttree_mcp/locale/*.cd release/MCC_NList/Catalogs/
 	$(CP) nlistviews_mcp/locale/*.cd release/MCC_NList/Catalogs/
 	$(CP) docs/MCC_*.doc release/MCC_NList/Developer/Autodocs/
