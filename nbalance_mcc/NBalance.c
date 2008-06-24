@@ -99,6 +99,16 @@ ULONG mGet(struct IClass *cl, Object *obj, Msg msg)
       *store = (LONG)data->pointerType;
       result = TRUE;
     break;
+
+    case MUIA_Version:
+      *store = LIB_VERSION;
+      result = TRUE;
+    break;
+
+    case MUIA_Revision:
+      *store = LIB_REVISION;
+      result = TRUE;
+    break;
   }
 
   if(result == FALSE)

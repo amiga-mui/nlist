@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-06-24  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nbalance_mcc/NBalance.c: damn, forgot to return MUIA_Version and
+    MUIA_Revision for checking the version application-wise. Well, the next
+    release in some months will have it then ;)
+
 #### v0.102 RELEASE ###########################################################
 
 2008-06-24  Jens Langner <Jens.Langner@light-speed.de>
