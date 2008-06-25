@@ -1,10 +1,10 @@
-## version $VER: NListviews_mcp.catalog 2.5 (12.12.2007)
+## version $VER: NListviews_mcp.catalog 2.6 (24.6.2008)
 ## language czech
 ## codeset 5
 ;
 ;
 ; NListviews_mcp.cd - NList MUI custom prefs catalog description file
-; $Id: nlistviews_mcp_czech.ct 5588 2007-12-12 08:39:35Z sindlarv $
+; $Id: TextEditor_mcp.cd 395 2007-09-11 22:32:41Z damato $
 ;
 ;#version 2
 ;#language english
@@ -681,4 +681,102 @@ Klávesa
 MSG_HOTKEYS_ACTION
 Akce
 ; Action
+;
+MSG_EXAMPLE_TEXT
+Pokud zaznamenáte problémy týkající se této tøídy MUI,\n\
+jedním z mo¾ných øe¹ení je zvìt¹ení velikosti zásobníku.\n\
+Tu lze definovat v ikonì programu (spou¹títe-li program\n\
+z prostøedí Workbench) nebo v ikonì CLI (pøi spu¹tìní\n\
+z pøíkazového øádku). Doporuèená velikost je 16 KB.\n\
+\n\
+Jestli¾e problémy neustanou, zkuste je zreprodukovat pomocí\n\
+pøilo¾eného demonstraèního programu a teprve poté nahla¹te\n\
+chybu.\n\
+Aktuální verzi najdete na Aminetu v adresáøi dev/mui nebo\n\
+na stránkách http://www.sourceforge.net/projects/nlist-classes/\n\
+\n\
+\033r\033b(C) 2001-2008 NList Open Source Team\n\
+\033r\033b(C) 1996-1998 Gilles Masson\n\
+\033r\033bhttp://www.sourceforge.net/projects/nlist-classes/\n\
+\n\
+Tato tøída je koncipovaná jako náhrada tøíd list a listview\n\
+systému MUI, pøièem¾ nabízí lep¹í funkce a vìt¹í mo¾nosti\n\
+konfigurace.\n\
+\n\
+Na rozdíl od standardního chování MUI je jinak øe¹en zpùsob\n\
+práce s kurzorem pøi výbìru více polo¾ek. Navíc je pøidaná\n\
+mo¾nost 'táhnout a pustit', vodorovný i svislý posuvník lze\n\
+nechat automaticky skrýt a jiné. Zkuste...\n\
+\n\
+Kurzorové ¹ipky mù¾ete vyu¾ít k posunu obsahu seznamu\n\
+ve vodorovném smìru. Posouvat seznamem vpravo i vlevo lze\n\
+i pøi výbìru textu my¹í. Zkuste kliknout na levý nebo pravý\n\
+okraj!\n\
+\n\
+Chcete zmìnit ¹íøku sloupcù? ®ádný problém. Najeïte ¹ipkou\n\
+my¹i na dìlicí linku mezi sloupci a pøetáhnìte v ¾ádaném\n\
+smìru (a nezapomeòte na pøepínaè vyvá¾ení ¹íøky sloupcù).\n\
+\n\
+A nechcete zmìnit poøadí sloupcù? Ani to není problém.\n\
+Dosáhnete toho zpùsobem podobným tomu, který je popsaný\n\
+vý¹e.\n\
+\n\
+Tøída NList obsahuje i vlastní funkci pro kopírování textu\n\
+do schránky a standardní zpùsob výbìru textu.\n\
+\n\
+V¹e si mù¾ete vyzkou¹et v pøilo¾eném demonstraèním programu.\n\
+\n\
+\n\
+\033r\033bNapi¹te nám! Nenechávejte si pøipomínky pro sebe :-)\n\
+\n\
+**************************************************************************************************\n
+; If you have problems, try to increase the stack value,\n\
+; in the icon infos if you launch the program from icon,\n\
+; stack of CLI if you start it from CLI/Shell,\n\
+; and if you launch it from some utility read its docs\n\
+; to see how to increase it.\n\
+; A stack of 12Kb, 16Kb or 20Kb is most of time a good idea.\n\
+; \n\
+; If you still have problems, try to see if they happen with the Demo prog, then tell me.\n\
+; \033C\n\
+; Latest public release can be found on aminet (dev/mui).\n\
+; All releases are available on\n\
+; http://www.sourceforge.net/projects/nlist-classes/\n\
+; \033C\n\
+; \033r\0333(C) 2001-2007 by NList Open Source Team\n\
+; \033r\0333(C) 1996-1998 by Gilles Masson\n\
+; \033r\0333http://www.sourceforge.net/projects/nlist-classes/\n\
+; \033C\n\
+; \033cThis new list/listview custom class\n\
+; \033chandles its own configurable backgrounds,\n\
+; \033cpens, fonts, scrollbars, keys and qualifiers\n\
+; \033C\n\
+; \033cThe way used to handle cursor with multiselection\n\
+; \033cis not exactly as the listview one !\n\
+; \033cDrag&Drop is supported, both scrollbars\n\
+; \033ccan be configured to disappear automatically\n\
+; \033cwhen not needed because all is visible.\n\
+; \033cJust try it...\n\
+; \033C\n\
+; \033cYou can horizontaly scroll with cursor keys,\n\
+; \033cor going on the right and left of the list\n\
+; \033cwhile selecting with the mouse.\n\
+; \033cTry just clicking on the left/right borders !\n\
+; \033C\n\
+; \033cYou can change columns widths just dragging\n\
+; \033cthe vertical separator between columns titles\n\
+; \033c(try it using the balancing qualifier too).\n\
+; \033C\n\
+; \033cYou can change columns order just dragging\n\
+; \033cthe column titles.\n\
+; \033C\n\
+; \033cThere is builtin copy to clipboard stuff\n\
+; \033cand classic char selection capability.\n\
+; \033C\n\
+; \033cTry the Demo program to test all that...\n\
+; \n\
+; \n\
+; \033r\033bGive some feedback about it ! :-)\n\
+; \033C\n\
+; **************************************************************************************************\n
 ;

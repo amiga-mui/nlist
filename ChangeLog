@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-06-25  Vit Sindlar <sindlarv at centrum dot cz>
+
+  * nlistviews_mcp/locale/czech.ct: Updated to match the latest .cd file.
+
 #### v0.102 RELEASE ###########################################################
 
 2008-06-24  Jens Langner <Jens.Langner@light-speed.de>
