@@ -100,6 +100,16 @@ static const ULONG vertSizePointer[] =
 
 #else // __amigaos4__
 
+#if defined(__MORPHOS__)
+#ifndef POINTERTYPE_VERTICALRESIZE
+#define POINTERTYPE_VERTICALRESIZE   10
+#define POINTERTYPE_HORIZONTALRESIZE 11
+#endif
+#ifndef WA_PointerType
+#define WA_PointerType (WA_Dummy + 164)
+#endif
+#endif
+
 static const UWORD horizSizePointer[] =
 {
 //plane1    plane2
@@ -422,6 +432,14 @@ void SetupCustomPointers(struct InstData *data)
 {
   ENTER();
 
+  #if defined(__MORPHOS__)
+  if(((struct Library *)IntuitionBase)->lib_Version >= 51)
+  {
+    data->horizSizePointerObj = (APTR)POINTERTYPE_HORIZONTALRESIZE;
+    data->vertSizePointerObj = (APTR)POINTERTYPE_VERTICALRESIZE;
+  }
+  #endif
+
   if(data->horizSizePointerObj == NULL)
   {
     #if defined(__amigaos4__)
@@ -450,7 +468,7 @@ void SetupCustomPointers(struct InstData *data)
     }
     else
     {
-      if((data->horizSizePointerObj = (Object *)AllocVec(sizeof(horizSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->horizSizePointerObj = (Object *)AllocMem(sizeof(horizSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->horizSizePointerObj, horizSizePointer, sizeof(horizSizePointer));
     }
     #endif
@@ -484,7 +502,7 @@ void SetupCustomPointers(struct InstData *data)
     }
     else
     {
-      if((data->vertSizePointerObj = (Object *)AllocVec(sizeof(vertSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->vertSizePointerObj = (Object *)AllocMem(sizeof(vertSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->vertSizePointerObj, vertSizePointer, sizeof(vertSizePointer));
     }
     #endif
@@ -497,6 +515,14 @@ void CleanupCustomPointers(struct InstData *data)
 {
   ENTER();
 
+  #if defined(__MORPHOS__)
+  if(((struct Library *)IntuitionBase)->lib_Version >= 51)
+  {
+    data->horizSizePointerObj = NULL;
+    data->vertSizePointerObj = NULL;
+  }
+  #endif
+
   // dispose the different pointer objects
   if(data->horizSizePointerObj != NULL)
   {
@@ -506,7 +532,7 @@ void CleanupCustomPointers(struct InstData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->horizSizePointerObj);
     else
-      FreeVec(data->horizSizePointerObj);
+      FreeMem(data->horizSizePointerObj, sizeof(horizSizePointer));
     #endif
 
     data->horizSizePointerObj = NULL;
@@ -520,7 +546,7 @@ void CleanupCustomPointers(struct InstData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->vertSizePointerObj);
     else
-      FreeVec(data->vertSizePointerObj);
+      FreeMem(data->vertSizePointerObj, sizeof(vertSizePointer));
     #endif
 
     data->vertSizePointerObj = NULL;
@@ -570,6 +596,8 @@ void ShowCustomPointer(Object *obj, struct InstData *data)
 
       #if defined(__amigaos4__)
       SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
+      #elif defined(__MORPHOS__)
+      SetWindowPointer(_window(obj), ((struct Library *)IntuitionBase)->lib_Version >= 51 ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #else
       if(((struct Library *)IntuitionBase)->lib_Version >= 39)
         SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
@@ -624,7 +652,7 @@ void HideCustomPointer(Object *obj, struct InstData *data)
 
   if(data->activeCustomPointer != PT_NONE)
   {
-    #if defined(__amigaos4__)
+    #if defined(__amigaos4__) || defined(__MORPHOS__)
     SetWindowPointer(_window(obj), TAG_DONE);
     #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)

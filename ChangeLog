@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-06-30  Ilkka Lehtoranta <ilkleht@isoveli.org>
+
+  * #?/Pointer.c: use MorphOS 2.0 system pointers. Also changed AllocVec()
+    calls by AllocMem() to save precious chip ram.
+
 2008-06-25  Vit Sindlar <sindlarv at centrum dot cz>
 
   * nlistviews_mcp/locale/czech.ct: Updated to match the latest .cd file.

@@ -27,6 +27,7 @@
 
 #include <clib/alib_protos.h>
 
+#include <exec/execbase.h>
 #include <intuition/pointerclass.h>
 
 #include <proto/utility.h>
@@ -117,6 +118,17 @@ static const ULONG selectPointer[] =
 #endif
 
 #else // __amigaos4__
+
+#if defined(__MORPHOS__)
+#ifndef POINTERTYPE_SELECTTEXT
+#define POINTERTYPE_SELECTTEXT       7
+#define POINTERTYPE_HORIZONTALRESIZE 11
+#define POINTERTYPE_MOVE             14
+#endif
+#ifndef WA_PointerType
+#define WA_PointerType (WA_Dummy + 164)
+#endif
+#endif
 
 static const UWORD sizePointer[] =
 {
@@ -505,6 +517,15 @@ void SetupCustomPointers(struct NLData *data)
 {
   ENTER();
 
+  #if defined(__MORPHOS__)
+  if(((struct Library *)IntuitionBase)->lib_Version >= 51)  // Check for V51 Intuition and use built-in pointers
+  {
+    data->SizePointerObj = (APTR)POINTERTYPE_HORIZONTALRESIZE;
+    data->MovePointerObj = (APTR)POINTERTYPE_MOVE;
+    data->SelectPointerObj = (APTR)POINTERTYPE_SELECTTEXT;
+  }
+  #endif
+
   if(data->SizePointerObj == NULL)
   {
     #if defined(__amigaos4__)
@@ -533,7 +554,7 @@ void SetupCustomPointers(struct NLData *data)
     }
     else
     {
-      if((data->SizePointerObj = (Object *)AllocVec(sizeof(sizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->SizePointerObj = (Object *)AllocMem(sizeof(sizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->SizePointerObj, sizePointer, sizeof(sizePointer));
     }
     #endif
@@ -567,7 +588,7 @@ void SetupCustomPointers(struct NLData *data)
     }
     else
     {
-      if((data->MovePointerObj = (Object *)AllocVec(sizeof(movePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->MovePointerObj = (Object *)AllocMem(sizeof(movePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->MovePointerObj, movePointer, sizeof(movePointer));
     }
     #endif
@@ -601,7 +622,7 @@ void SetupCustomPointers(struct NLData *data)
     }
     else
     {
-      if((data->SelectPointerObj = (Object *)AllocVec(sizeof(selectPointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->SelectPointerObj = (Object *)AllocMem(sizeof(selectPointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->SelectPointerObj, selectPointer, sizeof(selectPointer));
     }
     #endif
@@ -614,16 +635,25 @@ void CleanupCustomPointers(struct NLData *data)
 {
   ENTER();
 
+  #if defined(__MORPHOS__)
+  if(((struct Library *)IntuitionBase)->lib_Version >= 51)
+  {
+    data->SizePointerObj = NULL;
+    data->MovePointerObj = NULL;
+    data->SelectPointerObj = NULL;
+  }
+  #endif
+
   // dispose the different pointer objects
   if(data->SizePointerObj != NULL)
   {
-    #if defined(__amigaos4__)
+    #if defined(__amigaos4__) || defined(__MORPHOS__)
     DisposeObject(data->SizePointerObj);
     #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->SizePointerObj);
     else
-      FreeVec(data->SizePointerObj);
+      FreeMem(data->SizePointerObj, sizeof(sizePointer));
     #endif
 
     data->SizePointerObj = NULL;
@@ -631,13 +661,13 @@ void CleanupCustomPointers(struct NLData *data)
 
   if(data->MovePointerObj != NULL)
   {
-    #if defined(__amigaos4__)
+    #if defined(__amigaos4__) || defined(__MORPHOS__)
     DisposeObject(data->MovePointerObj);
     #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->MovePointerObj);
     else
-      FreeVec(data->MovePointerObj);
+      FreeMem(data->MovePointerObj, sizeof(movePointer));
     #endif
 
     data->MovePointerObj = NULL;
@@ -645,13 +675,13 @@ void CleanupCustomPointers(struct NLData *data)
 
   if(data->SelectPointerObj != NULL)
   {
-    #if defined(__amigaos4__)
+    #if defined(__amigaos4__) || defined(__MORPHOS__)
     DisposeObject(data->SelectPointerObj);
     #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->SelectPointerObj);
     else
-      FreeVec(data->SelectPointerObj);
+      FreeMem(data->SelectPointerObj, sizeof(selectPointer));
     #endif
 
     data->SelectPointerObj = NULL;
@@ -704,6 +734,8 @@ void ShowCustomPointer(Object *obj, struct NLData *data, enum PointerType type)
 
       #if defined(__amigaos4__)
       SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
+      #elif defined(__MORPHOS__)
+      SetWindowPointer(_window(obj), ((struct Library *)IntuitionBase)->lib_Version >= 51 ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #else
       if(((struct Library *)IntuitionBase)->lib_Version >= 39)
         SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
@@ -767,7 +799,7 @@ void HideCustomPointer(Object *obj, struct NLData *data)
 
   if(data->activeCustomPointer != PT_NONE)
   {
-    #if defined(__amigaos4__)
+    #if defined(__amigaos4__) || defined(__MORPHOS__)
     SetWindowPointer(_window(obj), TAG_DONE);
     #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
