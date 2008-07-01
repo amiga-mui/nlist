@@ -396,20 +396,30 @@ static void IdentifyPointerColors(Object *obj)
   else
   {
     UWORD rgb;
+    ULONG r, g, b;
 
     // OS2.x only has GetRGB4 which returns right aligned RGB nibbles
     rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 17);
-    colors[0*3+0] = (rgb & 0x000f) << 24;
-    colors[0*3+1] = (rgb & 0x00f0) << 20;
-    colors[0*3+2] = (rgb & 0x0f00) << 16;
+    r = ((rgb & 0x0f00) >> 4) | ((rgb & 0x0f00) >> 8);
+    g =  (rgb & 0x00f0)       | ((rgb & 0x00f0) >> 4);
+    b = ((rgb & 0x000f) << 4) |  (rgb & 0x000f);
+    colors[0*3+0] = r << 24;
+    colors[0*3+1] = g << 24;
+    colors[0*3+2] = b << 24;
     rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 18);
-    colors[1*3+0] = (rgb & 0x000f) << 24;
-    colors[1*3+1] = (rgb & 0x00f0) << 20;
-    colors[1*3+2] = (rgb & 0x0f00) << 16;
+    r = ((rgb & 0x0f00) >> 4) | ((rgb & 0x0f00) >> 8);
+    g =  (rgb & 0x00f0)       | ((rgb & 0x00f0) >> 4);
+    b = ((rgb & 0x000f) << 4) |  (rgb & 0x000f);
+    colors[1*3+0] = r << 24;
+    colors[1*3+1] = g << 24;
+    colors[1*3+2] = b << 24;
     rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 19);
-    colors[2*3+0] = (rgb & 0x000f) << 24;
-    colors[2*3+1] = (rgb & 0x00f0) << 20;
-    colors[2*3+2] = (rgb & 0x0f00) << 16;
+    r = ((rgb & 0x0f00) >> 4) | ((rgb & 0x0f00) >> 8);
+    g =  (rgb & 0x00f0)       | ((rgb & 0x00f0) >> 4);
+    b = ((rgb & 0x000f) << 4) |  (rgb & 0x000f);
+    colors[2*3+0] = r << 24;
+    colors[2*3+1] = g << 24;
+    colors[2*3+2] = b << 24;
   }
   #endif
 
