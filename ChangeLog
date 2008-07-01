@@ -5,6 +5,16 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2008-07-01  Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/Pointer.c: reverted all AllocMem() calls back to AllocVec(). If chip RAM
+    really is that precious, then a low chip memory situation will occur even
+    before MUI is able to open a window with all bells and whistles enabled.
+    Using AllocVec() instead of AllocMem() is really much more intuitive. Also
+    made the color management for the pointer images OS2.x compatible by using
+    GetRGB4() instead of GetRGB32(), which is OS3.x only. Although I really
+    doubt anybody is still seriously using MUI 3.8+ on an OS2.x system in 2008.
+
 2008-06-30  Ilkka Lehtoranta <ilkleht@isoveli.org>
 
   * #?/Pointer.c: use MorphOS 2.0 system pointers. Also changed AllocVec()

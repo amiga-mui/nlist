@@ -315,7 +315,30 @@ static void IdentifyPointerColors(Object *obj)
   ENTER();
 
   // get the current screen's pointer colors (17 to 19)
+  #if defined(__amigaos4__) || defined(__MORPHOS__)
   GetRGB32(_window(obj)->WScreen->ViewPort.ColorMap, 17, 3, colors);
+  #else
+  if(((struct Library *)GfxBase)->lib_Version >= 39)
+    GetRGB32(_window(obj)->WScreen->ViewPort.ColorMap, 17, 3, colors);
+  else
+  {
+    UWORD rgb;
+
+    // OS2.x only has GetRGB4 which returns right aligned RGB nibbles
+    rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 17);
+    colors[0*3+0] = (rgb & 0x000f) << 24;
+    colors[0*3+1] = (rgb & 0x00f0) << 20;
+    colors[0*3+2] = (rgb & 0x0f00) << 16;
+    rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 18);
+    colors[1*3+0] = (rgb & 0x000f) << 24;
+    colors[1*3+1] = (rgb & 0x00f0) << 20;
+    colors[1*3+2] = (rgb & 0x0f00) << 16;
+    rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 19);
+    colors[2*3+0] = (rgb & 0x000f) << 24;
+    colors[2*3+1] = (rgb & 0x00f0) << 20;
+    colors[2*3+2] = (rgb & 0x0f00) << 16;
+  }
+  #endif
 
   for(i=0; i < 3; i++)
   {
@@ -468,7 +491,7 @@ void SetupCustomPointers(struct InstData *data)
     }
     else
     {
-      if((data->horizSizePointerObj = (Object *)AllocMem(sizeof(horizSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->horizSizePointerObj = (Object *)AllocVec(sizeof(horizSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->horizSizePointerObj, horizSizePointer, sizeof(horizSizePointer));
     }
     #endif
@@ -502,7 +525,7 @@ void SetupCustomPointers(struct InstData *data)
     }
     else
     {
-      if((data->vertSizePointerObj = (Object *)AllocMem(sizeof(vertSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->vertSizePointerObj = (Object *)AllocVec(sizeof(vertSizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->vertSizePointerObj, vertSizePointer, sizeof(vertSizePointer));
     }
     #endif
@@ -532,7 +555,7 @@ void CleanupCustomPointers(struct InstData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->horizSizePointerObj);
     else
-      FreeMem(data->horizSizePointerObj, sizeof(horizSizePointer));
+      FreeVec(data->horizSizePointerObj);
     #endif
 
     data->horizSizePointerObj = NULL;
@@ -546,7 +569,7 @@ void CleanupCustomPointers(struct InstData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->vertSizePointerObj);
     else
-      FreeMem(data->vertSizePointerObj, sizeof(vertSizePointer));
+      FreeVec(data->vertSizePointerObj);
     #endif
 
     data->vertSizePointerObj = NULL;

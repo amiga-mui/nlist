@@ -388,7 +388,30 @@ static void IdentifyPointerColors(Object *obj)
   ENTER();
 
   // get the current screen's pointer colors (17 to 19)
+  #if defined(__amigaos4__) || defined(__MORPHOS__)
   GetRGB32(_window(obj)->WScreen->ViewPort.ColorMap, 17, 3, colors);
+  #else
+  if(((struct Library *)GfxBase)->lib_Version >= 39)
+    GetRGB32(_window(obj)->WScreen->ViewPort.ColorMap, 17, 3, colors);
+  else
+  {
+    UWORD rgb;
+
+    // OS2.x only has GetRGB4 which returns right aligned RGB nibbles
+    rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 17);
+    colors[0*3+0] = (rgb & 0x000f) << 24;
+    colors[0*3+1] = (rgb & 0x00f0) << 20;
+    colors[0*3+2] = (rgb & 0x0f00) << 16;
+    rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 18);
+    colors[1*3+0] = (rgb & 0x000f) << 24;
+    colors[1*3+1] = (rgb & 0x00f0) << 20;
+    colors[1*3+2] = (rgb & 0x0f00) << 16;
+    rgb = GetRGB4(_window(obj)->WScreen->ViewPort.ColorMap, 19);
+    colors[2*3+0] = (rgb & 0x000f) << 24;
+    colors[2*3+1] = (rgb & 0x00f0) << 20;
+    colors[2*3+2] = (rgb & 0x0f00) << 16;
+  }
+  #endif
 
   for(i=0; i < 3; i++)
   {
@@ -554,7 +577,7 @@ void SetupCustomPointers(struct NLData *data)
     }
     else
     {
-      if((data->SizePointerObj = (Object *)AllocMem(sizeof(sizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->SizePointerObj = (Object *)AllocVec(sizeof(sizePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->SizePointerObj, sizePointer, sizeof(sizePointer));
     }
     #endif
@@ -588,7 +611,7 @@ void SetupCustomPointers(struct NLData *data)
     }
     else
     {
-      if((data->MovePointerObj = (Object *)AllocMem(sizeof(movePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->MovePointerObj = (Object *)AllocVec(sizeof(movePointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->MovePointerObj, movePointer, sizeof(movePointer));
     }
     #endif
@@ -622,7 +645,7 @@ void SetupCustomPointers(struct NLData *data)
     }
     else
     {
-      if((data->SelectPointerObj = (Object *)AllocMem(sizeof(selectPointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
+      if((data->SelectPointerObj = (Object *)AllocVec(sizeof(selectPointer), MEMF_CHIP|MEMF_PUBLIC)) != NULL)
         memcpy(data->SelectPointerObj, selectPointer, sizeof(selectPointer));
     }
     #endif
@@ -653,7 +676,7 @@ void CleanupCustomPointers(struct NLData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->SizePointerObj);
     else
-      FreeMem(data->SizePointerObj, sizeof(sizePointer));
+      FreeVec(data->SizePointerObj);
     #endif
 
     data->SizePointerObj = NULL;
@@ -667,7 +690,7 @@ void CleanupCustomPointers(struct NLData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->MovePointerObj);
     else
-      FreeMem(data->MovePointerObj, sizeof(movePointer));
+      FreeVec(data->MovePointerObj);
     #endif
 
     data->MovePointerObj = NULL;
@@ -681,7 +704,7 @@ void CleanupCustomPointers(struct NLData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
       DisposeObject(data->SelectPointerObj);
     else
-      FreeMem(data->SelectPointerObj, sizeof(selectPointer));
+      FreeVec(data->SelectPointerObj);
     #endif
 
     data->SelectPointerObj = NULL;
