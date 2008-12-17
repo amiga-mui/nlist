@@ -668,7 +668,7 @@ DISPATCHER(NodeImage_Dispatcher)
 *******************************************************************************
 \*****************************************************************************/
 
-#if !defined(__MORPHOS__) && !defined(__amigaos4__) /* MorphOS supports Alloc/FreeVecPooled internally */
+#if !defined(__MORPHOS__) && !defined(__amigaos4__) /* MorphOS and OS4 support Alloc/FreeVecPooled internally */
 
 #ifdef MYDEBUG
 ULONG totalmem = 0;
@@ -715,32 +715,59 @@ INLINE VOID FreeVecPooled( APTR mempool, APTR mem )
 
 VOID CloseClipboard( struct IOClipReq *req )
 {
-  if ( req )
+  if(req != NULL)
   {
     struct MsgPort *mp = req->io_Message.mn_ReplyPort;
+
     if (req->io_Device != NULL)
       CloseDevice( (struct IORequest *)req );
+
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_IOREQUEST, req);
+    FreeSysObject(ASOT_PORT, mp);
+    #else
     DeleteIORequest( (struct IORequest *)req );
     DeleteMsgPort(mp);
+    #endif
   }
 }
 
 struct IOClipReq *OpenClipboard( LONG unit )
 {
   struct MsgPort *mp;
-  if((mp = CreateMsgPort()))
+
+  #if defined(__amigaos4__)
+  mp = AllocSysObject(ASOT_PORT, TAG_DONE);
+  #else
+  mp = CreateMsgPort();
+  #endif
+  if(mp != NULL)
   {
     struct IOClipReq *req;
-    if((req = (struct IOClipReq *)CreateIORequest(mp, sizeof(struct IOClipReq))))
+
+    #if defined(__amigaos4__)
+    req = (struct IOClipReq *)AllocSysObjectTags(ASOT_IOREQUEST, ASOIOR_Size, sizeof(*req),
+                                                                 ASOIOR_ReplyPort, mp,
+                                                                 TAG_DONE);
+    #else
+    req = (struct IOClipReq *)CreateIORequest(mp, sizeof(*req));
+    #endif
+    if(req != NULL)
     {
-      if(!(OpenDevice("clipboard.device", unit, (struct IORequest *)req, 0L)))
+      if(OpenDevice("clipboard.device", unit, (struct IORequest *)req, 0L) == 0)
       {
         return( req );
       }
       CloseClipboard( req );
     }
     else
+    {
+      #if defined(__amigaos4__)
+      FreeSysObject(ASOT_PORT, mp);
+      #else
       DeleteMsgPort(mp);
+      #endif
+    }
   }
 
   return( NULL );
@@ -5476,9 +5503,25 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
   /*
   **  Create new memory pool.
   */
-  if((ld.MemoryPool = CreatePool(MEMF_CLEAR, 16384, 8192)))
+  #if defined(__amigaos4__)
+  ld.MemoryPool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED|MEMF_CLEAR,
+                                                   ASOPOOL_Puddle, 16384,
+                                                   ASOPOOL_Threshold, 8192,
+                                                   TAG_DONE);
+  #else
+  ld.MemoryPool = CreatePool(MEMF_CLEAR, 16384, 8192);
+  #endif
+  if(ld.MemoryPool != NULL)
   {
-    if((ld.TreePool = CreatePool(MEMF_CLEAR, 16384, 4096)))
+    #if defined(__amigaos4__)
+    ld.TreePool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED|MEMF_CLEAR,
+                                                   ASOPOOL_Puddle, 16384,
+                                                   ASOPOOL_Threshold, 4096,
+                                                   TAG_DONE);
+    #else
+    ld.TreePool = CreatePool(MEMF_CLEAR, 16384, 4096);
+    #endif
+    if(ld.TreePool != NULL)
     {
       ld.Format   = NULL;
       ld.ActiveNode = CTN( MUIV_NListtree_Active_Off );
@@ -5668,11 +5711,23 @@ ULONG _Dispose( struct IClass *cl, Object *obj, Msg msg )
 
   ret = DoSuperMethodA( cl, obj, msg );
 
-  if ( treepool )
-    DeletePool( treepool );
+  if(treepool != NULL)
+  {
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_MEMPOOL, treepool);
+    #else
+    DeletePool(treepool);
+    #endif
+  }
 
-  if ( mempool )
-    DeletePool( mempool );
+  if(mempool != NULL)
+  {
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_MEMPOOL, mempool);
+    #else
+    DeletePool(mempool);
+    #endif
+  }
 
   /*
   **  Delete special image classes.
@@ -8003,10 +8058,23 @@ ULONG _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NList
 
     QuickRemoveNodes( data, ln );
 
-    if ( data->TreePool )
-      DeletePool( data->TreePool );
+    if(data->TreePool != NULL)
+    {
+      #if defined(__amigaos4__)
+      FreeSysObject(ASOT_MEMPOOL, data->TreePool);
+      #else
+      DeletePool(data->TreePool);
+      #endif
+    }
 
-    data->TreePool = CreatePool( MEMF_CLEAR, 16384, 4096 );
+    #if defined(__amigaos4__)
+    data->TreePool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED|MEMF_CLEAR,
+                                                      ASOPOOL_Puddle, 16384,
+                                                      ASOPOOL_Threshold, 4096,
+                                                      TAG_DONE);
+    #else
+    data->TreePool = CreatePool(MEMF_CLEAR, 16384, 4096);
+    #endif
 
     NewList( (struct List *)&data->RootList.ln_List );
     data->RootList.ln_Table.tb_Table = NULL;
