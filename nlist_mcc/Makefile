@@ -242,8 +242,7 @@ MCCOBJS = $(OBJDIR)/library.o      \
           $(OBJDIR)/NList_img2.o   \
           $(OBJDIR)/Pointer.o      \
           $(OBJDIR)/Debug.o        \
-          $(OBJDIR)/vastubs.o      \
-          $(OBJDIR)/libpool.o
+          $(OBJDIR)/vastubs.o
 
 TESTOBJS = $(OBJDIR)/NList-Test.o   \
            $(OBJDIR)/NList_mcc.o    \
@@ -265,10 +264,15 @@ TESTOBJS = $(OBJDIR)/NList-Test.o   \
            $(OBJDIR)/NList_img2.o   \
            $(OBJDIR)/Pointer.o      \
            $(OBJDIR)/Debug.o        \
-           $(OBJDIR)/vastubs.o      \
-          $(OBJDIR)/libpool.o
+           $(OBJDIR)/vastubs.o
 
 #
+
+# only the OS3 build needs the custom memory pool implementations if run on OS2.x
+ifeq ($(OS), os3)
+MCCOBJS  += $(OBJDIR)/libpool.o
+TESTOBJS += $(OBJDIR)/libpool.o
+endif
 
 all: $(BINDIR) $(OBJDIR) $(MCCTARGET) $(TESTTARGET)
 

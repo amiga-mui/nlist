@@ -7,6 +7,8 @@ $URL$
 
 2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlist_mcc/Makefile: modified Makefile to include the custom memory pool
+    functions for OS2.x in the OS3 build only.
   * nlisttree_mcc/NListtree.c: replaced some deprecated function calls by new
     ones for the the OS4 build.
   * nlist_mcc/NList_func3.c, nlist_mcc/cbio.c: replaced some deprecated function
