@@ -68,20 +68,37 @@ struct IOClipReq *CBOpen(ULONG unit)
   struct MsgPort *mp;
   struct IOClipReq *ior;
 
-  if((mp = CreateMsgPort()))
+  #if defined(__amigaos4__)
+  if((mp = AllocSysObjectTags(ASOT_PORT, TAG_DONE)) != NULL)
   {
-    if((ior = (struct IOClipReq *)CreateIORequest(mp,sizeof(struct IOClipReq))))
+    if((ior = (struct IOClipReq *)AllocSysObjectTags(ASOT_IOREQUEST, ASOIOR_Size, sizeof(*ior),
+                                                                     ASOIOR_ReplyPort, mp,
+                                                                     TAG_DONE)) != NULL)
+  {
+  #else
+  if((mp = CreateMsgPort()) != NULL)
+  {
+    if((ior = (struct IOClipReq *)CreateIORequest(mp, sizeof(*ior))) != NULL)
     {
-      if(!(OpenDevice("clipboard.device",unit,(struct IORequest *)ior,0L)))
+  #endif
+      if(OpenDevice("clipboard.device", unit, (struct IORequest *)ior, 0L) == 0)
       {
-        return (ior);
+        return ior;
       }
 
+  #if defined(__amigaos4__)
+      FreeSysObject(ASOT_IOREQUEST, ior);
+    }
+
+    FreeSysObject(ASOT_PORT, mp);
+  }
+  #else
       DeleteIORequest((struct IORequest *)ior);
     }
 
     DeleteMsgPort(mp);
   }
+  #endif
 
   return(NULL);
 }
@@ -109,8 +126,13 @@ void CBClose(struct IOClipReq *ior)
   mp = ior->io_Message.mn_ReplyPort;
 
   CloseDevice((struct IORequest *)ior);
+  #if defined(__amigaos4__)
+  FreeSysObject(ASOT_IOREQUEST, ior);
+  FreeSysObject(ASOT_PORT, mp);
+  #else
   DeleteIORequest((struct IORequest *)ior);
   DeleteMsgPort(mp);
+  #endif
 }
 
 /****** cbio/CBWriteFTXT *********************************************

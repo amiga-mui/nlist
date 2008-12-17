@@ -237,13 +237,18 @@ static char *stpncpy_noesc(char *to,char *from,int len)
 
 /* Create new pool, don't care about KickStart version and MorphOS. */
 /* Called by OM_NEW. */
-APTR	NL_Pool_Create( ULONG puddlesize, ULONG threshsize)
+APTR NL_Pool_Create( ULONG puddlesize, ULONG threshsize)
 {
-   #if defined(__amigaos4__) || defined(__MORPHOS__)
+   #if defined(__amigaos4__)
+   return AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                           ASOPOOL_Puddle, puddlesize,
+                                           ASOPOOL_Threshold, threshsize,
+                                           TAG_DONE);
+   #elif defined(__MORPHOS__)
    return(CreatePool(MEMF_ANY, puddlesize, threshsize));
    #else
 	/* Is KickStart at least V39+? */
-	if( LIBVER( SysBase ) >= 39 )
+	if( LIBVER( SysBase ) >= MINVER )
 	  return(CreatePool(MEMF_ANY, puddlesize, threshsize));
 	else
 	  return(LibCreatePool(MEMF_ANY, puddlesize, threshsize));
@@ -252,20 +257,22 @@ APTR	NL_Pool_Create( ULONG puddlesize, ULONG threshsize)
 
 /* Delete pool created by NL_Pool_Create(). */
 /* Called by OM_DISPOSE. */
-VOID	NL_Pool_Delete( APTR pool )
+VOID NL_Pool_Delete( APTR pool )
 {
-	if(pool)
-	{
-      #if defined(__amigaos4__) || defined(__MORPHOS__)
-      DeletePool(pool);
-      #else
-		/* KickStart is at least V39+? */
-		if(LIBVER(SysBase) >= 39)
-			DeletePool(pool);
-		else
-			LibDeletePool(pool);
-      #endif
-	}
+  if(pool != NULL)
+  {
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_MEMPOOL, pool);
+    #elif defined(__MORPHOS__)
+    DeletePool(pool);
+    #else
+	/* KickStart is at least V39+? */
+	if(LIBVER(SysBase) >= MINVER)
+	  DeletePool(pool);
+	else
+	  LibDeletePool(pool);
+    #endif
+  }
 }
 
 /* Low level alloc memory of pool created by NL_Pool_Create(). */
