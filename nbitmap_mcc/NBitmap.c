@@ -21,42 +21,27 @@
 ***************************************************************************/
 
 // ansi includes
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
-#include <math.h>
+
+// system includes
+#include <proto/exec.h>
+#include <proto/datatypes.h>
+#include <proto/graphics.h>
+#include <proto/muimaster.h>
+#include <mui/NBitmap_mcc.h>
 
 // system
-#include <cybergraphx/cybergraphics.h>
 #include <datatypes/pictureclass.h>
-#include <dos/dosextens.h>
-#include <dos/dostags.h>
-#include <exec/execbase.h>
-#include <exec/lists.h>
-#include <exec/nodes.h>
-#include <graphics/layers.h>
 
 #if defined(__amigaos4__)
 #include <graphics/blitattr.h>
+#else
+#include <proto/cybergraphics.h>
+#include <cybergraphx/cybergraphics.h>
 #endif
 
-// system includes
-#include <proto/cybergraphics.h>
-#include <proto/datatypes.h>
-#include <proto/dos.h>
-#include <proto/exec.h>
-#include <proto/gadtools.h>
-#include <proto/graphics.h>
-#include <proto/intuition.h>
-#include <proto/layers.h>
-#include <proto/muimaster.h>
-#include <proto/utility.h>
-#include <mui/NBitmap_mcc.h>
-
 // libraries
-#include <libraries/gadtools.h>
 #include <libraries/mui.h>
-#include <libraries/amigaguide.h>
 
 // local includes
 #include "NBitmap.h"
@@ -818,10 +803,12 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
         SHOWVALUE(DBF_DRAW, error);
 
         #else
+
         if(data->depth == 24)
           WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
         else
           WritePixelArrayAlpha(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
+
         #endif
       }
     }
@@ -848,7 +835,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
                                 BLITA_SrcX, 0,
                                 BLITA_SrcY, 0,
                                 BLITA_DestX, x+1,
-                                BLITA_DestY, y+1
+                                BLITA_DestY, y+1,
                                 BLITA_Width, data->shadeWidth,
                                 BLITA_Height, data->shadeHeight,
                                 BLITA_SrcType, BLITT_ARGB32,
@@ -862,7 +849,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
                                 BLITA_SrcX, 0,
                                 BLITA_SrcY, 0,
                                 BLITA_DestX, x+1,
-                                BLITA_DestY, y+1
+                                BLITA_DestY, y+1,
                                 BLITA_Width, data->shadeWidth,
                                 BLITA_Height, data->shadeHeight,
                                 BLITA_SrcType, BLITT_ARGB32,
@@ -872,11 +859,14 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
                                 TAG_DONE);
 
         SHOWVALUE(DBF_DRAW, error);
+
         #else
+
         if(data->pressed)
           WritePixelArrayAlpha(data->pressedShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
         else
           WritePixelArrayAlpha(data->overShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
+
         #endif
       }
     }

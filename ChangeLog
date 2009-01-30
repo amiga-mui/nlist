@@ -21,6 +21,8 @@ $URL$
     longer grabs the already blitted images from the RastPort and applies a hand
     crafted alpha shade. Instead precalculated shade arrays are used and alpha
     blitted over the normal images. This speeds things up a lot.
+  * nbitmap.c/misc: removed dependency on cybergraphics.library since everything
+    is done via graphics.library now.
 
 2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
 

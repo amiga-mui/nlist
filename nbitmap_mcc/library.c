@@ -50,11 +50,12 @@ static const char *used_classesP[] = { "NBitmap.mcp", NULL };
 
 // libraries
 struct Library *DataTypesBase = NULL;
+#if !defined(__amigaos4__)
 struct Library *CyberGfxBase = NULL;
+#endif
 
 #if defined(__amigaos4__)
 struct DataTypesIFace *IDataTypes = NULL;
-struct CyberGfxIFace *ICyberGfx = NULL;
 #endif
 
 /******************************************************************************/
@@ -81,11 +82,12 @@ static BOOL ClassInit(UNUSED struct Library *base)
   if((DataTypesBase = OpenLibrary("datatypes.library", 39L)) != NULL &&
      GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
   {
-
+    #if !defined(__amigaos4__)
     if((CyberGfxBase = OpenLibrary("cybergraphics.library", 40)) != NULL &&
        GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
     {
     }
+    #endif
 
     res = TRUE;
   }
@@ -99,12 +101,15 @@ static VOID ClassExpunge(UNUSED struct Library *base)
   ENTER();
 
   /* close libraries */
+
+  #if !defined(__amigaos4__)
   if(CyberGfxBase != NULL)
   {
     DROPINTERFACE(ICyberGfx);
     CloseLibrary(CyberGfxBase);
     CyberGfxBase = NULL;
   }
+  #endif
 
   if(DataTypesBase != NULL)
   {
