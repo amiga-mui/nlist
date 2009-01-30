@@ -319,7 +319,7 @@ VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj)
 ///
 /// NBitmap_SetupShades()
 // create an ARGB shade
-static BOOL SetupShades(struct InstData *data)
+BOOL NBitmap_SetupShades(struct InstData *data)
 {
   uint32 pixel;
 
@@ -385,7 +385,7 @@ static BOOL SetupShades(struct InstData *data)
 ///
 /// CleanupShades()
 // delete the ARGB shades
-static void CleanupShades(struct InstData *data)
+void NBitmap_CleanupShades(struct InstData *data)
 {
   ENTER();
 
@@ -499,7 +499,7 @@ BOOL NBitmap_OldNewImage(struct IClass *cl, Object *obj)
                 D(DBF_DATATYPE, "new: READPIXELARRAY returned %ld", error);
 
                 // finally create the shades
-                result = SetupShades(data);
+                result = NBitmap_SetupShades(data);
               }
             }
           }
@@ -554,7 +554,7 @@ VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj)
       }
     }
 
-    CleanupShades(data);
+    NBitmap_CleanupShades(data);
   }
 
   LEAVE();
@@ -617,7 +617,7 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
       result = TRUE;
     }
     else if(data->depth > 8)
-      result = SetupShades(data);
+      result = NBitmap_SetupShades(data);
   }
 
   RETURN(result);
@@ -648,7 +648,7 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
       }
     }
 
-    CleanupShades(data);
+    NBitmap_CleanupShades(data);
 
     // stored config
     FreeConfig(data);

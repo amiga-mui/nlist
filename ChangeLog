@@ -23,6 +23,8 @@ $URL$
     blitted over the normal images. This speeds things up a lot.
   * nbitmap.c/misc: removed dependency on cybergraphics.library since everything
     is done via graphics.library now.
+  * nbitmap.c/NBitmap.c, nbitmap_mcc/dispatcher.c: the latest changes didn't
+    respect a possibly changed border size during AskMinMax.
 
 2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
 

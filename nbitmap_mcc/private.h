@@ -136,6 +136,8 @@ VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj);
 BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj);
 VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj);
 BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj);
+BOOL NBitmap_SetupShades(struct InstData *data);
+void NBitmap_CleanupShades(struct InstData *data);
 
 #if defined(__MORPHOS__)
 #ifndef WritePixelArrayAlpha

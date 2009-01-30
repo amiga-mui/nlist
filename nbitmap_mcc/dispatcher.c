@@ -398,6 +398,9 @@ ULONG NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *m
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
+    uint32 oldBorderHoriz = data->border_horiz;
+    uint32 oldBorderVert = data->border_vert;
+
     // spacing
     data->border_horiz = 0;
     data->border_vert = 0;
@@ -412,32 +415,41 @@ ULONG NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *m
     }
 
     /* label */
-	 data->label_horiz = 0;
-	 data->label_vert = 0;
+	data->label_horiz = 0;
+	data->label_vert = 0;
 
-	 if(data->label != NULL && data->button != FALSE)
-	 {
-	   struct RastPort rp;
+    if(data->label != NULL && data->button != FALSE)
+    {
+      struct RastPort rp;
 
-		memcpy(&rp, &_screen(obj)->RastPort, sizeof(rp));
+      memcpy(&rp, &_screen(obj)->RastPort, sizeof(rp));
 
-		SetFont(&rp, _font(obj));
-		TextExtent(&rp, (STRPTR)data->label, strlen(data->label), &data->labelte);
+      SetFont(&rp, _font(obj));
+      TextExtent(&rp, (STRPTR)data->label, strlen(data->label), &data->labelte);
 
-		if(data->width < (uint32)data->labelte.te_Width) data->border_horiz += (data->labelte.te_Width - data->width);
-		data->label_vert = data->labelte.te_Height;
-		data->border_vert += data->labelte.te_Height;
-		data->border_vert += 2;
-	 }
+      if(data->width < (uint32)data->labelte.te_Width) data->border_horiz += (data->labelte.te_Width - data->width);
+      data->label_vert = data->labelte.te_Height;
+      data->border_vert += data->labelte.te_Height;
+      data->border_vert += 2;
+    }
 
     // standard width & height
-	 msg->MinMaxInfo->MinWidth = data->width + data->border_horiz;
-	 msg->MinMaxInfo->DefWidth = data->width + data->border_horiz;
-	 msg->MinMaxInfo->MaxWidth = data->width + data->border_horiz;
+    msg->MinMaxInfo->MinWidth = data->width + data->border_horiz;
+    msg->MinMaxInfo->DefWidth = data->width + data->border_horiz;
+    msg->MinMaxInfo->MaxWidth = data->width + data->border_horiz;
 
-	 msg->MinMaxInfo->MinHeight = data->height + data->border_vert;
-	 msg->MinMaxInfo->DefHeight = data->height + data->border_vert;
-	 msg->MinMaxInfo->MaxHeight = data->height + data->border_vert;
+    msg->MinMaxInfo->MinHeight = data->height + data->border_vert;
+    msg->MinMaxInfo->DefHeight = data->height + data->border_vert;
+    msg->MinMaxInfo->MaxHeight = data->height + data->border_vert;
+
+    if(data->border_horiz != oldBorderHoriz || data->border_vert != oldBorderVert)
+    {
+      if(data->depth > 8) {
+        // the border size has changed and we must recalculate the shade arrays
+        NBitmap_CleanupShades(data);
+        NBitmap_SetupShades(data);
+      }
+    }
   }
 
   RETURN(0);
