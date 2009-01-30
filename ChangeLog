@@ -17,6 +17,10 @@ $URL$
     treated a such.
   * Makefile: removed the printf usage with the ANSI codes and replaced them
     by the more intuitive CC/LD echo output.
+  * nbitmap_mcc/NBitmap.c: completely rewrote the images shading. The class no
+    longer grabs the already blitted images from the RastPort and applies a hand
+    crafted alpha shade. Instead precalculated shade arrays are used and alpha
+    blitted over the normal images. This speeds things up a lot.
 
 2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
 

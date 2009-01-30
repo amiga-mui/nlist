@@ -65,7 +65,27 @@
 #include "Debug.h"
 
 #if !defined(__amigaos4__) && !defined(__MORPHOS__)
-#include "WritePixelArrayAlpha.c"
+//#include "WritePixelArrayAlpha.c"
+  #ifndef WritePixelArrayAlpha
+    #if defined(__SASC)
+      ULONG WritePixelArrayAlpha(APTR, UWORD, UWORD, UWORD, struct RastPort *, UWORD, UWORD, UWORD, UWORD, ULONG);
+      #pragma libcall CyberGfxBase WritePixelArrayAlpha d8 76543921080A
+    #else
+      #define WritePixelArrayAlpha(__p0, __p1, __p2, __p3, __p4, __p5, __p6, __p7, __p8, __p9) \
+        LP10(216, ULONG , WritePixelArrayAlpha, \
+          APTR , __p0, a0, \
+          UWORD , __p1, d0, \
+          UWORD , __p2, d1, \
+          UWORD , __p3, d2, \
+          struct RastPort *, __p4, a1, \
+          UWORD , __p5, d3, \
+          UWORD , __p6, d4, \
+          UWORD , __p7, d5, \
+          UWORD , __p8, d6, \
+          ULONG , __p9, d7, \
+          , CYBERGRAPHICS_BASE_NAME)
+    #endif
+  #endif
 #endif
 
 // functions
@@ -312,6 +332,93 @@ VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj)
 }
 
 ///
+/// NBitmap_SetupShades()
+// create an ARGB shade
+static BOOL SetupShades(struct InstData *data)
+{
+  uint32 pixel;
+
+  ENTER();
+
+  data->shadeWidth = data->width + data->border_horiz - 2;
+  data->shadeHeight = data->height + data->border_vert - 2;
+  data->shadeBytesPerRow = data->shadeWidth * 4;
+
+  // the shades pixel color
+  pixel = ((ULONG)data->prefs.overlay_r << 16) | ((ULONG)data->prefs.overlay_g << 8) | (ULONG)data->prefs.overlay_b;
+
+  if((data->pressedShadePixels = AllocVec(data->shadeWidth * data->shadeHeight * 4, MEMF_ANY)) != NULL)
+  {
+    uint32 w, h;
+    uint32 alpha;
+    uint32 *p = data->pressedShadePixels;
+
+    // calculate the alpha channel value
+    alpha = (255L - (((255L * 1000L) / (uint32)data->prefs.overlay_shadepress) & 0xff)) << 24;
+
+    // fill the array with the pixel and alpha channel value
+    // the border will be the 100% opaque pixel color
+    for(h = 0; h < data->shadeHeight; h++)
+    {
+      for(w = 0; w < data->shadeWidth; w++)
+      {
+        if(h == 0 || h == data->shadeHeight-1 || w == 0 || w == data->shadeWidth-1)
+          *p++ = 0xff000000 | pixel;
+        else
+          *p++ = alpha | pixel;
+      }
+    }
+  }
+
+  if((data->overShadePixels = AllocVec(data->shadeWidth * data->shadeHeight * 4, MEMF_ANY)) != NULL)
+  {
+    uint32 w, h;
+    uint32 alpha;
+    uint32 *p = data->overShadePixels;
+
+    // calculate the alpha channel value
+    alpha = (255L - (((255L * 1000L) / (uint32)data->prefs.overlay_shadeover) & 0xff)) << 24;
+
+    // fill the array with the pixel and alpha channel value
+    // the border will be the 100% opaque pixel color
+    for(h = 0; h < data->shadeHeight; h++)
+    {
+      for(w = 0; w < data->shadeWidth; w++)
+      {
+        if(h == 0 || h == data->shadeHeight-1 || w == 0 || w == data->shadeWidth-1)
+          *p++ = 0xff000000 | pixel;
+        else
+          *p++ = alpha | pixel;
+      }
+    }
+  }
+
+  RETURN((data->pressedShadePixels != NULL && data->overShadePixels != NULL));
+  return (data->pressedShadePixels != NULL && data->overShadePixels != NULL);
+}
+
+///
+/// CleanupShades()
+// delete the ARGB shades
+static void CleanupShades(struct InstData *data)
+{
+  ENTER();
+
+  if(data->pressedShadePixels != NULL)
+  {
+    FreeVec(data->pressedShadePixels);
+    data->pressedShadePixels = NULL;
+  }
+  if(data->overShadePixels != NULL)
+  {
+    FreeVec(data->overShadePixels);
+    data->overShadePixels = NULL;
+  }
+
+  LEAVE();
+}
+
+///
 /// NBitmap_NewImage()
 //
 BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
@@ -323,11 +430,12 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
 
   if(((data = INST_DATA(cl, obj))!=NULL) && (data->dt_obj[0]))
   {
-   ULONG i;
+    ULONG i;
 
     for(i=0;i<3;i++)
-   {
-    if(data->dt_obj[i] != NULL) result = NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
+    {
+      if(data->dt_obj[i] != NULL)
+        result = NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
     }
   }
 
@@ -405,7 +513,8 @@ BOOL NBitmap_OldNewImage(struct IClass *cl, Object *obj)
                 error = DoMethod(data->dt_obj[i], PDTM_READPIXELARRAY, data->arraypixels[i], data->fmt, data->arraybpr, 0, 0, data->width, data->height);
                 D(DBF_DATATYPE, "new: READPIXELARRAY returned %ld", error);
 
-                result = TRUE;
+                // finally create the shades
+                result = SetupShades(data);
               }
             }
           }
@@ -459,6 +568,8 @@ VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj)
         data->arraypixels[i] = NULL;
       }
     }
+
+    CleanupShades(data);
   }
 
   LEAVE();
@@ -466,9 +577,10 @@ VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj)
 ///
 /// NBitmap_SetupImage()
 //
-VOID NBitmap_SetupImage(struct IClass *cl, Object *obj)
+BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
 {
   struct InstData *data;
+  BOOL result = FALSE;
 
   ENTER();
 
@@ -516,10 +628,15 @@ VOID NBitmap_SetupImage(struct IClass *cl, Object *obj)
           SHOWVALUE(DBF_DATATYPE, data->dt_bitmap[i]);
         }
       }
+
+      result = TRUE;
     }
+    else if(data->depth > 8)
+      result = SetupShades(data);
   }
 
-  LEAVE();
+  RETURN(result);
+  return result;
 }
 ///
 /// NBitmap_CleanupImage()
@@ -545,6 +662,8 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
         SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
       }
     }
+
+    CleanupShades(data);
 
     // stored config
     FreeConfig(data);
@@ -700,13 +819,9 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
         #else
         if(data->depth == 24)
-        {
           WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
-        }
         else
-        {
           WritePixelArrayAlpha(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
-        }
         #endif
       }
     }
@@ -724,58 +839,45 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
       }
       else
       {
-        UBYTE r, g, b;
-        uint16 shade;
-        ULONG size;
-        UBYTE *array;
-
-        /* shaded overlay */
-        r = data->prefs.overlay_r;
-        g = data->prefs.overlay_g;
-        b = data->prefs.overlay_b;
+        #if defined(__amigaos4__)
+        uint32 error;
 
         if(data->pressed)
-          shade = data->prefs.overlay_shadepress;
+          error = BltBitMapTags(BLITA_Source, data->pressedShadePixels,
+                                BLITA_Dest, _rp(obj),
+                                BLITA_SrcX, 0,
+                                BLITA_SrcY, 0,
+                                BLITA_DestX, x+1,
+                                BLITA_DestY, y+1
+                                BLITA_Width, data->shadeWidth,
+                                BLITA_Height, data->shadeHeight,
+                                BLITA_SrcType, BLITT_ARGB32,
+                                BLITA_DestType, BLITT_RASTPORT,
+                                BLITA_SrcBytesPerRow, data->shadeBytesPerRow,
+                                BLITA_UseSrcAlpha, TRUE,
+                                TAG_DONE);
         else
-          shade = data->prefs.overlay_shadeover;
+          error = BltBitMapTags(BLITA_Source, data->overShadePixels,
+                                BLITA_Dest, _rp(obj),
+                                BLITA_SrcX, 0,
+                                BLITA_SrcY, 0,
+                                BLITA_DestX, x+1,
+                                BLITA_DestY, y+1
+                                BLITA_Width, data->shadeWidth,
+                                BLITA_Height, data->shadeHeight,
+                                BLITA_SrcType, BLITT_ARGB32,
+                                BLITA_DestType, BLITT_RASTPORT,
+                                BLITA_SrcBytesPerRow, data->shadeBytesPerRow,
+                                BLITA_UseSrcAlpha, TRUE,
+                                TAG_DONE);
 
-        /* */
-        size = (twidth * theight) * 3;
-        if((array = AllocVec(size, MEMF_ANY|MEMF_CLEAR)) != NULL)
-        {
-          ULONG h;
-          UBYTE *p = array;
-          ULONG pxl;
-
-          ReadPixelArray(array, 0, 0, twidth * 3, _rp(obj), x+1, y+1, twidth, theight, RECTFMT_RGB);
-
-          for(h = 0; h < theight; h++)
-          {
-            uint32 w;
-
-            for(w = 0; w < twidth; w++)
-            {
-              uint32 value;
-
-              // The temporary value must by 32bit wide, because each color component
-              // can be 0..255, multiplied by 1000 this will exceed the 16bit limit.
-              // All in all this avoids usage of float or double values.
-              value = *p + r;
-              *p++ = (value * 1000) / shade;
-              value = *p + g;
-              *p++ = (value * 1000) / shade;
-              value = *p + b;
-              *p++ = (value * 1000) / shade;
-            }
-          }
-
-          pxl = ((uint32)r << 16) | ((uint32)g << 8) | (uint32)b;
-
-          FillPixelArray(_rp(obj), x, y, twidth+2, theight+2, pxl);
-          WritePixelArray(array, 0, 0, twidth * 3, _rp(obj), x+1, y+1, twidth, theight, RECTFMT_RGB);
-
-          FreeVec(array);
-        }
+        SHOWVALUE(DBF_DRAW, error);
+        #else
+        if(data->pressed)
+          WritePixelArrayAlpha(data->pressedShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
+        else
+          WritePixelArrayAlpha(data->overShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
+        #endif
       }
     }
   }

@@ -248,14 +248,13 @@ ULONG NBitmap_Dispose(struct IClass *cl, Object *obj, Msg msg)
 /* ULONG NBitmap_Setup() */
 ULONG NBitmap_Setup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
 {
-  ULONG result = 0;
+  ULONG result;
 
   ENTER();
 
-  if(DoSuperMethodA(cl, obj, (Msg)rinfo))
+  if((result = DoSuperMethodA(cl, obj, (Msg)rinfo)) != 0)
   {
-    NBitmap_SetupImage(cl, obj);
-    result = 1;
+    result = NBitmap_SetupImage(cl, obj);
   }
 
   RETURN(result);

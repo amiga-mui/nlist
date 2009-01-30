@@ -91,6 +91,11 @@ struct InstData
   uint32 label_horiz, label_vert;
   uint32 arraybpp, arraybpr, arraysize;
   APTR arraypixels[3];
+  uint32 shadeWidth;
+  uint32 shadeHeight;
+  uint32 shadeBytesPerRow;
+  APTR overShadePixels;
+  APTR pressedShadePixels;
 
   uint32 *dt_colours[3];
   Object *dt_obj[3];
@@ -128,7 +133,7 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
 VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj);
 BOOL NBitmap_NewImage(struct IClass *cl, Object *obj);
 VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj);
-VOID NBitmap_SetupImage(struct IClass *cl, Object *obj);
+BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj);
 VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj);
 BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj);
 
