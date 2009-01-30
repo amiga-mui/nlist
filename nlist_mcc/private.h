@@ -235,6 +235,7 @@ struct NLData
   char *NList_SkipChars;
   char *NList_WordSelectChars;
   char *NList_Title;
+  const char *NList_IgnoreSpecialChars;
   LONG  NList_TitleSeparator;
   LONG  NList_TitleMark;
   LONG  NList_TitleMark2;

@@ -1141,6 +1141,11 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         data->NList_KeyRightFocus = (Object *)tag->ti_Data;
       break;
 
+      case MUIA_NList_IgnoreSpecialChars:
+        data->NList_IgnoreSpecialChars = (char *)tag->ti_Data;
+      break;
+
+
 /*
  *       case 0x8042AC64 :
  *       case 0x8042BE50 :
@@ -1276,6 +1281,8 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_NList_TitleMark2:				*msg->opg_Storage = (ULONG) data->NList_TitleMark2;		return( TRUE );
     case MUIA_NList_AutoClip:				*msg->opg_Storage = (ULONG) data->NList_AutoClip;     return(TRUE);
     case MUIA_NList_PrivateData:		*msg->opg_Storage = (ULONG) data->NList_PrivateData;	return(TRUE);
+
+    case MUIA_NList_IgnoreSpecialChars: *msg->opg_Storage = (ULONG)data->NList_IgnoreSpecialChars; return(TRUE);
 
     case MUIA_NList_KeyUpFocus:     *msg->opg_Storage = (ULONG)data->NList_KeyUpFocus;    return(TRUE);
     case MUIA_NList_KeyDownFocus:   *msg->opg_Storage = (ULONG)data->NList_KeyDownFocus;  return(TRUE);

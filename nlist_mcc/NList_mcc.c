@@ -352,6 +352,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_TitleSeparator = TRUE;
   data->NList_TitleMark = MUIV_NList_TitleMark_None;
   data->NList_TitleMark2 = MUIV_NList_TitleMark2_None;
+  data->NList_IgnoreSpecialChars = NULL;
   data->NList_LastInserted = -1;
   data->NList_Quiet = 0;
   data->NList_AffActive = MUIV_NList_Active_Off;
@@ -939,6 +940,9 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
       NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
   }
+
+  if((tag = FindTagItem(MUIA_NList_IgnoreSpecialChars, taglist)))
+    data->NList_IgnoreSpecialChars = (const char *)tag->ti_Data;
 
   data->ihnode.ihn_Object  = obj;
   data->ihnode.ihn_Millis  = 30;

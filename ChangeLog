@@ -9,6 +9,12 @@ $URL$
 
   * nbalance_mcc/Makefile, nbitmap_mcc/Makefile: the OS4 build is now linked
     against newlib instead of clib2.
+  * nlist_mcc/misc: added new tag MUIA_NList_IgnoreSpecialChars. This attribute
+    accepts a NUL terminated string of characters to be ignored during string
+    parsing. This is meant to be able to use special characters like 0xA0, which
+    is used by some fonts (i.e. the Alpha character in some greek fonts). By
+    default the 0xA0 character is used as a "non breaking space" and will be
+    treated a such.
 
 2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
 

@@ -24,6 +24,7 @@
 ***************************************************************************/
 
 #include <stdlib.h>
+#include <string.h>
 
 #include <clib/alib_protos.h>
 #include <proto/intuition.h>
@@ -809,7 +810,8 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
 
 		//D(bug( "%ld - Setting aff info %ld: %15.15s - pos: %ld, len: %ld, style: %ld.\n", __LINE__, ni, afinfo->strptr, afinfo->pos, afinfo->len, afinfo->style ));
       }
-      else if ((ptr1[0] == '\t') || (((unsigned char)ptr1[0]) == 0xA0))
+      else if ((ptr1[0] == '\t' && (data->NList_IgnoreSpecialChars == NULL || strchr(data->NList_IgnoreSpecialChars, '\t') == 0)) ||
+               (((unsigned char)ptr1[0]) == 0xA0 && (data->NList_IgnoreSpecialChars == NULL || strchr(data->NList_IgnoreSpecialChars, 0xa0) == 0)))
       {
         there_is_char = 1;
         if (afinfo->len > 0)

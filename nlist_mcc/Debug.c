@@ -86,6 +86,8 @@ void SetupDebug(void)
     {
       { "always",   DBF_ALWAYS  },
       { "startup",  DBF_STARTUP },
+      { "select",   DBF_SELECT  },
+      { "input",    DBF_INPUT   },
       { "all",      DBF_ALL     },
       { NULL,       0           }
     };

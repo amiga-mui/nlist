@@ -127,6 +127,8 @@
 #define MUIA_NList_PrivateData              0x9d51006E /* GM  isg  APTR              */
 #define MUIA_NList_EntryValueDependent      0x9d51006F /* GM  isg  BOOL              */
 
+#define MUIA_NList_IgnoreSpecialChars       0x9d510070 /* GM  isg  const char *      */
+
 #define MUIA_NList_StackCheck               0x9d510097 /* GM  i..  BOOL              */
 #define MUIA_NList_WordSelectChars          0x9d510098 /* GM  isg  char *            */
 #define MUIA_NList_EntryClick               0x9d510099 /* GM  ..gn LONG              */
