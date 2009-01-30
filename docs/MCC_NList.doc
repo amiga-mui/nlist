@@ -43,6 +43,7 @@ NList.mcc/MUIA_NList_Horiz_DeltaFactor
 NList.mcc/MUIA_NList_Horiz_Entries
 NList.mcc/MUIA_NList_Horiz_First
 NList.mcc/MUIA_NList_Horiz_Visible
+NList.mcc/MUIA_NList_IgnoreSpecialChars
 NList.mcc/MUIA_NList_Imports
 NList.mcc/MUIA_NList_Input
 NList.mcc/MUIA_NList_InsertPosition
@@ -1180,6 +1181,22 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_NList_Horiz_DeltaFactor, MUIA_NList_Horiz_Entries, MUIA_NList_Horiz_First
+NList.mcc/MUIA_NList_IgnoreSpecialChars
+
+    NAME
+        MUIA_NList_IgnoreSpecialChars -- [ISG], const char *
+
+    FUNCTION
+        Used to let NList ignore a list of user definable characters during
+        string parsing. Some greek fonts need the 0xA0 character to display
+        an Alpha characters. In this case the string "\xa0" should be supplied
+        to make NList ignore this character and not treat 0xA0 as a "non
+        breaking space".
+        This string will *NOT* be copied by NList and must remain valid as long
+        as the object exists!
+
+    DEFAULT
+        NULL
 NList.mcc/MUIA_NList_Imports
 
     NAME
