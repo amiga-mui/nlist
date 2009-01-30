@@ -236,41 +236,44 @@ all: $(BINDIR) $(OBJDIR) $(NBITMAP_DEMO) $(NLIST_DEMO) $(NLISTTREE_DEMO)
 
 # make the object directories
 $(OBJDIR):
-	@printf '\033[33mGenerating $@ directory\033[0m\n'
+	@echo "  MK $@"
 	@$(MKDIR) $(OBJDIR)
 
 # make the binary directories
 $(BINDIR):
-	@printf '\033[33mGenerating $@ directory\033[0m\n'
+	@echo "  MK $@"
 	@$(MKDIR) $(BINDIR)
 
 #
 
 $(OBJDIR)/%.o: %.c
-	@printf '\033[32mCompiling $<\033[0m\n'
+	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
-	@printf '\033[32mCompiling $<\033[0m\n'
+	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
 #
 
 $(NBITMAP_DEMO): $(NBITMAP_OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(NBITMAP_OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 	@$(CHMOD) a+x $@
 
 $(NLIST_DEMO): $(NLIST_OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(NLIST_OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 	@$(CHMOD) a+x $@
 
 $(NLISTTREE_DEMO): $(NLISTTREE_OBJS)
-	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@echo "  LD $@.debug"
 	@$(CC) $(LDFLAGS) -o $@.debug $(NLISTTREE_OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 	@$(CHMOD) a+x $@
 

@@ -15,6 +15,8 @@ $URL$
     is used by some fonts (i.e. the Alpha character in some greek fonts). By
     default the 0xA0 character is used as a "non breaking space" and will be
     treated a such.
+  * Makefile: removed the printf usage with the ANSI codes and replaced them
+    by the more intuitive CC/LD echo output.
 
 2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
 
