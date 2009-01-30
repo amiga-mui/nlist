@@ -153,7 +153,7 @@ ifeq ($(OS), os4)
   OBJDUMP = ppc-amigaos-objdump
 
   # Compiler/Linker flags
-  CRT      = clib2
+  CRT      = newlib
   CPU      = -mcpu=powerpc
   CFLAGS   += -mcrt=$(CRT) -D__USE_INLINE__ -D__NEW_TIMEVAL_DEFINITION_USED__ \
               -DNO_PPCINLINE_STDARG -Wa,-mregnames

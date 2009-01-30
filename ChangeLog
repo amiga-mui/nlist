@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-01-30  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbalance_mcc/Makefile, nbitmap_mcc/Makefile: the OS4 build is now linked
+    against newlib instead of clib2.
+
 2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/Makefile: modified Makefile to include the custom memory pool
