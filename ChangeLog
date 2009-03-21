@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-03-21  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcp/NListtree.c: added missing MUI_DisposeObject() call for an
+    Imagedisplay.mui object.
+
 2009-01-30  Thore Böckelmann <tboeckel@gmx.de>
 
   * nbalance_mcc/Makefile, nbitmap_mcc/Makefile: the OS4 build is now linked

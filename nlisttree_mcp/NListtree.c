@@ -889,6 +889,8 @@ static ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Setti
   */
   if( pdobj )
     MUI_DisposeObject( pdobj );
+  if( idobj )
+    MUI_DisposeObject( idobj );
 
   RETURN(0);
   return( 0 );
