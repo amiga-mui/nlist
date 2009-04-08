@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-04-08  Thore Böckelmann <tboeckel@gmx.de>
+
+  * updated the SDI headers and mccinit.c to their latest fixed versions.
+
 2009-03-21  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcp/NListtree.c: added missing MUI_DisposeObject() call for an
