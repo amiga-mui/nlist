@@ -38,7 +38,7 @@
 
 #include "NListtree.h"
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 
 #define VERSION         LIB_VERSION
 #define REVISION        LIB_REVISION

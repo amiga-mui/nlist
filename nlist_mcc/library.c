@@ -40,7 +40,7 @@
 /******************************************************************************/
 
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 #include "NList_grp.h"
 
 #define VERSION             LIB_VERSION

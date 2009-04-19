@@ -38,7 +38,7 @@
 #include "NBalance.h"
 #include "Pointer.h"
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 #include "Debug.h"
 
 // functions

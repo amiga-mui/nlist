@@ -27,7 +27,7 @@
 /* local includes */
 #include "Debug.h"
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 
 /* mcc initialisation */
 #define VERSION       LIB_VERSION

@@ -70,7 +70,11 @@ struct Library			*UtilityBase = NULL;
 struct Library			*GadToolsBase = NULL;
 struct Library			*MUIMasterBase	= NULL;
 struct IntuitionBase *IntuitionBase = NULL;
+#if defined(__AROS__)
+struct UtilityBase	*UtilityBase = NULL;
+#else
 struct Library			*UtilityBase = NULL;
+#endif
 #endif
 
 #if defined(__amigaos4__)

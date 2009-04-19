@@ -46,7 +46,7 @@
 // local includes
 #include "NBitmap.h"
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 #include "Debug.h"
 
 #if !defined(__amigaos4__) && !defined(__MORPHOS__)

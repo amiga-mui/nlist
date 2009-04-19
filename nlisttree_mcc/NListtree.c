@@ -136,7 +136,7 @@
 #include "private.h"
 
 #include "NListtree.h"
-#include "rev.h"
+#include "version.h"
 
 /* undoc */
 #define MUIA_Group_Forward     0x80421422
@@ -668,7 +668,8 @@ DISPATCHER(NodeImage_Dispatcher)
 *******************************************************************************
 \*****************************************************************************/
 
-#if !defined(__MORPHOS__) && !defined(__amigaos4__) /* MorphOS and OS4 support Alloc/FreeVecPooled internally */
+/* MorphOS, OS4 and AROS support Alloc/FreeVecPooled internally */
+#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__) /* MorphOS and OS4 support Alloc/FreeVecPooled internally */
 
 #ifdef MYDEBUG
 ULONG totalmem = 0;

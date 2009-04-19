@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-04-20  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: changed all makefiles to also include the AROS targets. In addition
+    the whole build environment has been attached to compile all of our mcc
+    and mcp classes for AROS. Now all NList classes should at least compile
+    and link fine for AROS. If they properly work has to be tested first. :)
+
 2009-04-08  Thore Böckelmann <tboeckel@gmx.de>
 
   * updated the SDI headers and mccinit.c to their latest fixed versions.

@@ -43,7 +43,11 @@ struct Library *MUIMasterBase = NULL;
 struct Library *LayersBase = NULL;
 #else
 struct IntuitionBase *IntuitionBase = NULL;
+#if defined(__AROS__)
+struct UtilityBase *UtilityBase = NULL;
+#else
 struct Library *UtilityBase = NULL;
+#endif
 struct GfxBase *GfxBase = NULL;
 struct Library *DataTypesBase = NULL;
 struct Library *MUIMasterBase = NULL;

@@ -30,7 +30,7 @@
 #include <proto/exec.h>
 
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 
 #define imgbt(nr)\
   ImageObject,\

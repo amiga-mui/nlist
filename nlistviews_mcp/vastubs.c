@@ -23,17 +23,8 @@
 
 ***************************************************************************/
 
-/*
-   Stubs for the variable argument functions of the shared libraries used by
-   YAM. Please note that these stubs should only be used if the compiler
-   suite/SDK doesn't come with own stubs/inline functions.
-
-   Also note that these stubs are only safe on m68k machines as it
-   requires a linear stack layout!
-*/
-
-#if defined(__VBCC__) || defined(NO_INLINE_STDARG)
-#if !defined(__PPC__)
+#if !defined(__AROS__) && (defined(__VBCC__) || defined(NO_INLINE_STDARG))
+#if defined(_M68000) || defined(__M68000) || defined(__mc68000)
 
 #include <exec/types.h>
 

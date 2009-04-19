@@ -42,7 +42,7 @@
 #include <mui/NList_mcc.h>
 
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 
 #include "locale.h"
 

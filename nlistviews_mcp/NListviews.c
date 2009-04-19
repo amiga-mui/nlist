@@ -43,7 +43,7 @@
 #include "mui/muiundoc.h"
 
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 
 #include "locale.h"
 

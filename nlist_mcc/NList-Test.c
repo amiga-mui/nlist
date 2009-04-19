@@ -55,7 +55,11 @@
 #endif
 
 struct Library *MUIMasterBase = NULL;
+#if defined(__AROS__)
+struct UtilityBase *UtilityBase = NULL;
+#else
 struct Library *UtilityBase = NULL;
+#endif
 struct Library *LayersBase = NULL;
 struct Device *ConsoleDevice = NULL;
 struct Library *DiskfontBase = NULL;

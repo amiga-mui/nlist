@@ -33,7 +33,7 @@
 #include "private.h"
 
 #include "NList_func.h"
-#include "rev.h"
+#include "version.h"
 #include "NListviews_mcp.h"
 #include "NListview_mcc.h"
 
