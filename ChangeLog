@@ -8,6 +8,8 @@ $URL$
 2009-04-21  Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcp/Makefile: changed printf command to standard echo.
+  * nlist_mcc/NList_mcc1.c: adjusted some variable type due to the recent
+    changes in the OS4 SDK.
 
 2009-04-20  Jens Langner <Jens.Langner@light-speed.de>
 

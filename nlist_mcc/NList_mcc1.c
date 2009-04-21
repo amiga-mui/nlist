@@ -299,7 +299,7 @@ ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
 
           if((childlist = (struct List *)xget(data->VertPropObject, MUIA_Group_ChildList)))
           {
-            APTR object_state = childlist->lh_Head;
+            Object *object_state = (Object *)childlist->lh_Head;
             Object *child;
 
             while((child = NextObject(&object_state)))
