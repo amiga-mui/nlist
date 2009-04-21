@@ -355,13 +355,13 @@ $(OBJDIR)/library.o: library.c ../include/mccinit.c \
 
 locale.h: locale.c
 locale.c: $(LOCALE)/NListtree_mcp.cd C_h.sd C_c.sd
-	@printf '\033[33mGenerating locale file $@...\033[0m\n'
+	@echo "  FC $@"
 	@$(FC) $(LOCALE)/NListtree_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
 
 ## CATALOG GENERATION #################
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
-	@printf '\033[33mGenerating $@\033[0m\n'
+	@echo "  FC $@"
 	@$(FC) $(LOCALE)/NListtree_mcp.cd $< CATALOG $@
 
 .IGNORE: $(CATALOGS)

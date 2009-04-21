@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-04-21  Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcp/Makefile: changed printf command to standard echo.
+
 2009-04-20  Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: changed all makefiles to also include the AROS targets. In addition
