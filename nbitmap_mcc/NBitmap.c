@@ -40,6 +40,11 @@
 #include <cybergraphx/cybergraphics.h>
 #endif
 
+#if defined(__MORPHOS__)
+#include <exec/execbase.h>
+#include <exec/system.h>
+#endif
+
 // libraries
 #include <libraries/mui.h>
 
@@ -265,6 +270,19 @@ BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object 
         data->height =  data->dt_header[0]->bmh_Height;
         data->arraybpp = data->depth/8;
         data->arraybpr = data->arraybpp * data->width;
+
+        #if defined(__MORPHOS__)
+        if (SysBase->LibNode.lib_Version >= 51)
+        {
+          ULONG altivec_align = 0;
+
+          NewGetSystemAttrs(&altivec_align, sizeof(altivec_align), SYSTEMINFOTYPE_PPC_ALTIVEC, TAG_DONE);
+
+          if (altivec_align)
+            data->arraybpr = (data->arraybpr + 15) & ~15;
+        }
+        #endif
+
         arraysize = (data->arraybpr) * data->height;
 
         /* get array of pixels */
@@ -321,18 +339,34 @@ VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj)
 // create an ARGB shade
 BOOL NBitmap_SetupShades(struct InstData *data)
 {
-  uint32 pixel;
+  uint32 pixel, altivec_align;
 
   ENTER();
+
+  altivec_align = 0;
+
+  #if defined(__MORPHOS__)
+  if (SysBase->LibNode.lib_Version >= 51)
+  {
+    NewGetSystemAttrs(&altivec_align, sizeof(altivec_align), SYSTEMINFOTYPE_PPC_ALTIVEC, TAG_DONE);
+  }
+  #endif
 
   data->shadeWidth = data->width + data->border_horiz - 2;
   data->shadeHeight = data->height + data->border_vert - 2;
   data->shadeBytesPerRow = data->shadeWidth * 4;
 
+  if (altivec_align)
+    data->shadeBytesPerRow = (data->shadeBytesPerRow + 15) & ~15;
+
   // the shades pixel color
   pixel = ((ULONG)data->prefs.overlay_r << 16) | ((ULONG)data->prefs.overlay_g << 8) | (ULONG)data->prefs.overlay_b;
 
-  if((data->pressedShadePixels = AllocVec(data->shadeWidth * data->shadeHeight * 4, MEMF_ANY)) != NULL)
+  #if defined(__MORPHOS__)
+  if((data->pressedShadePixels = AllocVecAligned(data->shadeBytesPerRow * data->shadeHeight, MEMF_ANY, altivec_align ? 16 : 8, 0)) != NULL)
+  #else
+  if((data->pressedShadePixels = AllocVec(data->shadeBytesPerRow * data->shadeHeight, MEMF_ANY)) != NULL)
+  #endif
   {
     uint32 w, h;
     uint32 alpha;
@@ -352,10 +386,16 @@ BOOL NBitmap_SetupShades(struct InstData *data)
         else
           *p++ = alpha | pixel;
       }
+
+      p += (data->shadeBytesPerRow - data->shadeWidth * 4) / 4;
     }
   }
 
-  if((data->overShadePixels = AllocVec(data->shadeWidth * data->shadeHeight * 4, MEMF_ANY)) != NULL)
+  #if defined(__MORPHOS__)
+  if((data->overShadePixels = AllocVecAligned(data->shadeBytesPerRow * data->shadeHeight, MEMF_ANY, altivec_align ? 16 : 8, 0)) != NULL)
+  #else
+  if((data->overShadePixels = AllocVec(data->shadeBytesPerRow * data->shadeHeight, MEMF_ANY)) != NULL)
+  #endif
   {
     uint32 w, h;
     uint32 alpha;
@@ -375,6 +415,8 @@ BOOL NBitmap_SetupShades(struct InstData *data)
         else
           *p++ = alpha | pixel;
       }
+
+      p += (data->shadeBytesPerRow - data->shadeWidth * 4) / 4;
     }
   }
 

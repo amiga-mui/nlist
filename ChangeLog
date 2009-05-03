@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-05-03 Ilkka Lehtoranta <ilkleht@isoveli.org>
+
+  * nbitmap_mcc/NBitmap.c: use 16-byte AltiVec alignment to maximise software
+    blitting performance on Pegasos and Mac Mini.
+
 2009-05-02 Ilkka Lehtoranta <ilkleht@isoveli.org>
 
   * include/mccinit.c: RTF_EXTENDED was not set for the MorphOS build making
