@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-05-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/SDI_lib.h: updated to the latest version.
+
 2009-05-03 Ilkka Lehtoranta <ilkleht@isoveli.org>
 
   * nbitmap_mcc/NBitmap.c: use 16-byte AltiVec alignment to maximise software
