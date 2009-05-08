@@ -332,10 +332,6 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
-$(LOCALE)/%.catalog: $(LOCALE)/%.ct
-	@echo "  MK $@"
-	@$(FC) $(LOCALE)/NListtree_mcp.cd $< CATALOG $@
-
 # for linking the target
 $(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
 	@echo "  LD $@.debug"
