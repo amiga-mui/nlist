@@ -30,12 +30,12 @@
 #include <proto/utility.h>
 #include <proto/keymap.h>
 
-#include "mui/muiundoc.h"
-
 #include "private.h"
 #include "version.h"
 
 #include "NListviews_mcp.h"
+
+#include "muiextra.h"
 
 #ifndef MUI_EHF_GUIMODE
 #define MUI_EHF_GUIMODE     (1<<1)  /* set this if you dont want your handler to be called */
@@ -550,7 +550,7 @@ static ULONG mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
   register struct NLVData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
 
-  for(tags=((struct opSet *)msg)->ops_AttrList;(tag=(struct TagItem *) NextTagItem(&tags));)
+  for(tags=((struct opSet *)msg)->ops_AttrList;(tag=(struct TagItem *) NextTagItem((APTR)&tags));)
   {
     switch (tag->ti_Tag)
     {
@@ -588,7 +588,7 @@ static ULONG mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
 static ULONG mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
 {
   struct NLVData *data = INST_DATA(cl,obj);
-  ULONG *store = ((struct opGet *)msg)->opg_Storage;
+  IPTR *store = ((struct opGet *)msg)->opg_Storage;
 
   switch (((struct opGet *)msg)->opg_AttrID)
   {

@@ -32,6 +32,7 @@
 #include <clib/alib_protos.h>
 #include <proto/muimaster.h>
 #include <proto/graphics.h>
+#include <proto/intuition.h>
 
 #include "private.h"
 

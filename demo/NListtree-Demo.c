@@ -20,6 +20,10 @@
 
 ***************************************************************************/
 
+#if defined(__AROS__)
+#define MUI_OBSOLETE 1
+#endif
+
 /*
 **	Includes
 */
@@ -58,6 +62,10 @@
 #endif
 
 #include "SDI_hook.h"
+
+#ifndef MUIA_Slider_Level
+#define MUIA_Slider_Level                   0x8042ae3a /* V4  isg LONG              */
+#endif
 
 /*
 **	Do not use stack sizes below 8KB!!
@@ -362,7 +370,7 @@ HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
 		*/
 		struct SampleArray *a = (struct SampleArray *)msg->TreeNode->tn_User;
 
-		snprintf( buf, sizeof(buf), "%3ld", (ULONG)msg->Array[-1] );
+		snprintf( buf, sizeof(buf), "%3d", (unsigned int)msg->Array[-1] );
 
 		*msg->Array++	= msg->TreeNode->tn_Name;
 		*msg->Array++	= (STRPTR)(( a->flags & 0x8000 ) ? t3 : t4);
@@ -1174,7 +1182,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
 			/*
 			**	Minimal input loop.
 			*/
-			while((LONG)DoMethod( app, MUIM_Application_NewInput, &signals ) != MUIV_Application_ReturnID_Quit )
+			while((LONG)DoMethod( app, MUIM_Application_NewInput, &signals ) != (LONG)MUIV_Application_ReturnID_Quit )
 			{
 				if ( signals )
 				{

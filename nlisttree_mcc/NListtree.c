@@ -137,10 +137,7 @@
 
 #include "NListtree.h"
 #include "version.h"
-
-/* undoc */
-#define MUIA_Group_Forward     0x80421422
-#define MUIA_Imagedisplay_Spec 0x8042a547
+#include "muiextra.h"
 
 #define DATA_BUF_SIZE          4096
 
@@ -595,7 +592,7 @@ ULONG TreeImage_Set( struct IClass *cl, Object *obj, Msg msg )
   struct TreeImage_Data *data = INST_DATA( cl, obj );
   struct TagItem *tags, *tag;
 
-  for(tags = ((struct opSet *)msg )->ops_AttrList; (tag = (struct TagItem *)NextTagItem(&tags));)
+  for(tags = ((struct opSet *)msg )->ops_AttrList; (tag = (struct TagItem *)NextTagItem((APTR)&tags));)
   {
     switch( tag->ti_Tag )
     {
@@ -2984,7 +2981,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
       {
         if ( otn->tn_Space > 0 )
         {
-          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, (ULONG)otn->tn_Space );
+          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)otn->tn_Space );
 
           otn->tn_ImagePos += otn->tn_Space;
           otn->tn_Space = 0;
@@ -3001,14 +2998,14 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
           {
             if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
             {
-              snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, x2 );
+              snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)x2 );
 
               otn->tn_ImagePos += x2;
             }
           }
           else
           {
-            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, x2 );
+            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (int)x2 );
 
             otn->tn_ImagePos += x2;
           }
@@ -3036,7 +3033,7 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
       x1 = IMAGE_Closed;
     }
 
-    snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]", data->buf, (ULONG)data->Image[x1].ListImage );
+    snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x]", data->buf, (unsigned int)data->Image[x1].ListImage );
 
     if ( ( data->Style == MUICFGV_NListtree_Style_Win98 ) || ( data->Style == MUICFGV_NListtree_Style_Win98Plus ) )
       x1 = SPEC_Hor;
@@ -3045,12 +3042,12 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 
     if ( data->Space > 0 )
     {
-      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, x1, (ULONG)data->Space );
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (unsigned int)data->Space );
     }
 
     if ( data->Style == MUICFGV_NListtree_Style_Win98Plus )
     {
-      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx]\033O[%lx;%lx;%ld,%ld]", data->buf, (ULONG)data->Image[IMAGE_Special].ListImage, (ULONG)data->Image[IMAGE_Tree].ListImage, MUIA_TI_Spec, SPEC_Space, 3L );
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%x]\033O[%x;%x;%d,%d]", data->buf, (unsigned int)data->Image[IMAGE_Special].ListImage, (unsigned int)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (unsigned int)SPEC_Space, 3);
     }
   }
 
@@ -4651,7 +4648,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
   struct Hook *orgHook = NULL;
   BOOL intfunc, onlytrigger = FALSE;
 
-  for(tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
+  for(tags = msg->ops_AttrList; (tag = NextTagItem((APTR)&tags)); )
   {
     intfunc = TRUE;
 
@@ -5383,7 +5380,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 
 BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
 {
-  ULONG *store = ( (struct opGet *)msg )->opg_Storage;
+  IPTR *store = ( (struct opGet *)msg )->opg_Storage;
 
   *store = 0;
 
@@ -5669,9 +5666,9 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
           /*
           **  Setup spacial image class and tree image.
           */
-          if((data->CL_TreeImage = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct TreeImage_Data ), ENTRY(TreeImage_Dispatcher))))
+          if((data->CL_TreeImage = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Area, NULL, sizeof(struct TreeImage_Data ), ENTRY(TreeImage_Dispatcher))))
           {
-            if((data->CL_NodeImage = MUI_CreateCustomClass(NULL, MUIC_Image, NULL, sizeof(struct TreeImage_Data), ENTRY(NodeImage_Dispatcher))))
+            if((data->CL_NodeImage = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Image, NULL, sizeof(struct TreeImage_Data), ENTRY(NodeImage_Dispatcher))))
             {
               ActivateNotify( data );
 

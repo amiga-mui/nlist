@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-06-06 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: adapted the whole build system to compile all NList classes
+    finally for AROS. Now everything should compile and link fine with an
+    AROS cross-compiler and if everything works out fine the next NList
+    release will come with AROS binaries.
+
 2009-05-04 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/SDI_lib.h: updated to the latest version.

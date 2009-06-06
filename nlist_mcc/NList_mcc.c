@@ -33,6 +33,7 @@
 #include <proto/graphics.h>
 #include <proto/utility.h>
 #include <proto/exec.h>
+#include <proto/intuition.h>
 
 #include "private.h"
 
@@ -1223,7 +1224,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
           WANT_NOTIFY(NTF_Entries);
 
           // check if we have a DragType attribute or not
-          if(GetAttr(MUIA_Listview_DragType, data->listviewobj, (ULONG *)&tagval) != FALSE)
+          if(GetAttr(MUIA_Listview_DragType, data->listviewobj, (IPTR *)&tagval) != FALSE)
             data->NList_DragType = tagval;
 
           // in case this is MUI 3.8 we can query more detailed information
@@ -1442,7 +1443,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
     while((o = (Object *)xget(o, MUIA_Parent)))
     {
-      ULONG val;
+      IPTR val;
 
       // check if the class "knows" the Virtgroup_Left and
       // Virtgroup_Top attributes

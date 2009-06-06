@@ -40,12 +40,12 @@
 #include <proto/locale.h>
 #include <proto/exec.h>
 
-#include "mui/muiundoc.h"
-
 #include "private.h"
 #include "version.h"
 
 #include "locale.h"
+
+#include "muiextra.h"
 
 #define INTUIBASEMIN 39
 
@@ -1935,7 +1935,7 @@ ULONG mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settings
 
 static ULONG mNL_MCP_Get(struct IClass *cl,Object *obj,Msg msg)
 {
-  ULONG *store = ((struct opGet *)msg)->opg_Storage;
+  IPTR *store = ((struct opGet *)msg)->opg_Storage;
 
   switch (((struct opGet *)msg)->opg_AttrID)
   {

@@ -73,7 +73,7 @@ int main(void)
     SetupDebug();
     #endif
 
-    if((UtilityBase = OpenLibrary("utility.library", 36)) &&
+    if((UtilityBase = (APTR)OpenLibrary("utility.library", 36)) &&
       GETINTERFACE(IUtility, UtilityBase))
     {
       if((GfxBase = (APTR)OpenLibrary("graphics.library", 36)) &&
@@ -134,7 +134,7 @@ int main(void)
                   //set(window, MUIA_Window_ActiveObject, editorgad);
                   set(window, MUIA_Window_Open, TRUE);
 
-                  while((LONG)DoMethod(app, MUIM_Application_NewInput, &sigs) != MUIV_Application_ReturnID_Quit)
+                  while((LONG)DoMethod(app, MUIM_Application_NewInput, &sigs) != (LONG)MUIV_Application_ReturnID_Quit)
                   {
                     if(sigs)
                     {
@@ -175,7 +175,7 @@ int main(void)
       }
 
       DROPINTERFACE(IUtility);
-      CloseLibrary(UtilityBase);
+      CloseLibrary((struct Library *)UtilityBase);
       UtilityBase = NULL;
     }
   }

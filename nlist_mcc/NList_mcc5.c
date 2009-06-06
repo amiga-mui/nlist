@@ -33,6 +33,7 @@
 #include <proto/muimaster.h>
 #include <proto/graphics.h>
 #include <proto/layers.h>
+#include <proto/intuition.h>
 
 #include "private.h"
 
@@ -493,7 +494,7 @@ ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
     		LONG hsb,lastent,hsbheight,vsbwidth=0;
 
         // check if we got a HSB_Height attribute
-        if(data->scrollersobj && GetAttr(MUIA_NListview_HSB_Height, data->scrollersobj, (ULONG *)&hsbheight) != FALSE)
+        if(data->scrollersobj && GetAttr(MUIA_NListview_HSB_Height, data->scrollersobj, (IPTR *)&hsbheight) != FALSE)
         {
           hsbheight += data->vdt + data->vdb;
           lastent = ent + (hsbheight / data->vinc) + 1;

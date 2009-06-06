@@ -96,7 +96,7 @@ ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
               memset(data, 0, sizeof(struct InstData));
 
               /* passed tags */
-              for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
+              for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem((APTR)&tags)); )
                   {
                     switch(tag->ti_Tag)
                       {
@@ -151,7 +151,7 @@ ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
 ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
 {
   ULONG result = FALSE;
-  ULONG *store = ((struct opGet *)msg)->opg_Storage;
+  IPTR *store = ((struct opGet *)msg)->opg_Storage;
   struct InstData *data = INST_DATA(cl, obj);
 
   ENTER();
@@ -195,7 +195,7 @@ ULONG NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
 
   ENTER();
 
-  for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
+  for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem((APTR)&tags)); )
   {
     switch(tag->ti_Tag)
     {

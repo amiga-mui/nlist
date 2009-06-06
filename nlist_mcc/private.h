@@ -28,14 +28,12 @@
 
 #include <libraries/mui.h>
 
-#include "mui/muiundoc.h"
-#include "mui/NList_mcc.h"
+#include <mui/NList_mcc.h>
 
 #include "Debug.h"
-
 #include "Pointer.h"
-
-#include <mcc_common.h>
+#include "mcc_common.h"
+#include "muiextra.h"
 
 #ifndef LONG_MAX
 #define LONG_MAX    0x7fffffff    /* max value for a long */
@@ -48,8 +46,6 @@
 #endif
 
 #define MUIM_NList_Trigger            0x9d510090 /* GM */
-//#define MUIA_NList_Pause              0x9d5100c0  /* GM  isg  LONG              */
-#define MUIA_NList_TypeSelect               0x9d510030
 
 #ifndef MUIA_Prop_DoSmooth
 #define MUIA_Prop_DoSmooth            0x804236ce /* V4 i.. LONG */
@@ -605,13 +601,13 @@ extern char *stpcpy(char *to, char *from);
 
 /// xget()
 //  Gets an attribute value from a MUI object
-ULONG xget(Object *obj, const ULONG attr);
+ULONG xget(Object *obj, const IPTR attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
   // as some attributes (e.g. MUIA_Selected) always return FALSE, even
   // when they are supported by the object. But setting b=0 right before
   // the GetAttr() should catch the case when attr doesn't exist at all
-  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+  #define xget(OBJ, ATTR) ({IPTR b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
 ///
 

@@ -122,7 +122,8 @@ HOOKPROTONHNO(DisplayLI_TextFunc, void, struct NList_DisplayMessage *ndm)
     else if (entry->num % 20 == 13)
       ndm->strings[0] = (STRPTR)"\033o[1]";
     else
-    { snprintf(buf, sizeof(buf), "%ld",entry->num);
+    { 
+      snprintf(buf, sizeof(buf), "%d", (unsigned int)entry->num);
       ndm->strings[0]  = buf;
     }
 

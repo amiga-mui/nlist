@@ -37,7 +37,7 @@
 /* local prototypes */
 int openlibs(void);
 int closelibs(void);
-int fail(STRPTR str);
+int fail(CONST_STRPTR str);
 int initclasses(void);
 void freeclasses(void);
 BOOL buildapp(void);
@@ -87,7 +87,7 @@ struct UtilityIFace *IUtility = NULL;
 #endif
 
 /* startup functions */
-int main(int argc, char *argv[])
+int main(void)
 	{
 		ULONG sigs, muisignal;
 		
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 				if(buildapp())
 					{
 				
-						while(DoMethod(app, MUIM_Application_NewInput, &muisignal) != MUIV_Application_ReturnID_Quit)
+						while((LONG)DoMethod(app, MUIM_Application_NewInput, &muisignal) != (LONG)MUIV_Application_ReturnID_Quit)
 							{
 								sigs = Wait(muisignal|SIGBREAKF_CTRL_C);
 								if(sigs)
@@ -129,13 +129,13 @@ int openlibs(void)
 			fail("couldn't open elf.library");
     #endif
 
-		if((IntuitionBase = (struct Library*)OpenLibrary("intuition.library", 50))==0)
+		if((IntuitionBase = (APTR)OpenLibrary("intuition.library", 38))==0)
 			fail("couldn't open intuition.library");
 
-		if((GadToolsBase = (struct Library*)OpenLibrary("gadtools.library", 50))==0)
+		if((GadToolsBase = (struct Library*)OpenLibrary("gadtools.library", 38))==0)
 			fail("couldn't open gadtools.library");
 
-		if((UtilityBase = (struct Library*)OpenLibrary("utility.library", 50))==0)
+		if((UtilityBase = (APTR)OpenLibrary("utility.library", 38))==0)
 			fail("couldn't open utility.library");
 
 		if((MUIMasterBase = (struct Library*)OpenLibrary(MUIMASTER_NAME, MUIMASTER_VMIN))==0)
@@ -161,6 +161,8 @@ int openlibs(void)
 		if((IMUIMaster = (struct MUIMasterIFace *)GetInterface(MUIMasterBase, "main", 1, NULL))==0)
 			fail("couldn't obtain main interface from muimaster.library");
 #endif
+
+  return 1;
 }
 
 /* close libraries */
@@ -185,10 +187,12 @@ int closelibs(void)
 		if(GadToolsBase) CloseLibrary((struct Library *)GadToolsBase);
 		if(UtilityBase) CloseLibrary((struct Library *)UtilityBase);
 		if(MUIMasterBase) CloseLibrary(MUIMasterBase);
+
+      return 1;
 }
 
 /* fail */
-int fail(STRPTR str)
+int fail(CONST_STRPTR str)
 	{
 		if(str)
       printf("NBitmap-Demo Failed: %s\n", str);
@@ -201,7 +205,7 @@ int fail(STRPTR str)
 /* initialise classes */
 int initclasses(void)
 	{
-		if((MCC_Main = MUI_CreateCustomClass(NULL, MUIC_Window, 	NULL, sizeof(0), MCC_Main_Despatch))==0) return(FALSE);
+		if((MCC_Main = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Window, 	NULL, sizeof(0), MCC_Main_Despatch))==0) return(FALSE);
 		
 		return(TRUE);
 	}

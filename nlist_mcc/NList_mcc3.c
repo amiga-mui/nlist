@@ -32,7 +32,7 @@
 #include <proto/muimaster.h>
 #include <proto/graphics.h>
 #include <proto/layers.h>
-
+#include <proto/intuition.h>
 
 #include "private.h"
 

@@ -524,7 +524,7 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
           Line.minpixwidth = NULL;
           Line.maxpixwidth = NULL;
 
-          if((rdargs = ReadArgs(FORMAT_TEMPLATE, (LONG *)&Line, ptr)))
+          if((rdargs = ReadArgs(FORMAT_TEMPLATE, (APTR)&Line, ptr)))
           {
             if (Line.delta)    data->cols[column].delta = (WORD) *Line.delta;
             if (Line.preparse)

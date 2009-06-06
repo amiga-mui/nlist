@@ -27,6 +27,8 @@
 
 #include <clib/alib_protos.h>
 
+#include <proto/intuition.h>
+
 #include "private.h"
 
 #include "NList_func.h"

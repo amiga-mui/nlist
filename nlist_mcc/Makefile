@@ -154,9 +154,11 @@ PREFIX   = $(CDTHIS)
 OBJDIR   = .obj_$(OS)
 BINDIR   = bin_$(OS)
 VPATH    = $(OBJDIR)
+DEPFILE  = Makefile.dep
+DESTDIR  = MUI:Libs/MUI
 
 # target definition
-MCCTARGET = $(BINDIR)/NList.mcc
+TARGET    = $(BINDIR)/NList.mcc
 TESTTARGET= $(BINDIR)/NList-Test
 
 # Common compiler/linker flags
@@ -168,6 +170,35 @@ CFLAGS   = -I. -I../nlistview_mcc -I../nlistviews_mcp -I../include $(CPU) $(WARN
            $(OPTFLAGS) $(DEBUG) $(DEBUGSYM) $(USER_CFLAGS) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM)
 LDLIBS   =
+
+###########################################################################
+# object files definition
+#
+
+LOBJS = library.o
+
+COBJS = NList_mcc.o    \
+        NList_mcc0.o   \
+        NList_mcc1.o   \
+        NList_mcc2.o   \
+        NList_mcc3.o   \
+        NList_mcc4.o   \
+        NList_mcc5.o   \
+        NList_mcc6.o   \
+        move.o         \
+        cbio.o         \
+        NList_func.o   \
+        NList_func2.o  \
+        NList_func3.o  \
+        NList_func4.o  \
+        NList_grp.o    \
+        NList_img.o    \
+        NList_img2.o   \
+        Pointer.o      \
+        Debug.o        \
+        vastubs.o
+
+TOBJS = NList-Test.o
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -211,6 +242,9 @@ ifeq ($(OS), os3)
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
+
+  # only the OS3 build needs the custom memory pool implementations if run on OS2.x
+  COBJS  += libpool.o
 
 else
 ifeq ($(OS), mos)
@@ -286,63 +320,19 @@ endif
 endif
 endif
 
-###########################################################################
-# Here starts all stuff that is common for all target platforms and
-# hosts.
-
-MCCOBJS = $(OBJDIR)/library.o      \
-          $(OBJDIR)/NList_mcc.o    \
-          $(OBJDIR)/NList_mcc0.o   \
-          $(OBJDIR)/NList_mcc1.o   \
-          $(OBJDIR)/NList_mcc2.o   \
-          $(OBJDIR)/NList_mcc3.o   \
-          $(OBJDIR)/NList_mcc4.o   \
-          $(OBJDIR)/NList_mcc5.o   \
-          $(OBJDIR)/NList_mcc6.o   \
-          $(OBJDIR)/move.o         \
-          $(OBJDIR)/cbio.o         \
-          $(OBJDIR)/NList_func.o   \
-          $(OBJDIR)/NList_func2.o  \
-          $(OBJDIR)/NList_func3.o  \
-          $(OBJDIR)/NList_func4.o  \
-          $(OBJDIR)/NList_grp.o    \
-          $(OBJDIR)/NList_img.o    \
-          $(OBJDIR)/NList_img2.o   \
-          $(OBJDIR)/Pointer.o      \
-          $(OBJDIR)/Debug.o        \
-          $(OBJDIR)/vastubs.o
-
-TESTOBJS = $(OBJDIR)/NList-Test.o   \
-           $(OBJDIR)/NList_mcc.o    \
-           $(OBJDIR)/NList_mcc0.o   \
-           $(OBJDIR)/NList_mcc1.o   \
-           $(OBJDIR)/NList_mcc2.o   \
-           $(OBJDIR)/NList_mcc3.o   \
-           $(OBJDIR)/NList_mcc4.o   \
-           $(OBJDIR)/NList_mcc5.o   \
-           $(OBJDIR)/NList_mcc6.o   \
-           $(OBJDIR)/move.o         \
-           $(OBJDIR)/cbio.o         \
-           $(OBJDIR)/NList_func.o   \
-           $(OBJDIR)/NList_func2.o  \
-           $(OBJDIR)/NList_func3.o  \
-           $(OBJDIR)/NList_func4.o  \
-           $(OBJDIR)/NList_grp.o    \
-           $(OBJDIR)/NList_img.o    \
-           $(OBJDIR)/NList_img2.o   \
-           $(OBJDIR)/Pointer.o      \
-           $(OBJDIR)/Debug.o        \
-           $(OBJDIR)/vastubs.o
-
-# only the OS3 build needs the custom memory pool implementations if run on OS2.x
-ifeq ($(OS), os3)
-MCCOBJS  += $(OBJDIR)/libpool.o
-TESTOBJS += $(OBJDIR)/libpool.o
-endif
+MCCOBJS  = $(addprefix $(OBJDIR)/,$(LOBJS)) $(addprefix $(OBJDIR)/,$(COBJS))
+TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
 
 # main target
 .PHONY: all
-all: $(BINDIR) $(OBJDIR) $(MCCTARGET) $(TESTTARGET)
+ifeq ($(wildcard $(DEPFILE)),$(DEPFILE))
+# great, we have a dependecies file, let's make our target
+all: $(BINDIR) $(OBJDIR) $(M68KSTUBS) $(TARGET) $(TESTTARGET)
+else
+# no dependecies, create it and then call make again
+all: depend
+	@make --no-print-directory all
+endif
 
 # make the object directories
 $(OBJDIR):
@@ -364,7 +354,7 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@$(CC) $(CFLAGS) $< -o $@
 
 # for linking the target
-$(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
+$(TARGET): $(M68KSTUBS) $(MCCOBJS)
 	@echo "  LD $@.debug"
 	@$(CC) -nostartfiles $(LDFLAGS) -o $@.debug $(MCCOBJS) $(M68KSTUBS) $(LDLIBS) -Wl,--cref,-M,-Map=$@.map
 	@echo "  LD $@"
@@ -377,18 +367,13 @@ $(TESTTARGET): $(TESTOBJS)
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../include/mccinit.c \
-  ../include/mui/NList_mcc.h private.h version.h
-
-#
-
 .PHONY: dump
 dump:
-	-$(OBJDUMP) --section-headers --all-headers --reloc --disassemble-all $(MCCTARGET) > $(MCCTARGET).dump
+	-$(OBJDUMP) --section-headers --all-headers --reloc --disassemble-all $(TARGET) >$(TARGET).dump
 
 .PHONY: clean
 clean:
-	-$(RM) $(MCCTARGET) $(MCCTARGET).debug $(MCCTARGET).map
+	-$(RM) $(TARGET) $(TARGET).debug $(TARGET).map
 	-$(RM) $(TESTTARGET) $(TESTTARGET).debug $(TESTTARGET).map
 	-$(RM) $(MCCOBJS) $(TESTOBJS) $(M68KSTUBS)
 
@@ -396,3 +381,39 @@ clean:
 distclean: clean
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)
+
+# install
+.PHONY: install
+install: all
+	@echo "  IN $(TARGET)"
+	@$(CP) $(TARGET) $(DESTDIR)
+
+.PHONY: help
+help:
+	@echo "Cleaning targets:"
+	@echo "  clean     - Cleanup working directory for clean compile"
+	@echo "  distclean - Also cleanup autogenerated files"
+	@echo ""
+	@echo "Other generic targets:"
+	@echo "  all      - Build $(TARGET)"
+	@echo "  catalogs - Build all available catalogs"
+	@echo ""
+	@echo "Install targets:"
+	@echo "  install  - Install $(TARGET) into $(DESTDIR)"
+	@echo ""
+	@echo "Parameters:"
+	@echo "  make OS=os3|os4|mos|aros-i386|aros-i686|aros-ppc|aros-x86_64"
+	@echo "  make DEBUG= : build $(TARGET) without debugging information"
+	@echo ""
+
+## DEPENDENCY GENERATION ##############
+
+.PHONY: depend
+depend: 
+	@echo "  MK $(DEPFILE)"
+	@echo "# AUTOGENERATED! DO NOT EDIT!!!" >$(DEPFILE)
+	@$(CC) -MM $(CFLAGS) $(patsubst %.o,%.c, $(LOBJS)) $(patsubst %.o,%.c, $(COBJS)) $(patsubst %.o,%.c, $(TOBJS)) >>$(DEPFILE)
+	@echo "# AUTOGENERATED! DO NOT EDIT!!!" >>$(DEPFILE)
+
+# include dependencies file
+-include $(DEPFILE)

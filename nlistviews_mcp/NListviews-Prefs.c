@@ -101,7 +101,7 @@ int main(void)
         Object *window = NULL;
         struct MUI_CustomClass *mcc = NULL;
 
-        mcc = MUI_CreateCustomClass(NULL, "Group.mui", NULL, sizeof(struct NListviews_MCP_Data), ENTRY(_DispatcherP));
+        mcc = MUI_CreateCustomClass(NULL, (STRPTR)"Group.mui", NULL, sizeof(struct NListviews_MCP_Data), ENTRY(_DispatcherP));
         if(mcc)
         {
           app = MUI_NewObject("Application.mui",
@@ -138,7 +138,8 @@ int main(void)
 
           DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
           set(window, MUIA_Window_Open, TRUE);
-          while((LONG)DoMethod(app, MUIM_Application_NewInput, &sigs) != MUIV_Application_ReturnID_Quit)
+
+          while((LONG)DoMethod(app, MUIM_Application_NewInput, &sigs) != (LONG)MUIV_Application_ReturnID_Quit)
           {
             if(sigs)
             {

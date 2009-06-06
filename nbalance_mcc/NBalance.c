@@ -29,9 +29,9 @@
 #include <proto/exec.h>
 #include <proto/layers.h>
 #include <proto/muimaster.h>
+#include <proto/intuition.h>
 #include <proto/utility.h>
 #include <libraries/mui.h>
-#include <mui/muiundoc.h>
 #include <mui/NBalance_mcc.h>
 
 // local includes
@@ -40,6 +40,7 @@
 #include "private.h"
 #include "version.h"
 #include "Debug.h"
+#include "muiextra.h"
 
 // functions
 
@@ -61,7 +62,7 @@ ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
       // set some default values
       data->pointerType = MUIV_NBalance_Pointer_Standard;
 
-      for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
+      for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem((APTR)&tags)); )
       {
         switch(tag->ti_Tag)
         {
@@ -88,7 +89,7 @@ ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 ULONG mGet(struct IClass *cl, Object *obj, Msg msg)
 {
   ULONG result = FALSE;
-  ULONG *store = ((struct opGet *)msg)->opg_Storage;
+  IPTR *store = ((struct opGet *)msg)->opg_Storage;
   struct InstData *data = INST_DATA(cl, obj);
 
   ENTER();
@@ -126,7 +127,7 @@ ULONG mSet(struct IClass *cl,Object *obj, Msg msg)
 
   ENTER();
 
-  for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem(&tags)); )
+  for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem((APTR)&tags)); )
   {
     switch(tag->ti_Tag)
     {
@@ -166,8 +167,10 @@ ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
 
   if(DoSuperMethodA(cl, obj, (Msg)rinfo))
   {
+    Object *parent = (Object *)xget(obj, MUIA_Parent);
+
     // find out if the parent object is a horizontal or vertical group
-    data->groupType = xget((Object *)_parent(obj), MUIA_Group_Type);
+    data->groupType = xget(parent, MUIA_Group_Type);
 
     // setup all pointers
     SetupCustomPointers(data);

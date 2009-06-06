@@ -20,6 +20,10 @@
 
 ***************************************************************************/
 
+#if defined(__AROS__)
+#define MUI_OBSOLETE 1
+#endif
+
 /*
 **  Includes
 */
@@ -35,8 +39,6 @@
 #include <proto/locale.h>
 #include <proto/exec.h>
 
-#include "mui/muiundoc.h"
-
 #include <mui/NFloattext_mcc.h>
 #include <mui/NListview_mcc.h>
 #include <mui/NList_mcc.h>
@@ -46,8 +48,21 @@
 
 #include "locale.h"
 
+#include "muiextra.h"
+
 // some undocumented MUI tags we are going to use
+#ifndef MUIA_Imagedisplay_UseDefSize
 #define MUIA_Imagedisplay_UseDefSize  0x8042186d /* V11 i.. BOOL */
+#endif
+#ifndef MUIA_Slider_Level
+#define MUIA_Slider_Level                   0x8042ae3a /* V4  isg LONG              */
+#endif
+#ifndef MUIA_Slider_Min
+#define MUIA_Slider_Min                     0x8042e404 /* V4  isg LONG              */
+#endif
+#ifndef MUIA_Slider_Max
+#define MUIA_Slider_Max                     0x8042d78a /* V4  isg LONG              */
+#endif
 
 struct SampleArray
 {
@@ -222,7 +237,7 @@ HOOKPROTONHNO(dspfunc, LONG, struct MUIP_NListtree_DisplayMessage *msg)
     */
     struct SampleArray *a = (struct SampleArray *)msg->TreeNode->tn_User;
 
-    snprintf(buf, sizeof(buf), "%3ld", (ULONG)msg->Array[-1]);
+    snprintf(buf, sizeof(buf), "%3d", (unsigned int)msg->Array[-1]);
 
     *msg->Array++  = (STRPTR)a->name;
     *msg->Array++  = (STRPTR)((a->flags & 0x8000) ? t3 : t4);
@@ -956,28 +971,28 @@ static ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Setti
   **  Values
   */
   get( data->CY_Style, MUIA_Cycle_Active, &d );
-  snprintf(buf, sizeof(buf), "%ld", d);
+  snprintf(buf, sizeof(buf), "%d", (int)d);
   DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_Style );
 
   D(DBF_ALWAYS, "Style: %ld", d);
 
 
   get( data->SL_Space, MUIA_Slider_Level, &d );
-  snprintf(buf, sizeof(buf), "%ld", d);
+  snprintf(buf, sizeof(buf), "%d", (int)d);
   DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_Space );
 
   D(DBF_ALWAYS, "Space: %ld", d);
 
 
   get( data->CH_RememberStatus, MUIA_Selected, &d );
-  snprintf(buf, sizeof(buf), "%ld", d);
+  snprintf(buf, sizeof(buf), "%d", (int)d);
   DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_RememberStatus );
 
   D(DBF_ALWAYS, "RememberStatus: %ld", d);
 
 
   get( data->CH_OpenAutoScroll, MUIA_Selected, &d );
-  snprintf(buf, sizeof(buf), "%ld", d);
+  snprintf(buf, sizeof(buf), "%d", (int)d);
   DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_OpenAutoScroll );
 
   D(DBF_ALWAYS, "OpenAutoScroll: %ld", d);

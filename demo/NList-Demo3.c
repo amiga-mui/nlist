@@ -53,6 +53,7 @@
 #include <proto/graphics.h>
 #include <proto/utility.h>
 #include <proto/asl.h>
+#include <proto/intuition.h>
 
 extern struct Library *MUIMasterBase;
 
@@ -210,7 +211,7 @@ ULONG mNLI_Set(struct IClass *cl,Object *obj,Msg msg)
   register struct NLIData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
 
-  for(tags=((struct opSet *)msg)->ops_AttrList; (tag=(struct TagItem *)NextTagItem(&tags)); )
+  for(tags=((struct opSet *)msg)->ops_AttrList; (tag=(struct TagItem *)NextTagItem((APTR)&tags)); )
   {
     switch (tag->ti_Tag)
     {
@@ -246,7 +247,7 @@ DISPATCHER(NLI_Dispatcher)
 
 struct MUI_CustomClass *NLI_Create(void)
 {
-  NLI_Class = MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct NLIData), ENTRY(NLI_Dispatcher));
+  NLI_Class = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Area, NULL, sizeof(struct NLIData), ENTRY(NLI_Dispatcher));
 
   return (NLI_Class);
 }

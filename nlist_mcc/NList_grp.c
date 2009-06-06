@@ -25,15 +25,13 @@
 
 #include <clib/alib_protos.h>
 #include <proto/muimaster.h>
+#include <proto/intuition.h>
 
 #include "private.h"
 
 #include "NList_grp.h"
 
-#define MUIA_NList_Visible                  0x9d510063 /* GM  ..g  LONG              */
-
 struct MUI_CustomClass *NGR_Class = NULL;
-
 
 static ULONG mNGR_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
@@ -127,7 +125,7 @@ DISPATCHER(NGR_Dispatcher)
 
 struct MUI_CustomClass *NGR_Create(void)
 {
-  NGR_Class = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct NGRData), ENTRY(NGR_Dispatcher));
+  NGR_Class = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Group, NULL, sizeof(struct NGRData), ENTRY(NGR_Dispatcher));
 
   return (NGR_Class);
 }

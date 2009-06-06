@@ -29,6 +29,7 @@
 #include <proto/graphics.h>
 #include <proto/utility.h>
 #include <proto/exec.h>
+#include <proto/intuition.h>
 
 #include "private.h"
 
@@ -267,7 +268,7 @@ ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
       WANT_NOTIFY(NTF_VSB);
       if (msg->DestObj && !data->VertPropObject)
       {
-        ULONG val;
+        IPTR val;
 
         // check if MUIA_Prop_First exists
         if(GetAttr(MUIA_Prop_First, msg->DestObj, &val) != FALSE)
@@ -287,7 +288,7 @@ ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
     case MUIA_List_Prop_First :
       if (msg->DestObj && !data->VertPropObject)
       {
-        ULONG val;
+        IPTR val;
 
         // check if there exists a MUIA_Prop_First attribute
         if(GetAttr(MUIA_Prop_First, msg->DestObj, &val) != FALSE)
@@ -402,7 +403,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
   LONG do_things = TRUE;
   struct TagItem *tags,*tag;
 
-  for(tags = ((struct opSet *)msg)->ops_AttrList; (tag = (struct TagItem *)NextTagItem(&tags));)
+  for(tags = ((struct opSet *)msg)->ops_AttrList; (tag = (struct TagItem *)NextTagItem((APTR)&tags));)
   {
     switch (tag->ti_Tag)
     {

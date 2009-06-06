@@ -4,8 +4,8 @@
 /***************************************************************************
 
  NBitmap.mcc - New Bitmap MUI Custom Class
- Copyright (C) 2006 by Daniel Allsopp
- Copyright (C) 2007 by NList Open Source Team
+ Copyright (C) 2006      by Daniel Allsopp
+ Copyright (C) 2007-2009 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -27,8 +27,12 @@
 #include <exec/types.h>
 #endif
 
-#define MUIC_NBitmap                "NBitmap.mcc"
-#define NBitmapObject               MUI_NewObject(MUIC_NBitmap
+#define MUIC_NBitmap   "NBitmap.mcc"
+#if defined(__AROS__) && !defined(NO_INLINE_STDARG)
+#define NBitmapObject  MUIOBJMACRO_START(MUIC_NBitmap)
+#else
+#define NBitmapObject  MUI_NewObject(MUIC_NBitmap
+#endif
 
 /* attributes */
 #define MUIA_NBitmap_Type           0xa94f0000

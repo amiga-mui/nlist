@@ -189,7 +189,7 @@ static ULONG mNFT_Set(struct IClass *cl,Object *obj,Msg msg)
   register struct NFTData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
 
-  for (tags=((struct opSet *)msg)->ops_AttrList;(tag=NextTagItem(&tags));)
+  for (tags=((struct opSet *)msg)->ops_AttrList;(tag=NextTagItem((APTR)&tags));)
   {
     switch (tag->ti_Tag)
     {
@@ -243,7 +243,7 @@ static ULONG mNFT_Set(struct IClass *cl,Object *obj,Msg msg)
 static ULONG mNFT_Get(struct IClass *cl,Object *obj,Msg msg)
 {
   struct NFTData *data = INST_DATA(cl,obj);
-  ULONG *store = ((struct opGet *)msg)->opg_Storage;
+  IPTR *store = ((struct opGet *)msg)->opg_Storage;
 
   switch (((struct opGet *)msg)->opg_AttrID)
   {

@@ -427,7 +427,7 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
     return(0);
 
   // check if the Bitmap_Width attribute doesn't exists
-  if((flags == (ULONG)~0L) || GetAttr(MUIA_Bitmap_Width, imgobj, (ULONG *)&CI_BM_Width) == FALSE)
+  if((flags == (ULONG)~0L) || GetAttr(MUIA_Bitmap_Width, imgobj, (IPTR *)&CI_BM_Width) == FALSE)
     return (NL_CreateImage2(obj,data,imgobj,flags));
 
   if (imgobj && data->SETUP)

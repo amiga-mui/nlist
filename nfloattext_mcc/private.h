@@ -33,7 +33,8 @@
 
 #include <mcc_common.h>
 
-#include "NFloattext_mcc.h"
+#include <mui/NFloattext_mcc.h>
+
 #include "Debug.h"
 
 #define ALIGN_MASK      (0x0700)

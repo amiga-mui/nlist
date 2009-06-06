@@ -28,6 +28,7 @@
 #include <proto/datatypes.h>
 #include <proto/graphics.h>
 #include <proto/muimaster.h>
+#include <proto/intuition.h>
 #include <mui/NBitmap_mcc.h>
 
 // system

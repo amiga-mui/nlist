@@ -794,7 +794,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
     ULONG sigs = 0;
     char *line;
 
-    while ((id = DoMethod(APP_Main,MUIM_Application_NewInput,&sigs)) != MUIV_Application_ReturnID_Quit)
+    while ((id = DoMethod(APP_Main,MUIM_Application_NewInput,&sigs)) != (LONG)MUIV_Application_ReturnID_Quit)
     {
       if (id == ID_LIST2_ACTIVE)
       { DoMethod(LI_Text2, MUIM_NList_GetEntry, MUIV_NList_GetEntry_Active, &line);

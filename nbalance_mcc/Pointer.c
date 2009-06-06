@@ -30,9 +30,9 @@
 #include <proto/exec.h>
 #include <proto/graphics.h>
 #include <libraries/mui.h>
-#include <mui/muiundoc.h>
 
 #include "private.h"
+#include "muiextra.h"
 
 // the meta data of our pointers
 #define horizSizePointerWidth      16
@@ -490,7 +490,7 @@ void SetupCustomPointers(struct InstData *data)
     #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
     {
-      data->horizSizePointerObj = (Object *)NewObject(NULL, "pointerclass",
+      data->horizSizePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
         POINTERA_BitMap,      (LONG)&horizSizePointerBitmap,
         POINTERA_WordWidth,   (ULONG)1,
         POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
@@ -524,7 +524,7 @@ void SetupCustomPointers(struct InstData *data)
     #else
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
     {
-      data->vertSizePointerObj = (Object *)NewObject(NULL, "pointerclass",
+      data->vertSizePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
         POINTERA_BitMap,      (LONG)&vertSizePointerBitmap,
         POINTERA_WordWidth,   (ULONG)1,
         POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,

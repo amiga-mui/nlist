@@ -27,12 +27,15 @@
 #include <proto/graphics.h>
 #include <proto/utility.h>
 #include <proto/muimaster.h>
+#include <proto/intuition.h>
 
 #include "private.h"
 
 #include "NList_func.h"
 
+#ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
+#endif
 
 static ULONG mNL_Show(struct IClass *cl,Object *obj,Msg msg)
 {
