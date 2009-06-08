@@ -39,12 +39,12 @@
 
 /* Attributes */
 
-#define MUIA_NListview_NList                0x9d510020 /* GM  i.g Object *          */
+#define MUIA_NListview_NList                0x9d510020UL /* GM  i.g Object *          */
 
-#define MUIA_NListview_Vert_ScrollBar       0x9d510021 /* GM  isg LONG              */
-#define MUIA_NListview_Horiz_ScrollBar      0x9d510022 /* GM  isg LONG              */
-#define MUIA_NListview_VSB_Width            0x9d510023 /* GM  ..g LONG              */
-#define MUIA_NListview_HSB_Height           0x9d510024 /* GM  ..g LONG              */
+#define MUIA_NListview_Vert_ScrollBar       0x9d510021UL /* GM  isg LONG              */
+#define MUIA_NListview_Horiz_ScrollBar      0x9d510022UL /* GM  isg LONG              */
+#define MUIA_NListview_VSB_Width            0x9d510023UL /* GM  ..g LONG              */
+#define MUIA_NListview_HSB_Height           0x9d510024UL /* GM  ..g LONG              */
 
 #define MUIV_Listview_ScrollerPos_Default 0
 #define MUIV_Listview_ScrollerPos_Left 1

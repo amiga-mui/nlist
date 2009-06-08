@@ -118,10 +118,10 @@ static void NL_RejectIDCMP(Object *obj,struct NLData *data,LONG IDCMP_val,BOOL r
 }
 
 
-ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval = 0;
+  IPTR retval = 0;
   ULONG NotNotify = data->DoNotify;
   LONG tempbutton;
   LONG tempbuttonline;
@@ -1961,10 +1961,10 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 }
 
 
-ULONG mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
+IPTR mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval;
+  IPTR retval;
   if (data->DragRPort)
   { _rp(obj) = data->DragRPort;
     _left(obj) = 0;
@@ -1986,10 +1986,10 @@ ULONG mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragIm
 }
 
 
-ULONG mNL_DeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
+IPTR mNL_DeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval = DoSuperMethodA(cl,obj,(Msg) msg);
+  IPTR retval = DoSuperMethodA(cl,obj,(Msg) msg);
   if (data->DragRPort)
     DisposeDragRPort(obj,data);
   return (retval);
@@ -2059,7 +2059,7 @@ BOOL NL_Prop_First_Adjust(Object *obj,struct NLData *data)
 }
 
 
-ULONG mNL_Trigger(struct IClass *cl, UNUSED Object *obj, UNUSED Msg msg)
+IPTR mNL_Trigger(struct IClass *cl, UNUSED Object *obj, UNUSED Msg msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   /* attention, can be called with msg = NULL */

@@ -1165,39 +1165,39 @@ BYTE *NL_Columns(Object *obj,struct NLData *data,BYTE *columns)
 }
 
 
-ULONG mNL_ColToColumn(struct IClass *cl,Object *obj,struct MUIP_NList_ColToColumn *msg)
+IPTR mNL_ColToColumn(struct IClass *cl,Object *obj,struct MUIP_NList_ColToColumn *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  return ((ULONG) NL_ColToColumn(obj,data,msg->col));
+  return ((IPTR) NL_ColToColumn(obj,data,msg->col));
 }
 
 
-ULONG mNL_ColumnToCol(struct IClass *cl,Object *obj,struct MUIP_NList_ColumnToCol *msg)
+IPTR mNL_ColumnToCol(struct IClass *cl,Object *obj,struct MUIP_NList_ColumnToCol *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  return ((ULONG) NL_ColumnToCol(obj,data,msg->column));
+  return ((IPTR) NL_ColumnToCol(obj,data,msg->column));
 }
 
 
-ULONG mNL_SetColumnCol(struct IClass *cl,Object *obj,struct MUIP_NList_SetColumnCol *msg)
+IPTR mNL_SetColumnCol(struct IClass *cl,Object *obj,struct MUIP_NList_SetColumnCol *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   LONG retval;
   retval = NL_SetCol(obj,data,msg->column,msg->col);
   DONE_NOTIFY(NTF_Columns);
-  return ((ULONG) retval);
+  return ((IPTR) retval);
 }
 
 
-ULONG mNL_List_ColWidth(struct IClass *cl,Object *obj,struct MUIP_NList_ColWidth *msg)
+IPTR mNL_List_ColWidth(struct IClass *cl,Object *obj,struct MUIP_NList_ColWidth *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  return ((ULONG) NL_ColWidth(obj,data,msg->col,msg->width));
+  return ((IPTR) NL_ColWidth(obj,data,msg->col,msg->width));
 }
 
 
 
-ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuBuild *msg)
+IPTR mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuBuild *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   Object *MenuObj = NULL;
@@ -1297,7 +1297,7 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
         { nnset(mithis,MUIA_Menuitem_Enabled,FALSE);
         }
       }
-      return ((ULONG) MenuObj);
+      return ((IPTR) MenuObj);
     }
   }
 
@@ -1306,7 +1306,7 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
 
 
 
-ULONG mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *msg)
+IPTR mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
 

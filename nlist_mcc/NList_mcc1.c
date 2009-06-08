@@ -63,7 +63,7 @@ extern const struct Hook NL_DestructHook_String;
 
 
 
-ULONG mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+IPTR mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   LONG vinc = data->vinc;
@@ -249,7 +249,7 @@ ULONG mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 
 
 
-ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
+IPTR mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   switch (msg->TrigAttr)
@@ -396,10 +396,10 @@ ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
 }
 
 
-ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
+IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval;
+  IPTR retval;
   LONG do_things = TRUE;
   struct TagItem *tags,*tag;
 
@@ -1176,7 +1176,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
 // (It depends on what superclass do in OM_GET, if it clear storage data for undefined
 // attributes, it could cause problems...
 // Fixed msg type to correct one.
-ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
+IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
 {
 	struct NLData	*data	= INST_DATA( cl, obj );
 

@@ -60,7 +60,7 @@ struct InstData
 
 /// xget()
 //  Gets an attribute value from a MUI object
-ULONG xget(Object *obj, const IPTR attr);
+IPTR xget(Object *obj, const IPTR attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
   // as some attributes (e.g. MUIA_Selected) always return FALSE, even
@@ -71,12 +71,12 @@ ULONG xget(Object *obj, const IPTR attr);
 ///
 
 /* prototypes */
-ULONG mNew(struct IClass *cl, Object *obj, struct opSet *set);
-ULONG mSet(struct IClass *cl, Object *obj, Msg msg);
-ULONG mGet(struct IClass *cl, Object *obj, Msg msg);
-ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo);
-ULONG mCleanup(struct IClass *cl, Object *obj, Msg msg);
-ULONG mHide(struct IClass *cl, Object *obj, Msg msg);
-ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg);
+IPTR mNew(struct IClass *cl, Object *obj, struct opSet *set);
+IPTR mSet(struct IClass *cl, Object *obj, Msg msg);
+IPTR mGet(struct IClass *cl, Object *obj, Msg msg);
+IPTR mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo);
+IPTR mCleanup(struct IClass *cl, Object *obj, Msg msg);
+IPTR mHide(struct IClass *cl, Object *obj, Msg msg);
+IPTR mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg);
 
 #endif /* PRIVATE_H */

@@ -592,7 +592,7 @@ static ULONG DrawRefresh(Object *obj,struct NLData *data)
 }
 
 
-ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
 
@@ -1290,7 +1290,7 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 }
 
 
-ULONG mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDraw *msg)
+IPTR mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDraw *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
 

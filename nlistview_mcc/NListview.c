@@ -79,7 +79,7 @@ static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
 	return(-1);
 }
 
-static ULONG mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
+static IPTR mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
   struct NLVData *data = INST_DATA(cl,obj);
   struct IntuiMessage *imsg = msg->imsg;
@@ -103,7 +103,7 @@ static ULONG mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_Handle
 }
 
 
-static ULONG mNLV_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+static IPTR mNLV_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   struct NLVData *data = INST_DATA(cl,obj);
 
@@ -319,7 +319,7 @@ Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 #endif
 
 /* static ULONG mNLV_New(struct IClass *cl,Object *obj,Msg msg) */
-static ULONG mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   register struct NLVData *data;
   struct TagItem *tag;
@@ -388,7 +388,7 @@ static ULONG mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
     else
     {
       obj = NULL;
-      return((ULONG) obj);
+      return((IPTR) obj);
     }
   }
   else
@@ -456,11 +456,11 @@ static ULONG mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
     set(data->LI_NList,MUIA_NList_KeepActive,(LONG) obj);
   }
 
-  return((ULONG) obj);
+  return((IPTR) obj);
 }
 
 
-static ULONG mNLV_Dispose(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNLV_Dispose(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NLVData *data = INST_DATA(cl,obj);
 
@@ -473,7 +473,7 @@ static ULONG mNLV_Dispose(struct IClass *cl,Object *obj,Msg msg)
 }
 
 
-static ULONG mNLV_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
+static IPTR mNLV_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 {
   register struct NLVData *data = INST_DATA(cl,obj);
   data->SETUP = FALSE;
@@ -490,7 +490,7 @@ static ULONG mNLV_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 	data->eh.ehn_Events = IDCMP_RAWKEY;
 	data->eh.ehn_Flags  = MUI_EHF_GUIMODE;
 	data->eh.ehn_Priority = -1;
-	if (_win(obj)) DoMethod(_win(obj), MUIM_Window_AddEventHandler, (ULONG)&data->eh);
+	if (_win(obj)) DoMethod(_win(obj), MUIM_Window_AddEventHandler, (IPTR)&data->eh);
 
   if (!(DoSuperMethodA(cl,obj,(Msg) msg)))
     return(FALSE);
@@ -500,18 +500,18 @@ static ULONG mNLV_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 }
 
 
-static ULONG mNLV_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
+static IPTR mNLV_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 {
   register struct NLVData *data = INST_DATA(cl,obj);
   data->SETUP = FALSE;
 
-	if (_win(obj)) DoMethod(_win(obj), MUIM_Window_RemEventHandler, (ULONG)&data->eh);
+	if (_win(obj)) DoMethod(_win(obj), MUIM_Window_RemEventHandler, (IPTR)&data->eh);
 
   return (DoSuperMethodA(cl,obj,(Msg) msg));
 }
 
 
-static ULONG mNLV_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
+static IPTR mNLV_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
 {
   register struct NLVData *data = INST_DATA(cl,obj);
   switch (msg->TrigAttr)
@@ -545,7 +545,7 @@ static ULONG mNLV_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
 
 
 
-static ULONG mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NLVData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
@@ -585,7 +585,7 @@ static ULONG mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
 }
 
 
-static ULONG mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
 {
   struct NLVData *data = INST_DATA(cl,obj);
   IPTR *store = ((struct opGet *)msg)->opg_Storage;
@@ -594,25 +594,25 @@ static ULONG mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
   {
     case MUIA_Listview_List:
     case MUIA_NListview_NList:
-      *store = (LONG) data->LI_NList;
+      *store = (IPTR) data->LI_NList;
       return (TRUE);
     case MUIA_NListview_Vert_ScrollBar:
-      *store = (LONG) data->VertSB;
+      *store = (IPTR) data->VertSB;
       return (TRUE);
     case MUIA_NListview_Horiz_ScrollBar:
-      *store = (LONG) data->HorizSB;
+      *store = (IPTR) data->HorizSB;
       return (TRUE);
     case MUIA_NListview_VSB_Width:
       if (data->PR_Vert && data->Vert_Attached)
-        *store = (LONG) _width(data->PR_Vert);
+        *store = (IPTR) _width(data->PR_Vert);
       else
-        *store = (LONG) 0;
+        *store = (IPTR) 0;
       return (TRUE);
     case MUIA_NListview_HSB_Height:
       if (data->PR_Horiz && data->Horiz_Attached)
-        *store = (LONG) _height(data->PR_Horiz);
+        *store = (IPTR) _height(data->PR_Horiz);
       else
-        *store = (LONG) 0;
+        *store = (IPTR) 0;
       return (TRUE);
     case MUIA_Version:
       *store = LIB_VERSION;

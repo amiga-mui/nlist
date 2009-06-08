@@ -34,7 +34,7 @@
 #define HotkeyStringObject  MUI_NewObject(MUIC_HotkeyString
 #endif
 
-#define MUIA_HotkeyString_Snoop 0xad001000
-#define MUIA_HotkeyString_IX    0xad001002	/* V12 IS. */
+#define MUIA_HotkeyString_Snoop 0xad001000UL
+#define MUIA_HotkeyString_IX    0xad001002UL	/* V12 IS. */
 
 #endif /* HOTKEYSTRING_MCC_H */

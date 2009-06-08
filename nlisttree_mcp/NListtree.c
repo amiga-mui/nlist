@@ -52,16 +52,16 @@
 
 // some undocumented MUI tags we are going to use
 #ifndef MUIA_Imagedisplay_UseDefSize
-#define MUIA_Imagedisplay_UseDefSize  0x8042186d /* V11 i.. BOOL */
+#define MUIA_Imagedisplay_UseDefSize  0x8042186dUL /* V11 i.. BOOL */
 #endif
 #ifndef MUIA_Slider_Level
-#define MUIA_Slider_Level                   0x8042ae3a /* V4  isg LONG              */
+#define MUIA_Slider_Level                   0x8042ae3aUL /* V4  isg LONG              */
 #endif
 #ifndef MUIA_Slider_Min
-#define MUIA_Slider_Min                     0x8042e404 /* V4  isg LONG              */
+#define MUIA_Slider_Min                     0x8042e404UL /* V4  isg LONG              */
 #endif
 #ifndef MUIA_Slider_Max
-#define MUIA_Slider_Max                     0x8042d78a /* V4  isg LONG              */
+#define MUIA_Slider_Max                     0x8042d78aUL /* V4  isg LONG              */
 #endif
 
 struct SampleArray
@@ -308,7 +308,7 @@ HOOKPROTONHNO(StyleChangedFunc, VOID, ULONG **para)
 }
 MakeStaticHook(StyleChangedHook, StyleChangedFunc);
 
-static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
+static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtreeP_Data *data;
   static const char *CY_Style_Entries[9];
@@ -652,11 +652,11 @@ static ULONG _NewP( struct IClass *cl, Object *obj, Msg msg )
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->CH_OpenAutoScroll,MUICFG_NListtree_OpenAutoScroll, 1, "");
   }
 
-  return((ULONG)obj);
+  return((IPTR)obj);
 }
 
 
-static ULONG _DisposeP( struct IClass *cl, Object *obj, Msg msg )
+static IPTR _DisposeP( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtreeP_Data *data = INST_DATA( cl, obj );
     ULONG result;
@@ -675,7 +675,7 @@ static ULONG _DisposeP( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-static ULONG _SetupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
+static IPTR _SetupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 {
   struct NListtreeP_Data *data = INST_DATA( cl, obj );
 
@@ -698,7 +698,7 @@ static ULONG _SetupP( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
   return( TRUE );
 }
 
-static ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_ConfigToGadgets *msg )
+static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_ConfigToGadgets *msg )
 {
   struct NListtreeP_Data *data = INST_DATA(cl, obj);
   Object *pdobj, *idobj;
@@ -912,7 +912,7 @@ static ULONG _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Setti
 }
 
 
-static ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_GadgetsToConfig *msg )
+static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_GadgetsToConfig *msg )
 {
   struct NListtreeP_Data *data = INST_DATA( cl, obj );
   char buf[8];
@@ -1002,7 +1002,7 @@ static ULONG _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Setti
 }
 
 
-static ULONG _HandleInputP( struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg )
+static IPTR _HandleInputP( struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg )
 {
   if( msg->imsg )
   {

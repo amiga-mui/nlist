@@ -38,7 +38,7 @@
 
 DISPATCHER(_Dispatcher)
 {
-  ULONG result;
+  IPTR result;
 
   ENTER();
 

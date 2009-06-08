@@ -511,7 +511,7 @@ INLINE VOID DrawTreeHorBar( struct TreeImage_Data *data, struct MyImage *im, WOR
 /*
 **  Draw function for special tree image class.
 */
-ULONG TreeImage_Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
+IPTR TreeImage_Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
 {
   struct TreeImage_Data *data = INST_DATA( cl, obj );
 
@@ -565,7 +565,7 @@ ULONG TreeImage_Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
 /*
 **  Special tree image class creation.
 */
-ULONG TreeImage_New( struct IClass *cl, Object *obj, struct opSet *msg )
+IPTR TreeImage_New( struct IClass *cl, Object *obj, struct opSet *msg )
 {
   struct TreeImage_Data *data;
 
@@ -580,7 +580,7 @@ ULONG TreeImage_New( struct IClass *cl, Object *obj, struct opSet *msg )
   data->spec = 0;
 
   RETURN(obj);
-  return( (ULONG)obj );
+  return( (IPTR)obj );
 }
 
 
@@ -3369,7 +3369,7 @@ HOOKPROTONHNO(_FindUserDataFunc_PointerCompare, LONG, struct MUIP_NListtree_Find
 }
 MakeStaticHook(_FindUserDataHook_PointerCompare, _FindUserDataFunc_PointerCompare);
 
-HOOKPROTONO(NList_DispFunc, ULONG, struct NList_DisplayMessage *msg)
+HOOKPROTONO(NList_DispFunc, IPTR, struct NList_DisplayMessage *msg)
 {
   struct NListtree_Data *data = hook->h_Data;
   struct MUI_NListtree_TreeNode *tn = CTN( msg->entry );
@@ -3413,7 +3413,7 @@ HOOKPROTONO(NList_DispFunc, ULONG, struct NList_DisplayMessage *msg)
     msg->strings[data->TreeColumn] = data->buf;
   }
 
-  return( (ULONG)tn );
+  return( (IPTR)tn );
 }
 MakeStaticHook(NList_DispHook, NList_DispFunc);
 
@@ -5396,56 +5396,56 @@ BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
 
     case MUIA_NListtree_Active:
 
-      *store = (ULONG)data->ActiveNode;
+      *store = (IPTR)data->ActiveNode;
       D(DBF_GETSET, "GET MUIA_NListtree_Active: 0x%08lx", *store);
       return( TRUE );
 
     case MUIA_NListtree_ActiveList:
 
       if ( data->ActiveList == &data->RootList )
-        *store = (ULONG)MUIV_NListtree_ActiveList_Off;
+        *store = (IPTR)MUIV_NListtree_ActiveList_Off;
       else
-        *store = (ULONG)data->ActiveList;
+        *store = (IPTR)data->ActiveList;
       D(DBF_GETSET, "GET MUIA_NListtree_ActiveList: 0x%08lx",*store);
       return( TRUE );
 
     case MUIA_NListtree_DoubleClick:
 
-      *store = (ULONG)data->LDClickColumn;
+      *store = (IPTR)data->LDClickColumn;
       D(DBF_GETSET, "GET MUIA_NListtree_DoubleClick: 0x%08lx", *store);
       return( TRUE );
 
     case MUIA_NListtree_TreeColumn:
 
-      *store = (ULONG)data->TreeColumn;
+      *store = (IPTR)data->TreeColumn;
       D(DBF_GETSET, "GET MUIA_NListtree_TreeColumn: 0x%08lx", *store);
       return( TRUE );
 
     case MUIA_NListtree_ShowTree:
 
-      *store = (ULONG)!( data->Flags & NLTF_NO_TREE );
+      *store = (IPTR)!( data->Flags & NLTF_NO_TREE );
       D(DBF_GETSET, "GET MUIA_NListtree_ShowTree: 0x%08lx", *store);
       return( TRUE );
 
     case MUIA_NListtree_AutoVisible:
 
-      *store = (ULONG)data->AutoVisible;
+      *store = (IPTR)data->AutoVisible;
       D(DBF_GETSET, "GET MUIA_NListtree_AutoVisible: 0x%08lx", *store);
       return( TRUE );
 
     case MUIA_NListtree_DropType:
 
-      *store = (ULONG)data->DropType;
+      *store = (IPTR)data->DropType;
       return( TRUE );
 
     case MUIA_NListtree_DropTarget:
 
-      *store = (ULONG)data->DropTarget;
+      *store = (IPTR)data->DropTarget;
       return( TRUE );
 
     case MUIA_NListtree_DropTargetPos:
 
-      *store = (ULONG)data->DropTargetPos;
+      *store = (IPTR)data->DropTargetPos;
       return( TRUE );
 
     case MUIA_NListtree_SelectChange:
@@ -5492,7 +5492,7 @@ BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
 *******************************************************************************
 \*****************************************************************************/
 
-ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
+IPTR _New( struct IClass *cl, Object *obj, struct opSet *msg )
 {
   struct NListtree_Data ld;
 
@@ -5672,7 +5672,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
             {
               ActivateNotify( data );
 
-              return( (ULONG)obj );
+              return( (IPTR)obj );
             }
           }
         }
@@ -5686,7 +5686,7 @@ ULONG _New( struct IClass *cl, Object *obj, struct opSet *msg )
 }
 
 
-ULONG _Dispose( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Dispose( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   ULONG ret;
@@ -5742,7 +5742,7 @@ ULONG _Dispose( struct IClass *cl, Object *obj, Msg msg )
 
 
 
-ULONG _Set( struct IClass *cl, Object *obj, struct opSet *msg )
+IPTR _Set( struct IClass *cl, Object *obj, struct opSet *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
 
@@ -5752,7 +5752,7 @@ ULONG _Set( struct IClass *cl, Object *obj, struct opSet *msg )
 }
 
 
-ULONG _Get( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Get( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
 
@@ -5766,7 +5766,7 @@ ULONG _Get( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
+IPTR _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   Object *pdobj, *idobj;
@@ -5975,7 +5975,7 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 }
 
 
-ULONG _Cleanup( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Cleanup( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   UBYTE i;
@@ -6003,7 +6003,7 @@ ULONG _Cleanup( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-ULONG _Show( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Show( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
 
@@ -6022,7 +6022,7 @@ ULONG _Show( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-ULONG _Hide( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Hide( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
 
@@ -6032,7 +6032,7 @@ ULONG _Hide( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-ULONG _AskMinMax( struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg )
+IPTR _AskMinMax( struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg )
 {
   DoSuperMethodA( cl, obj, (Msg)msg );
 
@@ -6049,18 +6049,18 @@ ULONG _AskMinMax( struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg )
 
 
 
-ULONG _Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
+IPTR _Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
 {
   return( DoSuperMethodA( cl, obj, (Msg)msg ) );
 }
 
 
-ULONG _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg )
+IPTR _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg )
 {
   #define _between( a, x, b )   ( ( x ) >= ( a ) && ( x ) <= ( b ) )
   #define _isinobject( x, y )   ( _between( _mleft( obj ), ( x ), _mright( obj ) ) && _between( _mtop( obj ), ( y ), _mbottom( obj ) ) )
   struct NListtree_Data *data = INST_DATA( cl, obj );
-  ULONG ret = 0;
+  IPTR ret = 0;
 
   if ( msg->muikey )
   {
@@ -6388,7 +6388,7 @@ ULONG _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg
 
 
 
-ULONG _DragNDrop_DragQuery( struct IClass *cl, Object *obj, Msg msg )
+IPTR _DragNDrop_DragQuery( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUIP_DragQuery *d = (struct MUIP_DragQuery *)msg;
@@ -6416,10 +6416,10 @@ ULONG _DragNDrop_DragQuery( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-ULONG _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
+IPTR _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -6447,12 +6447,12 @@ ULONG _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-ULONG _DragNDrop_DragReport( struct IClass *cl, Object *obj, Msg msg )
+IPTR _DragNDrop_DragReport( struct IClass *cl, Object *obj, Msg msg )
 {
   #define _between( a, x, b ) ( ( x ) >= ( a ) && ( x ) <= ( b ) )
   #define _isinobject( x, y ) ( _between( _mleft( obj ), ( x ), _mright( obj ) ) && _between( _mtop( obj ), ( y ), _mbottom( obj ) ) )
   struct MUIP_DragReport *d = (struct MUIP_DragReport *)msg;
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -6466,7 +6466,7 @@ ULONG _DragNDrop_DragReport( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-ULONG _DragNDrop_DropType( struct IClass *cl, Object *obj, struct MUIP_NList_DropType *msg )
+IPTR _DragNDrop_DropType( struct IClass *cl, Object *obj, struct MUIP_NList_DropType *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
 
@@ -6562,7 +6562,7 @@ ULONG _DragNDrop_DropType( struct IClass *cl, Object *obj, struct MUIP_NList_Dro
 }
 
 
-ULONG _DragNDrop_NDropDraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_DropDraw *msg )
+IPTR _DragNDrop_NDropDraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_DropDraw *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct RastPort *rp = _rp( obj );
@@ -6639,7 +6639,7 @@ ULONG _DragNDrop_NDropDraw( struct IClass *cl, Object *obj, struct MUIP_NListtre
 
 
 //$$$
-ULONG _DragNDrop_DropDraw( struct IClass *cl, Object *obj, struct MUIP_NList_DropDraw *msg )
+IPTR _DragNDrop_DropDraw( struct IClass *cl, Object *obj, struct MUIP_NList_DropDraw *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *drawtarget;
@@ -6654,10 +6654,10 @@ ULONG _DragNDrop_DropDraw( struct IClass *cl, Object *obj, struct MUIP_NList_Dro
 }
 
 
-ULONG _DragNDrop_DragFinish( struct IClass *cl, Object *obj, Msg msg )
+IPTR _DragNDrop_DragFinish( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -6670,7 +6670,7 @@ ULONG _DragNDrop_DragFinish( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-ULONG _DragNDrop_DragDrop( struct IClass *cl, Object *obj, UNUSED Msg msg )
+IPTR _DragNDrop_DragDrop( struct IClass *cl, Object *obj, UNUSED Msg msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn, *tn2, *dtn, *nexttn = NULL;
@@ -6807,7 +6807,7 @@ ULONG _DragNDrop_DragDrop( struct IClass *cl, Object *obj, UNUSED Msg msg )
 
 
 //$$$
-ULONG _ContextMenuBuild( struct IClass *cl, Object *obj, struct MUIP_NList_ContextMenuBuild *msg )
+IPTR _ContextMenuBuild( struct IClass *cl, Object *obj, struct MUIP_NList_ContextMenuBuild *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
 
@@ -6834,14 +6834,14 @@ ULONG _ContextMenuBuild( struct IClass *cl, Object *obj, struct MUIP_NList_Conte
   data->MenuChoice.ontop = msg->ontop;
 
   if ( !msg->ontop )
-    return( (ULONG)MUI_MakeObject( MUIO_MenustripNM, ContextMenu, 0 ) );
+    return( (IPTR)MUI_MakeObject( MUIO_MenustripNM, ContextMenu, 0 ) );
 
   return( DoSuperMethodA( cl, obj, (Msg)msg ) );
 }
 
 
 //$$$
-ULONG _ContextMenuChoice( struct IClass *cl, Object *obj, struct MUIP_ContextMenuChoice *msg )
+IPTR _ContextMenuChoice( struct IClass *cl, Object *obj, struct MUIP_ContextMenuChoice *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn;
@@ -6940,7 +6940,7 @@ ULONG _ContextMenuChoice( struct IClass *cl, Object *obj, struct MUIP_ContextMen
 ******************************************************************************
 *
 */
-ULONG _NListtree_Open( struct IClass *cl, Object *obj, struct MUIP_NListtree_Open *msg )
+IPTR _NListtree_Open( struct IClass *cl, Object *obj, struct MUIP_NListtree_Open *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn, *tn2;
@@ -7128,7 +7128,7 @@ ULONG _NListtree_Open( struct IClass *cl, Object *obj, struct MUIP_NListtree_Ope
 ******************************************************************************
 *
 */
-ULONG _NListtree_Close( struct IClass *cl, Object *obj, struct MUIP_NListtree_Close *msg )
+IPTR _NListtree_Close( struct IClass *cl, Object *obj, struct MUIP_NListtree_Close *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn;
@@ -7338,7 +7338,7 @@ ULONG _NListtree_Close( struct IClass *cl, Object *obj, struct MUIP_NListtree_Cl
 ******************************************************************************
 *
 */
-ULONG _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_Insert *msg )
+IPTR _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_Insert *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn = NULL;
@@ -7700,7 +7700,7 @@ INLINE STRPTR mystrtok( STRPTR string, STRPTR buf, ULONG bufsize, STRPTR delimit
 
 
 
-ULONG _NListtree_InsertStruct( struct IClass *cl, Object *obj, struct MUIP_NListtree_InsertStruct *msg )
+IPTR _NListtree_InsertStruct( struct IClass *cl, Object *obj, struct MUIP_NListtree_InsertStruct *msg )
 {
   struct MUI_NListtree_TreeNode *temp, *lasttn = CTN( MUIV_NListtree_Insert_ListNode_Root );
   struct NListtree_Data *data = INST_DATA( cl, obj );
@@ -7736,7 +7736,7 @@ ULONG _NListtree_InsertStruct( struct IClass *cl, Object *obj, struct MUIP_NList
     FreeVecPooled( data->MemoryPool, token );
   }
 
-  return( (ULONG)lasttn );
+  return( (IPTR)lasttn );
 }
 
 
@@ -7819,7 +7819,7 @@ ULONG _NListtree_InsertStruct( struct IClass *cl, Object *obj, struct MUIP_NList
 ******************************************************************************
 *
 */
-ULONG _NListtree_Remove( struct IClass *cl, Object *obj, struct MUIP_NListtree_Remove *msg )
+IPTR _NListtree_Remove( struct IClass *cl, Object *obj, struct MUIP_NListtree_Remove *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_ListNode *li;
@@ -8013,7 +8013,7 @@ ULONG _NListtree_Remove( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
 ******************************************************************************
 *
 */
-ULONG _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_Clear *msg )
+IPTR _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_Clear *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_ListNode *ln = NULL;
@@ -8193,7 +8193,7 @@ ULONG _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NList
 ******************************************************************************
 *
 */
-ULONG _NListtree_Exchange( struct IClass *cl, Object *obj, struct MUIP_NListtree_Exchange *msg )
+IPTR _NListtree_Exchange( struct IClass *cl, Object *obj, struct MUIP_NListtree_Exchange *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_ListNode *ln1, *ln2;
@@ -8486,7 +8486,7 @@ ULONG _NListtree_Exchange( struct IClass *cl, Object *obj, struct MUIP_NListtree
 ******************************************************************************
 *
 */
-ULONG _NListtree_Move( struct IClass *cl, Object *obj, struct MUIP_NListtree_Move *msg )
+IPTR _NListtree_Move( struct IClass *cl, Object *obj, struct MUIP_NListtree_Move *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_ListNode *ln1, *ln2;
@@ -8732,7 +8732,7 @@ ULONG _NListtree_Move( struct IClass *cl, Object *obj, struct MUIP_NListtree_Mov
 ******************************************************************************
 *
 */
-ULONG _NListtree_Copy( struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy *msg )
+IPTR _NListtree_Copy( struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_ListNode *ln1, *ln2;
@@ -8923,7 +8923,7 @@ ULONG _NListtree_Copy( struct IClass *cl, Object *obj, struct MUIP_NListtree_Cop
 ******************************************************************************
 *
 */
-ULONG _NListtree_Rename( struct IClass *cl, Object *obj, struct MUIP_NListtree_Rename *msg )
+IPTR _NListtree_Rename( struct IClass *cl, Object *obj, struct MUIP_NListtree_Rename *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn;
@@ -8980,7 +8980,7 @@ ULONG _NListtree_Rename( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
   if ( !( msg->Flags & MUIV_NListtree_Rename_Flag_NoRefresh ) && ( tn->tn_IFlags & TNIF_VISIBLE ) )
     DoMethod( obj, MUIM_NList_Redraw, GetVisualPos( data, tn ) );
 
-  return( (ULONG)tn );
+  return( (IPTR)tn );
 }
 
 
@@ -9073,7 +9073,7 @@ ULONG _NListtree_Rename( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
 ******************************************************************************
 *
 */
-ULONG _NListtree_FindName( struct IClass *cl, Object *obj, struct MUIP_NListtree_FindName *msg )
+IPTR _NListtree_FindName( struct IClass *cl, Object *obj, struct MUIP_NListtree_FindName *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_ListNode *ln;
@@ -9113,7 +9113,7 @@ ULONG _NListtree_FindName( struct IClass *cl, Object *obj, struct MUIP_NListtree
         nnset( obj, MUIA_NListtree_Active, tn );
   }
 
-  return( (ULONG)tn );
+  return( (IPTR)tn );
 }
 
 
@@ -9210,7 +9210,7 @@ ULONG _NListtree_FindName( struct IClass *cl, Object *obj, struct MUIP_NListtree
 ******************************************************************************
 *
 */
-ULONG _NListtree_FindUserData( struct IClass *cl, Object *obj, struct MUIP_NListtree_FindUserData *msg )
+IPTR _NListtree_FindUserData( struct IClass *cl, Object *obj, struct MUIP_NListtree_FindUserData *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_ListNode *ln;
@@ -9250,7 +9250,7 @@ ULONG _NListtree_FindUserData( struct IClass *cl, Object *obj, struct MUIP_NList
         nnset( obj, MUIA_NListtree_Active, tn );
   }
 
-  return( (ULONG)tn );
+  return( (IPTR)tn );
 }
 
 
@@ -9350,7 +9350,7 @@ ULONG _NListtree_FindUserData( struct IClass *cl, Object *obj, struct MUIP_NList
 ******************************************************************************
 *
 */
-ULONG _NListtree_GetEntry( struct IClass *cl, Object *obj, struct MUIP_NListtree_GetEntry *msg )
+IPTR _NListtree_GetEntry( struct IClass *cl, Object *obj, struct MUIP_NListtree_GetEntry *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn = NULL;
@@ -9425,7 +9425,7 @@ ULONG _NListtree_GetEntry( struct IClass *cl, Object *obj, struct MUIP_NListtree
 
   //D(bug( "ListNode: 0x%08lx - Pos: 0x%08lx, Flags: 0x%08lx ==> Entry: 0x%08lx\n", msg->Node, msg->Position, msg->Flags, tn ) );
 
-  return( (ULONG)tn );
+  return( (IPTR)tn );
 }
 
 
@@ -9505,12 +9505,12 @@ ULONG _NListtree_GetEntry( struct IClass *cl, Object *obj, struct MUIP_NListtree
 ******************************************************************************
 *
 */
-ULONG _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_GetNr *msg )
+IPTR _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_GetNr *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn;
   struct MUI_NListtree_ListNode *ln;
-  ULONG ret = 0;
+  IPTR ret = 0;
   LONG pos = 0;
 
   D(DBF_LISTTREE, "GetNr: NListtree entries %ld",data->NumEntries);
@@ -9551,12 +9551,12 @@ ULONG _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_Ge
 
   else if ( msg->Flags & MUIV_NListtree_GetNr_Flag_Visible )
   {
-    ret = (ULONG)GetVisualPos( data, tn );
+    ret = (IPTR)GetVisualPos( data, tn );
   }
 
   else
   {
-    ret = (ULONG)-1;
+    ret = (IPTR)-1;
 
     if ( GetEntryPos( &data->RootList, tn, &pos ) )
       ret = pos;
@@ -9564,7 +9564,7 @@ ULONG _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_Ge
 
   //D(bug( "Node: 0x%08lx - %s - Flags: 0x%08lx ==> Nr: %ld\n", tn, tn->tn_Name, msg->Flags, ret ) );
 
-  return( (ULONG)ret );
+  return( (IPTR)ret );
 }
 
 
@@ -9630,7 +9630,7 @@ ULONG _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_Ge
 ******************************************************************************
 *
 */
-ULONG _NListtree_Sort( struct IClass *cl, Object *obj, struct MUIP_NListtree_Sort *msg )
+IPTR _NListtree_Sort( struct IClass *cl, Object *obj, struct MUIP_NListtree_Sort *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_ListNode *ln;
@@ -9760,7 +9760,7 @@ ULONG _NListtree_Sort( struct IClass *cl, Object *obj, struct MUIP_NListtree_Sor
 ******************************************************************************
 *
 */
-ULONG _NListtree_TestPos( UNUSED struct IClass *cl, Object *obj, struct MUIP_NListtree_TestPos *msg )
+IPTR _NListtree_TestPos( UNUSED struct IClass *cl, Object *obj, struct MUIP_NListtree_TestPos *msg )
 {
   struct MUI_NListtree_TestPos_Result *res = (struct MUI_NListtree_TestPos_Result *)msg->Result;
   struct MUI_NList_TestPos_Result lres;
@@ -9856,7 +9856,7 @@ ULONG _NListtree_TestPos( UNUSED struct IClass *cl, Object *obj, struct MUIP_NLi
 ******************************************************************************
 *
 */
-ULONG _NListtree_Redraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_Redraw *msg )
+IPTR _NListtree_Redraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_Redraw *msg )
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
 
@@ -9970,7 +9970,7 @@ ULONG _NListtree_Redraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_R
 ******************************************************************************
 *
 */
-ULONG _NListtree_Select( struct IClass *cl, Object *obj, struct MUIP_NListtree_Select *msg )
+IPTR _NListtree_Select( struct IClass *cl, Object *obj, struct MUIP_NListtree_Select *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   LONG state = 0;
@@ -10027,7 +10027,7 @@ ULONG _NListtree_Select( struct IClass *cl, Object *obj, struct MUIP_NListtree_S
   data->Flags &= ~NLTF_SELECT_METHOD;
 
   RETURN(state);
-  return( (ULONG)state );
+  return( (IPTR)state );
 }
 
 
@@ -10104,7 +10104,7 @@ ULONG _NListtree_Select( struct IClass *cl, Object *obj, struct MUIP_NListtree_S
 ******************************************************************************
 *
 */
-ULONG _NListtree_NextSelected( struct IClass *cl, Object *obj, struct MUIP_NListtree_NextSelected *msg )
+IPTR _NListtree_NextSelected( struct IClass *cl, Object *obj, struct MUIP_NListtree_NextSelected *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   LONG curr = data->SelectedTable.tb_Current;
@@ -10218,7 +10218,7 @@ ULONG _NListtree_NextSelected( struct IClass *cl, Object *obj, struct MUIP_NList
 *
 */
 
-ULONG _NListtree_PrevSelected( struct IClass *cl, Object *obj, struct MUIP_NListtree_PrevSelected *msg )
+IPTR _NListtree_PrevSelected( struct IClass *cl, Object *obj, struct MUIP_NListtree_PrevSelected *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   LONG curr = data->SelectedTable.tb_Current;
@@ -10304,7 +10304,7 @@ ULONG _NListtree_PrevSelected( struct IClass *cl, Object *obj, struct MUIP_NList
 ******************************************************************************
 *
 */
-ULONG _NListtree_CopyToClip( struct IClass *cl, Object *obj, struct MUIP_NListtree_CopyToClip *msg )
+IPTR _NListtree_CopyToClip( struct IClass *cl, Object *obj, struct MUIP_NListtree_CopyToClip *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct IOClipReq *req;
@@ -10668,7 +10668,7 @@ ULONG _NListtree_CopyToClip( struct IClass *cl, Object *obj, struct MUIP_NListtr
 ******************************************************************************
 *
 */
-ULONG _NListtree_GetListActive( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_GetListActive *msg )
+IPTR _NListtree_GetListActive( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_GetListActive *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn;
@@ -10695,7 +10695,7 @@ ULONG _NListtree_GetListActive( struct IClass *cl, Object *obj, UNUSED struct MU
 }
 
 
-ULONG _NListtree_GetDoubleClick( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_GetListActive *msg )
+IPTR _NListtree_GetDoubleClick( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_GetListActive *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
 
@@ -10769,7 +10769,7 @@ ULONG _NListtree_GetDoubleClick( struct IClass *cl, Object *obj, UNUSED struct M
 ******************************************************************************
 *
 */
-ULONG _NListtree_Data( struct IClass *cl, Object *obj, struct MUIP_NListtree_Data *msg )
+IPTR _NListtree_Data( struct IClass *cl, Object *obj, struct MUIP_NListtree_Data *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
 
@@ -10789,7 +10789,7 @@ ULONG _NListtree_Data( struct IClass *cl, Object *obj, struct MUIP_NListtree_Dat
 
 
 
-ULONG _NListtree_SelectChange( struct IClass *cl, Object *obj, struct MUIP_NList_SelectChange *msg )
+IPTR _NListtree_SelectChange( struct IClass *cl, Object *obj, struct MUIP_NList_SelectChange *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
   struct MUI_NListtree_TreeNode *tn;

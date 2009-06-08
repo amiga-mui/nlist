@@ -1487,7 +1487,7 @@ ULONG NL_List_TestPosOld(UNUSED Object *obj,struct NLData *data,LONG x,LONG y,st
 }
 
 
-ULONG mNL_List_GetEntry(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntry *msg)
+IPTR mNL_List_GetEntry(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntry *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   LONG ent = msg->pos;
@@ -1504,7 +1504,7 @@ ULONG mNL_List_GetEntry(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntr
 }
 
 
-ULONG mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntryInfo *msg)
+IPTR mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntryInfo *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   LONG line,ent2,ent = msg->res->pos;
@@ -1588,7 +1588,7 @@ ULONG mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_Get
 }
 
 
-ULONG mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
+IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   LONG pos = msg->pos;
@@ -1629,7 +1629,7 @@ ULONG mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
 }
 
 
-ULONG mNL_List_Select(struct IClass *cl,Object *obj,struct MUIP_NList_Select *msg)
+IPTR mNL_List_Select(struct IClass *cl,Object *obj,struct MUIP_NList_Select *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1641,7 +1641,7 @@ ULONG mNL_List_Select(struct IClass *cl,Object *obj,struct MUIP_NList_Select *ms
 }
 
 
-ULONG mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *msg)
+IPTR mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1649,7 +1649,7 @@ ULONG mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *
 }
 
 
-ULONG mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos *msg)
+IPTR mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1657,7 +1657,7 @@ ULONG mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos
 }
 
 
-ULONG mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg)
+IPTR mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   long ent;
@@ -1805,7 +1805,7 @@ ULONG mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *ms
 }
 
 
-ULONG mNL_List_RedrawEntry(struct IClass *cl,Object *obj,struct MUIP_NList_RedrawEntry *msg)
+IPTR mNL_List_RedrawEntry(struct IClass *cl,Object *obj,struct MUIP_NList_RedrawEntry *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   LONG ent = 0;
@@ -1834,7 +1834,7 @@ ULONG mNL_List_RedrawEntry(struct IClass *cl,Object *obj,struct MUIP_NList_Redra
 }
 
 
-ULONG mNL_List_NextSelected(struct IClass *cl,Object *obj,struct MUIP_NList_NextSelected *msg)
+IPTR mNL_List_NextSelected(struct IClass *cl,Object *obj,struct MUIP_NList_NextSelected *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   long ent = *msg->pos;
@@ -1865,7 +1865,7 @@ ULONG mNL_List_NextSelected(struct IClass *cl,Object *obj,struct MUIP_NList_Next
 }
 
 
-ULONG mNL_List_PrevSelected(struct IClass *cl,Object *obj,struct MUIP_NList_PrevSelected *msg)
+IPTR mNL_List_PrevSelected(struct IClass *cl,Object *obj,struct MUIP_NList_PrevSelected *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   long ent = *msg->pos;
@@ -1896,7 +1896,7 @@ ULONG mNL_List_PrevSelected(struct IClass *cl,Object *obj,struct MUIP_NList_Prev
 }
 
 
-ULONG mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_GetSelectInfo *msg)
+IPTR mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_GetSelectInfo *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   LONG ent;
@@ -1962,7 +1962,7 @@ ULONG mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_Get
 }
 
 
-ULONG mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod *msg)
+IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   LONG ent = msg->pos;
@@ -2058,7 +2058,7 @@ ULONG mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod
 }
 
 
-ULONG mNL_List_GetPos(struct IClass *cl,Object *obj,struct MUIP_NList_GetPos *msg)
+IPTR mNL_List_GetPos(struct IClass *cl,Object *obj,struct MUIP_NList_GetPos *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   LONG ent = *msg->pos + 1;

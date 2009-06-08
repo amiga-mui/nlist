@@ -86,7 +86,7 @@ struct NLIData
 /* *********************************************** */
 
 
-ULONG mNLI_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+IPTR mNLI_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
   register struct NLIData *data = INST_DATA(cl,obj);
   DoSuperMethodA(cl,obj,(Msg) msg);
@@ -182,18 +182,18 @@ ULONG mNLI_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 }
 
 
-ULONG mNLI_New(struct IClass *cl,Object *obj,struct opSet *msg)
+IPTR mNLI_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   register struct NLIData *data;
   if (!(obj = (Object *)DoSuperMethodA(cl,obj,(Msg) msg)))
     return(0);
   data = INST_DATA(cl,obj);
   data->special = 0;
-  return((ULONG) obj);
+  return((IPTR) obj);
 }
 
 
-ULONG mNLI_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+IPTR mNLI_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
   DoSuperMethodA(cl,obj,(Msg) msg);
   msg->MinMaxInfo->MinWidth  += 8;
@@ -206,7 +206,7 @@ ULONG mNLI_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 }
 
 
-ULONG mNLI_Set(struct IClass *cl,Object *obj,Msg msg)
+IPTR mNLI_Set(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NLIData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;

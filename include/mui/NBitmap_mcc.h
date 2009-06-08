@@ -35,16 +35,16 @@
 #endif
 
 /* attributes */
-#define MUIA_NBitmap_Type           0xa94f0000
-#define MUIA_NBitmap_Label          0xa94f0001
-#define MUIA_NBitmap_Button         0xa94f0002
-#define MUIA_NBitmap_Normal         0xa94f0003
-#define MUIA_NBitmap_Ghosted        0xa94f0004
-#define MUIA_NBitmap_Selected       0xa94f0005
-#define MUIA_NBitmap_Width          0xa94f0006
-#define MUIA_NBitmap_Height         0xa94f0007
-#define MUIA_NBitmap_MaxWidth       0xa94f0008
-#define MUIA_NBitmap_MaxHeight      0xa94f0009
+#define MUIA_NBitmap_Type           0xa94f0000UL
+#define MUIA_NBitmap_Label          0xa94f0001UL
+#define MUIA_NBitmap_Button         0xa94f0002UL
+#define MUIA_NBitmap_Normal         0xa94f0003UL
+#define MUIA_NBitmap_Ghosted        0xa94f0004UL
+#define MUIA_NBitmap_Selected       0xa94f0005UL
+#define MUIA_NBitmap_Width          0xa94f0006UL
+#define MUIA_NBitmap_Height         0xa94f0007UL
+#define MUIA_NBitmap_MaxWidth       0xa94f0008UL
+#define MUIA_NBitmap_MaxHeight      0xa94f0009UL
 
 /* source types */
 #define MUIV_NBitmap_Type_File      0

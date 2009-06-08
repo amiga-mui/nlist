@@ -45,7 +45,7 @@
 // functions
 
 // methods
-ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR mNew(struct IClass *cl, Object *obj, struct opSet *msg)
 {
   BOOL result = FALSE;
   ENTER();
@@ -82,13 +82,13 @@ ULONG mNew(struct IClass *cl, Object *obj, struct opSet *msg)
     obj = NULL;
   }
 
-  RETURN((ULONG)obj);
-  return (ULONG)obj;
+  RETURN((IPTR)obj);
+  return (IPTR)obj;
 }
 
-ULONG mGet(struct IClass *cl, Object *obj, Msg msg)
+IPTR mGet(struct IClass *cl, Object *obj, Msg msg)
 {
-  ULONG result = FALSE;
+  IPTR result = FALSE;
   IPTR *store = ((struct opGet *)msg)->opg_Storage;
   struct InstData *data = INST_DATA(cl, obj);
 
@@ -119,11 +119,11 @@ ULONG mGet(struct IClass *cl, Object *obj, Msg msg)
   return result;
 }
 
-ULONG mSet(struct IClass *cl,Object *obj, Msg msg)
+IPTR mSet(struct IClass *cl,Object *obj, Msg msg)
 {
   struct InstData *data = INST_DATA(cl, obj);
   struct TagItem *tags, *tag;
-  ULONG result = FALSE;
+  IPTR result = FALSE;
 
   ENTER();
 
@@ -158,9 +158,9 @@ ULONG mSet(struct IClass *cl,Object *obj, Msg msg)
 }
 
 
-ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
+IPTR mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
 {
-  ULONG result = FALSE;
+  IPTR result = FALSE;
   struct InstData *data = INST_DATA(cl, obj);
 
   ENTER();
@@ -190,9 +190,9 @@ ULONG mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
   return result;
 }
 
-ULONG mCleanup(struct IClass *cl, Object *obj, Msg msg)
+IPTR mCleanup(struct IClass *cl, Object *obj, Msg msg)
 {
-  ULONG result = 0;
+  IPTR result = 0;
   struct InstData *data = INST_DATA(cl, obj);
 
   ENTER();
@@ -208,10 +208,10 @@ ULONG mCleanup(struct IClass *cl, Object *obj, Msg msg)
   return result;
 }
 
-ULONG mHide(struct IClass *cl, Object *obj, Msg msg)
+IPTR mHide(struct IClass *cl, Object *obj, Msg msg)
 {
   struct InstData *data = INST_DATA(cl, obj);
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -229,9 +229,9 @@ ULONG mHide(struct IClass *cl, Object *obj, Msg msg)
   return result;
 }
 
-ULONG mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
+IPTR mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
-  ULONG result = 0;
+  IPTR result = 0;
   struct InstData *data;
 
   ENTER();

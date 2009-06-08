@@ -661,7 +661,7 @@ HOOKPROTONHNO(DestructFunc, VOID, struct NList_DestructMessage *ndm)
 }
 MakeStaticHook(DestructHook, DestructFunc);
 
-static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   struct NListviews_MCP_Data *data;
   APTR group1, group2, group3, group4, group5;
@@ -1547,10 +1547,10 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_WheelMMB,     MUICFG_NList_WheelMMB, 1, tr(MSG_MMB_FASTWHEEL));
   }
 
-  return ((ULONG)obj);
+  return ((IPTR)obj);
 }
 
-static ULONG mNL_MCP_Dispose(struct IClass *cl, Object *obj, Msg msg)
+static IPTR mNL_MCP_Dispose(struct IClass *cl, Object *obj, Msg msg)
 {
   struct NListviews_MCP_Data *data = INST_DATA(cl, obj);
 
@@ -1570,7 +1570,7 @@ static ULONG mNL_MCP_Dispose(struct IClass *cl, Object *obj, Msg msg)
   return DoSuperMethodA(cl, obj, msg);
 }
 
-ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigToGadgets *msg)
+IPTR mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigToGadgets *msg)
 {
   struct NListviews_MCP_Data *data = INST_DATA(cl, obj);
 
@@ -1778,7 +1778,7 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
 }
 
 
-ULONG mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_GadgetsToConfig *msg)
+IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_GadgetsToConfig *msg)
 {
   struct NListviews_MCP_Data *data = INST_DATA(cl, obj);
 
@@ -1933,7 +1933,7 @@ ULONG mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settings
 }
 
 
-static ULONG mNL_MCP_Get(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNL_MCP_Get(struct IClass *cl,Object *obj,Msg msg)
 {
   IPTR *store = ((struct opGet *)msg)->opg_Storage;
 

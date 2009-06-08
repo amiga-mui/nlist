@@ -383,7 +383,7 @@ static void disposeBitMapImage(struct NLData *data,Object *obj,struct BitMapImag
 }
 
 
-ULONG NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
+IPTR NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 {
   struct BitMapImage *bmimg = NULL;
   if (imgobj)
@@ -415,11 +415,11 @@ ULONG NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags
     if (!bmimg)
       MUI_DisposeObject((APTR) imgobj);
   }
-  return ((ULONG) bmimg);
+  return ((IPTR) bmimg);
 }
 
 
-ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
+IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 {
   LONG CI_BM_Width = 0;
 
@@ -731,7 +731,7 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
     }
     if (bmimg && (data->MinImageHeight < bmimg->height) && !flags)
       data->MinImageHeight = bmimg->height;
-    return ((ULONG) bmimg);
+    return ((IPTR) bmimg);
   }
 
   return (0);
@@ -900,7 +900,7 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
 }
 
 
-ULONG mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_CreateImage *msg)
+IPTR mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_CreateImage *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -908,7 +908,7 @@ ULONG mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_CreateImag
 }
 
 
-ULONG mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImage *msg)
+IPTR mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImage *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -916,7 +916,7 @@ ULONG mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImag
 }
 
 
-ULONG mNL_UseImage(struct IClass *cl,Object *obj,struct MUIP_NList_UseImage *msg)
+IPTR mNL_UseImage(struct IClass *cl,Object *obj,struct MUIP_NList_UseImage *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/

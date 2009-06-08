@@ -79,7 +79,7 @@ static VOID setstr(STRPTR *dest, STRPTR str)
 }
 
 /* ULONG NBitmap_New() */
-ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
 {
       uint32 i;
       struct InstData *data = NULL;
@@ -139,7 +139,7 @@ ULONG NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
                   }
 
               /* setup images */
-              if(NBitmap_NewImage(cl, obj)) return((ULONG)obj);
+              if(NBitmap_NewImage(cl, obj)) return((IPTR)obj);
             }
         }
 
@@ -187,11 +187,11 @@ ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
 }
 
 /* ULONG NBitmap_Set() */
-ULONG NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
+IPTR NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
 {
   struct InstData *data = INST_DATA(cl, obj);
   struct TagItem *tags, *tag;
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -231,9 +231,9 @@ ULONG NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
 }
 
 /* ULONG NBitmap_Dispose() */
-ULONG NBitmap_Dispose(struct IClass *cl, Object *obj, Msg msg)
+IPTR NBitmap_Dispose(struct IClass *cl, Object *obj, Msg msg)
 {
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -246,9 +246,9 @@ ULONG NBitmap_Dispose(struct IClass *cl, Object *obj, Msg msg)
 }
 
 /* ULONG NBitmap_Setup() */
-ULONG NBitmap_Setup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
+IPTR NBitmap_Setup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
 {
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -262,9 +262,9 @@ ULONG NBitmap_Setup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo
 }
 
 /* ULONG NBitmap_Cleanup() */
-ULONG NBitmap_Cleanup(struct IClass *cl, Object *obj, Msg msg)
+IPTR NBitmap_Cleanup(struct IClass *cl, Object *obj, Msg msg)
 {
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -277,9 +277,9 @@ ULONG NBitmap_Cleanup(struct IClass *cl, Object *obj, Msg msg)
 }
 
 /* ULONG NBitmap_Show() */
-ULONG NBitmap_Show(struct IClass *cl, Object *obj, Msg msg)
+IPTR NBitmap_Show(struct IClass *cl, Object *obj, Msg msg)
 {
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -290,9 +290,9 @@ ULONG NBitmap_Show(struct IClass *cl, Object *obj, Msg msg)
 }
 
 /* ULONG NBitmap_Hide() */
-ULONG NBitmap_Hide(struct IClass *cl, Object *obj, Msg msg)
+IPTR NBitmap_Hide(struct IClass *cl, Object *obj, Msg msg)
 {
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -303,10 +303,10 @@ ULONG NBitmap_Hide(struct IClass *cl, Object *obj, Msg msg)
 }
 
 /* ULONG NBitmap_HandleEvent() */
-ULONG NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
+IPTR NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
   struct InstData *data;
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -388,7 +388,7 @@ ULONG NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEven
 }
 
 /* ULONG  NBitmap_AskMinMax() */
-ULONG NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
+IPTR NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
   struct InstData *data;
 
@@ -457,9 +457,9 @@ ULONG NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *m
 }
 
 /* ULONG NBitmap_Draw() */
-ULONG NBitmap_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
+IPTR NBitmap_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -477,7 +477,7 @@ ULONG NBitmap_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 /* DISPATCHER() */
 DISPATCHER(_Dispatcher)
 {
-  ULONG result;
+  IPTR result;
 
   ENTER();
 

@@ -39,6 +39,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef __AROS__
+#warning FIXME: Check for endiannes
+#endif
 
 /****** cbio/CBOpen *************************************************
 *

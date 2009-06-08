@@ -69,7 +69,7 @@ Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 }
 #endif
 
-static ULONG mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   register struct NFTData *data;
   struct TagItem *tag;
@@ -164,11 +164,11 @@ static ULONG mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
       DoMethod(obj,MUIM_NList_InsertWrap,data->NFloattext_Text,-2,MUIV_NList_Insert_Bottom,1,data->NFloattext_Align);
   }
 
-  return((ULONG) obj);
+  return((IPTR) obj);
 }
 
 
-static ULONG mNFT_Dispose(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNFT_Dispose(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NFTData *data;
   data = INST_DATA(cl,obj);
@@ -184,7 +184,7 @@ static ULONG mNFT_Dispose(struct IClass *cl,Object *obj,Msg msg)
 }
 
 
-static ULONG mNFT_Set(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNFT_Set(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NFTData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
@@ -240,7 +240,7 @@ static ULONG mNFT_Set(struct IClass *cl,Object *obj,Msg msg)
 }
 
 
-static ULONG mNFT_Get(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNFT_Get(struct IClass *cl,Object *obj,Msg msg)
 {
   struct NFTData *data = INST_DATA(cl,obj);
   IPTR *store = ((struct opGet *)msg)->opg_Storage;
@@ -277,7 +277,7 @@ static ULONG mNFT_Get(struct IClass *cl,Object *obj,Msg msg)
 }
 
 
-static ULONG mNFT_GetEntry(struct IClass *cl,Object *obj,struct MUIP_NFloattext_GetEntry *msg)
+static IPTR mNFT_GetEntry(struct IClass *cl,Object *obj,struct MUIP_NFloattext_GetEntry *msg)
 {
   register struct NFTData *data = INST_DATA(cl,obj);
   struct MUI_NList_GetEntryInfo gei;

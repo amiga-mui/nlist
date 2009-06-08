@@ -1040,7 +1040,7 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
 }
 
 
-ULONG mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip *msg)
+IPTR mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1048,16 +1048,16 @@ ULONG mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip 
   if((LONG)msg->clipnum < 0)
     return (0);
 
-  return ((ULONG) NL_CopyTo(obj,data,msg->pos,NULL,msg->clipnum,msg->entries,msg->hook));
+  return ((IPTR) NL_CopyTo(obj,data,msg->pos,NULL,msg->clipnum,msg->entries,msg->hook));
 }
 
 
-ULONG mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *msg)
+IPTR mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   LONG res;
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   res = NL_CopyTo(obj,data,msg->pos,msg->filename,-1,msg->entries,NULL);
   *msg->result = (APTR) res;
-  return ((ULONG)res);
+  return ((IPTR)res);
 }

@@ -27,12 +27,12 @@
 extern "C" {
 #endif
 
-#ifdef __GNUC__
-  #ifdef __PPC__
+#if !defined(__AROS__) && defined(__PPC__)
+  #if defined(__GNUC__)
     #pragma pack(2)
+  #elif defined(__VBCC__)
+    #pragma amiga-align
   #endif
-#elif defined(__VBCC__)
-  #pragma amiga-align
 #endif
 
 #ifndef EXEC_TYPES_H
@@ -42,12 +42,12 @@ extern "C" {
 #define MUIC_NBitmap		"NBitmap.mcc"
 #define NBitmapObject 	MUI_NewObject(MUIC_NBitmap
 
-#ifdef __GNUC__
-  #ifdef __PPC__
+#if !defined(__AROS__) && defined(__PPC__)
+  #if defined(__GNUC__)
     #pragma pack()
+  #elif defined(__VBCC__)
+    #pragma default-align
   #endif
-#elif defined(__VBCC__)
-  #pragma default-align
 #endif
 
 #ifdef __cplusplus

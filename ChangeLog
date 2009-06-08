@@ -10,6 +10,7 @@ $URL$
   * AROS metamakefiles added.
   * Added "ioreq.io_Message.mn_Length = sizeof(ioreq)" because
     console.device won't open without this on AROS.
+  * Some fixes for 64-bit AROS
 
 2009-06-06 Jens Langner <Jens.Langner@light-speed.de>
 

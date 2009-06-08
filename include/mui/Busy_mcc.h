@@ -33,7 +33,7 @@
 
 /*** Methods ***/
 
-#define MUIM_Busy_Move           0x80020001
+#define MUIM_Busy_Move           0x80020001UL
 
 /*** Method structs ***/
 
@@ -51,8 +51,8 @@ struct MUIP_Busy_Move {
 
 /*** Attributes ***/
 
-#define MUIA_Busy_ShowHideIH     0x800200a9
-#define MUIA_Busy_Speed          0x80020049
+#define MUIA_Busy_ShowHideIH     0x800200a9UL
+#define MUIA_Busy_Speed          0x80020049UL
 
 /*** Special attribute values ***/
 
