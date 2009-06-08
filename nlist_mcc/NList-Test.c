@@ -748,6 +748,7 @@ static VOID init(VOID)
   if((MUIMasterBase = OpenLibrary("muimaster.library", 19)) &&
      GETINTERFACE(IMUIMaster, MUIMasterBase))
   {
+    ioreq.io_Message.mn_Length = sizeof(ioreq);
     if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
 		{
 		  ConsoleDevice = (APTR)ioreq.io_Device;

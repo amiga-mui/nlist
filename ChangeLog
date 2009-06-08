@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-06-08 Matthias Rustler <mrustler@gmx.de>
+
+  * AROS metamakefiles added.
+  * Added "ioreq.io_Message.mn_Length = sizeof(ioreq)" because
+    console.device won't open without this on AROS.
+
 2009-06-06 Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: adapted the whole build system to compile all NList classes

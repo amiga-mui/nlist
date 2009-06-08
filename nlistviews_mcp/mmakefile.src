@@ -1,0 +1,27 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-nlistviews-mcp : includes linklibs
+#MM contrib-zune-classes-nlistviews-mcp-test : includes linklibs
+
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
+USER_CFLAGS := -DNO_INLINE_STDARG
+
+FILES := locale NListviews Debug vastubs
+
+%build_module_simple mmake=contrib-zune-classes-nlistviews-mcp \
+  modname=NListviews modtype=mcp moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
+  files="library $(FILES)" uselibs="amiga mui rom m"
+
+
+%build_prog mmake=contrib-zune-classes-nlistviews-mcp-test progname=NListviews-Prefs \
+    files="NListviews-Prefs $(FILES)" targetdir=$(AROS_TESTS)/NList \
+    uselibs="amiga mui arosc m"
+
+
+#MM includes-copy
+
+INCLUDE_FILES := NListviews_mcp.h
+%copy_includes path=mui
+
+%common

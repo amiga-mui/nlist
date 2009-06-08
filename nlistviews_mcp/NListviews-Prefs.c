@@ -74,6 +74,7 @@ extern DISPATCHERPROTO(_DispatcherP);
 
 int main(void)
 {
+  ioreq.io_Message.mn_Length = sizeof(ioreq);
   if((UtilityBase = OpenLibrary("utility.library", 38)) &&
     GETINTERFACE(IUtility, UtilityBase))
   if((IntuitionBase = (APTR)OpenLibrary("intuition.library", 38)) &&

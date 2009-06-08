@@ -96,6 +96,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
 	if((CxBase = OpenLibrary("commodities.library", 37L)) &&
      GETINTERFACE(ICommodities, struct CommoditiesIFace *, CxBase))
 	{
+		ioreq.io_Message.mn_Length = sizeof(ioreq);
 		if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
 		{
 			ConsoleDevice = (struct Device *)ioreq.io_Device;

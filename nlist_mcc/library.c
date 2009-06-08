@@ -102,6 +102,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
 		if((DiskfontBase = OpenLibrary("diskfont.library", 37L)) &&
        GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
 		{
+			ioreq.io_Message.mn_Length = sizeof(ioreq);
 			if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
 			{
 				ConsoleDevice = (APTR)ioreq.io_Device;
