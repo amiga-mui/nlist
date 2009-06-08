@@ -55,7 +55,17 @@ static char *CopyText(char *textin)
   return (textout);
 }
 
-#if !defined(__MORPHOS__)
+#ifdef __AROS__
+static IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
+static IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
+{
+  AROS_SLOWSTACKTAGS_PRE(tag1)
+  
+  retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
+
+  AROS_SLOWSTACKTAGS_POST
+}
+#elif !defined(__MORPHOS__)
 Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;

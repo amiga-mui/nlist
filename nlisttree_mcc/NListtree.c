@@ -171,7 +171,17 @@ struct TreeImage_Data
   LONG  spec;
 };
 
-#if !defined(__MORPHOS__)
+#ifdef __AROS__
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
+{
+  AROS_SLOWSTACKTAGS_PRE(tag1)
+  
+  retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
+
+  AROS_SLOWSTACKTAGS_POST
+}
+#elif !defined(__MORPHOS__)
 Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
@@ -804,6 +814,14 @@ INLINE ULONG MyCallHookA(struct Hook *hook, struct NListtree_Data *data, struct 
 }
 #endif
 
+#ifdef __AROS__
+static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
+{
+    AROS_SLOWSTACKHOOKS_PRE(data)
+    retval = CallHookPkt(hook, data->Obj, AROS_SLOWSTACKHOOKS_ARG(data));
+    AROS_SLOWSTACKHOOKS_POST
+}
+#else
 static ULONG STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
   ULONG ret;
@@ -815,6 +833,7 @@ static ULONG STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_D
 
   return(ret);
 }
+#endif
 
 /*
 **  Release a pen.
