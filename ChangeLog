@@ -8,6 +8,7 @@ $URL$
 2009-06-15 Matthias Rustler <mrustler@gmx.de>
 
   * Renamed francais.ct to french.ct, so that we have English language names.
+  * Added catalog creation to AROS metamakefiles
 
 2009-06-15 Thore Böckelmann <tboeckel@gmx.de>
 

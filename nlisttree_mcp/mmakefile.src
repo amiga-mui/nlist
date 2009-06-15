@@ -13,32 +13,39 @@ FILES := library NListtree locale
 
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_NList/Locale/Catalogs
 
+# CTs which aren't uptodate:
+# $(TARGETDIR)/deutsch/NListtree_mcp.catalog \
+# $(TARGETDIR)/russian/NListtree_mcp.catalog \
+
 #MM
 contrib-zune-classes-nlisttree-mcp-catalogs : locale.h locale.c \
-    $(TARGETDIR)/deutsch/TheBar.catalog \
-    $(TARGETDIR)/czech/TheBar.catalog \
-    $(TARGETDIR)/svenska/TheBar.catalog \
-    $(TARGETDIR)/italiano/TheBar.catalog \
-    $(TARGETDIR)/français/TheBar.catalog
+    $(TARGETDIR)/english-british/NListtree_mcp.catalog \
+    $(TARGETDIR)/czech/NListtree_mcp.catalog \
+    $(TARGETDIR)/svenska/NListtree_mcp.catalog \
+    $(TARGETDIR)/français/NListtree_mcp.catalog
 
-$(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
+$(TARGETDIR)/deutsch/NListtree_mcp.catalog: locale/german.ct
 	@$(MKDIR) $(TARGETDIR)/deutsch
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
 
-$(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
+$(TARGETDIR)/czech/NListtree_mcp.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
 
-$(TARGETDIR)/français/TheBar.catalog: locale/french.ct
+$(TARGETDIR)/français/NListtree_mcp.catalog: locale/french.ct
 	@$(MKDIR) $(TARGETDIR)/français
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
 
-$(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
+$(TARGETDIR)/svenska/NListtree_mcp.catalog: locale/swedish.ct
 	@$(MKDIR) $(TARGETDIR)/svenska
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
 
-$(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
-	@$(MKDIR) $(TARGETDIR)/italiano
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+$(TARGETDIR)/english-british/NListtree_mcp.catalog: locale/english-british.ct
+	@$(MKDIR) $(TARGETDIR)/english-british
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/russian/NListtree_mcp.catalog: locale/russian.ct
+	@$(MKDIR) $(TARGETDIR)/russian
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
 
 %common

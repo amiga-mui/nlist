@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-nlistviews-mcp : includes linklibs
+#MM contrib-zune-classes-nlistviews-mcp : includes linklibs contrib-zune-classes-nlistviews-mcp-catalogs
 #MM contrib-zune-classes-nlistviews-mcp-test : includes linklibs
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
@@ -23,5 +23,27 @@ FILES := locale NListviews Debug vastubs
 
 INCLUDE_FILES := NListviews_mcp.h
 %copy_includes path=mui
+
+
+TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_NList/Locale/Catalogs
+
+#MM
+contrib-zune-classes-nlistviews-mcp-catalogs : locale.h locale.c \
+    $(TARGETDIR)/czech/NListviews_mcp.catalog \
+    $(TARGETDIR)/svenska/NListviews_mcp.catalog \
+    $(TARGETDIR)/français/NListviews_mcp.catalog
+
+
+$(TARGETDIR)/czech/NListviews_mcp.catalog: locale/czech.ct
+	@$(MKDIR) $(TARGETDIR)/czech
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/français/NListviews_mcp.catalog: locale/french.ct
+	@$(MKDIR) $(TARGETDIR)/français
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/svenska/NListviews_mcp.catalog: locale/swedish.ct
+	@$(MKDIR) $(TARGETDIR)/svenska
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $< CATALOG $@
 
 %common
