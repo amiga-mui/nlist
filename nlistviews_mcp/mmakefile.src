@@ -26,12 +26,21 @@ INCLUDE_FILES := NListviews_mcp.h
 
 
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_NList/Locale/Catalogs
+LOCALE_H := $(SRCDIR)/$(CURDIR)/locale.h
+LOCALE_C := $(SRCDIR)/$(CURDIR)/locale.c
 
 #MM
 contrib-zune-classes-nlistviews-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/czech/NListviews_mcp.catalog \
     $(TARGETDIR)/svenska/NListviews_mcp.catalog \
     $(TARGETDIR)/français/NListviews_mcp.catalog
+
+
+$(LOCALE_H): locale/NListviews_mcp.cd C_h.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $(LOCALE_H)=$(SRCDIR)/$(CURDIR)/C_h.sd
+
+$(LOCALE_C): locale/NListviews_mcp.cd C_c.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $(LOCALE_C)=$(SRCDIR)/$(CURDIR)/C_c.sd
 
 
 $(TARGETDIR)/czech/NListviews_mcp.catalog: locale/czech.ct
