@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-nlisttree-mcp : includes linklibs
+#MM contrib-zune-classes-nlisttree-mcp : includes linklibs contrib-zune-classes-nlisttree-mcp-catalogs
 
 USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
@@ -10,5 +10,35 @@ FILES := library NListtree locale
 %build_module_simple mmake=contrib-zune-classes-nlisttree-mcp \
   modname=NListtree modtype=mcp moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
   files=$(FILES) uselibs="amiga mui rom m"
+
+TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_NList/Locale/Catalogs
+
+#MM
+contrib-zune-classes-nlisttree-mcp-catalogs : locale.h locale.c \
+    $(TARGETDIR)/deutsch/TheBar.catalog \
+    $(TARGETDIR)/czech/TheBar.catalog \
+    $(TARGETDIR)/svenska/TheBar.catalog \
+    $(TARGETDIR)/italiano/TheBar.catalog \
+    $(TARGETDIR)/français/TheBar.catalog
+
+$(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
+	@$(MKDIR) $(TARGETDIR)/deutsch
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+
+$(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
+	@$(MKDIR) $(TARGETDIR)/czech
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+
+$(TARGETDIR)/français/TheBar.catalog: locale/french.ct
+	@$(MKDIR) $(TARGETDIR)/français
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+
+$(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
+	@$(MKDIR) $(TARGETDIR)/svenska
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+
+$(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
+	@$(MKDIR) $(TARGETDIR)/italiano
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
 
 %common

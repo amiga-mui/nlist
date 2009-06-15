@@ -190,7 +190,7 @@ TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
 # available catalog translations
 CATALOGS = $(LOCALE)/swedish.catalog \
            $(LOCALE)/czech.catalog \
-           $(LOCALE)/francais.catalog
+           $(LOCALE)/french.catalog
 
 # different options per target OS
 ifeq ($(OS), os4)

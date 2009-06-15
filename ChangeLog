@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-06-15 Matthias Rustler <mrustler@gmx.de>
+
+  * Renamed francais.ct to french.ct, so that we have English language names.
+
 2009-06-15 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func3.c: replaced the hand crafted clipboard accesses by
