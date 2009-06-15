@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-06-15 Matthias Rustler <mrustler@gmx.de>
+
+  * Made clipboard functions endiannes aware.
+
 2009-06-08 Matthias Rustler <mrustler@gmx.de>
 
   * AROS metamakefiles added.

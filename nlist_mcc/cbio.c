@@ -40,7 +40,11 @@
 #include <string.h>
 
 #ifdef __AROS__
-#warning FIXME: Check for endiannes
+#define LONG2BE(x) AROS_LONG2BE(x)
+#define BE2LONG(x) AROS_BE2LONG(x)
+#else
+#define LONG2BE(x) (x)
+#define BE2LONG(x) (x)
 #endif
 
 /****** cbio/CBOpen *************************************************
@@ -162,7 +166,7 @@ void CBClose(struct IOClipReq *ior)
 
 int CBWriteFTXT(struct IOClipReq *ior,char *string)
 {
-  ULONG length, slen;
+  ULONG length, slen, temp;
   BOOL odd;
   int success;
 
@@ -180,11 +184,16 @@ int CBWriteFTXT(struct IOClipReq *ior,char *string)
   /* Create the IFF header information */
 
   WriteLong(ior, (long *) "FORM");     /* "FORM"             */
-  length+=12L;                         /* + "[size]FTXTCHRS" */
-  WriteLong(ior, (long *) &length);    /* total length       */
+
+  length+=12;                          /* + "[size]FTXTCHRS" */
+  temp = LONG2BE(length);
+  WriteLong(ior, (long *) &temp);      /* total length       */
+
   WriteLong(ior, (long *) "FTXT");     /* "FTXT"             */
   WriteLong(ior, (long *) "CHRS");     /* "CHRS"             */
-  WriteLong(ior, (long *) &slen);      /* string length      */
+
+  temp = LONG2BE(slen);
+  WriteLong(ior, (long *) &temp);      /* string length      */
 
   /* Write string */
   ior->io_Data    = (STRPTR)string;
@@ -318,7 +327,7 @@ int CBQueryFTXT(struct IOClipReq *ior)
 
 struct cbbuf *CBReadCHRS(struct IOClipReq *ior)
 {
-  ULONG chunk,size;
+  ULONG chunk,size,temp;
   struct cbbuf *buf;
   int looking;
   /* Find next CHRS chunk */
@@ -333,17 +342,21 @@ struct cbbuf *CBReadCHRS(struct IOClipReq *ior)
       if (chunk == ID_CHRS)
       {
         /* Get size of chunk, and copy data */
-        if (ReadLong(ior,&size))
+        if (ReadLong(ior,&temp))
         {
-          if (size)
+          if (temp)
+          {
+            size = BE2LONG(temp);
             buf=FillCBData(ior,size);
+          }
         }
       }
       /* If not, skip to next chunk */
       else
       {
-        if (ReadLong(ior,&size))
+        if (ReadLong(ior,&temp))
         {
+          size = BE2LONG(temp);
           looking = TRUE;
           if (size & 1)
             size++;    /* if odd size, add pad byte */
