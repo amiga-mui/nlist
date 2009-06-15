@@ -9558,7 +9558,7 @@ IPTR _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_Get
       ret = CLN(tn)->ln_Table.tb_Entries;
   }
 
-  else if ( msg->Flags & MUIV_NListtree_GetNr_Flag_CountLevel )
+  else if ( ln && (msg->Flags & MUIV_NListtree_GetNr_Flag_CountLevel) )
   {
     ret = ln->ln_Table.tb_Entries;
   }

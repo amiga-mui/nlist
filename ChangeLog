@@ -7,8 +7,11 @@ $URL$
 
 2009-06-15 Matthias Rustler <mrustler@gmx.de>
 
-  * Renamed francais.ct to french.ct, so that we have English language names.
+  * Renamed francais.ct to french.ct, so that we have only English language names.
   * Added catalog creation to AROS metamakefiles
+  * nlisttree_mcc/NListtree.c: check variable "ln" to avoid a segfault.
+    This happened in the NListtree demo when the button "GetNr" was pressed
+    while no list entry was selected.
 
 2009-06-15 Thore Böckelmann <tboeckel@gmx.de>
 
