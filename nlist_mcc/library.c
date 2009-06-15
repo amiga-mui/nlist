@@ -78,7 +78,7 @@ struct Library *IFFParseBase = NULL;
 struct LayersIFace *ILayers = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 struct ConsoleIFace *IConsole = NULL;
-struct IFFParseIFace *IFFParse = NULL;
+struct IFFParseIFace *IIFFParse = NULL;
 #endif
 
 static struct IOStdReq ioreq;
@@ -119,7 +119,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
               return(TRUE);
             }
 
-            DROPINTERFACE(IIFFParseIFace);
+            DROPINTERFACE(IIFFParse);
             CloseLibrary(IFFParseBase);
             IFFParseBase = NULL;
           }
