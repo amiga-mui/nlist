@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-06-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func3.c: replaced the hand crafted clipboard accesses by
+    proper iffparse.library calls. This circumvents the endian conversions and
+    is much easier to understand.
+
 2009-06-15 Matthias Rustler <mrustler@gmx.de>
 
   * Made clipboard functions endiannes aware.

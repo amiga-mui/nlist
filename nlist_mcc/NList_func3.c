@@ -27,15 +27,16 @@
 
 #include <dos/dos.h>
 #include <exec/memory.h>
+#include <libraries/iffparse.h>
 #include <proto/console.h>
 #include <proto/utility.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
+#include <proto/iffparse.h>
 
 #include "private.h"
 
 #include "NList_func.h"
-#include "cbio.h"
 
 ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message)
 {
@@ -903,25 +904,109 @@ static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,L
     ok = CCB_entry(obj,data,&clipstr,data->EntriesArray[e]->Entry,e,NULL,c1,p1,c2,p2); \
   }
 
+static LONG CopyToFile(STRPTR filename, STRPTR buffer)
+{
+  LONG result = MUIV_NLCT_Failed;
+
+  ENTER();
+
+  if(buffer != NULL)
+  {
+    BPTR file = 0;
+
+    if((file = Open(filename, MODE_NEWFILE)) != 0)
+    {
+      LONG pstr = 0;
+      LONG lstr = strlen(buffer);
+      LONG ret = 0;
+
+      while(lstr > 0 && (ret = Write(file, &buffer[pstr], lstr)) >= 0)
+      {
+        lstr -= ret;
+        pstr += ret;
+      }
+
+      if(ret < 0)
+        result = MUIV_NLCT_WriteErr;
+      else
+        result = MUIV_NLCT_Success;
+
+      Close(file);
+    }
+    else
+      result = MUIV_NLCT_OpenErr;
+  }
+
+  RETURN(result);
+  return result;
+}
+
+#ifndef ID_FORM
+#define ID_FORM MAKE_ID('F','O','R','M')
+#endif
+#ifndef ID_FTXT
+#define ID_FTXT MAKE_ID('F','T','X','T')
+#endif
+#ifndef ID_CHRS
+#define ID_CHRS MAKE_ID('C','H','R','S')
+#endif
+
+static LONG CopyToClipboard(ULONG clip, STRPTR buffer)
+{
+  LONG result = MUIV_NLCT_Failed;
+  struct IFFHandle *iff;
+
+  ENTER();
+
+  if(buffer == NULL)
+    buffer = (STRPTR)"";
+
+  if((iff = AllocIFF()) != NULL)
+  {
+    SHOWVALUE(DBF_CLIPBOARD, iff);
+    if((iff->iff_Stream = (ULONG)OpenClipboard(clip)) != 0)
+    {
+      SHOWVALUE(DBF_CLIPBOARD, iff->iff_Stream);
+      InitIFFasClip(iff);
+
+      if(OpenIFF(iff, IFFF_WRITE) == 0)
+      {
+        if(PushChunk(iff, ID_FTXT, ID_FORM, IFFSIZE_UNKNOWN) == 0)
+        {
+          if(PushChunk(iff, 0, ID_CHRS, IFFSIZE_UNKNOWN) == 0)
+          {
+            if(WriteChunkBytes(iff, buffer, strlen(buffer)) == (LONG)strlen(buffer))
+              result = MUIV_NLCT_Success;
+            else
+              result = MUIV_NLCT_WriteErr;
+
+            PopChunk(iff);
+          }
+
+          PopChunk(iff);
+        }
+
+        CloseIFF(iff);
+      }
+
+      CloseClipboard((struct ClipboardHandle *)iff->iff_Stream);
+    }
+
+    FreeIFF(iff);
+  }
+
+  RETURN(result);
+  return result;
+}
 
 LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook)
 {
-  struct IOClipReq *ior = NULL;
-  BPTR file = (BPTR)NULL;
   char *retstr = NULL;
   char *clipstr = NULL;
   LONG ok = TRUE;
   LONG ent;
 
-  if (filename)
-  { if (!(file = Open( filename, MODE_NEWFILE )))
-      return (MUIV_NLCT_OpenErr);
-  }
-  else if((LONG)clipnum >= 0)
-  {
-    if (!(ior = CBOpen(clipnum)))
-      return (0);
-  }
+  ENTER();
 
   switch (pos)
   {
@@ -931,11 +1016,14 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
 
     case MUIV_NList_CopyToClip_Selected:
     {
-      if (!data->NList_TypeSelect)
-      { ent = 0;
+      if(!data->NList_TypeSelect)
+      {
+        ent = 0;
         while (ok && (ent < data->NList_Entries))
-        { if (data->EntriesArray[ent]->Select != TE_Select_None)
-          { CCB_ENTRY(ent);
+        {
+          if (data->EntriesArray[ent]->Select != TE_Select_None)
+          {
+            CCB_ENTRY(ent);
           }
           ent++;
         }
@@ -950,21 +1038,26 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
         ent = data->sel_pt[data->min_sel].ent;
         D(DBF_STARTUP, "ok=%d ent=%d mincol=%d maxcol=%d minpos=%d maxpos=%d", ok, ent, c1, c2, p1, p2);
         if (ok && (ent >= 0) && (ent < data->NList_Entries))
-        { if (ent == data->sel_pt[data->max_sel].ent)
-          { CCB_ENTRY_START_END(ent,c1,p1,c2,p2);
+        {
+          if (ent == data->sel_pt[data->max_sel].ent)
+          {
+            CCB_ENTRY_START_END(ent,c1,p1,c2,p2);
             break;
           }
           else
-          { CCB_ENTRY_START_END(ent,c1,p1,-2,-2);
+          {
+            CCB_ENTRY_START_END(ent,c1,p1,-2,-2);
             ent++;
           }
         }
         while (ok && (ent >= 0) && (ent < data->sel_pt[data->max_sel].ent) && (ent < data->NList_Entries))
-        { CCB_ENTRY(ent);
+        {
+          CCB_ENTRY(ent);
           ent++;
         }
         if (ok && (ent >= 0) && (ent == data->sel_pt[data->max_sel].ent) && (ent < data->NList_Entries))
-        { CCB_ENTRY_START_END(ent,-1,-1,c2,p2);
+        {
+          CCB_ENTRY_START_END(ent,-1,-1,c2,p2);
           ent++;
         }
       }
@@ -974,16 +1067,19 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
     case MUIV_NList_CopyToClip_All :
       { ent = 0;
         while (ok && (ent < data->NList_Entries))
-        { CCB_ENTRY(ent);
+        {
+          CCB_ENTRY(ent);
           ent++;
         }
       }
       break;
     case MUIV_NList_CopyToClip_Entries :
-      { APTR *array = (APTR *) entries;
+      {
+        APTR *array = (APTR *) entries;
         ent = 0;
         while (ok && array[ent])
-        { CCB_ENTRY_PTR(array[ent]);
+        {
+          CCB_ENTRY_PTR(array[ent]);
           ent++;
         }
       }
@@ -991,61 +1087,50 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
     case MUIV_NList_CopyToClip_Entry :
       CCB_ENTRY_PTR(entries);
       break;
+
     case MUIV_NList_CopyToClip_Strings :
-      { APTR *array = (APTR *) entries;
+      {
+        APTR *array = (APTR *) entries;
         ent = 0;
         while (ok && array[ent])
-        { CCB_ENTRY_PTR_HOOK(array[ent],hook);
+        {
+          CCB_ENTRY_PTR_HOOK(array[ent],hook);
           ent++;
         }
       }
       break;
+
     case MUIV_NList_CopyToClip_String :
       CCB_ENTRY_PTR_HOOK(entries,hook);
       break;
+
     default :
       CCB_ENTRY(pos);
       break;
   }
-  if (file)
-  { if (clipstr)
-    { LONG pstr = 0;
-      LONG lstr = strlen(clipstr);
-      LONG ret = 0;
-      while ((lstr > 0) && ((ret = Write(file,&clipstr[pstr],lstr)) >= 0))
-      { lstr -= ret;
-        pstr += ret;
-      }
-      if (ret < 0)
-        ok = MUIV_NLCT_WriteErr;
-      else
-        ok = MUIV_NLCT_Success;
-    }
-    else
-      ok = MUIV_NLCT_Failed;
-    Close(file);
-  }
-  else if (ior)
-  {
-    if (clipstr)
-      CBWriteFTXT(ior, clipstr);
-    else
-      CBWriteFTXT(ior, (char *)"");
 
-    CBClose(ior);
+  if(filename != NULL)
+  {
+    ok = CopyToFile(filename, clipstr);
+  }
+  else if((LONG)clipnum >= 0)
+  {
+    ok = CopyToClipboard(clipnum, clipstr);
   }
   else
   {
     int len = strlen(clipstr) + 1;
-    retstr = (char *) AllocVec(len, 0L);
-    if (retstr)
-      strlcpy(retstr,clipstr, len);
-    ok = (LONG) retstr;
-  }
-  if (clipstr)
-    NL_Free(data,clipstr,"CopyTo");
 
-  return(ok);
+    if((retstr = (char *)AllocVec(len, 0L)) != NULL)
+      strlcpy(retstr, clipstr, len);
+    ok = (LONG)retstr;
+  }
+
+  if(clipstr != NULL)
+    NL_Free(data, clipstr, "CopyTo");
+
+  RETURN(ok);
+  return ok;
 }
 
 

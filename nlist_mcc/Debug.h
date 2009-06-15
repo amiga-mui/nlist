@@ -67,21 +67,22 @@ void kprintf(const char *formatString,...);
 #endif
 
 // debug classes
-#define DBC_CTRACE   (1<<0) // call tracing (ENTER/LEAVE etc.)
-#define DBC_REPORT   (1<<1) // reports (SHOWVALUE/SHOWSTRING etc.)
-#define DBC_ASSERT   (1<<2) // asserts (ASSERT)
-#define DBC_TIMEVAL  (1<<3) // time evaluations (STARTCLOCK/STOPCLOCK)
-#define DBC_DEBUG    (1<<4) // debugging output D()
-#define DBC_ERROR    (1<<5) // error output     E()
-#define DBC_WARNING  (1<<6) // warning output   W()
-#define DBC_ALL      0xffffffff
+#define DBC_CTRACE    (1<<0) // call tracing (ENTER/LEAVE etc.)
+#define DBC_REPORT    (1<<1) // reports (SHOWVALUE/SHOWSTRING etc.)
+#define DBC_ASSERT    (1<<2) // asserts (ASSERT)
+#define DBC_TIMEVAL   (1<<3) // time evaluations (STARTCLOCK/STOPCLOCK)
+#define DBC_DEBUG     (1<<4) // debugging output D()
+#define DBC_ERROR     (1<<5) // error output     E()
+#define DBC_WARNING   (1<<6) // warning output   W()
+#define DBC_ALL       0xffffffff
 
 // debug flags
-#define DBF_ALWAYS   (1<<0)
-#define DBF_STARTUP  (1<<1)     // for startup/shutdown events (YAM.c)
-#define DBF_SELECT   (1<<2)
-#define DBF_INPUT    (1<<3)
-#define DBF_ALL      0xffffffff
+#define DBF_ALWAYS    (1<<0)
+#define DBF_STARTUP   (1<<1)     // for startup/shutdown events (YAM.c)
+#define DBF_SELECT    (1<<2)
+#define DBF_INPUT     (1<<3)
+#define DBF_CLIPBOARD (1<<4)
+#define DBF_ALL       0xffffffff
 
 void SetupDebug(void);
 

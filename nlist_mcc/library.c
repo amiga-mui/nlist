@@ -66,16 +66,19 @@ static const char *used_classesP[] = { "NListviews.mcp", NULL };
 struct Library *LayersBase = NULL;
 struct Library *DiskfontBase = NULL;
 struct Library *ConsoleDevice = NULL;
+struct Library *IFFParseBase = NULL;
 #else
 struct Library *LayersBase = NULL;
 struct Library *DiskfontBase = NULL;
 struct Device *ConsoleDevice = NULL;
+struct Library *IFFParseBase = NULL;
 #endif
 
 #if defined(__amigaos4__)
 struct LayersIFace *ILayers = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 struct ConsoleIFace *IConsole = NULL;
+struct IFFParseIFace *IFFParse = NULL;
 #endif
 
 static struct IOStdReq ioreq;
@@ -96,67 +99,82 @@ static VOID ClassExpunge(UNUSED struct Library *base);
 /******************************************************************************/
 static BOOL ClassInit(UNUSED struct Library *base)
 {
-	if((LayersBase = OpenLibrary("layers.library", 37L)) &&
+  if((LayersBase = OpenLibrary("layers.library", 37L)) &&
      GETINTERFACE(ILayers, struct LayersIFace *, LayersBase))
-	{
-		if((DiskfontBase = OpenLibrary("diskfont.library", 37L)) &&
+  {
+    if((DiskfontBase = OpenLibrary("diskfont.library", 37L)) &&
        GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
-		{
-			ioreq.io_Message.mn_Length = sizeof(ioreq);
-			if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
-			{
-				ConsoleDevice = (APTR)ioreq.io_Device;
-
+    {
+      ioreq.io_Message.mn_Length = sizeof(ioreq);
+      if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
+      {
+        ConsoleDevice = (APTR)ioreq.io_Device;
         if(GETINTERFACE(IConsole, struct ConsoleIFace *, ConsoleDevice))
         {
-				  if(NGR_Create())
-				  {
-					  return(TRUE);
-				  }
+          if((IFFParseBase = OpenLibrary("iffparse.library", 37L)) &&
+             GETINTERFACE(IIFFParse, struct IFFParseIFace *, IFFParseBase))
+          {
+            if(NGR_Create())
+            {
+              return(TRUE);
+            }
+
+            DROPINTERFACE(IIFFParseIFace);
+            CloseLibrary(IFFParseBase);
+            IFFParseBase = NULL;
+          }
+
+          DROPINTERFACE(IConsole);
         }
 
-        DROPINTERFACE(IConsole);
-				CloseDevice((struct IORequest *)&ioreq);
-				ConsoleDevice = NULL;
-			}
+        CloseDevice((struct IORequest *)&ioreq);
+        ConsoleDevice = NULL;
+      }
 
       DROPINTERFACE(IDiskfont);
-			CloseLibrary(DiskfontBase);
-			DiskfontBase = NULL;
-		}
+      CloseLibrary(DiskfontBase);
+      DiskfontBase = NULL;
+    }
 
     DROPINTERFACE(ILayers);
-		CloseLibrary(LayersBase);
-		LayersBase = NULL;
-	}
+    CloseLibrary(LayersBase);
+    LayersBase = NULL;
+  }
 
-	return(FALSE);
+  return(FALSE);
 }
 
 
 static VOID ClassExpunge(UNUSED struct Library *base)
 {
-	NGR_Delete();
+  NGR_Delete();
 
-	if(ConsoleDevice)
+  if(IFFParseBase)
+  {
+    DROPINTERFACE(IIFFParse);
+    CloseLibrary(IFFParseBase);
+    IFFParseBase = NULL;
+  }
+
+  if(ConsoleDevice)
   {
     DROPINTERFACE(IConsole);
-		CloseDevice((struct IORequest *)&ioreq);
-	  ConsoleDevice = NULL;
+    CloseDevice((struct IORequest *)&ioreq);
+    ConsoleDevice = NULL;
   }
 
-	if(DiskfontBase)
+  if(DiskfontBase)
   {
     DROPINTERFACE(IDiskfont);
-		CloseLibrary(DiskfontBase);
-  	DiskfontBase = NULL;
+    CloseLibrary(DiskfontBase);
+    DiskfontBase = NULL;
   }
 
-	if(LayersBase)
+  if(LayersBase)
   {
     DROPINTERFACE(ILayers);
-		CloseLibrary(LayersBase);
-	  LayersBase = NULL;
+    CloseLibrary(LayersBase);
+    LayersBase = NULL;
   }
 }
 

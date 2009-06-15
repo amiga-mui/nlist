@@ -36,6 +36,7 @@
 #include <libraries/gadtools.h>
 #include <libraries/asl.h>
 #include <libraries/mui.h>
+#include <libraries/iffparse.h>
 #include <devices/clipboard.h>
 #include <workbench/workbench.h>
 #include <intuition/intuition.h>
@@ -49,6 +50,7 @@
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
+#include <proto/iffparse.h>
 
 #if !defined(__amigaos4__)
 #include <clib/alib_protos.h>
@@ -63,6 +65,7 @@ struct Library *UtilityBase = NULL;
 struct Library *LayersBase = NULL;
 struct Device *ConsoleDevice = NULL;
 struct Library *DiskfontBase = NULL;
+struct Library *IFFParseBase = NULL;
 
 #if defined(__amigaos4__)
 struct Library *IntuitionBase = NULL;
@@ -73,6 +76,7 @@ struct GfxBase *GfxBase = NULL;
 #endif
 
 #if defined(__amigaos4__)
+struct IFFParseIFace *IIFFParse = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 struct LayersIFace *ILayers = NULL;
 struct ConsoleIFace *IConsole = NULL;
@@ -575,7 +579,7 @@ HOOKPROTONHNO(DisplayLI_TextFunc, void, struct NList_DisplayMessage *ndm)
     else if (entry->num % 20 == 13)
       ndm->strings[0] = (STRPTR)"\033o[1]";
     else
-    { 
+    {
       snprintf(buf, sizeof(buf), "%d", (int)entry->num);
       ndm->strings[0]  = buf;
     }
@@ -723,6 +727,12 @@ static VOID fail(APTR APP_Main,const char *str)
     CloseLibrary(DiskfontBase);
   }
 
+  if(IFFParseBase)
+  {
+    DROPINTERFACE(IIFFParse);
+    CloseLibrary(IFFParseBase);
+  }
+
 
   if (str)
   { puts(str);
@@ -735,6 +745,8 @@ static VOID init(VOID)
 {
   APP_Main = NULL;
 
+  if((IFFParseBase = OpenLibrary("iffparse.library", 37)) &&
+    GETINTERFACE(IIFFParse, IFFParseBase))
   if((DiskfontBase = OpenLibrary("diskfont.library", 38)) &&
     GETINTERFACE(IDiskfont, DiskfontBase))
   if((UtilityBase = (APTR)OpenLibrary("utility.library", 36)) &&
