@@ -7,6 +7,8 @@ $URL$
 
 2009-06-16 Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlisttree_mcc/NListtree.c: added some APTR typecasts to fix several type pun
+    warnings.
   * nlist_mcc/NList_func.c: replaced the hand crafted message for the embedded
     DoMethodA() call by a proper structure. This fixes a type pun warning.
 

@@ -176,7 +176,7 @@ IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE(tag1)
-  
+
   retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
 
   AROS_SLOWSTACKTAGS_POST
@@ -1402,7 +1402,7 @@ INLINE VOID ReplaceNListEntry( struct NListtree_Data *data, struct MUI_NListtree
 */
 struct MUI_NListtree_TreeNode *GetEntryByTotalPos( struct MUI_NListtree_ListNode *ln, LONG pos, LONG *cpos, ULONG flags )
 {
-  struct MUI_NListtree_TreeNode *tn = CTN( &ln->ln_List );
+  struct MUI_NListtree_TreeNode *tn = CTN( (APTR)&ln->ln_List );
 
   if ( ln->ln_Flags & TNF_LIST )
   {
@@ -1436,7 +1436,7 @@ struct MUI_NListtree_TreeNode *GetEntryByTotalPos( struct MUI_NListtree_ListNode
 */
 BOOL GetEntryPos( struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNode *stn, LONG *pos )
 {
-  struct MUI_NListtree_TreeNode *tn = (struct MUI_NListtree_TreeNode *)&ln->ln_List;
+  struct MUI_NListtree_TreeNode *tn = CTN( (APTR)&ln->ln_List );
 
   while((tn = CTN(Node_Next((struct Node *)tn))))
   {
@@ -1464,7 +1464,7 @@ static int GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 {
   LONG pos = -1;
 
-  if(tn != CTN(&data->RootList) && tn != NULL)
+  if(tn != CTN((APTR)&data->RootList) && tn != NULL)
   {
     if(data->Flags & NLTF_NLIST_DIRECT_ENTRY_SUPPORT)
     {
@@ -1493,7 +1493,7 @@ static int GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 static int GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn)
 {
   /* Easy case */
-  if (tn == CTN(&data->RootList))
+  if (tn == CTN((APTR)&data->RootList))
     return xget(data->Obj, MUIA_NList_Entries);
 
   if ((tn->tn_Flags & TNF_LIST) && (tn->tn_Flags & TNF_OPEN) &&
@@ -9434,7 +9434,7 @@ IPTR _NListtree_GetEntry( struct IClass *cl, Object *obj, struct MUIP_NListtree_
 
     case MUIV_NListtree_GetEntry_Position_Root:
 
-      tn = CTN( &data->RootList );
+      tn = CTN( (APTR)&data->RootList );
       break;
 
     default:
@@ -9540,7 +9540,7 @@ IPTR _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_Get
   if ( (ULONG)msg->TreeNode == (ULONG)MUIV_NListtree_GetNr_TreeNode_Active )
     tn = data->ActiveNode;
   else if ( (ULONG)msg->TreeNode == (ULONG)MUIV_NListtree_GetNr_TreeNode_Root )
-    tn = CTN(&data->RootList);
+    tn = CTN((APTR)&data->RootList);
   else
     tn = msg->TreeNode;
 
