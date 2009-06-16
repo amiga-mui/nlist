@@ -1967,90 +1967,105 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
   struct NLData *data = INST_DATA(cl,obj);
   LONG ent = msg->pos;
   APTR dest = msg->DestObj;
-  if ((msg->FollowParams >= 1) && (msg->FollowParams < 40) &&
-      ((msg->pos == MUIV_NList_DoMethod_Active) ||
-       (msg->pos == MUIV_NList_DoMethod_Selected) ||
-       (msg->pos == MUIV_NList_DoMethod_All) ||
-       ((msg->pos >= 0) && (msg->pos < data->NList_Entries))))
-  {
-    LONG *table1 = (LONG *) &msg->FollowParams;
-    LONG table2[64]; /* MAXIMUM 40 (see docs) <aphaso> */
 
-    if (msg->FollowParams > 63) /* MAXIMUM 40 (see docs) <aphaso> */
+  if((msg->FollowParams >= 1) && (msg->FollowParams < 40) &&
+     ((msg->pos == MUIV_NList_DoMethod_Active) ||
+      (msg->pos == MUIV_NList_DoMethod_Selected) ||
+      (msg->pos == MUIV_NList_DoMethod_All) ||
+      ((msg->pos >= 0) && (msg->pos < data->NList_Entries))))
+  {
+    LONG *table1 = (LONG *)&msg->FollowParams;
+    struct
+    {
+	  ULONG MethodID;
+	  LONG params[64]; /* MAXIMUM 40 (see docs) <aphaso> */
+    } newMsg;
+
+    if(msg->FollowParams > 63) /* MAXIMUM 40 (see docs) <aphaso> */
     {
       msg->FollowParams = 63;
-      table2[63] = 0;
+      newMsg.params[63] = 0;
     }
 
-    if ((LONG) msg->DestObj == MUIV_NList_DoMethod_Self)
+    if((LONG)msg->DestObj == MUIV_NList_DoMethod_Self)
       dest = (APTR) obj;
-    else if ((LONG) msg->DestObj == MUIV_NList_DoMethod_App)
-    { if (data->SETUP)
+    else if((LONG)msg->DestObj == MUIV_NList_DoMethod_App)
+    {
+      if(data->SETUP)
         dest = (APTR) _app(obj);
       else
         dest = NULL;
     }
-    if (msg->pos == MUIV_NList_DoMethod_Active)
+    if(msg->pos == MUIV_NList_DoMethod_Active)
       ent = MUIV_NList_DoMethod_Active;
-    else if (msg->pos == MUIV_NList_DoMethod_Selected)
-    { if (data->NList_TypeSelect)
+    else if(msg->pos == MUIV_NList_DoMethod_Selected)
+    {
+      if(data->NList_TypeSelect)
         ent = data->sel_pt[data->min_sel].ent;
       else
-      { ent = 0;
-        while ((ent < data->NList_Entries) && (data->EntriesArray[ent]->Select == TE_Select_None))
+      {
+        ent = 0;
+        while((ent < data->NList_Entries) && (data->EntriesArray[ent]->Select == TE_Select_None))
           ent++;
       }
     }
-    else if (msg->pos == MUIV_NList_DoMethod_All)
+    else if(msg->pos == MUIV_NList_DoMethod_All)
       ent = 0;
-    while ((ent >= 0) && (ent < data->NList_Entries))
-    { if ((LONG) msg->DestObj == MUIV_NList_DoMethod_Entry)
+    while((ent >= 0) && (ent < data->NList_Entries))
+    {
+      if((LONG) msg->DestObj == MUIV_NList_DoMethod_Entry)
         dest = data->EntriesArray[ent]->Entry;
-      if (dest)
+      if(dest)
       {
         ULONG num;
-        table2[0] = table1[1];
+
+        newMsg.MethodID = table1[1];
 
         for(num = 1;num < msg->FollowParams;num++)
         {
-          switch (table1[num+1])
+          switch(table1[num+1])
           {
-            case MUIV_NList_EntryValue :
-              table2[num] = (LONG) data->EntriesArray[ent]->Entry;
+            case MUIV_NList_EntryValue:
+              newMsg.params[num] = (LONG)data->EntriesArray[ent]->Entry;
               break;
-            case MUIV_NList_EntryPosValue :
-              table2[num] = (LONG) ent;
+            case MUIV_NList_EntryPosValue:
+              newMsg.params[num] = (LONG)ent;
               break;
-            case MUIV_NList_SelfValue :
-              table2[num] = (LONG) obj;
+            case MUIV_NList_SelfValue:
+              newMsg.params[num] = (LONG)obj;
               break;
-            case MUIV_NList_AppValue :
+            case MUIV_NList_AppValue:
               if (data->SETUP)
-                table2[num] = (LONG) _app(obj);
+                newMsg.params[num] = (LONG)_app(obj);
               else
-                table2[num] = 0;
+                newMsg.params[num] = 0;
               break;
-            default :
-              table2[num] = table1[num+1];
+            default:
+              newMsg.params[num] = table1[num+1];
+              break;
           }
         }
-        DoMethodA(dest, (Msg)table2);
+
+        DoMethodA(dest, (Msg)((APTR)&newMsg));
       }
       ent++;
-      if (msg->pos == MUIV_NList_DoMethod_Selected)
-      { if (data->NList_TypeSelect)
-        { if ((ent > data->sel_pt[data->max_sel].ent) ||
-              ((ent == data->sel_pt[data->max_sel].ent) &&
-               (data->sel_pt[data->max_sel].column == 0) &&
-               (data->sel_pt[data->max_sel].xoffset == PMIN)))
+      if(msg->pos == MUIV_NList_DoMethod_Selected)
+      {
+        if(data->NList_TypeSelect)
+        {
+          if((ent > data->sel_pt[data->max_sel].ent) ||
+             ((ent == data->sel_pt[data->max_sel].ent) &&
+              (data->sel_pt[data->max_sel].column == 0) &&
+              (data->sel_pt[data->max_sel].xoffset == PMIN)))
             break;
         }
         else
-        { while ((ent < data->NList_Entries) && (data->EntriesArray[ent]->Select == TE_Select_None))
+        {
+          while((ent < data->NList_Entries) && (data->EntriesArray[ent]->Select == TE_Select_None))
             ent++;
         }
       }
-      else if (msg->pos != MUIV_NList_DoMethod_All)
+      else if(msg->pos != MUIV_NList_DoMethod_All)
         break;
     }
   }

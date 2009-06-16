@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-06-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.c: replaced the hand crafted message for the embedded
+    DoMethodA() call by a proper structure. This fixes a type pun warning.
+
 2009-06-15 Matthias Rustler <mrustler@gmx.de>
 
   * Renamed francais.ct to french.ct, so that we have only English language names.
