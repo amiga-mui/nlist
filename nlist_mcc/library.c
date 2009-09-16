@@ -66,19 +66,16 @@ static const char *used_classesP[] = { "NListviews.mcp", NULL };
 struct Library *LayersBase = NULL;
 struct Library *DiskfontBase = NULL;
 struct Library *ConsoleDevice = NULL;
-struct Library *IFFParseBase = NULL;
 #else
 struct Library *LayersBase = NULL;
 struct Library *DiskfontBase = NULL;
 struct Device *ConsoleDevice = NULL;
-struct Library *IFFParseBase = NULL;
 #endif
 
 #if defined(__amigaos4__)
 struct LayersIFace *ILayers = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 struct ConsoleIFace *IConsole = NULL;
-struct IFFParseIFace *IIFFParse = NULL;
 #endif
 
 static struct IOStdReq ioreq;
