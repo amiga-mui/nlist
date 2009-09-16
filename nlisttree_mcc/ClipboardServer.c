@@ -261,7 +261,7 @@ BOOL StartClipboardServer(void)
     // create the server process
     // this must *NOT* be a child process
     serverProcess = CreateNewProcTags(NP_Entry, ClipboardServer,
-                                      NP_Name, "NList.mcc clipboard server",
+                                      NP_Name, "NListtree.mcc clipboard server",
                                       NP_Priority, 1,
                                       NP_StackSize, 16384,
                                       NP_WindowPtr, ~0L,
