@@ -175,6 +175,7 @@ LDLIBS   =
 LOBJS = library.o
 
 COBJS = NListtree.o \
+        ClipboardServer.o \
         QuickSort.o \
         Debug.o \
         vastubs.o

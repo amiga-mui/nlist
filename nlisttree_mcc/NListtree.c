@@ -123,7 +123,6 @@
 #include <graphics/gfxmacros.h>
 #undef GetOutlinePen
 
-#include <devices/clipboard.h>
 #include <libraries/gadtools.h>
 #include <clib/alib_protos.h>
 #include <clib/macros.h>
@@ -719,84 +718,6 @@ INLINE VOID FreeVecPooled( APTR mempool, APTR mem )
 }
 
 #endif /* !__MORPHOS__ && !__amigaos4__ */
-
-
-VOID CloseClipboard( struct IOClipReq *req )
-{
-  if(req != NULL)
-  {
-    struct MsgPort *mp = req->io_Message.mn_ReplyPort;
-
-    if (req->io_Device != NULL)
-      CloseDevice( (struct IORequest *)req );
-
-    #if defined(__amigaos4__)
-    FreeSysObject(ASOT_IOREQUEST, req);
-    FreeSysObject(ASOT_PORT, mp);
-    #else
-    DeleteIORequest( (struct IORequest *)req );
-    DeleteMsgPort(mp);
-    #endif
-  }
-}
-
-struct IOClipReq *OpenClipboard( LONG unit )
-{
-  struct MsgPort *mp;
-
-  #if defined(__amigaos4__)
-  mp = AllocSysObject(ASOT_PORT, TAG_DONE);
-  #else
-  mp = CreateMsgPort();
-  #endif
-  if(mp != NULL)
-  {
-    struct IOClipReq *req;
-
-    #if defined(__amigaos4__)
-    req = (struct IOClipReq *)AllocSysObjectTags(ASOT_IOREQUEST, ASOIOR_Size, sizeof(*req),
-                                                                 ASOIOR_ReplyPort, mp,
-                                                                 TAG_DONE);
-    #else
-    req = (struct IOClipReq *)CreateIORequest(mp, sizeof(*req));
-    #endif
-    if(req != NULL)
-    {
-      if(OpenDevice("clipboard.device", unit, (struct IORequest *)req, 0L) == 0)
-      {
-        return( req );
-      }
-      CloseClipboard( req );
-    }
-    else
-    {
-      #if defined(__amigaos4__)
-      FreeSysObject(ASOT_PORT, mp);
-      #else
-      DeleteMsgPort(mp);
-      #endif
-    }
-  }
-
-  return( NULL );
-}
-
-
-
-BOOL DoClipCmd( ULONG cmd, struct IOClipReq *req, LONG *ldata, LONG len )
-{
-  req->io_Data  = (STRPTR)ldata;
-  req->io_Length  = len;
-  req->io_Command = cmd;
-  DoIO( (struct IORequest *)req );
-
-  if ( req->io_Actual == (ULONG)len )
-  {
-    return( (BOOL)( req->io_Error ? FALSE : TRUE ) );
-  }
-
-  return( FALSE );
-}
 
 
 /*****************************************************************************\
@@ -10326,7 +10247,6 @@ IPTR _NListtree_PrevSelected( struct IClass *cl, Object *obj, struct MUIP_NListt
 IPTR _NListtree_CopyToClip( struct IClass *cl, Object *obj, struct MUIP_NListtree_CopyToClip *msg )
 {
   struct NListtree_Data *data = INST_DATA( cl, obj );
-  struct IOClipReq *req;
   STRPTR string, str;
   BOOL alloc = FALSE;
 
@@ -10367,60 +10287,7 @@ IPTR _NListtree_CopyToClip( struct IClass *cl, Object *obj, struct MUIP_NListtre
   //D(bug( "String: %s, Unit: %ld, pos: %ld\n", string, msg->Unit, msg->Pos ) );
 
 
-  if((req = OpenClipboard(msg->Unit)))
-  {
-    LONG length, slen;
-    BOOL odd;
-
-    slen = strlen( string );
-    odd = ( slen & 1 );     /* pad byte flag */
-
-    length = ( odd ) ? slen + 1 : slen;
-
-    /*
-    **  Initial set-up for Offset, Error, and ClipID.
-    */
-    req->io_Offset  = 0;
-    req->io_Error = 0;
-    req->io_ClipID  = 0;
-
-
-    /*
-    **  Create the IFF header information.
-    */
-    DoClipCmd( CMD_WRITE, req, (LONG *)"FORM", 4 ); /* "FORM"             */
-    length += 12L;                  /* + "[size]FTXTCHRS" */
-    DoClipCmd( CMD_WRITE, req, &length, 4 );    /* total length       */
-    DoClipCmd( CMD_WRITE, req, (LONG *)"FTXT", 4 ); /* "FTXT"             */
-    DoClipCmd( CMD_WRITE, req, (LONG *)"CHRS", 4 ); /* "CHRS"             */
-    DoClipCmd( CMD_WRITE, req, &slen, 4 );      /* string length      */
-
-    /*
-    **  Write string.
-    */
-    req->io_Data  = (STRPTR)string;
-    req->io_Length  = slen;
-    req->io_Command = CMD_WRITE;
-    DoIO( (struct IORequest *)req );
-
-    /*
-    **  Pad if needed.
-    */
-    if ( odd )
-    {
-      req->io_Data  = (STRPTR)"";
-      req->io_Length  = 1L;
-      DoIO( (struct IORequest *)req );
-    }
-
-    /*
-    **  Tell the clipboard we are done writing.
-    */
-    req->io_Command = CMD_UPDATE;
-    DoIO( (struct IORequest *)req );
-
-    CloseClipboard( req );
-  }
+  StringToClipboard(msg->Unit, string);
 
   if ( alloc )
     FreeVecPooled( data->MemoryPool, string );

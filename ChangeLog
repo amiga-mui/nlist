@@ -11,6 +11,8 @@ $URL$
     Accessing the clipboard via iffparse.library requires 2 user signals for
     each instance and thus an application would run out of free signals sooner
     or later.
+  * nlisttree_mcc/misc: applied the same changes as for NList.mcc and clipboard
+    access.
 
 2009-08-14 Thore Böckelmann <tboeckel@gmx.de>
 
