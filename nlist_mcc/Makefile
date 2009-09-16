@@ -177,24 +177,25 @@ LDLIBS   =
 
 LOBJS = library.o
 
-COBJS = NList_mcc.o    \
-        NList_mcc0.o   \
-        NList_mcc1.o   \
-        NList_mcc2.o   \
-        NList_mcc3.o   \
-        NList_mcc4.o   \
-        NList_mcc5.o   \
-        NList_mcc6.o   \
-        move.o         \
-        NList_func.o   \
-        NList_func2.o  \
-        NList_func3.o  \
-        NList_func4.o  \
-        NList_grp.o    \
-        NList_img.o    \
-        NList_img2.o   \
-        Pointer.o      \
-        Debug.o        \
+COBJS = NList_mcc.o       \
+        NList_mcc0.o      \
+        NList_mcc1.o      \
+        NList_mcc2.o      \
+        NList_mcc3.o      \
+        NList_mcc4.o      \
+        NList_mcc5.o      \
+        NList_mcc6.o      \
+        move.o            \
+        NList_func.o      \
+        NList_func2.o     \
+        NList_func3.o     \
+        NList_func4.o     \
+        NList_grp.o       \
+        NList_img.o       \
+        NList_img2.o      \
+        ClipboardServer.o \
+        Pointer.o         \
+        Debug.o           \
         vastubs.o
 
 TOBJS = NList-Test.o

@@ -111,17 +111,12 @@ static BOOL ClassInit(UNUSED struct Library *base)
         ConsoleDevice = (APTR)ioreq.io_Device;
         if(GETINTERFACE(IConsole, struct ConsoleIFace *, ConsoleDevice))
         {
-          if((IFFParseBase = OpenLibrary("iffparse.library", 37L)) &&
-             GETINTERFACE(IIFFParse, struct IFFParseIFace *, IFFParseBase))
+          if(NGR_Create())
           {
-            if(NGR_Create())
+            if(StartClipboardServer() == TRUE)
             {
               return(TRUE);
             }
-
-            DROPINTERFACE(IIFFParse);
-            CloseLibrary(IFFParseBase);
-            IFFParseBase = NULL;
           }
 
           DROPINTERFACE(IConsole);
@@ -147,14 +142,9 @@ static BOOL ClassInit(UNUSED struct Library *base)
 
 static VOID ClassExpunge(UNUSED struct Library *base)
 {
-  NGR_Delete();
+  ShutdownClipboardServer();
 
-  if(IFFParseBase)
-  {
-    DROPINTERFACE(IIFFParse);
-    CloseLibrary(IFFParseBase);
-    IFFParseBase = NULL;
-  }
+  NGR_Delete();
 
   if(ConsoleDevice)
   {
