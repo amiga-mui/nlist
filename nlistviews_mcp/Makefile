@@ -188,9 +188,10 @@ MCCOBJS  = $(addprefix $(OBJDIR)/,$(LOBJS)) $(addprefix $(OBJDIR)/,$(COBJS))
 TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
 
 # available catalog translations
-CATALOGS = $(LOCALE)/swedish.catalog \
-           $(LOCALE)/czech.catalog \
-           $(LOCALE)/french.catalog
+CATALOGS = $(LOCALE)/czech.catalog \
+           $(LOCALE)/french.catalog \
+           $(LOCALE)/german.catalog \
+           $(LOCALE)/swedish.catalog
 
 # different options per target OS
 ifeq ($(OS), os4)

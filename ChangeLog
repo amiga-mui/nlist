@@ -7,6 +7,8 @@ $URL$
 
 2009-09-17 Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlistviews_mcp/locale/german.ct, nlistviews_mcp/Makefile: added a german
+    translation.
   * nlisttree_mcp/locale/german.ct: replaced the former german translation with
     a completely new one.
 
