@@ -288,7 +288,7 @@ Optionen
 ; Options
 ;
 MSG_PAGE_SCROLLING
-Scrollen
+Rollen
 ; Scrolling
 ;
 MSG_PAGE_KEYBINDINGS
@@ -296,12 +296,12 @@ Tasten
 ; Keybindings
 ;
 MSG_SB_HORIZONTAL
-Horizontale Scrollbar
+Horizontaler Rollbalken
 ; Horizontal Scrollbar
 ;
 MSG_SB_HORIZONTAL_HELP
-Legt des Standardmodus für die horizontale\n\
-Scrollbar fest (kann von der Applikation\n\
+Legt des Standardmodus für den horizontalen\n\
+Rollbalken fest (kann von der Applikation\n\
 ignoriert werden).
 ; Set the default mode\n\
 ; for the horizontal scrollbar.\n\
@@ -309,12 +309,12 @@ ignoriert werden).
 ; application)
 ;
 MSG_SB_VERTICAL
-Vertikale Scrollbar
+Vertikaler Rollbalken
 ; Vertical Scrollbar
 ;
 MSG_SB_VERTICAL_HELP
-Legt des Standardmodus für die vertikale\n\
-Scrollbar fest (kann von der Applikation\n\
+Legt des Standardmodus für den vertikalen\n\
+Rollbalken fest (kann von der Applikation\n\
 ignoriert werden).
 ; Set the default mode\n\
 ; for the vertical scrollbar.\n\
@@ -326,12 +326,12 @@ Kontrolle
 ; Scolling Control
 ;
 MSG_SMOOTH_SCROLLING
-sanftes Scrollen
+sanftes Rollen
 ; Smooth Scrolling
 ;
 MSG_SMOOTH_SCROLLING_HELP
 Falls aktiv werden die Listen sanft\n\
-gescrollt.
+gerollt.
 ; If enabled, smoothing scrolling\n\
 ; will be used for NList objects.\n\
 ; In addition, by using the 'smooth'\n\
@@ -345,7 +345,7 @@ schnelles Mausrad
 ;
 MSG_MMB_FASTWHEEL_HELP
 Falls aktiv kann die mittlere Maustaste\n\
-genutzt werden um das Scrollen zu beschleunigen.
+genutzt werden um das Rollen zu beschleunigen.
 ; If enabled, the middle mouse button\n\
 ; can be used as a qualifier to perform\n\
 ; a fast scroll wheel action.\n\
@@ -358,7 +358,7 @@ Mausrad-Schritte
 ;
 MSG_WHEEL_STEP_HELP
 Gibt an um wie viele Zeilen bei Betätigung\n\
-des Mausrades gescrollt wird.
+des Mausrades gerollt wird.
 ; Allows to specify the amount of lines\n\
 ; that should be scrolled when using a\n\
 ; wheel mouse.
@@ -370,7 +370,7 @@ schnelle Mausrad-Schritte
 MSG_WHEEL_FAST_HELP
 Gibt an um wie viele Zeilen bei Betätigung\n\
 des Mausrades und der Tastenkombination für\n\
-das schnelle Mausrad gescrollt wird.
+das schnelle Mausrad gerollt wird.
 ; Allows to specify the amount of lines\n\
 ; that should be scrolled when using a\n\
 ; wheel mouse and when the fast wheel\n\
@@ -490,7 +490,7 @@ im Zusammenspiel mit seriellen Mäusen zu umgehen.
 ; a serial mouse.
 ;
 MSG_SELECT_POINTER
-Auswahlzeiger
+Auswahl-Mauszeiger
 ; Custom Select Pointer
 ;
 MSG_SELECT_POINTER_HELP
