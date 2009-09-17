@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-09-17 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcp/locale/german.ct: replaced the former german translation with
+    a completely new one.
+
 2009-09-16 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/misc: loaded all clipboard access stuff off to a separate process.
