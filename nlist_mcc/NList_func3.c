@@ -253,6 +253,7 @@ APTR NL_Pool_Create( ULONG puddlesize, ULONG threshsize)
    return AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
                                            ASOPOOL_Puddle, puddlesize,
                                            ASOPOOL_Threshold, threshsize,
+                                           ASOPOOL_Name, "NList.mcc pool",
                                            TAG_DONE);
    #elif defined(__MORPHOS__)
    return(CreatePool(MEMF_ANY, puddlesize, threshsize));

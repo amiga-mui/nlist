@@ -5445,6 +5445,7 @@ IPTR _New( struct IClass *cl, Object *obj, struct opSet *msg )
   ld.MemoryPool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED|MEMF_CLEAR,
                                                    ASOPOOL_Puddle, 16384,
                                                    ASOPOOL_Threshold, 8192,
+                                                   ASOPOOL_Name, "NListtree.mcc pool",
                                                    TAG_DONE);
   #else
   ld.MemoryPool = CreatePool(MEMF_CLEAR, 16384, 8192);
@@ -5455,6 +5456,7 @@ IPTR _New( struct IClass *cl, Object *obj, struct opSet *msg )
     ld.TreePool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED|MEMF_CLEAR,
                                                    ASOPOOL_Puddle, 16384,
                                                    ASOPOOL_Threshold, 4096,
+                                                   ASOPOOL_Name, "NListtree.mcc tree pool",
                                                    TAG_DONE);
     #else
     ld.TreePool = CreatePool(MEMF_CLEAR, 16384, 4096);
@@ -8009,6 +8011,7 @@ IPTR _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListt
     data->TreePool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED|MEMF_CLEAR,
                                                       ASOPOOL_Puddle, 16384,
                                                       ASOPOOL_Threshold, 4096,
+                                                      ASOPOOL_Name, "NListtree.mcc tree pool",
                                                       TAG_DONE);
     #else
     data->TreePool = CreatePool(MEMF_CLEAR, 16384, 4096);

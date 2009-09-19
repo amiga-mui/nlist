@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-09-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: added a name to all memory pools for OS4.
+
 2009-09-17 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/locale/german.ct, nlistviews_mcp/Makefile: added a german
