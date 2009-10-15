@@ -7,6 +7,7 @@ $URL$
 
 2009-10-15 Thore Böckelmann <tboeckel@gmx.de>
 
+  * demo/NList-Demo#?.c: removed some unneeded includes.
   * nlist_mcc/NList_mcc1.c: get()ting MUIA_Disabled always returned FALSE even
     for disabled lists. Thanks to Andreas Falkenhahn for the hint.
 
