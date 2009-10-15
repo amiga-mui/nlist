@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-10-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc1.c: get()ting MUIA_Disabled always returned FALSE even
+    for disabled lists. Thanks to Andreas Falkenhahn for the hint.
+
 2009-09-19 Thore Böckelmann <tboeckel@gmx.de>
 
   * misc: added a name to all memory pools for OS4.
