@@ -7,6 +7,12 @@ $URL$
 
 2009-10-15 Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlist_mcc/Nlist_func2.c, docs/MCC_NList.doc: MUIM_NList_ReplaceSingle was
+    broken in several ways. Passing pos==MUIV_NList_Insert_Bottom did nothing
+    instead of replacing the last entry, pos==MUIV_NList_Insert_Active chose
+    the correct entry, but due to a missing "break;" statement that entry was
+    discarded again and caused no replacement at all. Again thanks to Andreas
+    Falkenhahn for the hint.
   * demo/NList-Demo#?.c: removed some unneeded includes.
   * nlist_mcc/NList_mcc1.c: get()ting MUIA_Disabled always returned FALSE even
     for disabled lists. Thanks to Andreas Falkenhahn for the hint.
