@@ -7,7 +7,9 @@ $URL$
 
 2009-10-15 Thore Böckelmann <tboeckel@gmx.de>
 
-  * nlist_mcc/Nlist_func2.c, docs/MCC_NList.doc: MUIM_NList_ReplaceSingle was
+  * nlist_mcc/NList_func.h: replaced the custom style definitions by official
+    ones.
+  * nlist_mcc/NList_func2.c, docs/MCC_NList.doc: MUIM_NList_ReplaceSingle was
     broken in several ways. Passing pos==MUIV_NList_Insert_Bottom did nothing
     instead of replacing the last entry, pos==MUIV_NList_Insert_Active chose
     the correct entry, but due to a missing "break;" statement that entry was
