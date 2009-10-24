@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.103 RELEASE ###########################################################
+
+2009-10-24  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.103 release preparations
+
 2009-10-15 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func.h: replaced the custom style definitions by official
