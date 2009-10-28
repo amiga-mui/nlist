@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-10-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/Debug.c: added the missing DBF_CLIPBOARD class.
+
 2009-10-26 Pär Boberg <pbobbenb@spray.se>
 
   * nlistviews_mcp/locale/swedish.ct: very minor update.
