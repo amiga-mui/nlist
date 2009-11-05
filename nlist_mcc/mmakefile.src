@@ -22,6 +22,7 @@ FILES := \
         NList_grp    \
         NList_img    \
         NList_img2   \
+        ClipboardServer \
         Pointer      \
         Debug        \
         vastubs
