@@ -272,7 +272,7 @@ BOOL StartClipboardServer(void)
     serverProcess = CreateNewProcTags(NP_Entry, ClipboardServer,
                                       NP_Name, "NListtree.mcc clipboard server",
                                       NP_Priority, 1,
-                                      NP_StackSize, 16384,
+                                      NP_StackSize, 8192,
                                       NP_WindowPtr, ~0L,
                                       #if defined(__amigaos4__)
                                       NP_Child, FALSE,
