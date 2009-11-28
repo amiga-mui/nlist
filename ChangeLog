@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-11-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/ClipboardServer.c, nlisttree_mcc/ClipboardServer.c: decreased the
+    stack size from 16K to 8K as the server process doesn't really need much
+    stack.
+
 2009-10-28 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/Debug.c: added the missing DBF_CLIPBOARD class.
