@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2009-12-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: the PageUp, PageDown, Pos1 and End keys can now be
+    used to navigate within a list in addition to the standard MUI keys.
+
 2009-11-28 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/ClipboardServer.c, nlisttree_mcc/ClipboardServer.c: decreased the
