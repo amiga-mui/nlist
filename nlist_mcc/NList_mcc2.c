@@ -132,6 +132,19 @@ static BOOL GotoPage(struct IClass *cl, Object *obj, ULONG activePage)
   return changed;
 }
 
+static BOOL Scroll(struct IClass *cl, Object *obj, ULONG direction)
+{
+  struct NLData *data = INST_DATA(cl, obj);
+  BOOL scrolled;
+
+  ENTER();
+
+  scrolled = NL_List_Horiz_First(obj, data, direction, NULL);
+
+  RETURN(scrolled);
+  return scrolled;
+}
+
 IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
@@ -177,18 +190,16 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
       (data->width != _width(obj)) || (data->height != _height(obj)))
     NL_SetObjInfos(obj,data,FALSE);
 
-  if ((msg->muikey != MUIKEY_NONE) && !data->NList_Quiet && !data->NList_Disabled)
+  if(msg->muikey != MUIKEY_NONE && !data->NList_Quiet && !data->NList_Disabled)
   {
     data->ScrollBarsTime = SCROLLBARSTIME;
 
     SHOWVALUE(DBF_ALWAYS, msg->muikey);
-    switch (msg->muikey)
+    switch(msg->muikey)
     {
       case MUIKEY_UP:
       {
-        BOOL changed;
-
-        changed = GotoPage(cl, obj, MUIV_NList_First_Up);
+        BOOL changed = GotoPage(cl, obj, MUIV_NList_First_Up);
 
         // if we have an object that we should make the new active object
         // of the window we do so in case this up key action didn't end up in
@@ -202,9 +213,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
       case MUIKEY_DOWN:
       {
-        BOOL changed;
-
-        changed = GotoPage(cl, obj, MUIV_NList_First_Down);
+        BOOL changed = GotoPage(cl, obj, MUIV_NList_First_Down);
 
         // if we have an object that we should make the new active object
         // of the window we do so in case this down key action didn't end up in
@@ -288,7 +297,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
       case MUIKEY_LEFT:
       {
-        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
+        BOOL scrolled = Scroll(cl, obj, MUIV_NList_Horiz_First_Left);
 
         // if we have an object that we should make the new active object
         // of the window we do so in case this left key action didn't end up in
@@ -302,7 +311,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
       case MUIKEY_RIGHT:
       {
-        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
+        BOOL scrolled = Scroll(cl, obj, MUIV_NList_Horiz_First_Right);
 
         // if we have an object that we should make the new active object
         // of the window we do so in case this right key action didn't end up in
@@ -316,28 +325,28 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
       case MUIKEY_WORDLEFT :
       {
-        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageLeft,NULL);
+        Scroll(cl, obj, MUIV_NList_Horiz_First_PageLeft);
         retval = MUI_EventHandlerRC_Eat;
       }
       break;
 
       case MUIKEY_WORDRIGHT:
       {
-        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageRight,NULL);
+        Scroll(cl, obj, MUIV_NList_Horiz_First_PageRight);
         retval = MUI_EventHandlerRC_Eat;
       }
       break;
 
       case MUIKEY_LINESTART:
       {
-        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Start,NULL);
+        Scroll(cl, obj, MUIV_NList_Horiz_First_Start);
         retval = MUI_EventHandlerRC_Eat;
       }
       break;
 
-      case MUIKEY_LINEEND  :
+      case MUIKEY_LINEEND:
       {
-        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_End,NULL);
+        Scroll(cl, obj, MUIV_NList_Horiz_First_End);
         retval = MUI_EventHandlerRC_Eat;
       }
       break;
