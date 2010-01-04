@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-01-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/private: added missing rawkey definitions for PageUp, PageDown,
+    Pos1 and End keys. OS3 doesn't know these.
+
 2009-12-30 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc2.c: the PageUp, PageDown, Pos1 and End keys can now be
