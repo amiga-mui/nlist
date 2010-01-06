@@ -5,9 +5,15 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-01-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: added a workaround to the layout issue when the
+    dynamically added/removed scrollbars caused a screwed up layout with objects
+    drawn over the window borders. Also cleaned up the source a lot.
+
 2010-01-04 Thore Böckelmann <tboeckel@gmx.de>
 
-  * nlist_mcc/private: added missing rawkey definitions for PageUp, PageDown,
+  * nlist_mcc/private.h: added missing rawkey definitions for PageUp, PageDown,
     Pos1 and End keys. OS3 doesn't know these.
 
 2009-12-30 Thore Böckelmann <tboeckel@gmx.de>
