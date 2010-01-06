@@ -112,7 +112,7 @@ static IPTR mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleE
   return 0;
 }
 
-static IPTR mNLV_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+static IPTR mNLV_HandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
 
@@ -130,10 +130,102 @@ static IPTR mNLV_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInp
   }
 
   LEAVE();
-  return DoSuperMethodA(cl,obj,(Msg) msg);
+  return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
+static void AddVerticalScroller(Object *obj, struct NLVData *data)
+{
+  ENTER();
+
+  if(data->Vert_Attached == FALSE)
+  {
+    D(DBF_STARTUP, "adding vertical scrollbar: %08lx", data->PR_Vert);
+
+    DoMethod(obj, OM_ADDMEMBER, data->PR_Vert);
+
+    // add notifications
+    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Prop_Entries,    MUIV_EveryTime,  data->PR_Vert,  3, MUIM_NoNotifySet, MUIA_Prop_Entries, MUIV_TriggerValue);
+    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Prop_Visible,    MUIV_EveryTime,  data->PR_Vert,  3, MUIM_NoNotifySet, MUIA_Prop_Visible, MUIV_TriggerValue);
+    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Prop_First,      MUIV_EveryTime,  data->PR_Vert,  3, MUIM_NoNotifySet, MUIA_Prop_First, MUIV_TriggerValue);
+    DoMethod(data->PR_Vert,  MUIM_Notify, MUIA_Prop_First,            MUIV_EveryTime,  data->LI_NList, 3, MUIM_NoNotifySet, MUIA_NList_Prop_First, MUIV_TriggerValue);
+    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_VertDeltaFactor, MUIV_EveryTime,  data->PR_Vert,  3, MUIM_NoNotifySet, MUIA_Prop_DeltaFactor, MUIV_TriggerValue);
+
+    data->Vert_Attached = TRUE;
+  }
+
+  LEAVE();
+}
+
+static void RemoveVerticalScroller(Object *obj, struct NLVData *data)
+{
+  ENTER();
+
+  if(data->Vert_Attached == TRUE)
+  {
+    D(DBF_STARTUP, "removing vertical scrollbar: %08lx", data->PR_Vert);
+
+    DoMethod(obj, OM_REMMEMBER, data->PR_Vert);
+
+    // remove notifications
+    DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_Entries,    data->PR_Vert);
+    DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_Visible,    data->PR_Vert);
+    DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_First,      data->PR_Vert);
+    DoMethod(data->PR_Vert,  MUIM_KillNotifyObj, MUIA_Prop_First,            data->LI_NList);
+    DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_VertDeltaFactor, data->PR_Vert);
+
+    data->Vert_Attached = FALSE;
+  }
+
+  LEAVE();
+}
+
+static void AddHorizontalScroller(struct NLVData *data)
+{
+  ENTER();
+
+  if(data->Horiz_Attached == FALSE)
+  {
+    D(DBF_STARTUP, "adding horizontal scrollbar: %08lx", data->PR_Horiz);
+
+    DoMethod(data->Group, OM_ADDMEMBER, data->PR_Horiz);
+
+    // add notifications
+    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_Entries,    MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_Entries, MUIV_TriggerValue);
+    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_Visible,    MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_Visible, MUIV_TriggerValue);
+    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_First,      MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_First, MUIV_TriggerValue);
+    DoMethod(data->PR_Horiz, MUIM_Notify, MUIA_Prop_First,             MUIV_EveryTime, data->LI_NList, 3, MUIM_NoNotifySet, MUIA_NList_Horiz_First, MUIV_TriggerValue);
+    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_HorizDeltaFactor, MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_DeltaFactor, MUIV_TriggerValue);
+
+    data->Horiz_Attached = TRUE;
+  }
+
+  LEAVE();
+}
+
+static void RemoveHorizontalScroller(struct NLVData *data)
+{
+  ENTER();
+
+  if(data->Horiz_Attached == TRUE)
+  {
+    D(DBF_STARTUP, "removing horizontal scrollbar: %08lx", data->PR_Horiz);
+
+    DoMethod(data->Group, OM_REMMEMBER, data->PR_Horiz);
+
+    // remove notifications
+    DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_Entries,    data->PR_Horiz);
+    DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_Visible,    data->PR_Horiz);
+    DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_First,      data->PR_Horiz);
+    DoMethod(data->PR_Horiz, MUIM_KillNotifyObj, MUIA_Prop_First,             data->LI_NList);
+    DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_HorizDeltaFactor, data->PR_Horiz);
+
+    data->Horiz_Attached = FALSE;
+  }
+
+  LEAVE();
+}
+
+static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG horiz)
 {
   LONG scrollers = 0;
 
@@ -147,7 +239,7 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
     {
       LONG *scrollbar;
 
-      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (LONG) (&scrollbar)))
+      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (LONG)&scrollbar))
         data->VertSB = *scrollbar;
       else
         data->VertSB = MUIV_NListview_VSB_Always;
@@ -155,32 +247,27 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
     else
       data->VertSB = data->Vert_ScrollBar;
 
-    switch (data->VertSB)
+    switch(data->VertSB)
     {
-      case MUIV_NListview_VSB_Always :
-      case MUIV_NListview_VSB_Left :
+      case MUIV_NListview_VSB_Always:
+      case MUIV_NListview_VSB_Left:
+      {
         scrollers |= MUIV_NListview_VSB_On;
-      case MUIV_NListview_VSB_Auto :
-      case MUIV_NListview_VSB_FullAuto :
-        if(data->PR_Vert != NULL)
-        {
-          data->Vert_Attached = FALSE;
-          DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Prop_Entries,MUIV_EveryTime,
-            data->PR_Vert, 3, MUIM_NoNotifySet,MUIA_Prop_Entries,MUIV_TriggerValue);
-          DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Prop_Visible,MUIV_EveryTime,
-            data->PR_Vert, 3, MUIM_NoNotifySet,MUIA_Prop_Visible,MUIV_TriggerValue);
-          DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Prop_First,MUIV_EveryTime,
-            data->PR_Vert, 3, MUIM_NoNotifySet,MUIA_Prop_First,MUIV_TriggerValue);
-          DoMethod(data->PR_Vert, MUIM_Notify, MUIA_Prop_First,MUIV_EveryTime,
-            data->LI_NList, 3, MUIM_NoNotifySet,MUIA_NList_Prop_First,MUIV_TriggerValue);
-          DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_VertDeltaFactor,MUIV_EveryTime,
-            data->PR_Vert, 3, MUIM_NoNotifySet,MUIA_Prop_DeltaFactor,MUIV_TriggerValue);
-          /*set(data->PR_Vert,MUIA_Prop_DoSmooth, TRUE);*/
-        }
-        break;
-      case MUIV_NListview_VSB_None :
+      }
+      break;
+
+      case MUIV_NListview_VSB_Auto:
+      case MUIV_NListview_VSB_FullAuto:
+      {
+        // nothing
+      }
+      break;
+
+      case MUIV_NListview_VSB_None:
+      {
         scrollers |= MUIV_NListview_VSB_Off;
-        break;
+      }
+      break;
     }
   }
 
@@ -192,7 +279,7 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
     {
       LONG *scrollbar;
 
-      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (LONG) (&scrollbar)))
+      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (LONG)&scrollbar))
         data->HorizSB = *scrollbar;
       else
         data->HorizSB = DEFAULT_HSB;
@@ -202,116 +289,88 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
 
     switch (data->HorizSB)
     {
-      case MUIV_NListview_HSB_Always :
+      case MUIV_NListview_HSB_Always:
+      {
         scrollers |= MUIV_NListview_HSB_On;
-      case MUIV_NListview_HSB_Auto :
-      case MUIV_NListview_HSB_FullAuto :
-        if(data->PR_Horiz != NULL)
-        {
-          data->Horiz_Attached = FALSE;
-          DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_Entries,MUIV_EveryTime,
-            data->PR_Horiz, 3, MUIM_NoNotifySet,MUIA_Prop_Entries,MUIV_TriggerValue);
-          DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_Visible,MUIV_EveryTime,
-            data->PR_Horiz, 3, MUIM_NoNotifySet,MUIA_Prop_Visible,MUIV_TriggerValue);
-          DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_First,MUIV_EveryTime,
-            data->PR_Horiz, 3, MUIM_NoNotifySet,MUIA_Prop_First,MUIV_TriggerValue);
-          DoMethod(data->PR_Horiz, MUIM_Notify, MUIA_Prop_First,MUIV_EveryTime,
-            data->LI_NList, 3, MUIM_NoNotifySet,MUIA_NList_Horiz_First,MUIV_TriggerValue);
-          DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_HorizDeltaFactor,MUIV_EveryTime,
-            data->PR_Horiz, 3, MUIM_NoNotifySet,MUIA_Prop_DeltaFactor,MUIV_TriggerValue);
-        }
-        break;
-      case MUIV_NListview_HSB_None :
+      }
+      break;
+
+      case MUIV_NListview_HSB_Auto:
+      case MUIV_NListview_HSB_FullAuto:
+      {
+        // nothing
+      }
+      break;
+
+      case MUIV_NListview_HSB_None:
+      {
         scrollers |= MUIV_NListview_HSB_Off;
-        break;
+      }
+      break;
     }
   }
 
   scrollers |= ((vert | horiz) & (MUIV_NListview_VSB_On | MUIV_NListview_HSB_On));
 
-  if((!data->PR_Vert) ||
-      (((data->VertSB == MUIV_NListview_VSB_Auto) || (data->VertSB == MUIV_NListview_VSB_Always))&&
-       ((scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_Off)) ||
-      ((data->VertSB == MUIV_NListview_VSB_None) &&
-       ((scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_On)) ||
-      ((data->Vert_Attached)  && ((scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_On)) ||
-      ((!data->Vert_Attached) && ((scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_Off)))
-  { scrollers &= ~MUIV_NListview_VSB_On;
+  if(((data->VertSB == MUIV_NListview_VSB_Auto || data->VertSB == MUIV_NListview_VSB_Always) && (scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_Off) ||
+     (data->VertSB == MUIV_NListview_VSB_None && (scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_On) ||
+     (data->Vert_Attached == TRUE && (scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_On) ||
+     (data->Vert_Attached == FALSE && (scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_Off))
+  {
+    scrollers &= ~MUIV_NListview_VSB_On;
   }
 
-  if((!data->PR_Horiz) ||
-      (((data->HorizSB == MUIV_NListview_HSB_Auto) || (data->HorizSB == MUIV_NListview_HSB_Always)) &&
-       ((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_Off)) ||
-      ((data->HorizSB == MUIV_NListview_HSB_None) &&
-       ((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)) ||
-      ((data->Horiz_Attached)  && ((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)) ||
-      ((!data->Horiz_Attached) && ((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_Off)))
-  { scrollers &= ~MUIV_NListview_HSB_On;
+  if(((data->HorizSB == MUIV_NListview_HSB_Auto || data->HorizSB == MUIV_NListview_HSB_Always) && (scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_Off) ||
+      (data->HorizSB == MUIV_NListview_HSB_None && (scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On) ||
+      (data->Horiz_Attached == TRUE && (scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On) ||
+      (data->Horiz_Attached == FALSE && (scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_Off))
+  {
+    scrollers &= ~MUIV_NListview_HSB_On;
   }
 
   if(scrollers & MUIV_NListview_VSB_On)
   {
-    if(data->SETUP == FALSE || DoMethod(obj,MUIM_Group_InitChange))
+    if(data->SETUP == FALSE || DoMethod(obj, MUIM_Group_InitChange))
     {
       if((scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_On)
       {
-        D(DBF_STARTUP, "adding vertical scrollbar: %08lx", data->PR_Vert);
-
-        data->Vert_Attached = TRUE;
-        DoMethod(obj,OM_ADDMEMBER,data->PR_Vert);
-
+        AddVerticalScroller(obj, data);
         if(data->VertSB == MUIV_NListview_VSB_Left)
-          DoMethod(obj,MUIM_Group_Sort,data->PR_Vert ,data->Group, NULL);
+          DoMethod(obj, MUIM_Group_Sort, data->PR_Vert, data->Group, NULL);
       }
       else
       {
-        D(DBF_STARTUP, "removing vertical scrollbar: %08lx", data->PR_Vert);
-
-        data->Vert_Attached = FALSE;
-        DoMethod(obj,OM_REMMEMBER,data->PR_Vert);
+        RemoveVerticalScroller(obj, data);
       }
+
       if(scrollers & MUIV_NListview_HSB_On)
       {
         if(data->SETUP == FALSE || DoMethod(data->Group,MUIM_Group_InitChange))
         {
           if((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)
-          {
-            data->Horiz_Attached = TRUE;
-            DoMethod(data->Group,OM_ADDMEMBER,data->PR_Horiz);
-          }
+            AddHorizontalScroller(data);
           else
-          {
-            data->Horiz_Attached = FALSE;
-            DoMethod(data->Group,OM_REMMEMBER,data->PR_Horiz);
-          }
+            RemoveHorizontalScroller(data);
+
           if(data->SETUP == TRUE)
-            DoMethod(data->Group,MUIM_Group_ExitChange);
+            DoMethod(data->Group, MUIM_Group_ExitChange);
         }
       }
       if(data->SETUP == TRUE)
-        DoMethod(obj,MUIM_Group_ExitChange);
+        DoMethod(obj, MUIM_Group_ExitChange);
     }
   }
   else if(scrollers & MUIV_NListview_HSB_On)
   {
-    if(data->SETUP == FALSE || DoMethod(data->Group,MUIM_Group_InitChange))
+    if(data->SETUP == FALSE || DoMethod(data->Group, MUIM_Group_InitChange))
     {
       if((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)
-      {
-        D(DBF_STARTUP, "adding horizontal scrollbar: %08lx", data->PR_Horiz);
-
-        data->Horiz_Attached = TRUE;
-        DoMethod(data->Group,OM_ADDMEMBER,data->PR_Horiz);
-      }
+        AddHorizontalScroller(data);
       else
-      {
-        D(DBF_STARTUP, "removing horizontal scrollbar: %08lx", data->PR_Horiz);
+        RemoveHorizontalScroller(data);
 
-        data->Horiz_Attached = FALSE;
-        DoMethod(data->Group,OM_REMMEMBER,data->PR_Horiz);
-      }
       if(data->SETUP == TRUE)
-        DoMethod(data->Group,MUIM_Group_ExitChange);
+        DoMethod(data->Group, MUIM_Group_ExitChange);
     }
   }
 
@@ -349,7 +408,7 @@ Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 #endif
 
 /* static ULONG mNLV_New(struct IClass *cl,Object *obj,Msg msg) */
-static IPTR mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mNLV_New(struct IClass *cl, Object *obj, struct opSet *msg)
 {
   struct NLVData *data;
   struct TagItem *tag;
@@ -360,59 +419,59 @@ static IPTR mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
   ENTER();
 
-  if((tag = FindTagItem(MUIA_Draggable, msg->ops_AttrList)))
+  if((tag = FindTagItem(MUIA_Draggable, msg->ops_AttrList)) != NULL)
     tag->ti_Tag = TAG_IGNORE;
 
-  if((tag = FindTagItem(MUIA_Dropable, msg->ops_AttrList)))
+  if((tag = FindTagItem(MUIA_Dropable, msg->ops_AttrList)) != NULL)
   {
     tag->ti_Tag = TAG_IGNORE;
     dropable = tag->ti_Data;
   }
 
-  if((tag = FindTagItem(MUIA_CycleChain, msg->ops_AttrList)))
+  if((tag = FindTagItem(MUIA_CycleChain, msg->ops_AttrList)) != NULL)
   {
     tag->ti_Tag = TAG_IGNORE;
     cyclechain = tag->ti_Data;
   }
 
-  if((tag = FindTagItem(MUIA_NListview_NList, msg->ops_AttrList)) ||
-     (tag = FindTagItem(MUIA_Listview_List, msg->ops_AttrList)))
+  if((tag = FindTagItem(MUIA_NListview_NList, msg->ops_AttrList)) != NULL ||
+     (tag = FindTagItem(MUIA_Listview_List, msg->ops_AttrList)) != NULL)
   {
     nlist = (Object *) tag->ti_Data;
 
-    if(nlist)
+    if(nlist != NULL)
     {
       if(dropable)
       {
         nnset(nlist,MUIA_Dropable, dropable);
       }
 
-      if((tag = FindTagItem(MUIA_NList_DragType, msg->ops_AttrList)) ||
-         (tag = FindTagItem(MUIA_Listview_DragType, msg->ops_AttrList)))
+      if((tag = FindTagItem(MUIA_NList_DragType, msg->ops_AttrList)) != NULL ||
+         (tag = FindTagItem(MUIA_Listview_DragType, msg->ops_AttrList)) != NULL)
       {
         nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
 
-      if((tag = FindTagItem(MUIA_Listview_Input, msg->ops_AttrList)) ||
-         (tag = FindTagItem(MUIA_NList_Input, msg->ops_AttrList)))
+      if((tag = FindTagItem(MUIA_Listview_Input, msg->ops_AttrList)) != NULL ||
+         (tag = FindTagItem(MUIA_NList_Input, msg->ops_AttrList)) != NULL)
       {
         nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
 
-      if((tag = FindTagItem(MUIA_Listview_MultiSelect, msg->ops_AttrList)) ||
-         (tag = FindTagItem(MUIA_NList_MultiSelect, msg->ops_AttrList)))
+      if((tag = FindTagItem(MUIA_Listview_MultiSelect, msg->ops_AttrList)) != NULL ||
+         (tag = FindTagItem(MUIA_NList_MultiSelect, msg->ops_AttrList)) != NULL)
       {
         nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
 
-      if((tag = FindTagItem(MUIA_Listview_DoubleClick, msg->ops_AttrList)) ||
-         (tag = FindTagItem(MUIA_NList_DoubleClick, msg->ops_AttrList)))
+      if((tag = FindTagItem(MUIA_Listview_DoubleClick, msg->ops_AttrList)) != NULL ||
+         (tag = FindTagItem(MUIA_NList_DoubleClick, msg->ops_AttrList)) != NULL)
       {
         nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
 
-      if((tag = FindTagItem(MUIA_Listview_DefClickColumn, msg->ops_AttrList)) ||
-         (tag = FindTagItem(MUIA_NList_DefClickColumn, msg->ops_AttrList)))
+      if((tag = FindTagItem(MUIA_Listview_DefClickColumn, msg->ops_AttrList)) != NULL ||
+         (tag = FindTagItem(MUIA_NList_DefClickColumn, msg->ops_AttrList)) != NULL)
       {
         nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
@@ -500,7 +559,7 @@ static IPTR mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
   }
 
   RETURN(obj);
-  return((IPTR) obj);
+  return((IPTR)obj);
 }
 
 
@@ -553,14 +612,14 @@ static IPTR mNLV_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax
   // In case the scrollbars are invisible these dimensions can be added to the
   // layout dimensions to leave some room for the relayout when they are
   // eventually added.
-  if(data->PR_Vert != NULL && data->Vert_Attached == FALSE)
+  if(data->Vert_Attached == FALSE)
   {
     // the scrollbar is not part of the GUI, add the (default) width
     msg->MinMaxInfo->MinWidth += data->Vert_Width;
     msg->MinMaxInfo->DefWidth += data->Vert_Width;
     msg->MinMaxInfo->MaxWidth += data->Vert_Width;
   }
-  if(data->PR_Horiz != NULL && data->Horiz_Attached == FALSE)
+  if(data->Horiz_Attached == FALSE)
   {
     // the scrollbar is not part of the GUI, add the (default) height
     msg->MinMaxInfo->MinHeight += data->Horiz_Height;
@@ -572,7 +631,7 @@ static IPTR mNLV_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax
   return 0;
 }
 
-static IPTR mNLV_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
+static IPTR mNLV_Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
   IPTR result = FALSE;
@@ -608,7 +667,7 @@ static IPTR mNLV_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 }
 
 
-static IPTR mNLV_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
+static IPTR mNLV_Cleanup(struct IClass *cl, Object *obj, struct MUIP_Cleanup *msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
 
@@ -624,7 +683,7 @@ static IPTR mNLV_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 }
 
 
-static IPTR mNLV_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
+static IPTR mNLV_Notify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
 
@@ -663,15 +722,17 @@ static IPTR mNLV_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
 static IPTR mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
-  struct TagItem *tags,*tag;
+  struct TagItem *tags, *tag;
 
   ENTER();
 
-  for(tags=((struct opSet *)msg)->ops_AttrList;(tag=(struct TagItem *) NextTagItem((APTR)&tags));)
+  tags = ((struct opSet *)msg)->ops_AttrList;
+  while((tag = NextTagItem((APTR)&tags)) != NULL)
   {
     switch (tag->ti_Tag)
     {
-      case MUIA_Listview_ScrollerPos :
+      case MUIA_Listview_ScrollerPos:
+      {
         if(tag->ti_Data == MUIV_Listview_ScrollerPos_None)
           tag->ti_Data = MUIV_NListview_VSB_None;
         else if(tag->ti_Data == MUIV_Listview_ScrollerPos_Left)
@@ -680,27 +741,37 @@ static IPTR mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
           tag->ti_Data = MUIV_NListview_VSB_Always;
         else
           tag->ti_Data = MUIV_NListview_VSB_Default;
-      case MUIA_NListview_Vert_ScrollBar :
+      }
+      // fall through...
+
+      case MUIA_NListview_Vert_ScrollBar:
+      {
         tag->ti_Tag = TAG_IGNORE;
-        if(!data->sem)
-        { data->sem = TRUE;
-          NLV_Scrollers(obj,data,tag->ti_Data,0);
+        if(data->sem == FALSE)
+        {
+          data->sem = TRUE;
+          NLV_Scrollers(obj, data, tag->ti_Data, 0);
           data->sem = FALSE;
         }
-        break;
-      case MUIA_NListview_Horiz_ScrollBar :
+      }
+      break;
+
+      case MUIA_NListview_Horiz_ScrollBar:
+      {
         tag->ti_Tag = TAG_IGNORE;
-        if(!data->sem)
-        { data->sem = TRUE;
-          NLV_Scrollers(obj,data,0,tag->ti_Data);
+        if(data->sem == FALSE)
+        {
+          data->sem = TRUE;
+          NLV_Scrollers(obj, data, 0, tag->ti_Data);
           data->sem = FALSE;
         }
-        break;
+      }
+      break;
     }
   }
 
   LEAVE();
-  return DoSuperMethodA(cl,obj,msg);
+  return DoSuperMethodA(cl, obj, msg);
 }
 
 
@@ -708,41 +779,79 @@ static IPTR mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
   IPTR *store = ((struct opGet *)msg)->opg_Storage;
+  IPTR result = FALSE;
 
-  switch (((struct opGet *)msg)->opg_AttrID)
+  ENTER();
+
+  switch(((struct opGet *)msg)->opg_AttrID)
   {
     case MUIA_Listview_List:
     case MUIA_NListview_NList:
-      *store = (IPTR) data->LI_NList;
-      return (TRUE);
+    {
+      *store = (IPTR)data->LI_NList;
+      result = TRUE;
+    }
+    break;
+
     case MUIA_NListview_Vert_ScrollBar:
-      *store = (IPTR) data->VertSB;
-      return (TRUE);
+    {
+      *store = (IPTR)data->VertSB;
+      result = TRUE;
+    }
+    break;
+
     case MUIA_NListview_Horiz_ScrollBar:
-      *store = (IPTR) data->HorizSB;
-      return (TRUE);
+    {
+      *store = (IPTR)data->HorizSB;
+      result = TRUE;
+    }
+    break;
+
     case MUIA_NListview_VSB_Width:
-      if(data->PR_Vert && data->Vert_Attached)
-        *store = (IPTR) _width(data->PR_Vert);
+    {
+      if(data->Vert_Attached == TRUE)
+        *store = (IPTR)_width(data->PR_Vert);
       else
-        *store = (IPTR) 0;
-      return (TRUE);
+        *store = (IPTR)0;
+
+      result = TRUE;
+    }
+    break;
+
     case MUIA_NListview_HSB_Height:
-      if(data->PR_Horiz && data->Horiz_Attached)
-        *store = (IPTR) _height(data->PR_Horiz);
+    {
+      if(data->Horiz_Attached == TRUE)
+        *store = (IPTR)_height(data->PR_Horiz);
       else
-        *store = (IPTR) 0;
-      return (TRUE);
+        *store = (IPTR)0;
+
+      result = TRUE;
+    }
+    break;
+
     case MUIA_Version:
+    {
       *store = LIB_VERSION;
-      return(TRUE);
-      break;
+      result = TRUE;
+    }
+    break;
+
     case MUIA_Revision:
+    {
       *store = LIB_REVISION;
-      return(TRUE);
-      break;
+      result = TRUE;
+    }
+    break;
+
+    default:
+    {
+      result = DoSuperMethodA(cl, obj, msg);
+    }
+    break;
   }
-  return (DoSuperMethodA(cl,obj,msg));
+
+  RETURN(result);
+  return result;
 }
 
 DISPATCHER(_Dispatcher)
@@ -775,7 +884,7 @@ DISPATCHER(_Dispatcher)
     {
       struct NLVData *data = INST_DATA(cl, obj);
 
-      if(data->LI_NList)
+      if(data->LI_NList != NULL)
         DoMethod(data->LI_NList, msg->MethodID == MUIM_GoActive ? MUIM_NList_GoActive : MUIM_NList_GoInactive);
     }
     break;
@@ -832,11 +941,11 @@ DISPATCHER(_Dispatcher)
       struct NLVData *data = INST_DATA(cl, obj);
 
       if(data->LI_NList)
-        return(DoMethodA(data->LI_NList, msg));
+        return DoMethodA(data->LI_NList, msg);
       else
         return 0;
     }
   }
 
-  return(DoSuperMethodA(cl,obj,msg));
+  return DoSuperMethodA(cl, obj, msg);
 }

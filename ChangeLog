@@ -10,6 +10,9 @@ $URL$
   * nlistview_mcc/NListview.c: added a workaround to the layout issue when the
     dynamically added/removed scrollbars caused a screwed up layout with objects
     drawn over the window borders. Also cleaned up the source a lot.
+  * nlistview_mcc/NListview.c: cleaned up the code even more. Now all added
+    notifications are removed again when the scrollbars are removed from the
+    layout.
 
 2010-01-04 Thore Böckelmann <tboeckel@gmx.de>
 
