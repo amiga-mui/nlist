@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-01-08 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: reverted the last change as it didn't really
+    work out and still caused some issues with dynamically added scrollbars.
+
 2010-01-06 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistview_mcc/NListview.c: added a workaround to the layout issue when the

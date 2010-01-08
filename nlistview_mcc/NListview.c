@@ -101,7 +101,7 @@ static IPTR mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleE
       {
         if(data->ControlChar != '\0' && IMsgToChar(imsg, 0, (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT)) == data->ControlChar)
         {
-          set(data->LI_NList, MUIA_NList_Active, imsg->Qualifier & (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT) ? MUIV_NList_Active_Up : MUIV_NList_Active_Down);
+          set(data->LI_NList, MUIA_NList_Active, imsg->Qualifier & (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT) ? MUIV_NList_Active_Up: MUIV_NList_Active_Down);
         }
       }
       break;
@@ -139,7 +139,7 @@ static void AddVerticalScroller(Object *obj, struct NLVData *data)
 
   if(data->Vert_Attached == FALSE)
   {
-    D(DBF_STARTUP, "adding vertical scrollbar: %08lx", data->PR_Vert);
+    D(DBF_STARTUP, "adding vertical scrollbar");
 
     DoMethod(obj, OM_ADDMEMBER, data->PR_Vert);
 
@@ -162,7 +162,7 @@ static void RemoveVerticalScroller(Object *obj, struct NLVData *data)
 
   if(data->Vert_Attached == TRUE)
   {
-    D(DBF_STARTUP, "removing vertical scrollbar: %08lx", data->PR_Vert);
+    D(DBF_STARTUP, "removing vertical scrollbar: %08lx");
 
     DoMethod(obj, OM_REMMEMBER, data->PR_Vert);
 
@@ -179,15 +179,15 @@ static void RemoveVerticalScroller(Object *obj, struct NLVData *data)
   LEAVE();
 }
 
-static void AddHorizontalScroller(struct NLVData *data)
+static void AddHorizontalScroller(Object *obj, struct NLVData *data)
 {
   ENTER();
 
   if(data->Horiz_Attached == FALSE)
   {
-    D(DBF_STARTUP, "adding horizontal scrollbar: %08lx", data->PR_Horiz);
+    D(DBF_STARTUP, "adding horizontal scrollbar: %08lx");
 
-    DoMethod(data->Group, OM_ADDMEMBER, data->PR_Horiz);
+    DoMethod(obj, OM_ADDMEMBER, data->PR_Horiz);
 
     // add notifications
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_Entries,    MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_Entries, MUIV_TriggerValue);
@@ -202,15 +202,15 @@ static void AddHorizontalScroller(struct NLVData *data)
   LEAVE();
 }
 
-static void RemoveHorizontalScroller(struct NLVData *data)
+static void RemoveHorizontalScroller(Object *obj, struct NLVData *data)
 {
   ENTER();
 
   if(data->Horiz_Attached == TRUE)
   {
-    D(DBF_STARTUP, "removing horizontal scrollbar: %08lx", data->PR_Horiz);
+    D(DBF_STARTUP, "removing horizontal scrollbar: %08lx");
 
-    DoMethod(data->Group, OM_REMMEMBER, data->PR_Horiz);
+    DoMethod(obj, OM_REMMEMBER, data->PR_Horiz);
 
     // remove notifications
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_Entries,    data->PR_Horiz);
@@ -345,17 +345,18 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
 
       if(scrollers & MUIV_NListview_HSB_On)
       {
-        if(data->SETUP == FALSE || DoMethod(data->Group,MUIM_Group_InitChange))
+        if(data->SETUP == FALSE || DoMethod(data->Group, MUIM_Group_InitChange))
         {
           if((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)
-            AddHorizontalScroller(data);
+            AddHorizontalScroller(data->Group, data);
           else
-            RemoveHorizontalScroller(data);
+            RemoveHorizontalScroller(data->Group, data);
 
           if(data->SETUP == TRUE)
             DoMethod(data->Group, MUIM_Group_ExitChange);
         }
       }
+
       if(data->SETUP == TRUE)
         DoMethod(obj, MUIM_Group_ExitChange);
     }
@@ -365,20 +366,14 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
     if(data->SETUP == FALSE || DoMethod(data->Group, MUIM_Group_InitChange))
     {
       if((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)
-        AddHorizontalScroller(data);
+        AddHorizontalScroller(data->Group, data);
       else
-        RemoveHorizontalScroller(data);
+        RemoveHorizontalScroller(data->Group, data);
 
       if(data->SETUP == TRUE)
         DoMethod(data->Group, MUIM_Group_ExitChange);
     }
   }
-
-  // update the scrollbars' dimension information
-  if(data->Vert_Attached == TRUE)
-    get(data->PR_Vert, MUIA_Width, &data->Vert_Width);
-  if(data->Horiz_Attached == TRUE)
-    get(data->PR_Horiz, MUIA_Height, &data->Horiz_Height);
 
   LEAVE();
 }
@@ -488,12 +483,12 @@ static IPTR mNLV_New(struct IClass *cl, Object *obj, struct opSet *msg)
     nlist = MUI_NewObject(MUIC_NList, MUIA_Dropable, dropable, TAG_MORE, msg->ops_AttrList);
   }
 
-  obj = (Object *) DoSuperNew(cl,obj,
+  obj = (Object *)DoSuperNew(cl, obj,
     MUIA_Group_Horiz, TRUE,
     MUIA_Group_Spacing, 0,
     MUIA_CycleChain, cyclechain,
     NoFrame,
-    Child, vgroup = (Object *) MUI_NewObject(MUIC_Group,
+    Child, vgroup = VGroup,
       MUIA_Group_Spacing, 0,
       Child, nlist,
     TAG_DONE),
@@ -509,9 +504,6 @@ static IPTR mNLV_New(struct IClass *cl, Object *obj, struct opSet *msg)
     data->Group = vgroup;
     data->Vert_Attached = FALSE;
     data->Horiz_Attached = FALSE;
-    // start with a dummy size of 40 additional pixels for yet invisible scrollbars
-    data->Vert_Width = 40;
-    data->Horiz_Height = 40;
     data->Vert_ScrollBar = MUIV_NListview_VSB_Default;
     data->Horiz_ScrollBar = MUIV_NListview_HSB_Default;
     if((tag = FindTagItem(MUIA_Listview_ScrollerPos, msg->ops_AttrList)) != NULL)
@@ -552,8 +544,7 @@ static IPTR mNLV_New(struct IClass *cl, Object *obj, struct opSet *msg)
       MUIA_Group_Horiz, TRUE,
     End;
 
-    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NListview_Horiz_ScrollBar, MUIV_EveryTime,
-      obj, 3, MUIM_Set, MUIA_NListview_Horiz_ScrollBar, MUIV_TriggerValue);
+    DoMethod(data->LI_NList, MUIM_Notify, MUIA_NListview_Horiz_ScrollBar, MUIV_EveryTime, obj, 3, MUIM_Set, MUIA_NListview_Horiz_ScrollBar, MUIV_TriggerValue);
 
     set(data->LI_NList, MUIA_NList_KeepActive, (LONG)obj);
   }
@@ -585,52 +576,6 @@ static IPTR mNLV_Dispose(struct IClass *cl,Object *obj,Msg msg)
   return DoSuperMethodA(cl,obj,msg);
 }
 
-static IPTR mNLV_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
-{
-  struct NLVData *data = INST_DATA(cl, obj);
-
-  ENTER();
-
-  DoSuperMethodA(cl, obj, (Msg)msg);
-
-  // Add some dummy space if the scrollbars are *NOT* visible, just in case
-  // they might added later because of a resizing operation.
-  // Otherwise we might end up with a too small window and MUI completely
-  // terminates its layout process and the GUI will be screwed up afterwards.
-  // The reason is the following:
-  // The window's minimum dimensions are calculated on basis of the AskMinMax
-  // results. Without visible scrollbars these dimensions will be a bit too
-  // small for a window with later dynamically added scrollbars. If the window
-  // is resized faster than the layout is adapted it may happen that the final
-  // window might be smaller than the required size for the now added scrollbars.
-  // In this situation MUI is unable to perform a relayout and enlarge the
-  // window to make place for the scrollbars. The end is a totally screwed up
-  // layout with objects partly drawn over the window's borders because of a
-  // missing proper layout.
-  // The solution is to start with some default scrollbar dimensions and obtain
-  // the true dimensions as soon as the scrollbars are added to the layout.
-  // In case the scrollbars are invisible these dimensions can be added to the
-  // layout dimensions to leave some room for the relayout when they are
-  // eventually added.
-  if(data->Vert_Attached == FALSE)
-  {
-    // the scrollbar is not part of the GUI, add the (default) width
-    msg->MinMaxInfo->MinWidth += data->Vert_Width;
-    msg->MinMaxInfo->DefWidth += data->Vert_Width;
-    msg->MinMaxInfo->MaxWidth += data->Vert_Width;
-  }
-  if(data->Horiz_Attached == FALSE)
-  {
-    // the scrollbar is not part of the GUI, add the (default) height
-    msg->MinMaxInfo->MinHeight += data->Horiz_Height;
-    msg->MinMaxInfo->DefHeight += data->Horiz_Height;
-    msg->MinMaxInfo->MaxHeight += data->Horiz_Height;
-  }
-
-  LEAVE();
-  return 0;
-}
-
 static IPTR mNLV_Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
@@ -656,7 +601,7 @@ static IPTR mNLV_Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
   if(_win(obj) != NULL)
     DoMethod(_win(obj), MUIM_Window_AddEventHandler, (IPTR)&data->eh);
 
-  if(DoSuperMethodA(cl,obj,(Msg) msg))
+  if(DoSuperMethodA(cl, obj, (Msg)msg))
   {
     result = TRUE;
     data->SETUP = TRUE;
@@ -679,7 +624,7 @@ static IPTR mNLV_Cleanup(struct IClass *cl, Object *obj, struct MUIP_Cleanup *ms
   data->SETUP = FALSE;
 
   LEAVE();
-  return DoSuperMethodA(cl,obj,(Msg) msg);
+  return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
 
@@ -687,34 +632,35 @@ static IPTR mNLV_Notify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
 
-  switch (msg->TrigAttr)
+  switch(msg->TrigAttr)
   {
-    case MUIA_List_Prop_Entries :
-    case MUIA_List_Prop_Visible :
-    case MUIA_List_Prop_First :
-    case MUIA_NList_Horiz_Entries :
-    case MUIA_NList_Horiz_Visible :
-    case MUIA_NList_Horiz_First :
-    case MUIA_NList_HorizDeltaFactor :
-    case MUIA_NList_Prop_Entries :
-    case MUIA_NList_Prop_Visible :
-    case MUIA_NList_Prop_First :
-    case MUIA_NList_VertDeltaFactor :
-    case MUIA_NList_SelectChange :
-    case MUIA_NList_MultiClick :
-    case MUIA_NList_DoubleClick :
-    case MUIA_NList_EntryClick :
-    case MUIA_NList_Active :
-    case MUIA_NList_First :
-    case MUIA_NList_Entries :
-    case MUIA_NList_TitleClick :
-    case MUIA_List_Active :
-    case MUIA_Listview_SelectChange :
-    case MUIA_Listview_DoubleClick :
-      return (DoMethodA(data->LI_NList,(Msg) msg));
-  }
+    case MUIA_List_Prop_Entries:
+    case MUIA_List_Prop_Visible:
+    case MUIA_List_Prop_First:
+    case MUIA_NList_Horiz_Entries:
+    case MUIA_NList_Horiz_Visible:
+    case MUIA_NList_Horiz_First:
+    case MUIA_NList_HorizDeltaFactor:
+    case MUIA_NList_Prop_Entries:
+    case MUIA_NList_Prop_Visible:
+    case MUIA_NList_Prop_First:
+    case MUIA_NList_VertDeltaFactor:
+    case MUIA_NList_SelectChange:
+    case MUIA_NList_MultiClick:
+    case MUIA_NList_DoubleClick:
+    case MUIA_NList_EntryClick:
+    case MUIA_NList_Active:
+    case MUIA_NList_First:
+    case MUIA_NList_Entries:
+    case MUIA_NList_TitleClick:
+    case MUIA_List_Active:
+    case MUIA_Listview_SelectChange:
+    case MUIA_Listview_DoubleClick:
+      return DoMethodA(data->LI_NList, (Msg)msg);
 
-  return (DoSuperMethodA(cl,obj,(Msg) msg));
+    default:
+      return DoSuperMethodA(cl, obj, (Msg)msg);
+  }
 }
 
 
@@ -858,23 +804,22 @@ DISPATCHER(_Dispatcher)
 {
   switch(msg->MethodID)
   {
-    case OM_NEW                      : return(mNLV_New(cl,obj,(APTR)msg));
-    case OM_DISPOSE                  : return(mNLV_Dispose(cl,obj,(APTR)msg));
-    case OM_GET                      : return(mNLV_Get(cl,obj,(APTR)msg));
-    case OM_SET                      : return(mNLV_Set(cl,obj,(APTR)msg));
-    case MUIM_AskMinMax              : return(mNLV_AskMinMax(cl,obj,(APTR)msg));
-    case MUIM_Setup                  : return(mNLV_Setup(cl,obj,(APTR)msg));
-    case MUIM_Cleanup                : return(mNLV_Cleanup(cl,obj,(APTR)msg));
-    case MUIM_HandleInput            : return(mNLV_HandleInput(cl,obj,(APTR)msg));
-    case MUIM_HandleEvent            : return(mNLV_HandleEvent(cl,obj,(APTR)msg));
-    case MUIM_NList_QueryBeginning   : return(0);
-    case MUIM_DragQuery              : return(MUIV_DragQuery_Refuse);
+    case OM_NEW                     : return(mNLV_New(cl,obj,(APTR)msg));
+    case OM_DISPOSE                 : return(mNLV_Dispose(cl,obj,(APTR)msg));
+    case OM_GET                     : return(mNLV_Get(cl,obj,(APTR)msg));
+    case OM_SET                     : return(mNLV_Set(cl,obj,(APTR)msg));
+    case MUIM_Setup                 : return(mNLV_Setup(cl,obj,(APTR)msg));
+    case MUIM_Cleanup               : return(mNLV_Cleanup(cl,obj,(APTR)msg));
+    case MUIM_HandleInput           : return(mNLV_HandleInput(cl,obj,(APTR)msg));
+    case MUIM_HandleEvent           : return(mNLV_HandleEvent(cl,obj,(APTR)msg));
+    case MUIM_NList_QueryBeginning  : return(0);
+    case MUIM_DragQuery             : return(MUIV_DragQuery_Refuse);
 
     // we catch all notify relevant method
     // calls in one function
-    case MUIM_KillNotify             :
-    case MUIM_KillNotifyObj          :
-    case MUIM_Notify                 : return (mNLV_Notify(cl,obj,(APTR)msg));
+    case MUIM_KillNotify            :
+    case MUIM_KillNotifyObj         :
+    case MUIM_Notify                : return (mNLV_Notify(cl,obj,(APTR)msg));
 
     // in case the listview is receiving the
     // active/inactive method we forward it to
@@ -885,58 +830,58 @@ DISPATCHER(_Dispatcher)
       struct NLVData *data = INST_DATA(cl, obj);
 
       if(data->LI_NList != NULL)
-        DoMethod(data->LI_NList, msg->MethodID == MUIM_GoActive ? MUIM_NList_GoActive : MUIM_NList_GoInactive);
+        DoMethod(data->LI_NList, msg->MethodID == MUIM_GoActive ? MUIM_NList_GoActive: MUIM_NList_GoInactive);
     }
     break;
 
     // the following method calls are all forwarded
     // to the corresponding NList object
-    case MUIM_List_Sort              :
-    case MUIM_List_Insert            :
-    case MUIM_List_InsertSingle      :
-    case MUIM_List_GetEntry          :
-    case MUIM_List_Clear             :
-    case MUIM_List_Jump              :
-    case MUIM_List_Select            :
-    case MUIM_List_TestPos           :
-    case MUIM_List_Redraw            :
-    case MUIM_List_Exchange          :
-    case MUIM_List_Move              :
-    case MUIM_List_NextSelected      :
-    case MUIM_List_Remove            :
-    case MUIM_List_CreateImage       :
-    case MUIM_List_DeleteImage       :
-    case MUIM_NList_Sort             :
-    case MUIM_NList_Sort2            :
-    case MUIM_NList_Insert           :
-    case MUIM_NList_InsertSingle     :
-    case MUIM_NList_GetEntry         :
-    case MUIM_NList_Clear            :
-    case MUIM_NList_Jump             :
-    case MUIM_NList_Select           :
-    case MUIM_NList_TestPos          :
-    case MUIM_NList_Redraw           :
-    case MUIM_NList_RedrawEntry      :
-    case MUIM_NList_Exchange         :
-    case MUIM_NList_Move             :
-    case MUIM_NList_NextSelected     :
-    case MUIM_NList_Remove           :
-    case MUIM_NList_CreateImage      :
-    case MUIM_NList_DeleteImage      :
-    case MUIM_NList_CopyToClip       :
-    case MUIM_NList_UseImage         :
-    case MUIM_NList_ReplaceSingle    :
-    case MUIM_NList_InsertWrap       :
-    case MUIM_NList_InsertSingleWrap :
-    case MUIM_NList_GetEntryInfo     :
-    case MUIM_NList_GetSelectInfo    :
-    case MUIM_NList_CopyTo           :
-    case MUIM_NList_DropType         :
-    case MUIM_NList_DropDraw         :
-    case MUIM_NList_DoMethod         :
-    case MUIM_NList_ColWidth         :
-    case MUIM_NList_ColToColumn      :
-    case MUIM_NList_ColumnToCol      :
+    case MUIM_List_Sort             :
+    case MUIM_List_Insert           :
+    case MUIM_List_InsertSingle     :
+    case MUIM_List_GetEntry         :
+    case MUIM_List_Clear            :
+    case MUIM_List_Jump             :
+    case MUIM_List_Select           :
+    case MUIM_List_TestPos          :
+    case MUIM_List_Redraw           :
+    case MUIM_List_Exchange         :
+    case MUIM_List_Move             :
+    case MUIM_List_NextSelected     :
+    case MUIM_List_Remove           :
+    case MUIM_List_CreateImage      :
+    case MUIM_List_DeleteImage      :
+    case MUIM_NList_Sort            :
+    case MUIM_NList_Sort2           :
+    case MUIM_NList_Insert          :
+    case MUIM_NList_InsertSingle    :
+    case MUIM_NList_GetEntry        :
+    case MUIM_NList_Clear           :
+    case MUIM_NList_Jump            :
+    case MUIM_NList_Select          :
+    case MUIM_NList_TestPos         :
+    case MUIM_NList_Redraw          :
+    case MUIM_NList_RedrawEntry     :
+    case MUIM_NList_Exchange        :
+    case MUIM_NList_Move            :
+    case MUIM_NList_NextSelected    :
+    case MUIM_NList_Remove          :
+    case MUIM_NList_CreateImage     :
+    case MUIM_NList_DeleteImage     :
+    case MUIM_NList_CopyToClip      :
+    case MUIM_NList_UseImage        :
+    case MUIM_NList_ReplaceSingle   :
+    case MUIM_NList_InsertWrap      :
+    case MUIM_NList_InsertSingleWrap:
+    case MUIM_NList_GetEntryInfo    :
+    case MUIM_NList_GetSelectInfo   :
+    case MUIM_NList_CopyTo          :
+    case MUIM_NList_DropType        :
+    case MUIM_NList_DropDraw        :
+    case MUIM_NList_DoMethod        :
+    case MUIM_NList_ColWidth        :
+    case MUIM_NList_ColToColumn     :
+    case MUIM_NList_ColumnToCol     :
     {
       struct NLVData *data = INST_DATA(cl, obj);
 

@@ -44,8 +44,6 @@ struct NLVData
   Object *Group;
   BOOL   Vert_Attached;
   BOOL   Horiz_Attached;
-  LONG   Vert_Width;
-  LONG   Horiz_Height;
   LONG   VertSB;
   LONG   HorizSB;
   LONG   Vert_ScrollBar;
