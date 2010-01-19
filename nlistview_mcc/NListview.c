@@ -151,6 +151,8 @@ static void AddVerticalScroller(Object *obj, struct NLVData *data)
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_VertDeltaFactor, MUIV_EveryTime,  data->PR_Vert,  3, MUIM_NoNotifySet, MUIA_Prop_DeltaFactor, MUIV_TriggerValue);
 
     data->Vert_Attached = TRUE;
+
+    D(DBF_STARTUP, "vertical scrollbar added");
   }
 
   LEAVE();
@@ -162,18 +164,22 @@ static void RemoveVerticalScroller(Object *obj, struct NLVData *data)
 
   if(data->Vert_Attached == TRUE)
   {
-    D(DBF_STARTUP, "removing vertical scrollbar: %08lx");
+    D(DBF_STARTUP, "removing vertical scrollbar");
 
-    DoMethod(obj, OM_REMMEMBER, data->PR_Vert);
-
+/*
     // remove notifications
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_Entries,    data->PR_Vert);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_Visible,    data->PR_Vert);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_First,      data->PR_Vert);
     DoMethod(data->PR_Vert,  MUIM_KillNotifyObj, MUIA_Prop_First,            data->LI_NList);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_VertDeltaFactor, data->PR_Vert);
+*/
+
+    DoMethod(obj, OM_REMMEMBER, data->PR_Vert);
 
     data->Vert_Attached = FALSE;
+
+    D(DBF_STARTUP, "vertical scrollbar removed");
   }
 
   LEAVE();
@@ -185,7 +191,7 @@ static void AddHorizontalScroller(Object *obj, struct NLVData *data)
 
   if(data->Horiz_Attached == FALSE)
   {
-    D(DBF_STARTUP, "adding horizontal scrollbar: %08lx");
+    D(DBF_STARTUP, "adding horizontal scrollbar");
 
     DoMethod(obj, OM_ADDMEMBER, data->PR_Horiz);
 
@@ -197,6 +203,8 @@ static void AddHorizontalScroller(Object *obj, struct NLVData *data)
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_HorizDeltaFactor, MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_DeltaFactor, MUIV_TriggerValue);
 
     data->Horiz_Attached = TRUE;
+
+    D(DBF_STARTUP, "horizontal scrollbar added");
   }
 
   LEAVE();
@@ -208,18 +216,22 @@ static void RemoveHorizontalScroller(Object *obj, struct NLVData *data)
 
   if(data->Horiz_Attached == TRUE)
   {
-    D(DBF_STARTUP, "removing horizontal scrollbar: %08lx");
+    D(DBF_STARTUP, "removing horizontal scrollbar");
 
-    DoMethod(obj, OM_REMMEMBER, data->PR_Horiz);
-
+/*
     // remove notifications
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_Entries,    data->PR_Horiz);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_Visible,    data->PR_Horiz);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_First,      data->PR_Horiz);
     DoMethod(data->PR_Horiz, MUIM_KillNotifyObj, MUIA_Prop_First,             data->LI_NList);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_HorizDeltaFactor, data->PR_Horiz);
+*/
+
+    DoMethod(obj, OM_REMMEMBER, data->PR_Horiz);
 
     data->Horiz_Attached = FALSE;
+
+    D(DBF_STARTUP, "horizontal scrollbar removed");
   }
 
   LEAVE();
