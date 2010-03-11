@@ -5,6 +5,16 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-03-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: finally it is possible to automatically open
+    closed nodes during drag'n'drop sessions by simply dragging an object over
+    a closed node and wait there for at least one second. Since opening the
+    node might cause bigger graphical updates on the screen this feature
+    requires a non-locked screen. That means that for example LockLayers()
+    must *NOT* have been called before. Currently this is only the fact with
+    the yet unreleased next MUI3.9 for OS4 and only on hi/truecolor screens.
+
 2010-01-08 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistview_mcc/NListview.c: reverted the last change as it didn't really
