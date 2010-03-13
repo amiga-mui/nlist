@@ -5738,6 +5738,11 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
   data->Image[IMAGE_Tree].Image = NewObject( data->CL_TreeImage->mcc_Class, NULL, MUIA_FillArea, FALSE, NoFrame, MUIA_UserData, &data->Image[IMAGE_Tree], TAG_DONE);
   data->Image[IMAGE_Tree].ListImage = (Object *)DoMethod( obj, MUIM_NList_CreateImage, data->Image[IMAGE_Tree].Image, 0L );
 
+  data->compositingActive = 0;
+  #if defined(__amigaos4__)
+  // check whether compositing is enabled on our screen
+  GetScreenAttrs(_screen(obj), SA_Compositing, &data->compositingActive, TAG_DONE);
+  #endif
 
   /*
   **  Get and set image config.
@@ -6467,7 +6472,7 @@ IPTR _DragNDrop_DropType(struct IClass *cl, Object *obj, struct MUIP_NList_DropT
     // Opening the node now might lead to a deadlock, because the redraw might require
     // another lock. However, OS4's MUI is able to perform lockless DnD actions on true
     // color screens.
-    if(_screen(obj)->LayerInfo.Lock.ss_Owner == NULL)
+    if(data->compositingActive != 0 && _screen(obj)->LayerInfo.Lock.ss_Owner == NULL)
     {
       // the current possible drop target is a closed list node
       if(data->OldDropTarget != data->DropTarget)

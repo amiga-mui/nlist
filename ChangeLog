@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-03-13 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: added another check if compositing is really
+    enabled on the object's screen.
+
 2010-03-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: finally it is possible to automatically open
