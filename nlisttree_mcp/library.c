@@ -75,7 +75,23 @@ static VOID ClassExpunge(UNUSED struct Library *base);
 /******************************************************************************/
 #define USE_IM_PREFS_BODY   1
 #define USE_IM_PREFS_COLORS 1
+#define PREFSIMAGEOBJECT \
+  BodychunkObject,\
+    MUIA_FixWidth,              IM_PREFS_WIDTH,\
+    MUIA_FixHeight,             IM_PREFS_HEIGHT,\
+    MUIA_Bitmap_Width,          IM_PREFS_WIDTH ,\
+    MUIA_Bitmap_Height,         IM_PREFS_HEIGHT,\
+    MUIA_Bodychunk_Depth,       IM_PREFS_DEPTH,\
+    MUIA_Bodychunk_Body,        (UBYTE *)Im_Prefs_body,\
+    MUIA_Bodychunk_Compression, IM_PREFS_COMPRESSION,\
+    MUIA_Bodychunk_Masking,     IM_PREFS_MASKING,\
+    MUIA_Bitmap_SourceColors,   (ULONG *)Im_Prefs_colors,\
+    MUIA_Bitmap_Transparent,    0,\
+    MUIA_Bitmap_RawData,        icon32,\
+    MUIA_Bitmap_RawDataFormat,  MUIV_Bitmap_RawDataFormat_ARGB32,\
+  End
 #include "icon.bh"
+#include "icon32.h"
 #include "mccinit.c"
 
 /******************************************************************************/

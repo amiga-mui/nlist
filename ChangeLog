@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-04-12 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/misc: added 32bit truecolor prefs image done by Martin 'Mason' Merz.
+    This requires at least MUI3.9 and AmigaOS 4.1.
+
 2010-03-13 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: added another check if compositing is really

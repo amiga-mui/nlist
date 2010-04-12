@@ -12,7 +12,7 @@ const ULONG Im_Prefs_colors[24] =
 };
 #endif
 
-#define IM_PREFS_WIDTH        23
+#define IM_PREFS_WIDTH        24
 #define IM_PREFS_HEIGHT       14
 #define IM_PREFS_DEPTH         3
 #define IM_PREFS_COMPRESSION   1

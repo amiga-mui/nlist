@@ -12,7 +12,7 @@ const ULONG list_colors[24] =
 };
 #endif
 
-#define LIST_WIDTH        23
+#define LIST_WIDTH        24
 #define LIST_HEIGHT       14
 #define LIST_DEPTH         3
 #define LIST_COMPRESSION   0

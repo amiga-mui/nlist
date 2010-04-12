@@ -180,6 +180,7 @@ LOBJS = library.o
 COBJS = locale.o \
         NListviews.o \
         vastubs.o \
+        icon32.o \
         Debug.o
 
 TOBJS = NListviews-Prefs.o
