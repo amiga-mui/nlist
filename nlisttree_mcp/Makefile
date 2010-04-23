@@ -179,6 +179,7 @@ COBJS = locale.o \
         NListtree.o \
         Debug.o \
         icon32.o \
+        iconraw.o \
         vastubs.o
 
 TOBJS = #NListtree-Test.o

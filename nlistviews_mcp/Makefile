@@ -181,6 +181,7 @@ COBJS = locale.o \
         NListviews.o \
         vastubs.o \
         icon32.o \
+        iconraw.o \
         Debug.o
 
 TOBJS = NListviews-Prefs.o

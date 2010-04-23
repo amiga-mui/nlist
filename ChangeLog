@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-04-23 Ilkka Lehtoranta <ilkleht@yahoo.com>
+
+  * mcp/misc: use bzip2 compressed 32bit prefs image on MorphOS 2.
+
 2010-04-12 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/misc: added 32bit truecolor prefs image done by Martin 'Mason' Merz.

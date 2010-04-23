@@ -85,6 +85,38 @@ static VOID ClassExpunge(UNUSED struct Library *base);
 /******************************************************************************/
 #define USE_LIST_BODY   1
 #define USE_LIST_COLORS 1
+
+#include "icon.bh"
+#include "icon32.h"
+
+#if defined(__MORPHOS__)
+
+#define PREFSIMAGEOBJECT get_prefs_image()
+
+#include <mui/Rawimage_mcc.h>
+#include <proto/muimaster.h>
+
+static APTR get_prefs_image(void)
+{
+  APTR obj = RawimageObject, MUIA_Rawimage_Data, icondata, End;
+  if (!obj) obj = BodychunkObject,
+    MUIA_FixWidth,              LIST_WIDTH,
+    MUIA_FixHeight,             LIST_HEIGHT,
+    MUIA_Bitmap_Width,          LIST_WIDTH ,
+    MUIA_Bitmap_Height,         LIST_HEIGHT,
+    MUIA_Bodychunk_Depth,       LIST_DEPTH,
+    MUIA_Bodychunk_Body,        (UBYTE *)list_body,
+    MUIA_Bodychunk_Compression, LIST_COMPRESSION,
+    MUIA_Bodychunk_Masking,     LIST_MASKING,
+    MUIA_Bitmap_SourceColors,   (ULONG *)list_colors,
+    MUIA_Bitmap_Transparent,    0,
+  End;
+
+  return obj;
+}
+
+#else
+
 #define PREFSIMAGEOBJECT \
   BodychunkObject,\
     MUIA_FixWidth,              LIST_WIDTH,\
@@ -100,8 +132,9 @@ static VOID ClassExpunge(UNUSED struct Library *base);
     MUIA_Bitmap_RawData,        icon32,\
     MUIA_Bitmap_RawDataFormat,  MUIV_Bitmap_RawDataFormat_ARGB32,\
   End
-#include "icon.bh"
-#include "icon32.h"
+
+#endif
+
 #include "mccinit.c"
 
 /******************************************************************************/
