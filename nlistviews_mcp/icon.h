@@ -1,5 +1,22 @@
-#ifdef USE_LIST_COLORS
-const ULONG list_colors[24] =
+/*
+ * $Id$
+ */
+
+
+#if defined(__MORPHOS__)
+// bzip2 compressed ARGB data
+extern const unsigned char icon32[];
+#else
+// uncompressed ARGB data
+extern const unsigned long icon32[];
+#endif
+#define ICON32_WIDTH 24
+#define ICON32_HEIGHT 20
+#define ICON32_DEPTH 32
+
+
+#ifdef USE_ICON8_COLORS
+const ULONG icon8_colors[24] =
 {
 	0xadadadad,0xadadadad,0xadadadad,
 	0x7b7b7b7b,0x7b7b7b7b,0x7b7b7b7b,
@@ -12,19 +29,19 @@ const ULONG list_colors[24] =
 };
 #endif
 
-#define LIST_WIDTH        24
-#define LIST_HEIGHT       14
-#define LIST_DEPTH         3
-#define LIST_COMPRESSION   0
-#define LIST_MASKING       2
+#define ICON8_WIDTH        24
+#define ICON8_HEIGHT       14
+#define ICON8_DEPTH         3
+#define ICON8_COMPRESSION   0
+#define ICON8_MASKING       2
 
-#ifdef USE_LIST_HEADER
-const struct BitMapHeader list_header =
+#ifdef USE_ICON8_HEADER
+const struct BitMapHeader icon8_header =
 { 23,14,0,0,3,2,0,0,0,44,44,320,256 };
 #endif
 
-#ifdef USE_LIST_BODY
-const UBYTE list_body[168] = {
+#ifdef USE_ICON8_BODY
+const UBYTE icon8_body[168] = {
 0x00,0x00,0x44,0x00,0xff,0xff,0xb8,0x00,0xff,0xff,0xb8,0x00,0x00,0x00,0x00,
 0x00,0x80,0x00,0x64,0x00,0xff,0xff,0xb8,0x00,0x3b,0xb8,0x46,0x00,0x80,0x00,
 0x64,0x00,0xc4,0x47,0xfc,0x00,0x00,0x00,0x46,0x00,0x80,0x00,0x64,0x00,0xff,

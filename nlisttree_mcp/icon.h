@@ -1,5 +1,22 @@
-#ifdef USE_IM_PREFS_COLORS
-const ULONG Im_Prefs_colors[24] =
+/*
+ * $Id$
+ */
+
+
+#if defined(__MORPHOS__)
+// bzip2 compressed ARGB data
+extern const unsigned char icon32[];
+#else
+// uncompressed ARGB data
+extern const unsigned long icon32[];
+#endif
+#define ICON32_WIDTH 24
+#define ICON32_HEIGHT 20
+#define ICON32_DEPTH 32
+
+
+#ifdef USE_ICON8_COLORS
+const ULONG icon8_colors[24] =
 {
 	0x96969696,0x96969696,0x96969696,
 	0x00000000,0x00000000,0x00000000,
@@ -12,19 +29,19 @@ const ULONG Im_Prefs_colors[24] =
 };
 #endif
 
-#define IM_PREFS_WIDTH        24
-#define IM_PREFS_HEIGHT       14
-#define IM_PREFS_DEPTH         3
-#define IM_PREFS_COMPRESSION   1
-#define IM_PREFS_MASKING       2
+#define ICON8_WIDTH        24
+#define ICON8_HEIGHT       14
+#define ICON8_DEPTH         3
+#define ICON8_COMPRESSION   1
+#define ICON8_MASKING       2
 
-#ifdef USE_IM_PREFS_HEADER
-const struct BitMapHeader Im_Prefs_header =
+#ifdef USE_ICON8_HEADER
+const struct BitMapHeader icon8_header =
 { 23,14,0,0,3,2,1,0,0,22,22,640,480 };
 #endif
 
-#ifdef USE_IM_PREFS_BODY
-const UBYTE Im_Prefs_body[201] = {
+#ifdef USE_ICON8_BODY
+const UBYTE icon8_body[201] = {
 0xfd,0x00,0xff,0xff,0x01,0xd8,0x00,0xff,0x00,0x01,0x24,0x00,0x03,0x7f,0xaf,
 0xec,0x00,0x03,0x80,0x50,0x34,0x00,0x03,0x7f,0x57,0xc8,0x00,0x03,0x5b,0xfd,
 0xec,0x00,0x03,0xa4,0x96,0x10,0x00,0x03,0x48,0x03,0xca,0x00,0x03,0x4b,0x5f,

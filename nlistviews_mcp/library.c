@@ -32,6 +32,7 @@
 #include <proto/exec.h>
 #include <proto/intuition.h>
 
+#include <proto/muimaster.h>
 /******************************************************************************/
 /*                                                                            */
 /* MCC/MCP name and version                                                   */
@@ -83,57 +84,55 @@ static VOID ClassExpunge(UNUSED struct Library *base);
 /******************************************************************************/
 /* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
 /******************************************************************************/
-#define USE_LIST_BODY   1
-#define USE_LIST_COLORS 1
+#define USE_ICON8_COLORS
+#define USE_ICON8_BODY
 
-#include "icon.bh"
-#include "icon32.h"
+#include "icon.h"
+
+#define ICON8OBJECT \
+  BodychunkObject,\
+    MUIA_FixWidth,              ICON8_WIDTH,\
+    MUIA_FixHeight,             ICON8_HEIGHT,\
+    MUIA_Bitmap_Width,          ICON8_WIDTH ,\
+    MUIA_Bitmap_Height,         ICON8_HEIGHT,\
+    MUIA_Bodychunk_Depth,       ICON8_DEPTH,\
+    MUIA_Bodychunk_Body,        (UBYTE *)icon8_body,\
+    MUIA_Bodychunk_Compression, ICON8_COMPRESSION,\
+    MUIA_Bodychunk_Masking,     ICON8_MASKING,\
+    MUIA_Bitmap_SourceColors,   (ULONG *)icon8_colors,\
+    MUIA_Bitmap_Transparent,    0,\
+  End
 
 #if defined(__MORPHOS__)
-
-#define PREFSIMAGEOBJECT get_prefs_image()
-
 #include <mui/Rawimage_mcc.h>
-#include <proto/muimaster.h>
+#endif
 
 static APTR get_prefs_image(void)
 {
-  APTR obj = RawimageObject, MUIA_Rawimage_Data, icondata, End;
-  if (!obj) obj = BodychunkObject,
-    MUIA_FixWidth,              LIST_WIDTH,
-    MUIA_FixHeight,             LIST_HEIGHT,
-    MUIA_Bitmap_Width,          LIST_WIDTH ,
-    MUIA_Bitmap_Height,         LIST_HEIGHT,
-    MUIA_Bodychunk_Depth,       LIST_DEPTH,
-    MUIA_Bodychunk_Body,        (UBYTE *)list_body,
-    MUIA_Bodychunk_Compression, LIST_COMPRESSION,
-    MUIA_Bodychunk_Masking,     LIST_MASKING,
-    MUIA_Bitmap_SourceColors,   (ULONG *)list_colors,
-    MUIA_Bitmap_Transparent,    0,
+  APTR obj = NULL;
+
+  #if defined(MUIA_Bitmap_RawData)
+  obj = BitmapObject,
+    MUIA_FixWidth,              ICON32_WIDTH,
+    MUIA_FixHeight,             ICON32_HEIGHT,
+    MUIA_Bitmap_Width,          ICON32_WIDTH ,
+    MUIA_Bitmap_Height,         ICON32_HEIGHT,
+    MUIA_Bitmap_RawData,        icon32,\
+    MUIA_Bitmap_RawDataFormat,  MUIV_Bitmap_RawDataFormat_ARGB32,
   End;
+  #elif defined(__MORPHOS__)
+  obj = RawimageObject,
+    MUIA_Rawimage_Data, icon32,
+  End;
+  #endif
+
+  if(obj == NULL)
+    obj = ICON8OBJECT;
 
   return obj;
 }
 
-#else
-
-#define PREFSIMAGEOBJECT \
-  BodychunkObject,\
-    MUIA_FixWidth,              LIST_WIDTH,\
-    MUIA_FixHeight,             LIST_HEIGHT,\
-    MUIA_Bitmap_Width,          LIST_WIDTH ,\
-    MUIA_Bitmap_Height,         LIST_HEIGHT,\
-    MUIA_Bodychunk_Depth,       LIST_DEPTH,\
-    MUIA_Bodychunk_Body,        (UBYTE *)list_body,\
-    MUIA_Bodychunk_Compression, LIST_COMPRESSION,\
-    MUIA_Bodychunk_Masking,     LIST_MASKING,\
-    MUIA_Bitmap_SourceColors,   (ULONG *)list_colors,\
-    MUIA_Bitmap_Transparent,    0,\
-    MUIA_Bitmap_RawData,        icon32,\
-    MUIA_Bitmap_RawDataFormat,  MUIV_Bitmap_RawDataFormat_ARGB32,\
-  End
-
-#endif
+#define PREFSIMAGEOBJECT get_prefs_image()
 
 #include "mccinit.c"
 
