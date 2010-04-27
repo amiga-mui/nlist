@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-04-27 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/library: all systems now try to create a truecolor prefs image using
+    Rawimage.mcc first before falling back to the old 8bit images.
+
 2010-04-26 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/misc: merged all converted image data into one file, moved the image
