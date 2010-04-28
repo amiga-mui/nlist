@@ -946,7 +946,7 @@ static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
                         BLITA_Height, h,
                         BLITA_SrcType, BLITT_CHUNKY,
                         BLITA_DestType, BLITT_RASTPORT,
-                        BLITA_SrcBytesPerRow, data->width,
+                        BLITA_SrcBytesPerRow, data->rawDataWidth,
                         BLITA_CLUT, data->rawDataCLUT,
                         BLITA_Alpha, data->rawDataAlpha,
                         TAG_DONE);
@@ -963,7 +963,7 @@ static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
                         BLITA_Height, h,
                         BLITA_SrcType, BLITT_RGB24,
                         BLITA_DestType, BLITT_RASTPORT,
-                        BLITA_SrcBytesPerRow, data->width*3,
+                        BLITA_SrcBytesPerRow, data->rawDataWidth*3,
                         BLITA_Alpha, data->rawDataAlpha,
                         TAG_DONE);
         break;
@@ -979,7 +979,7 @@ static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
                         BLITA_Height, h,
                         BLITA_SrcType, BLITT_ARGB32,
                         BLITA_DestType, BLITT_RASTPORT,
-                        BLITA_SrcBytesPerRow, data->width*4,
+                        BLITA_SrcBytesPerRow, data->rawDataWidth*4,
                         BLITA_UseSrcAlpha, TRUE,
                         BLITA_Alpha, data->rawDataAlpha,
                         TAG_DONE);
@@ -989,15 +989,15 @@ static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
       switch(data->rawDataFormat)
       {
         case MUIV_NBitmap_RawDataFormat_CLUT8:
-          WriteLUTPixelArray(data->rawData, 0, 0, data->width, _rp(obj), data->rawDataCLUT, _mleft(obj), _mtop(obj), w, h, CTABFMT_XRGB8);
+          WriteLUTPixelArray(data->rawData, 0, 0, data->rawDataWidth, _rp(obj), data->rawDataCLUT, _mleft(obj), _mtop(obj), w, h, CTABFMT_XRGB8);
         break;
 
         case MUIV_NBitmap_RawDataFormat_RGB24:
-          WritePixelArrayAlpha(data->rawData, 0, 0, data->width*3, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->rawDataAlpha);
+          WritePixelArrayAlpha(data->rawData, 0, 0, data->rawDataWidth*3, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->rawDataAlpha);
         break;
 
         case MUIV_NBitmap_RawDataFormat_ARGB32:
-          WritePixelArrayAlpha(data->rawData, 0, 0, data->width*4, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->rawDataAlpha);
+          WritePixelArrayAlpha(data->rawData, 0, 0, data->rawDataWidth*4, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->rawDataAlpha);
         break;
       }
       #endif // __amigaos4__
