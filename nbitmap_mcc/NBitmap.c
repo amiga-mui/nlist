@@ -438,23 +438,35 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
-  	if(data->dt_obj[0] != NULL)
-  	{
-      ULONG i;
-
-      // assume success for the moment
-      result = TRUE;
-
-      for(i=0;i<3;i++)
-      {
-        if(data->dt_obj[i] != NULL)
-          result &= NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
-      }
-    }
-    else if(data->rawData != NULL)
+    switch(data->type)
     {
-      // no further requirements, instant success
-      result = TRUE;
+      case MUIV_NBitmap_Type_File:
+      case MUIV_NBitmap_Type_DTObject:
+      {
+        if(data->dt_obj[0] != NULL)
+        {
+          ULONG i;
+
+          // assume success for the moment
+          result = TRUE;
+
+          for(i=0;i<3;i++)
+          {
+            if(data->dt_obj[i] != NULL)
+              result &= NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
+          }
+        }
+      }
+      break;
+
+      case MUIV_NBitmap_Type_CLUT8:
+      case MUIV_NBitmap_Type_RGB24:
+      case MUIV_NBitmap_Type_ARGB32:
+      {
+        // no further requirements, instant success
+        result = TRUE;
+      }
+      break;
     }
   }
 
@@ -605,60 +617,70 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
-    if(data->dt_obj[0] != NULL)
+    struct Screen *scr = NULL;
+
+    /* stored config */
+    InitConfig(obj, data);
+
+    /* screen */
+    scr = _screen(obj);
+    data->scrdepth = GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH);
+
+    /* input */
+    if(data->button)
     {
-      struct Screen *scr = NULL;
+      data->ehnode.ehn_Priority = 0;
+      data->ehnode.ehn_Flags = MUI_EHF_GUIMODE;
+      data->ehnode.ehn_Object = obj;
+      data->ehnode.ehn_Class = cl;
+      data->ehnode.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE;
 
-      /* stored config */
-      InitConfig(obj, data);
+      DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
+    }
 
-      /* screen */
-      scr = _screen(obj);
-      data->scrdepth = GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH);
-
-      /* input */
-      if(data->button)
+    switch(data->type)
+    {
+      case MUIV_NBitmap_Type_File:
+      case MUIV_NBitmap_Type_DTObject:
       {
-        data->ehnode.ehn_Priority = 0;
-        data->ehnode.ehn_Flags = MUI_EHF_GUIMODE;
-        data->ehnode.ehn_Object = obj;
-        data->ehnode.ehn_Class = cl;
-        data->ehnode.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE;
 
-        DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
-      }
-
-      /* 8-bit data */
-      if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
-      {
-        ULONG i;
-
-        /* layout image */
-        for(i = 0; i < 3; i++)
+        /* 8-bit data */
+        if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
         {
-          // set the new screen for this object
-          SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
-          if(DoMethod(data->dt_obj[i], DTM_PROCLAYOUT, NULL, 1))
-          {
-            GetDTAttrs(data->dt_obj[i], PDTA_CRegs, &data->dt_colours[i],
-                                        PDTA_MaskPlane, &data->dt_mask[i],
-                                        PDTA_DestBitMap, &data->dt_bitmap[i],
-                                        TAG_DONE);
-            if(data->dt_bitmap[i] == NULL)
-              GetDTAttrs(data->dt_obj[i], PDTA_BitMap, &data->dt_bitmap[i], TAG_DONE);
-            SHOWVALUE(DBF_DATATYPE, data->dt_bitmap[i]);
-          }
-        }
+          ULONG i;
 
+          /* layout image */
+          for(i = 0; i < 3; i++)
+          {
+            // set the new screen for this object
+            SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
+            if(DoMethod(data->dt_obj[i], DTM_PROCLAYOUT, NULL, 1))
+            {
+              GetDTAttrs(data->dt_obj[i], PDTA_CRegs, &data->dt_colours[i],
+                                          PDTA_MaskPlane, &data->dt_mask[i],
+                                          PDTA_DestBitMap, &data->dt_bitmap[i],
+                                          TAG_DONE);
+              if(data->dt_bitmap[i] == NULL)
+                GetDTAttrs(data->dt_obj[i], PDTA_BitMap, &data->dt_bitmap[i], TAG_DONE);
+              SHOWVALUE(DBF_DATATYPE, data->dt_bitmap[i]);
+            }
+          }
+
+          result = TRUE;
+        }
+        else if(data->depth > 8)
+          result = NBitmap_SetupShades(data);
+        }
+      break;
+
+      case MUIV_NBitmap_Type_CLUT8:
+      case MUIV_NBitmap_Type_RGB24:
+      case MUIV_NBitmap_Type_ARGB32:
+      {
+        // no further requirements, instant success
         result = TRUE;
       }
-      else if(data->depth > 8)
-        result = NBitmap_SetupShades(data);
-    }
-    else if(data->rawData != NULL)
-    {
-      // this always succeeds
-      result = TRUE;
+      break;
     }
   }
 
@@ -674,29 +696,42 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
-    if(data->dt_obj[0] != NULL)
+    // input
+    if(data->button)
+      DoMethod(_win(obj), MUIM_Window_RemEventHandler, &data->ehnode);
+
+    switch(data->type)
     {
-      // input
-      if(data->button)
-        DoMethod(_win(obj), MUIM_Window_RemEventHandler, &data->ehnode);
-
-      if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
+      case MUIV_NBitmap_Type_File:
+      case MUIV_NBitmap_Type_DTObject:
       {
-        ULONG i;
-
-        /* layout image */
-        for(i = 0; i < 3; i++)
+        if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
         {
-          // reset the screen pointer
-          SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+          ULONG i;
+
+          /* layout image */
+          for(i = 0; i < 3; i++)
+          {
+            // reset the screen pointer
+            SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+          }
         }
       }
+      break;
 
-      NBitmap_CleanupShades(data);
-
-      // stored config
-      FreeConfig(data);
+      case MUIV_NBitmap_Type_CLUT8:
+      case MUIV_NBitmap_Type_RGB24:
+      case MUIV_NBitmap_Type_ARGB32:
+      {
+        // nothing to do
+      }
+      break;
     }
+
+    NBitmap_CleanupShades(data);
+
+    // stored config
+    FreeConfig(data);
   }
 }
 ///
@@ -726,7 +761,7 @@ static void NBitmap_DrawDTImage(struct IClass *cl, Object *obj)
 
   ENTER();
 
-  if((data = INST_DATA(cl, obj)) != NULL)
+  if((data = INST_DATA(cl, obj)) != NULL && data->dt_obj[0] != NULL)
   {
     LONG item;
     ULONG x, y, twidth, theight;
@@ -925,18 +960,18 @@ static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
 
   ENTER();
 
-  if((data = INST_DATA(cl, obj)) != NULL)
+  if((data = INST_DATA(cl, obj)) != NULL && data->data[0] != NULL)
   {
-    int w = min((uint32)_mwidth (obj), data->rawDataWidth );
-    int h = min((uint32)_mheight(obj), data->rawDataHeight);
+    int w = min((uint32)_mwidth (obj), data->width );
+    int h = min((uint32)_mheight(obj), data->height);
 
     if(w > 0 && h > 0)
     {
       #if defined(__amigaos4__)
-      switch(data->rawDataFormat)
+      switch(data->type)
       {
-        case MUIV_NBitmap_RawDataFormat_CLUT8:
-          BltBitMapTags(BLITA_Source, data->rawData,
+        case MUIV_NBitmap_Type_CLUT8:
+          BltBitMapTags(BLITA_Source, data->data[0],
                         BLITA_Dest, _rp(obj),
                         BLITA_SrcX, 0,
                         BLITA_SrcY, 0,
@@ -946,14 +981,14 @@ static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
                         BLITA_Height, h,
                         BLITA_SrcType, BLITT_CHUNKY,
                         BLITA_DestType, BLITT_RASTPORT,
-                        BLITA_SrcBytesPerRow, data->rawDataWidth,
-                        BLITA_CLUT, data->rawDataCLUT,
-                        BLITA_Alpha, data->rawDataAlpha,
+                        BLITA_SrcBytesPerRow, data->width,
+                        BLITA_CLUT, data->clut,
+                        BLITA_Alpha, data->alpha,
                         TAG_DONE);
         break;
 
-        case MUIV_NBitmap_RawDataFormat_RGB24:
-          BltBitMapTags(BLITA_Source, data->rawData,
+        case MUIV_NBitmap_Type_RGB24:
+          BltBitMapTags(BLITA_Source, data->data[0],
                         BLITA_Dest, _rp(obj),
                         BLITA_SrcX, 0,
                         BLITA_SrcY, 0,
@@ -963,13 +998,13 @@ static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
                         BLITA_Height, h,
                         BLITA_SrcType, BLITT_RGB24,
                         BLITA_DestType, BLITT_RASTPORT,
-                        BLITA_SrcBytesPerRow, data->rawDataWidth*3,
-                        BLITA_Alpha, data->rawDataAlpha,
+                        BLITA_SrcBytesPerRow, data->width*3,
+                        BLITA_Alpha, data->alpha,
                         TAG_DONE);
         break;
 
-        case MUIV_NBitmap_RawDataFormat_ARGB32:
-          BltBitMapTags(BLITA_Source, data->rawData,
+        case MUIV_NBitmap_Type_ARGB32:
+          BltBitMapTags(BLITA_Source, data->data[0],
                         BLITA_Dest, _rp(obj),
                         BLITA_SrcX, 0,
                         BLITA_SrcY, 0,
@@ -979,25 +1014,25 @@ static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
                         BLITA_Height, h,
                         BLITA_SrcType, BLITT_ARGB32,
                         BLITA_DestType, BLITT_RASTPORT,
-                        BLITA_SrcBytesPerRow, data->rawDataWidth*4,
+                        BLITA_SrcBytesPerRow, data->width*4,
                         BLITA_UseSrcAlpha, TRUE,
-                        BLITA_Alpha, data->rawDataAlpha,
+                        BLITA_Alpha, data->alpha,
                         TAG_DONE);
         break;
       }
       #else // __amigaos4__
-      switch(data->rawDataFormat)
+      switch(data->type)
       {
-        case MUIV_NBitmap_RawDataFormat_CLUT8:
-          WriteLUTPixelArray(data->rawData, 0, 0, data->rawDataWidth, _rp(obj), data->rawDataCLUT, _mleft(obj), _mtop(obj), w, h, CTABFMT_XRGB8);
+        case MUIV_NBitmap_Type_CLUT8:
+          WriteLUTPixelArray(data->data[0], 0, 0, data->width, _rp(obj), data->clut, _mleft(obj), _mtop(obj), w, h, CTABFMT_XRGB8);
         break;
 
-        case MUIV_NBitmap_RawDataFormat_RGB24:
-          WritePixelArrayAlpha(data->rawData, 0, 0, data->rawDataWidth*3, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->rawDataAlpha);
+        case MUIV_NBitmap_Type_RGB24:
+          WritePixelArrayAlpha(data->data[0], 0, 0, data->width*3, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->alpha);
         break;
 
-        case MUIV_NBitmap_RawDataFormat_ARGB32:
-          WritePixelArrayAlpha(data->rawData, 0, 0, data->rawDataWidth*4, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->rawDataAlpha);
+        case MUIV_NBitmap_Type_ARGB32:
+          WritePixelArrayAlpha(data->data[0], 0, 0, data->width*4, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->alpha);
         break;
       }
       #endif // __amigaos4__
@@ -1017,10 +1052,23 @@ VOID NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
-    if(data->dt_obj[0] != NULL)
-      NBitmap_DrawDTImage(cl, obj);
-    else if(data->rawData != NULL)
-      NBitmap_DrawRawImage(cl, obj);
+    switch(data->type)
+    {
+      case MUIV_NBitmap_Type_File:
+      case MUIV_NBitmap_Type_DTObject:
+      {
+        NBitmap_DrawDTImage(cl, obj);
+      }
+      break;
+
+      case MUIV_NBitmap_Type_CLUT8:
+      case MUIV_NBitmap_Type_RGB24:
+      case MUIV_NBitmap_Type_ARGB32:
+      {
+        NBitmap_DrawRawImage(cl, obj);
+      }
+      break;
+    }
   }
 
   LEAVE();

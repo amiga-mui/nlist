@@ -95,8 +95,7 @@ IPTR NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
             {
               memset(data, 0, sizeof(struct InstData));
 
-              data->rawDataFormat = MUIV_NBitmap_RawDataFormat_ARGB32;
-              data->rawDataAlpha = 0xffffffffUL;
+              data->alpha = 0xffffffffUL;
 
               /* passed tags */
               for(tags=((struct opSet *)msg)->ops_AttrList;(tag = NextTagItem((APTR)&tags)); )
@@ -127,28 +126,20 @@ IPTR NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
                           setstr(&data->label, (STRPTR)tag->ti_Data);
                         break;
 
-                        case MUIA_NBitmap_RawData:
-                          data->rawData = (APTR)tag->ti_Data;
+                        case MUIA_NBitmap_Width:
+                          data->width = tag->ti_Data;
                         break;
 
-                        case MUIA_NBitmap_RawDataFormat:
-                          data->rawDataFormat = tag->ti_Data;
+                        case MUIA_NBitmap_Height:
+                          data->height = tag->ti_Data;
                         break;
 
-                        case MUIA_NBitmap_RawDataWidth:
-                          data->rawDataWidth = (uint32)tag->ti_Data;
+                        case MUIA_NBitmap_CLUT:
+                          data->clut = (uint32 *)tag->ti_Data;
                         break;
 
-                        case MUIA_NBitmap_RawDataHeight:
-                          data->rawDataHeight = (uint32)tag->ti_Data;
-                        break;
-
-                        case MUIA_NBitmap_RawDataCLUT:
-                          data->rawDataCLUT = (APTR)tag->ti_Data;
-                        break;
-
-                        case MUIA_NBitmap_RawDataAlpha:
-                          data->rawDataAlpha = tag->ti_Data;
+                        case MUIA_NBitmap_Alpha:
+                          data->alpha = tag->ti_Data;
                         break;
                       }
                   }
@@ -159,7 +150,7 @@ IPTR NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
                 for(i=0;i<3;i++)
                   if(data->data[i]) NBitmap_LoadImage((STRPTR)data->data[i], i, cl, obj);
               }
-              else
+              else if(data->type == MUIV_NBitmap_Type_DTObject)
               {
                 for(i=0;i<3;i++)
                   if(data->data[i]) data->dt_obj[i] = (Object *)data->data[i];
@@ -400,68 +391,57 @@ IPTR NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *ms
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
-    if(data->dt_obj[0] != NULL)
+    uint32 oldBorderHoriz = data->border_horiz;
+    uint32 oldBorderVert = data->border_vert;
+
+    // spacing
+    data->border_horiz = 0;
+    data->border_vert = 0;
+
+    if(data->button)
     {
-      uint32 oldBorderHoriz = data->border_horiz;
-      uint32 oldBorderVert = data->border_vert;
+      data->border_horiz += 4;
+      data->border_horiz += data->prefs.spacing_horiz * 2;
 
-      // spacing
-      data->border_horiz = 0;
-      data->border_vert = 0;
-
-      if(data->button)
-      {
-        data->border_horiz += 4;
-        data->border_horiz += data->prefs.spacing_horiz * 2;
-
-        data->border_vert += 4;
-        data->border_vert += data->prefs.spacing_vert * 2;
-      }
-
-      /* label */
-      data->label_horiz = 0;
-      data->label_vert = 0;
-
-      if(data->label != NULL && data->button != FALSE)
-      {
-        struct RastPort rp;
-
-        memcpy(&rp, &_screen(obj)->RastPort, sizeof(rp));
-
-        SetFont(&rp, _font(obj));
-        TextExtent(&rp, (STRPTR)data->label, strlen(data->label), &data->labelte);
-
-        if(data->width < (uint32)data->labelte.te_Width) data->border_horiz += (data->labelte.te_Width - data->width);
-        data->label_vert = data->labelte.te_Height;
-        data->border_vert += data->labelte.te_Height;
-        data->border_vert += 2;
-      }
-
-      // standard width & height
-      msg->MinMaxInfo->MinWidth = data->width + data->border_horiz;
-      msg->MinMaxInfo->DefWidth = data->width + data->border_horiz;
-      msg->MinMaxInfo->MaxWidth = data->width + data->border_horiz;
-
-      msg->MinMaxInfo->MinHeight = data->height + data->border_vert;
-      msg->MinMaxInfo->DefHeight = data->height + data->border_vert;
-      msg->MinMaxInfo->MaxHeight = data->height + data->border_vert;
-
-      if(data->border_horiz != oldBorderHoriz || data->border_vert != oldBorderVert)
-      {
-        if(data->depth > 8) {
-          // the border size has changed and we must recalculate the shade arrays
-          NBitmap_CleanupShades(data);
-          NBitmap_SetupShades(data);
-        }
-      }
+      data->border_vert += 4;
+      data->border_vert += data->prefs.spacing_vert * 2;
     }
-    else if(data->rawData != NULL)
-    {
-      msg->MinMaxInfo->MinWidth += 1;
-      msg->MinMaxInfo->MaxWidth = MUI_MAXMAX;
 
-      msg->MinMaxInfo->MinHeight += 1;
-      msg->MinMaxInfo->MaxHeight = MUI_MAXMAX;
+    /* label */
+    data->label_horiz = 0;
+    data->label_vert = 0;
+
+    if(data->label != NULL && data->button != FALSE)
+    {
+      struct RastPort rp;
+
+      memcpy(&rp, &_screen(obj)->RastPort, sizeof(rp));
+
+      SetFont(&rp, _font(obj));
+      TextExtent(&rp, (STRPTR)data->label, strlen(data->label), &data->labelte);
+
+      if(data->width < (uint32)data->labelte.te_Width) data->border_horiz += (data->labelte.te_Width - data->width);
+      data->label_vert = data->labelte.te_Height;
+      data->border_vert += data->labelte.te_Height;
+      data->border_vert += 2;
+    }
+
+    // standard width & height
+    msg->MinMaxInfo->MinWidth = data->width + data->border_horiz;
+    msg->MinMaxInfo->DefWidth = data->width + data->border_horiz;
+    msg->MinMaxInfo->MaxWidth = data->width + data->border_horiz;
+
+    msg->MinMaxInfo->MinHeight = data->height + data->border_vert;
+    msg->MinMaxInfo->DefHeight = data->height + data->border_vert;
+    msg->MinMaxInfo->MaxHeight = data->height + data->border_vert;
+
+    if(data->border_horiz != oldBorderHoriz || data->border_vert != oldBorderVert)
+    {
+      if(data->depth > 8) {
+        // the border size has changed and we must recalculate the shade arrays
+        NBitmap_CleanupShades(data);
+        NBitmap_SetupShades(data);
+      }
     }
   }
 

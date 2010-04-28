@@ -106,12 +106,8 @@ struct InstData
   struct BitMapHeader *dt_header[3];
   struct TextExtent labelte;
 
-  APTR rawData;
-  ULONG rawDataFormat;
-  ULONG rawDataAlpha;
-  APTR rawDataCLUT;
-  uint32 rawDataWidth;
-  uint32 rawDataHeight;
+  uint32 alpha;
+  uint32 *clut;
 
   struct MUI_EventHandlerNode ehnode;
 };
