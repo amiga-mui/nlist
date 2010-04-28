@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-04-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/misc: added some new attributes to handle raw image data.
+
 2010-04-27 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/library: all systems now try to create a truecolor prefs image using

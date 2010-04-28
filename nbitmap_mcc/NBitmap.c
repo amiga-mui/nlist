@@ -55,30 +55,6 @@
 #include "version.h"
 #include "Debug.h"
 
-#if !defined(__amigaos4__) && !defined(__MORPHOS__)
-//#include "WritePixelArrayAlpha.c"
-  #ifndef WritePixelArrayAlpha
-    #if defined(__SASC)
-      ULONG WritePixelArrayAlpha(APTR, UWORD, UWORD, UWORD, struct RastPort *, UWORD, UWORD, UWORD, UWORD, ULONG);
-      #pragma libcall CyberGfxBase WritePixelArrayAlpha d8 76543921080A
-    #else
-      #define WritePixelArrayAlpha(__p0, __p1, __p2, __p3, __p4, __p5, __p6, __p7, __p8, __p9) \
-        LP10(216, ULONG , WritePixelArrayAlpha, \
-          APTR , __p0, a0, \
-          UWORD , __p1, d0, \
-          UWORD , __p2, d1, \
-          UWORD , __p3, d2, \
-          struct RastPort *, __p4, a1, \
-          UWORD , __p5, d3, \
-          UWORD , __p6, d4, \
-          UWORD , __p7, d5, \
-          UWORD , __p8, d6, \
-          ULONG , __p9, d7, \
-          , CYBERGRAPHICS_BASE_NAME)
-    #endif
-  #endif
-#endif
-
 // functions
 /// GetConfigItem()
 //
@@ -138,6 +114,10 @@ BOOL NBitmap_LoadImage(STRPTR filename, uint32 item, struct IClass *cl, Object *
 {
   BOOL result = FALSE;
   struct InstData *data;
+
+  ENTER();
+
+  SHOWSTRING(DBF_DATATYPE, filename);
 
   if((data = INST_DATA(cl, obj)) != NULL && filename != NULL)
   {
@@ -456,14 +436,25 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
 
   ENTER();
 
-  if(((data = INST_DATA(cl, obj))!=NULL) && (data->dt_obj[0]))
+  if((data = INST_DATA(cl, obj)) != NULL)
   {
-    ULONG i;
+  	if(data->dt_obj[0] != NULL)
+  	{
+      ULONG i;
 
-    for(i=0;i<3;i++)
+      // assume success for the moment
+      result = TRUE;
+
+      for(i=0;i<3;i++)
+      {
+        if(data->dt_obj[i] != NULL)
+          result &= NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
+      }
+    }
+    else if(data->rawData != NULL)
     {
-      if(data->dt_obj[i] != NULL)
-        result = NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
+      // no further requirements, instant success
+      result = TRUE;
     }
   }
 
@@ -614,53 +605,61 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
-    struct Screen *scr = NULL;
-
-    /* stored config */
-    InitConfig(obj, data);
-
-    /* screen */
-    scr = _screen(obj);
-    data->scrdepth = GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH);
-
-    /* input */
-    if(data->button)
+    if(data->dt_obj[0] != NULL)
     {
-      data->ehnode.ehn_Priority = 0;
-      data->ehnode.ehn_Flags = MUI_EHF_GUIMODE;
-      data->ehnode.ehn_Object = obj;
-      data->ehnode.ehn_Class = cl;
-      data->ehnode.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE;
+      struct Screen *scr = NULL;
 
-      DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
-    }
+      /* stored config */
+      InitConfig(obj, data);
 
-    /* 8-bit data */
-    if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
-    {
-      ULONG i;
+      /* screen */
+      scr = _screen(obj);
+      data->scrdepth = GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH);
 
-      /* layout image */
-      for(i = 0; i < 3; i++)
+      /* input */
+      if(data->button)
       {
-        // set the new screen for this object
-        SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
-        if(DoMethod(data->dt_obj[i], DTM_PROCLAYOUT, NULL, 1))
-        {
-          GetDTAttrs(data->dt_obj[i], PDTA_CRegs, &data->dt_colours[i],
-                                      PDTA_MaskPlane, &data->dt_mask[i],
-                                      PDTA_DestBitMap, &data->dt_bitmap[i],
-                                      TAG_DONE);
-          if(data->dt_bitmap[i] == NULL)
-            GetDTAttrs(data->dt_obj[i], PDTA_BitMap, &data->dt_bitmap[i], TAG_DONE);
-          SHOWVALUE(DBF_DATATYPE, data->dt_bitmap[i]);
-        }
+        data->ehnode.ehn_Priority = 0;
+        data->ehnode.ehn_Flags = MUI_EHF_GUIMODE;
+        data->ehnode.ehn_Object = obj;
+        data->ehnode.ehn_Class = cl;
+        data->ehnode.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE;
+
+        DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
       }
 
+      /* 8-bit data */
+      if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
+      {
+        ULONG i;
+
+        /* layout image */
+        for(i = 0; i < 3; i++)
+        {
+          // set the new screen for this object
+          SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
+          if(DoMethod(data->dt_obj[i], DTM_PROCLAYOUT, NULL, 1))
+          {
+            GetDTAttrs(data->dt_obj[i], PDTA_CRegs, &data->dt_colours[i],
+                                        PDTA_MaskPlane, &data->dt_mask[i],
+                                        PDTA_DestBitMap, &data->dt_bitmap[i],
+                                        TAG_DONE);
+            if(data->dt_bitmap[i] == NULL)
+              GetDTAttrs(data->dt_obj[i], PDTA_BitMap, &data->dt_bitmap[i], TAG_DONE);
+            SHOWVALUE(DBF_DATATYPE, data->dt_bitmap[i]);
+          }
+        }
+
+        result = TRUE;
+      }
+      else if(data->depth > 8)
+        result = NBitmap_SetupShades(data);
+    }
+    else if(data->rawData != NULL)
+    {
+      // this always succeeds
       result = TRUE;
     }
-    else if(data->depth > 8)
-      result = NBitmap_SetupShades(data);
   }
 
   RETURN(result);
@@ -675,26 +674,29 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
-    // input
-    if(data->button)
-      DoMethod(_win(obj), MUIM_Window_RemEventHandler, &data->ehnode);
-
-    if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
+    if(data->dt_obj[0] != NULL)
     {
-      ULONG i;
+      // input
+      if(data->button)
+        DoMethod(_win(obj), MUIM_Window_RemEventHandler, &data->ehnode);
 
-      /* layout image */
-      for(i = 0; i < 3; i++)
+      if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
       {
-        // reset the screen pointer
-        SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+        ULONG i;
+
+        /* layout image */
+        for(i = 0; i < 3; i++)
+        {
+          // reset the screen pointer
+          SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+        }
       }
+
+      NBitmap_CleanupShades(data);
+
+      // stored config
+      FreeConfig(data);
     }
-
-    NBitmap_CleanupShades(data);
-
-    // stored config
-    FreeConfig(data);
   }
 }
 ///
@@ -716,12 +718,11 @@ VOID NBitmap_DrawSimpleFrame(Object *obj, uint32 x, uint32 y, uint32 w, uint32 h
   LEAVE();
 }
 ///
-/// NBitmap_DrawImage()
+/// NBitmap_DrawDTImage()
 //
-BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
+static void NBitmap_DrawDTImage(struct IClass *cl, Object *obj)
 {
   struct InstData *data;
-  struct MUI_AreaData *areadata = NULL;
 
   ENTER();
 
@@ -730,17 +731,15 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
     LONG item;
     ULONG x, y, twidth, theight;
 
-    areadata = muiAreaData(obj);
-
     /* coordinates */
     item = 0;
-    x = areadata->mad_Box.Left;
-    y = areadata->mad_Box.Top;
+    x = _left(obj);
+    y = _top(obj);
     twidth = (data->width + data->border_horiz) - 2;      /* subtract standard 1 pixel border */
     theight = (data->height + data->border_vert) - 2;
 
    /* clear */
-   if(data->button) DoMethod(obj, MUIM_DrawBackground, areadata->mad_Box.Left, areadata->mad_Box.Top, areadata->mad_Box.Width, areadata->mad_Box.Height, 0, 0);
+   if(data->button) DoMethod(obj, MUIM_DrawBackground, _left(obj), _top(obj), _width(obj), _height(obj), 0, 0);
 
    /* label */
    if(data->label != NULL && data->button != FALSE)
@@ -915,8 +914,116 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
     }
   }
 
-  RETURN(FALSE);
-  return FALSE;
+  LEAVE();
+}
+///
+/// NBitmap_DrawRawImage()
+//
+static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
+{
+  struct InstData *data;
+
+  ENTER();
+
+  if((data = INST_DATA(cl, obj)) != NULL)
+  {
+    int w = min((uint32)_mwidth (obj), data->rawDataWidth );
+    int h = min((uint32)_mheight(obj), data->rawDataHeight);
+
+    if(w > 0 && h > 0)
+    {
+      #if defined(__amigaos4__)
+      switch(data->rawDataFormat)
+      {
+        case MUIV_NBitmap_RawDataFormat_CLUT8:
+          BltBitMapTags(BLITA_Source, data->rawData,
+                        BLITA_Dest, _rp(obj),
+                        BLITA_SrcX, 0,
+                        BLITA_SrcY, 0,
+                        BLITA_DestX, _mleft(obj),
+                        BLITA_DestY, _mtop(obj),
+                        BLITA_Width, w,
+                        BLITA_Height, h,
+                        BLITA_SrcType, BLITT_CHUNKY,
+                        BLITA_DestType, BLITT_RASTPORT,
+                        BLITA_SrcBytesPerRow, data->width,
+                        BLITA_CLUT, data->rawDataCLUT,
+                        BLITA_Alpha, data->rawDataAlpha,
+                        TAG_DONE);
+        break;
+
+        case MUIV_NBitmap_RawDataFormat_RGB24:
+          BltBitMapTags(BLITA_Source, data->rawData,
+                        BLITA_Dest, _rp(obj),
+                        BLITA_SrcX, 0,
+                        BLITA_SrcY, 0,
+                        BLITA_DestX, _mleft(obj),
+                        BLITA_DestY, _mtop(obj),
+                        BLITA_Width, w,
+                        BLITA_Height, h,
+                        BLITA_SrcType, BLITT_RGB24,
+                        BLITA_DestType, BLITT_RASTPORT,
+                        BLITA_SrcBytesPerRow, data->width*3,
+                        BLITA_Alpha, data->rawDataAlpha,
+                        TAG_DONE);
+        break;
+
+        case MUIV_NBitmap_RawDataFormat_ARGB32:
+          BltBitMapTags(BLITA_Source, data->rawData,
+                        BLITA_Dest, _rp(obj),
+                        BLITA_SrcX, 0,
+                        BLITA_SrcY, 0,
+                        BLITA_DestX, _mleft(obj),
+                        BLITA_DestY, _mtop(obj),
+                        BLITA_Width, w,
+                        BLITA_Height, h,
+                        BLITA_SrcType, BLITT_ARGB32,
+                        BLITA_DestType, BLITT_RASTPORT,
+                        BLITA_SrcBytesPerRow, data->width*4,
+                        BLITA_UseSrcAlpha, TRUE,
+                        BLITA_Alpha, data->rawDataAlpha,
+                        TAG_DONE);
+        break;
+      }
+      #else // __amigaos4__
+      switch(data->rawDataFormat)
+      {
+        case MUIV_NBitmap_RawDataFormat_CLUT8:
+          WriteLUTPixelArray(data->rawData, 0, 0, data->width, _rp(obj), data->rawDataCLUT, _mleft(obj), _mtop(obj), w, h, CTABFMT_XRGB8);
+        break;
+
+        case MUIV_NBitmap_RawDataFormat_RGB24:
+          WritePixelArrayAlpha(data->rawData, 0, 0, data->width*3, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->rawDataAlpha);
+        break;
+
+        case MUIV_NBitmap_RawDataFormat_ARGB32:
+          WritePixelArrayAlpha(data->rawData, 0, 0, data->width*4, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->rawDataAlpha);
+        break;
+      }
+      #endif // __amigaos4__
+    }
+  }
+
+  LEAVE();
+}
+///
+/// NBitmap_DrawImage()
+//
+VOID NBitmap_DrawImage(struct IClass *cl, Object *obj)
+{
+  struct InstData *data;
+
+  ENTER();
+
+  if((data = INST_DATA(cl, obj)) != NULL)
+  {
+    if(data->dt_obj[0] != NULL)
+      NBitmap_DrawDTImage(cl, obj);
+    else if(data->rawData != NULL)
+      NBitmap_DrawRawImage(cl, obj);
+  }
+
+  LEAVE();
 }
 ///
 
