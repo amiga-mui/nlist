@@ -16,7 +16,7 @@
 
  NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 
- $Id: library.c 125 2006-12-17 00:15:23Z damato $
+ $Id$
 
 ***************************************************************************/
 

@@ -16,7 +16,7 @@
 
  NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 
- $Id: library.c 125 2006-12-17 00:15:23Z damato $
+ $Id$
 
 ***************************************************************************/
 
@@ -106,14 +106,14 @@ struct InstData
   struct BitMapHeader *dt_header[3];
   struct TextExtent labelte;
 
-  struct MUI_EventHandlerNode ehnode;
-
   APTR rawData;
   ULONG rawDataFormat;
   ULONG rawDataAlpha;
   APTR rawDataCLUT;
   uint32 rawDataWidth;
   uint32 rawDataHeight;
+
+  struct MUI_EventHandlerNode ehnode;
 };
 
 /* macros */
