@@ -5,6 +5,15 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-04-29  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nbitmap_mcc: unified the draw image routines of the raw data and dtobject
+    functionality so that the raw data can be used equivalently to the file
+    or dtobject based functionality. However, somehow this new functionality
+    have to be slightly tested before we can really roll it out. Especially
+    the shape drawing part have to be evaluated if this still work with raw
+    data as well.
+
 2010-04-29 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/dispatcher.c: let OM_NEW fail if now valid type is specified.

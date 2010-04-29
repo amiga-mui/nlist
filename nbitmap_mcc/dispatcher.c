@@ -262,6 +262,32 @@ IPTR NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
       }
       break;
 
+      case MUIA_NBitmap_Ghosted:
+      {
+        if(data->type == MUIV_NBitmap_Type_File)
+        {
+          data->data[1] = (uint32*)tag->ti_Data;
+          NBitmap_UpdateImage(1, (STRPTR)data->data[1], cl, obj);
+          MUI_Redraw(obj, MADF_DRAWOBJECT);
+        }
+
+        tag->ti_Tag = TAG_IGNORE;
+      }
+      break;
+
+      case MUIA_NBitmap_Selected:
+      {
+        if(data->type == MUIV_NBitmap_Type_File)
+        {
+          data->data[2] = (uint32*)tag->ti_Data;
+          NBitmap_UpdateImage(2, (STRPTR)data->data[2], cl, obj);
+          MUI_Redraw(obj, MADF_DRAWOBJECT);
+        }
+
+        tag->ti_Tag = TAG_IGNORE;
+      }
+      break;
+
       case MUIA_NBitmap_MaxWidth:
         data->maxwidth = (uint32)tag->ti_Data;
         tag->ti_Tag = TAG_IGNORE;
@@ -455,7 +481,9 @@ IPTR NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *ms
       SetFont(&rp, _font(obj));
       TextExtent(&rp, (STRPTR)data->label, strlen(data->label), &data->labelte);
 
-      if(data->width < (uint32)data->labelte.te_Width) data->border_horiz += (data->labelte.te_Width - data->width);
+      if(data->width < (uint32)data->labelte.te_Width)
+        data->border_horiz += (data->labelte.te_Width - data->width);
+
       data->label_vert = data->labelte.te_Height;
       data->border_vert += data->labelte.te_Height;
       data->border_vert += 2;

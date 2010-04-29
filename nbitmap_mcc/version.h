@@ -29,9 +29,9 @@
 
 // for setting all necessary version information
 #define LIB_VERSION    15
-#define LIB_REVISION   7
-#define LIB_DATE       "24.10.2009"
-#define LIB_COPYRIGHT  "Copyright (C) 2007-2009 NList Open Source Team"
+#define LIB_REVISION   8
+#define LIB_DATE       "29.04.2010"
+#define LIB_COPYRIGHT  "Copyright (C) 2007-2010 NList Open Source Team"
 
 // set the LIB_REV_STRING
 #define LIB_REV_STRING STR(LIB_VERSION) "." STR(LIB_REVISION)

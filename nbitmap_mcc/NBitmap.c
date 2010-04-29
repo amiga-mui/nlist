@@ -753,15 +753,15 @@ VOID NBitmap_DrawSimpleFrame(Object *obj, uint32 x, uint32 y, uint32 w, uint32 h
   LEAVE();
 }
 ///
-/// NBitmap_DrawDTImage()
+/// NBitmap_DrawImage()
 //
-static void NBitmap_DrawDTImage(struct IClass *cl, Object *obj)
+void NBitmap_DrawImage(struct IClass *cl, Object *obj)
 {
   struct InstData *data;
 
   ENTER();
 
-  if((data = INST_DATA(cl, obj)) != NULL && data->dt_obj[0] != NULL)
+  if((data = INST_DATA(cl, obj)) != NULL)
   {
     LONG item;
     ULONG x, y, twidth, theight;
@@ -773,121 +773,219 @@ static void NBitmap_DrawDTImage(struct IClass *cl, Object *obj)
     twidth = (data->width + data->border_horiz) - 2;      /* subtract standard 1 pixel border */
     theight = (data->height + data->border_vert) - 2;
 
-   /* clear */
-   if(data->button) DoMethod(obj, MUIM_DrawBackground, _left(obj), _top(obj), _width(obj), _height(obj), 0, 0);
+    /* clear */
+    if(data->button)
+      DoMethod(obj, MUIM_DrawBackground, _left(obj), _top(obj), _width(obj), _height(obj), 0, 0);
 
-   /* label */
-   if(data->label != NULL && data->button != FALSE)
-   {
-     uint32 labelx;
+    /* label */
+    if(data->label != NULL && data->button != FALSE)
+    {
+      uint32 labelx;
 
-     SetFont(_rp(obj), _font(obj));
-     SetAPen(_rp(obj), 1);
+      SetFont(_rp(obj), _font(obj));
+      SetAPen(_rp(obj), 1);
 
-     labelx = (twidth/2) - (data->labelte.te_Width/2);
+      labelx = (twidth/2) - (data->labelte.te_Width/2);
 
-     Move(_rp(obj), x + labelx, _bottom(obj) - 3);
-     Text(_rp(obj), data->label, strlen(data->label));
-   }
+      Move(_rp(obj), x + labelx, _bottom(obj) - 3);
+      Text(_rp(obj), data->label, strlen(data->label));
+    }
 
     /* draw image */
-    if(data->fmt == PBPAFMT_LUT8)
+    switch(data->type)
     {
-      #if defined(__amigaos4__)
-      uint32 error;
-      #endif
+      case MUIV_NBitmap_Type_File:
+      case MUIV_NBitmap_Type_DTObject:
+      {
+        if(data->dt_obj[0] != NULL)
+        {
+          if(data->fmt == PBPAFMT_LUT8)
+          {
+            #if defined(__amigaos4__)
+            uint32 error;
+            #endif
 
-      /* select bitmap */
-      if(data->button && data->pressed && data->overlay && data->dt_bitmap[2])
-        item = 2;
+            /* select bitmap */
+            if(data->button && data->pressed && data->overlay && data->dt_bitmap[2])
+              item = 2;
 
-      SHOWVALUE(DBF_DRAW, item);
-      SHOWVALUE(DBF_DRAW, data->dt_bitmap[item]);
-      SHOWVALUE(DBF_DRAW, data->dt_mask[item]);
+            SHOWVALUE(DBF_DRAW, item);
+            SHOWVALUE(DBF_DRAW, data->dt_bitmap[item]);
+            SHOWVALUE(DBF_DRAW, data->dt_mask[item]);
 
-      #if defined(__amigaos4__)
-      error = BltBitMapTags(BLITA_Source, data->dt_bitmap[item],
+            #if defined(__amigaos4__)
+            error = BltBitMapTags(BLITA_Source, data->dt_bitmap[item],
+                                  BLITA_Dest, _rp(obj),
+                                  BLITA_SrcX, 0,
+                                  BLITA_SrcY, 0,
+                                  BLITA_DestX, x + (data->border_horiz / 2),
+                                  BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                                  BLITA_Width, data->width,
+                                  BLITA_Height, data->height,
+                                  BLITA_SrcType, BLITT_BITMAP,
+                                  BLITA_DestType, BLITT_RASTPORT,
+                                  BLITA_MaskPlane, data->dt_mask[item],
+                                  TAG_DONE);
+            SHOWVALUE(DBF_DRAW, error);
+
+            #else
+
+            if(data->dt_mask[item] != NULL)
+            {
+              BltMaskBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
+                _left(obj) + (data->border_horiz / 2),
+                _top(obj) + (data->border_vert / 2),
+                data->width,
+                data->height,
+                0xc0,
+                (APTR)data->dt_mask[item]);
+            }
+            else
+            {
+              BltBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
+                _left(obj) + (data->border_horiz / 2),
+                _top(obj) + (data->border_vert / 2),
+                data->width,
+                data->height,
+                0xc0);
+            }
+            #endif
+          }
+          else
+          {
+            /* select bitmap */
+            if(data->button && data->pressed && data->overlay && data->arraypixels[2] != NULL)
+              item = 2;
+
+            SHOWVALUE(DBF_DRAW, item);
+            SHOWVALUE(DBF_DRAW, data->arraypixels[item]);
+
+            if(data->arraypixels[item] != NULL)
+            {
+              #if defined(__amigaos4__)
+              int32 srctype;
+              uint32 error;
+
+              if(data->depth == 24)
+               srctype = BLITT_RGB24;
+              else
+               srctype = BLITT_ARGB32;
+
+              error = BltBitMapTags(BLITA_Source, data->arraypixels[item],
+                                    BLITA_Dest, _rp(obj),
+                                    BLITA_SrcX, 0,
+                                    BLITA_SrcY, 0,
+                                    BLITA_DestX, x + (data->border_horiz / 2),
+                                    BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                                    BLITA_Width, data->width,
+                                    BLITA_Height, data->height,
+                                    BLITA_SrcType, srctype,
+                                    BLITA_DestType, BLITT_RASTPORT,
+                                    BLITA_SrcBytesPerRow, data->arraybpr,
+                                    BLITA_UseSrcAlpha, TRUE,
+                                    TAG_DONE);
+
+              SHOWVALUE(DBF_DRAW, error);
+
+              #else
+
+              if(data->depth == 24)
+                WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
+              else
+                WritePixelArrayAlpha(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
+
+              #endif
+            }
+          }
+        }
+      }
+      break;
+
+      case MUIV_NBitmap_Type_CLUT8:
+      case MUIV_NBitmap_Type_RGB24:
+      case MUIV_NBitmap_Type_ARGB32:
+      {
+        int w = min((uint32)_mwidth (obj), data->width );
+        int h = min((uint32)_mheight(obj), data->height);
+
+        /* select bitmap */
+        if(data->button && data->pressed && data->overlay && data->data[2] != NULL)
+          item = 2;
+
+        if(data->data[item] != NULL)
+        {
+          #if defined(__amigaos4__)
+          switch(data->type)
+          {
+            case MUIV_NBitmap_Type_CLUT8:
+              BltBitMapTags(BLITA_Source, data->data[item],
                             BLITA_Dest, _rp(obj),
                             BLITA_SrcX, 0,
                             BLITA_SrcY, 0,
                             BLITA_DestX, x + (data->border_horiz / 2),
                             BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
-                            BLITA_Width, data->width,
-                            BLITA_Height, data->height,
-                            BLITA_SrcType, BLITT_BITMAP,
+                            BLITA_Width, w,
+                            BLITA_Height, h,
+                            BLITA_SrcType, BLITT_CHUNKY,
                             BLITA_DestType, BLITT_RASTPORT,
-                            BLITA_MaskPlane, data->dt_mask[item],
+                            BLITA_SrcBytesPerRow, data->width,
+                            BLITA_CLUT, data->clut,
+                            BLITA_Alpha, data->alpha,
                             TAG_DONE);
-      SHOWVALUE(DBF_DRAW, error);
+            break;
 
-      #else
+            case MUIV_NBitmap_Type_RGB24:
+              BltBitMapTags(BLITA_Source, data->data[item],
+                            BLITA_Dest, _rp(obj),
+                            BLITA_SrcX, 0,
+                            BLITA_SrcY, 0,
+                            BLITA_DestX, x + (data->border_horiz / 2),
+                            BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                            BLITA_Width, w,
+                            BLITA_Height, h,
+                            BLITA_SrcType, BLITT_RGB24,
+                            BLITA_DestType, BLITT_RASTPORT,
+                            BLITA_SrcBytesPerRow, data->width*3,
+                            BLITA_Alpha, data->alpha,
+                            TAG_DONE);
+            break;
 
-      if(data->dt_mask[item] != NULL)
-      {
-        BltMaskBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
-          _left(obj) + (data->border_horiz / 2),
-          _top(obj) + (data->border_vert / 2),
-          data->width,
-          data->height,
-          0xc0,
-          (APTR)data->dt_mask[item]);
+            case MUIV_NBitmap_Type_ARGB32:
+              BltBitMapTags(BLITA_Source, data->data[item],
+                            BLITA_Dest, _rp(obj),
+                            BLITA_SrcX, 0,
+                            BLITA_SrcY, 0,
+                            BLITA_DestX, x + (data->border_horiz / 2),
+                            BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                            BLITA_Width, w,
+                            BLITA_Height, h,
+                            BLITA_SrcType, BLITT_ARGB32,
+                            BLITA_DestType, BLITT_RASTPORT,
+                            BLITA_SrcBytesPerRow, data->width*4,
+                            BLITA_UseSrcAlpha, TRUE,
+                            BLITA_Alpha, data->alpha,
+                            TAG_DONE);
+            break;
+          }
+          #else // __amigaos4__
+          switch(data->type)
+          {
+            case MUIV_NBitmap_Type_CLUT8:
+              WriteLUTPixelArray(data->data[item], 0, 0, data->width, _rp(obj), data->clut, _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), w, h, CTABFMT_XRGB8);
+            break;
+
+            case MUIV_NBitmap_Type_RGB24:
+              WritePixelArrayAlpha(data->data[item], 0, 0, data->width*3, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), w, h, data->alpha);
+            break;
+
+            case MUIV_NBitmap_Type_ARGB32:
+              WritePixelArrayAlpha(data->data[item], 0, 0, data->width*4, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), w, h, data->alpha);
+            break;
+          }
+          #endif // __amigaos4__
+        }
       }
-      else
-      {
-        BltBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
-          _left(obj) + (data->border_horiz / 2),
-          _top(obj) + (data->border_vert / 2),
-          data->width,
-          data->height,
-          0xc0);
-      }
-      #endif
-    }
-    else
-    {
-      /* select bitmap */
-      if(data->button && data->pressed && data->overlay && data->arraypixels[2] != NULL)
-        item = 2;
-
-      SHOWVALUE(DBF_DRAW, item);
-      SHOWVALUE(DBF_DRAW, data->arraypixels[item]);
-
-      if(data->arraypixels[item] != NULL)
-      {
-        #if defined(__amigaos4__)
-        int32 srctype;
-        uint32 error;
-
-        if(data->depth == 24)
-         srctype = BLITT_RGB24;
-        else
-         srctype = BLITT_ARGB32;
-
-        error = BltBitMapTags(BLITA_Source, data->arraypixels[item],
-                              BLITA_Dest, _rp(obj),
-                              BLITA_SrcX, 0,
-                              BLITA_SrcY, 0,
-                              BLITA_DestX, x + (data->border_horiz / 2),
-                              BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
-                              BLITA_Width, data->width,
-                              BLITA_Height, data->height,
-                              BLITA_SrcType, srctype,
-                              BLITA_DestType, BLITT_RASTPORT,
-                              BLITA_SrcBytesPerRow, data->arraybpr,
-                              BLITA_UseSrcAlpha, TRUE,
-                              TAG_DONE);
-
-        SHOWVALUE(DBF_DRAW, error);
-
-        #else
-
-        if(data->depth == 24)
-          WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
-        else
-          WritePixelArrayAlpha(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
-
-        #endif
-      }
+      break;
     }
 
     /* overlay */
@@ -952,126 +1050,3 @@ static void NBitmap_DrawDTImage(struct IClass *cl, Object *obj)
   LEAVE();
 }
 ///
-/// NBitmap_DrawRawImage()
-//
-static void NBitmap_DrawRawImage(struct IClass *cl, Object *obj)
-{
-  struct InstData *data;
-
-  ENTER();
-
-  if((data = INST_DATA(cl, obj)) != NULL && data->data[0] != NULL)
-  {
-    int w = min((uint32)_mwidth (obj), data->width );
-    int h = min((uint32)_mheight(obj), data->height);
-
-    if(w > 0 && h > 0)
-    {
-      #if defined(__amigaos4__)
-      switch(data->type)
-      {
-        case MUIV_NBitmap_Type_CLUT8:
-          BltBitMapTags(BLITA_Source, data->data[0],
-                        BLITA_Dest, _rp(obj),
-                        BLITA_SrcX, 0,
-                        BLITA_SrcY, 0,
-                        BLITA_DestX, _mleft(obj),
-                        BLITA_DestY, _mtop(obj),
-                        BLITA_Width, w,
-                        BLITA_Height, h,
-                        BLITA_SrcType, BLITT_CHUNKY,
-                        BLITA_DestType, BLITT_RASTPORT,
-                        BLITA_SrcBytesPerRow, data->width,
-                        BLITA_CLUT, data->clut,
-                        BLITA_Alpha, data->alpha,
-                        TAG_DONE);
-        break;
-
-        case MUIV_NBitmap_Type_RGB24:
-          BltBitMapTags(BLITA_Source, data->data[0],
-                        BLITA_Dest, _rp(obj),
-                        BLITA_SrcX, 0,
-                        BLITA_SrcY, 0,
-                        BLITA_DestX, _mleft(obj),
-                        BLITA_DestY, _mtop(obj),
-                        BLITA_Width, w,
-                        BLITA_Height, h,
-                        BLITA_SrcType, BLITT_RGB24,
-                        BLITA_DestType, BLITT_RASTPORT,
-                        BLITA_SrcBytesPerRow, data->width*3,
-                        BLITA_Alpha, data->alpha,
-                        TAG_DONE);
-        break;
-
-        case MUIV_NBitmap_Type_ARGB32:
-          BltBitMapTags(BLITA_Source, data->data[0],
-                        BLITA_Dest, _rp(obj),
-                        BLITA_SrcX, 0,
-                        BLITA_SrcY, 0,
-                        BLITA_DestX, _mleft(obj),
-                        BLITA_DestY, _mtop(obj),
-                        BLITA_Width, w,
-                        BLITA_Height, h,
-                        BLITA_SrcType, BLITT_ARGB32,
-                        BLITA_DestType, BLITT_RASTPORT,
-                        BLITA_SrcBytesPerRow, data->width*4,
-                        BLITA_UseSrcAlpha, TRUE,
-                        BLITA_Alpha, data->alpha,
-                        TAG_DONE);
-        break;
-      }
-      #else // __amigaos4__
-      switch(data->type)
-      {
-        case MUIV_NBitmap_Type_CLUT8:
-          WriteLUTPixelArray(data->data[0], 0, 0, data->width, _rp(obj), data->clut, _mleft(obj), _mtop(obj), w, h, CTABFMT_XRGB8);
-        break;
-
-        case MUIV_NBitmap_Type_RGB24:
-          WritePixelArrayAlpha(data->data[0], 0, 0, data->width*3, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->alpha);
-        break;
-
-        case MUIV_NBitmap_Type_ARGB32:
-          WritePixelArrayAlpha(data->data[0], 0, 0, data->width*4, _rp(obj), _mleft(obj), _mtop(obj), w, h, data->alpha);
-        break;
-      }
-      #endif // __amigaos4__
-    }
-  }
-
-  LEAVE();
-}
-///
-/// NBitmap_DrawImage()
-//
-VOID NBitmap_DrawImage(struct IClass *cl, Object *obj)
-{
-  struct InstData *data;
-
-  ENTER();
-
-  if((data = INST_DATA(cl, obj)) != NULL)
-  {
-    switch(data->type)
-    {
-      case MUIV_NBitmap_Type_File:
-      case MUIV_NBitmap_Type_DTObject:
-      {
-        NBitmap_DrawDTImage(cl, obj);
-      }
-      break;
-
-      case MUIV_NBitmap_Type_CLUT8:
-      case MUIV_NBitmap_Type_RGB24:
-      case MUIV_NBitmap_Type_ARGB32:
-      {
-        NBitmap_DrawRawImage(cl, obj);
-      }
-      break;
-    }
-  }
-
-  LEAVE();
-}
-///
-
