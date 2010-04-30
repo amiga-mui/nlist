@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.104 RELEASE ###########################################################
+
+2010-04-30  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.104 release preparations
+  * include/libraries/mui.h: added MORPHOS #ifdef to maskout the Rawimage
+    definition.
+
 2010-04-30 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/library.c: added version check for NBitmap.mcc. Only version V15.8+ can
