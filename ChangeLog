@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-04-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/library.c: added version check for NBitmap.mcc. Only version V15.8+ can
+    handle raw image data.
+
 2010-04-29  Jens Langner <Jens.Langner@light-speed.de>
 
   * nbitmap_mcc: unified the draw image routines of the raw data and dtobject
@@ -16,7 +21,7 @@ $URL$
 
 2010-04-29 Thore Böckelmann <tboeckel@gmx.de>
 
-  * nbitmap_mcc/dispatcher.c: let OM_NEW fail if now valid type is specified.
+  * nbitmap_mcc/dispatcher.c: let OM_NEW fail if no valid type is specified.
 
 2010-04-28 Thore Böckelmann <tboeckel@gmx.de>
 
