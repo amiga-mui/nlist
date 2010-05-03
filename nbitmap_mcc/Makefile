@@ -176,6 +176,7 @@ LOBJS = library.o
 
 COBJS = dispatcher.o \
         NBitmap.o \
+        DitherImage.o \
         Debug.o \
         vastubs.o
 

@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-05-03 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc: implemented a simple dithering to be able to display truecolor
+    images on colormapped screens. A fixed but colorful palette will be used.
+
 #### v0.104 RELEASE ###########################################################
 
 2010-04-30  Jens Langner <Jens.Langner@light-speed.de>

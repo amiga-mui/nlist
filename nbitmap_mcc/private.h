@@ -107,7 +107,10 @@ struct InstData
   struct TextExtent labelte;
 
   uint32 alpha;
-  uint32 *clut;
+  const uint32 *clut;
+  APTR ditheredImage[3];
+  APTR ditheredMask[3];
+  int32 ditherPenMap[256];
 
   struct MUI_EventHandlerNode ehnode;
 };
@@ -132,8 +135,8 @@ struct InstData
 /* prototypes */
 BOOL NBitmap_LoadImage(STRPTR filename, uint32 item, struct IClass *cl, Object *obj);
 VOID NBitmap_UpdateImage(uint32 item, STRPTR filename, struct IClass *cl, Object *obj);
-BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object *obj);
-VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj);
+//BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object *obj);
+//VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj);
 BOOL NBitmap_NewImage(struct IClass *cl, Object *obj);
 VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj);
 BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj);

@@ -139,7 +139,7 @@ IPTR NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
           break;
 
           case MUIA_NBitmap_CLUT:
-            data->clut = (uint32 *)tag->ti_Data;
+            data->clut = (const uint32 *)tag->ti_Data;
           break;
 
           case MUIA_NBitmap_Alpha:
