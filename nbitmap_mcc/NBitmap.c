@@ -721,6 +721,23 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
                                                    DITHERA_PenMap, (uint32)data->ditherPenMap,
                                                    DITHERA_MaskPlane, (uint32)&data->ditheredMask[i],
                                                    TAG_DONE);
+
+              #if !defined(__amigaos4__)
+              if(data->ditheredImage[i] != NULL)
+              {
+                // CyberGraphics cannot blit raw data through a mask, thus we have to
+                // take this ugly workaround and take the detour using a bitmap.
+                if((data->ditheredBitmap[i] = AllocBitMap(data->width, data->height, 8, BMF_MINPLANES, NULL)) != NULL)
+                {
+                  struct RastPort tempRP;
+
+                  InitRastPort(&tempRP);
+                  tempRP.BitMap = data->ditheredBitmap[i];
+
+                  WritePixelArray(data->ditheredImage[i], 0, 0, data->width, &tempRP, 0, 0, data->width, data->height, RECTFMT_LUT8);
+                }
+              }
+              #endif // !__amigaos4__
             }
           }
         }
@@ -783,6 +800,13 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
             FreeDitheredImage(data->ditheredImage[i], data->ditheredMask[i]);
             data->ditheredImage[i] = NULL;
           }
+          #if !defined(__amigaos4__)
+          if(data->ditheredBitmap[i] != NULL)
+          {
+            FreeBitMap(data->ditheredBitmap[i]);
+            data->ditheredBitmap[i] = NULL;
+          }
+          #endif // !__amigaos4__
         }
 
         // release all allocated pens
@@ -986,42 +1010,58 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
         if(data->data[item] != NULL)
         {
+          #if defined(__amigaos4__)
           if(data->scrdepth <= 8 && data->ditheredImage[item] != NULL)
           {
-            #if defined(__amigaos4__)
-            BltBitMapTags(BLITA_Source, data->ditheredImage[item],
-                          BLITA_Dest, _rp(obj),
-                          BLITA_SrcX, 0,
-                          BLITA_SrcY, 0,
-                          BLITA_DestX, x + (data->border_horiz / 2),
-                          BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
-                          BLITA_Width, w,
-                          BLITA_Height, h,
-                          BLITA_SrcType, BLITT_CHUNKY,
-                          BLITA_DestType, BLITT_RASTPORT,
-                          BLITA_SrcBytesPerRow, data->width,
-                          BLITA_MaskPlane, data->ditheredMask[item],
-                          TAG_DONE);
-            #else // __amigaos4__
-            struct BitMap *tempBM;
-
+            if(data->ditheredMask[item] != NULL)
+            {
+              BltBitMapTags(BLITA_Source, data->ditheredImage[item],
+                            BLITA_Dest, _rp(obj),
+                            BLITA_SrcX, 0,
+                            BLITA_SrcY, 0,
+                            BLITA_DestX, x + (data->border_horiz / 2),
+                            BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                            BLITA_Width, w,
+                            BLITA_Height, h,
+                            BLITA_SrcType, BLITT_CHUNKY,
+                            BLITA_DestType, BLITT_RASTPORT,
+                            BLITA_SrcBytesPerRow, data->width,
+                            BLITA_MaskPlane, data->ditheredMask[item],
+                            BLITA_Minterm, (ABC|ABNC|ANBC),
+                            TAG_DONE);
+            }
+            else
+            {
+              BltBitMapTags(BLITA_Source, data->ditheredImage[item],
+                            BLITA_Dest, _rp(obj),
+                            BLITA_SrcX, 0,
+                            BLITA_SrcY, 0,
+                            BLITA_DestX, x + (data->border_horiz / 2),
+                            BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                            BLITA_Width, w,
+                            BLITA_Height, h,
+                            BLITA_SrcType, BLITT_CHUNKY,
+                            BLITA_DestType, BLITT_RASTPORT,
+                            BLITA_SrcBytesPerRow, data->width,
+                            BLITA_Minterm, (ABC|ABNC),
+                            TAG_DONE);
+            }
+          }
+          #else // __amigaos4__
+          if(data->scrdepth <= 8 && data->ditheredBitmap[item] != NULL)
+          {
             // CyberGraphics cannot blit raw data through a mask, thus we have to
             // take this ugly workaround and take the detour using a bitmap.
-            if((tempBM = AllocBitMap(w, h, 8, BMF_MINPLANES, NULL)) != NULL)
+            if(data->ditheredMask[item] != NULL)
             {
-              struct RastPort tempRP;
-
-              InitRastPort(&tempRP);
-              tempRP.BitMap = tempBM;
-
-              WritePixelArray(data->ditheredImage[item], 0, 0, w, &tempRP, 0, 0, w, h, RECTFMT_LUT8);
-
-              BltMaskBitMapRastPort(tempBM, 0, 0, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, (ABC|ABNC|ANBC), data->ditheredMask[item]);
-
-              FreeBitMap(tempBM);
+              BltMaskBitMapRastPort(data->ditheredBitmap[item], 0, 0, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, (ABC|ABNC|ANBC), data->ditheredMask[item]);
             }
-            #endif // __amigaos4__
+            else
+            {
+              BltBitMapRastPort(data->ditheredBitmap[item], 0, 0, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, (ABC|ABNC));
+            }
           }
+          #endif // __amigaos4__
           else
           {
             #if defined(__amigaos4__)
@@ -1084,7 +1124,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
               break;
 
               case MUIV_NBitmap_Type_RGB24:
-                WritePixelArrayAlpha(data->data[item], 0, 0, data->width*3, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, data->alpha);
+                WritePixelArray(data->data[item], 0, 0, data->width*3, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, RECTFMT_RGB);
               break;
 
               case MUIV_NBitmap_Type_ARGB32:

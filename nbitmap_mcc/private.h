@@ -111,6 +111,9 @@ struct InstData
   APTR ditheredImage[3];
   APTR ditheredMask[3];
   int32 ditherPenMap[256];
+  #if !defined(__amigaos4__)
+  struct BitMap *ditheredBitmap[3];
+  #endif
 
   struct MUI_EventHandlerNode ehnode;
 };
