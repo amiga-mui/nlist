@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-05-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c: the class will now forget that its MUIM_Setup method
+    has been invoked before deleting possibly added list images. Otherwise the
+    surrounding group would be told to perform a relayout, which is not a very
+    good thing to do while everything is being cleaned up. This fixes bug
+    #2977811.
+
 2010-05-04 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: fixed slightly broken handling of RGB24 data.
