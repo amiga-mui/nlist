@@ -13,6 +13,8 @@ $URL$
   * nlist_mcc/NList_mcc4.c: simplified the image spec handling. Specifying
     additional dimensions was discouraged anyway and the old scanning  algorithm
     completely broke the color handling. Effectively this fixes bug #1272693.
+  * doc/MCC_NList.doc: updated documentation about direct "ESC I[<s>]" image
+    specs. Only image specs followings the rules are supported from now on.
 
 2010-05-06 Thore Böckelmann <tboeckel@gmx.de>
 
