@@ -229,7 +229,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
       {
         GotoPage(cl, obj, MUIV_NList_Active_PageUp);
         retval = MUI_EventHandlerRC_Eat;
-      } 
+      }
       break;
 
       case MUIKEY_PAGEDOWN:
@@ -606,7 +606,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
               {
                 LONG newactsel = MUIV_NList_Select_On;
-              	
+
                 if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
                	NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,newactsel,FALSE);
@@ -754,7 +754,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               (MultQual || (data->multiselect == MUIV_NList_MultiSelect_Always)))
             multi = 1;
           data->selectskiped = FALSE;
-          if (msg->imsg->Code==SELECTDOWN && _isinobject2(msg->imsg->MouseX,msg->imsg->MouseY))
+          // Using _isinobject2() here would also recognize clicks on the list's border
+          // as clicks inside the list. But clicking on the border above the list's title
+          // being interpreted like a click the first entry is not very intuitive. Thus
+          // we restrict ourself to clicks really inside the object here.
+          if (msg->imsg->Code==SELECTDOWN && _isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
           {
             WORD ly = (msg->imsg->MouseY - data->vpos);
             WORD ly2 = (msg->imsg->MouseY - data->vdtitlepos);
