@@ -10,6 +10,9 @@ $URL$
   * nlist_mcc/NList_mcc2.c: clicks on the list's border are no longer taken as
     valid clicks within the list. Before such clicks resulted in the first/last
     entry to be selected, which is not very intuitive. This fixes bug #2951808.
+  * nlist_mcc/NList_mcc4.c: simplified the image spec handling. Specifying
+    additional dimensions was discouraged anyway and the old scanning  algorithm
+    completely broke the color handling. Effectively this fixes bug #1272693.
 
 2010-05-06 Thore Böckelmann <tboeckel@gmx.de>
 
