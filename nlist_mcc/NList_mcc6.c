@@ -1527,22 +1527,32 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
 
 void DisposeDragRPort(UNUSED Object *obj,struct NLData *data)
 {
-  if (data->DragRPort)
-  { struct BitMap *bm = data->DragRPort->BitMap;
-    NL_Free(data,data->DragRPort,"DisposeDragRPort");
+  if(data->DragRPort != NULL)
+  {
+    struct BitMap *bm = data->DragRPort->BitMap;
+
+    NL_Free(data, data->DragRPort, "DisposeDragRPort");
     data->DragRPort = NULL;
-    if (bm)
-    { WaitBlit();
-      if (LIBVER(GfxBase) >= 39)
+
+    if(bm != NULL)
+    {
+      WaitBlit();
+
+      if(LIBVER(GfxBase) >= 39)
+      {
         FreeBitMap(bm);
+      }
       else
-      { struct BitMapImage *bmimg = (struct BitMapImage *) (((ULONG *)bm)[-1]);
-        WORD ktr;
-        for (ktr = 0; ktr < bm->Depth; ktr++)
-        { if (bm->Planes[ktr])
+      {
+        struct BitMapImage *bmimg = (struct BitMapImage *)(((ULONG *)bm)[-1]);
+        ULONG ktr;
+
+        for(ktr = 0; ktr < bm->Depth; ktr++)
+        {
+          if(bm->Planes[ktr] != NULL)
             FreeRaster(bm->Planes[ktr], bmimg->width, bmimg->height);
         }
-        NL_Free(data,bmimg,"DisposeDragRPort");
+        NL_Free(data, bmimg, "DisposeDragRPort");
       }
     }
   }
@@ -1552,18 +1562,24 @@ void DisposeDragRPort(UNUSED Object *obj,struct NLData *data)
 struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,LONG first,LONG last)
 {
   char text[40];
-  if (last >= first)
-  { data->DragWidth = data->mwidth;
+
+  if(last >= first)
+  {
+    data->DragWidth = data->mwidth;
     data->DragHeight = data->vinc * numlines;
-    return (NULL);
+
+    return NULL;
   }
   else
-  { char num[8];
+  {
+    char num[8];
+
     data->DragHeight = data->vinc;
     data->DragWidth = data->mwidth;
+
     if(data->NList_DragColOnly < 0)
     {
-      if (numlines == 1)
+      if(numlines == 1)
         stpcpy(text, (char *)"Dragging 1 Item...");
       else
         stpcpy(stpcpy(stpcpy(text, (char *)"Dragging "),ltoa(numlines,num,8)), (char *)" Items...");
@@ -1573,75 +1589,97 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
     }
     else
     {
-      if (numlines != 1)
+      if(numlines != 1)
       {
         stpcpy(stpcpy(text,ltoa(numlines,num,8)), (char *)" items.");
         data->DragText = text;
         data->DragEntry = -1;
       }
-      else if (data->NList_DragLines == 1)
+      else if(data->NList_DragLines == 1)
       {
         stpcpy(text, (char *)"1 item.");
         data->DragText = text;
         data->DragEntry = -1;
       }
       else
-      { data->DragText = NULL;
+      {
+        data->DragText = NULL;
         data->DragEntry = first;
       }
       data->DragWidth = DrawDragText(obj,data,FALSE);
     }
   }
-  if (!data->DragRPort &&
-      (data->DragRPort = (struct RastPort *) NL_Malloc(data,sizeof(struct RastPort),"CreateDragRPort")))
-  { struct BitMap *fbm = _window(obj)->RPort->BitMap;
+
+  if(data->DragRPort == NULL &&
+     ((data->DragRPort = (struct RastPort *)NL_Malloc(data, sizeof(struct RastPort), "CreateDragRPort"))) != NULL)
+  {
+    struct BitMap *fbm = _window(obj)->RPort->BitMap;
+    ULONG fbmDepth;
+
     InitRastPort(data->DragRPort);
-    if (LIBVER(GfxBase) >= 39)
-      data->DragRPort->BitMap = AllocBitMap((ULONG)data->DragWidth,(ULONG)data->DragHeight,(ULONG)fbm->Depth, 0, fbm);
+
+    if(LIBVER(GfxBase) >= 39)
+    {
+      fbmDepth = GetBitMapAttr(fbm, BMA_DEPTH);
+      data->DragRPort->BitMap = AllocBitMap((ULONG)data->DragWidth, (ULONG)data->DragHeight, fbmDepth, 0, fbm);
+    }
     else
-    { struct BitMapImage *bmimg = NULL;
-      UBYTE  newdepth = fbm->Depth;
-      if (newdepth > 8)
-        newdepth = 8;
+    {
+      struct BitMapImage *bmimg = NULL;
+
+      fbmDepth = MIN(fbm->Depth, 8);
+
       data->DragRPort->BitMap = NULL;
-      if((bmimg = NL_Malloc(data,sizeof(struct BitMapImage),"CreateDragRPort")))
+      if((bmimg = NL_Malloc(data, sizeof(struct BitMapImage), "CreateDragRPort")) != NULL)
       {
-        WORD ktr;
+        ULONG ktr;
         BOOL bmimg_failed = FALSE;
-        InitBitMap(&(bmimg->imgbmp),newdepth,data->DragWidth,data->DragHeight);
+
+        InitBitMap(&bmimg->imgbmp, fbmDepth, data->DragWidth, data->DragHeight);
+
         bmimg->control = MUIM_NList_CreateImage;
         bmimg->width = data->DragWidth;
         bmimg->height = data->DragHeight;
-        bmimg->mask = (PLANEPTR) bmimg;
-        for (ktr = 0; ktr < bmimg->imgbmp.Depth; ktr++)
-        { if (!(bmimg->imgbmp.Planes[ktr] = (PLANEPTR) AllocRaster(bmimg->width,bmimg->height)))
+        bmimg->mask = (PLANEPTR)bmimg;
+
+        for(ktr = 0; ktr < fbmDepth; ktr++)
+        {
+          if((bmimg->imgbmp.Planes[ktr] = (PLANEPTR)AllocRaster(bmimg->width, bmimg->height)) == NULL)
             bmimg_failed = TRUE;
         }
-        if (bmimg_failed)
-        { for (ktr = 0; ktr < bmimg->imgbmp.Depth; ktr++)
-          { if (bmimg->imgbmp.Planes[ktr])
+
+        if(bmimg_failed == TRUE)
+        {
+          for(ktr = 0; ktr < fbmDepth; ktr++)
+          {
+            if(bmimg->imgbmp.Planes[ktr] != NULL)
               FreeRaster(bmimg->imgbmp.Planes[ktr], bmimg->width, bmimg->height);
           }
           NL_Free(data,bmimg,"dispBMI_bmimg");
           bmimg = NULL;
         }
-        if (bmimg)
-          data->DragRPort->BitMap = &(bmimg->imgbmp);
+
+        if(bmimg != NULL)
+          data->DragRPort->BitMap = &bmimg->imgbmp;
       }
     }
-    if (data->DragRPort->BitMap)
-    { struct IClass *realclass = OCLASS(obj);
+    if(data->DragRPort->BitMap != NULL)
+    {
+      struct IClass *realclass = OCLASS(obj);
       SetFont(data->DragRPort,data->font);
       OCLASS(obj) = data->ncl;
       REDRAW_FORCE;
       OCLASS(obj) = realclass;
-      return (data->DragRPort);
+
+      return data->DragRPort;
     }
     else
-    { NL_Free(data,data->DragRPort,"CreateDragRPort");
+    {
+      NL_Free(data,data->DragRPort,"CreateDragRPort");
       data->DragRPort = NULL;
     }
   }
-  return (NULL);
+
+  return NULL;
 }
 

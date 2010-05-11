@@ -9,6 +9,8 @@ $URL$
 
   * include/mui/NList_mcc.h: added a comment to skip certain method IDs for
     future extensions to avoid clashes with other classes.
+  * nlist_mcc/NList_mcc6.c: use GetBitMapAttr() to determine a bitmap's depth
+    of V39+ systems instead of peeking around.
 
 2010-05-07 Thore Böckelmann <tboeckel@gmx.de>
 
