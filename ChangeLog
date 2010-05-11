@@ -13,6 +13,7 @@ $URL$
     of V39+ systems instead of peeking around.
   * nlist_mcc: replaced custom stpcpy() function by uses of then overrun-save
     functions strlcpy() and snprintf().
+  * nlist_mcc: removed now unused function ltoa().
 
 2010-05-07 Thore Böckelmann <tboeckel@gmx.de>
 

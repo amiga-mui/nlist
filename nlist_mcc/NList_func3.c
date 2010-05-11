@@ -156,24 +156,6 @@ LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG
 }
 
 
-char *ltoa(ULONG val, char *buf, int len)
-{
-  ULONG v;
-  if (len > 0)
-    buf[--len] = '\0';
-  if (val == 0)
-  { if (len > 0) buf[--len] = '0'; }
-  else
-  { while (val)
-    { v = val % 10;
-      if (len > 0) buf[--len] = ('0' + ((char) v));
-      val = val / 10;
-    }
-  }
-  return (&buf[len]);
-}
-
-
 /*static char *stpncpy_noesc(char *to,const char *from,int len)*/
 static char *stpncpy_noesc(char *to,char *from,int len)
 {
