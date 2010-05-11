@@ -1571,7 +1571,7 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
   }
   else
   {
-    char text[40];
+    static char text[40];
 
     data->DragHeight = data->vinc;
     data->DragWidth = data->mwidth;
@@ -1610,9 +1610,6 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
 
       data->DragWidth = DrawDragText(obj, data, FALSE);
     }
-
-    // clear the text pointer to avoid reusing a local pointer outside this function
-    data->DragText = NULL;
   }
 
   if(data->DragRPort == NULL &&
