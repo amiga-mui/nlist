@@ -1621,7 +1621,7 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
     if(LIBVER(GfxBase) >= 39)
     {
       fbmDepth = GetBitMapAttr(fbm, BMA_DEPTH);
-      data->DragRPort->BitMap = AllocBitMap((ULONG)data->DragWidth, (ULONG)data->DragHeight, fbmDepth, 0, fbm);
+      data->DragRPort->BitMap = AllocBitMap((ULONG)data->DragWidth, (ULONG)data->DragHeight, fbmDepth, BMF_MINPLANES, fbm);
     }
     else
     {
