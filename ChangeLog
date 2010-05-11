@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-05-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mui/NList_mcc.h: added a comment to skip certain method IDs for
+    future extensions to avoid clashes with other classes.
+
 2010-05-07 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc2.c: clicks on the list's border are no longer taken as
