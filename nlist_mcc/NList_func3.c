@@ -174,19 +174,6 @@ char *ltoa(ULONG val, char *buf, int len)
 }
 
 
-/*char *stpcpy(char *to,const char *from)*/
-#if !defined(__SASC) && !defined(__MORPHOS__) && !defined(__AROS__)
-char *stpcpy(char *to,char *from)
-{
-  register char *to2 = to;
-
-  while (*from)
-    *to2++ = *from++;
-  *to2 = '\0';
-  return (to2);
-}
-#endif
-
 /*static char *stpncpy(char *to,const char *from,int len)*/
 static char *stpncpy(char *to,char *from,int len)
 {

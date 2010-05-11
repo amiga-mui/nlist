@@ -23,6 +23,7 @@
 
 ***************************************************************************/
 
+#include <stdio.h>
 #include <string.h>
 
 #include <graphics/gfxmacros.h>
@@ -1561,8 +1562,6 @@ void DisposeDragRPort(UNUSED Object *obj,struct NLData *data)
 
 struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,LONG first,LONG last)
 {
-  char text[40];
-
   if(last >= first)
   {
     data->DragWidth = data->mwidth;
@@ -1572,17 +1571,18 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
   }
   else
   {
-    char num[8];
+    char text[40];
 
     data->DragHeight = data->vinc;
     data->DragWidth = data->mwidth;
+    D(DBF_ALWAYS,"dragcol %ld, draglines %ld, numlines %ld",data->NList_DragColOnly,data->NList_DragLines,numlines);
 
     if(data->NList_DragColOnly < 0)
     {
       if(numlines == 1)
-        stpcpy(text, (char *)"Dragging 1 Item...");
+        strlcpy(text, "Dragging one item...", sizeof(text));
       else
-        stpcpy(stpcpy(stpcpy(text, (char *)"Dragging "),ltoa(numlines,num,8)), (char *)" Items...");
+        snprintf(text, sizeof(text), "Dragging %ld items...", numlines);
 
       data->DragText = text;
       data->DragEntry = -1;
@@ -1591,13 +1591,15 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
     {
       if(numlines != 1)
       {
-        stpcpy(stpcpy(text,ltoa(numlines,num,8)), (char *)" items.");
+        snprintf(text, sizeof(text), "%ld items.", numlines);
+
         data->DragText = text;
         data->DragEntry = -1;
       }
       else if(data->NList_DragLines == 1)
       {
-        stpcpy(text, (char *)"1 item.");
+        strlcpy(text, "1 item.", sizeof(text));
+
         data->DragText = text;
         data->DragEntry = -1;
       }
@@ -1606,8 +1608,12 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
         data->DragText = NULL;
         data->DragEntry = first;
       }
-      data->DragWidth = DrawDragText(obj,data,FALSE);
+
+      data->DragWidth = DrawDragText(obj, data, FALSE);
     }
+
+    // clear the text pointer to avoid reusing a local pointer outside this function
+    data->DragText = NULL;
   }
 
   if(data->DragRPort == NULL &&
