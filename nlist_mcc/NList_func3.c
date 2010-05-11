@@ -174,20 +174,6 @@ char *ltoa(ULONG val, char *buf, int len)
 }
 
 
-/*static char *stpncpy(char *to,const char *from,int len)*/
-static char *stpncpy(char *to,char *from,int len)
-{
-  register char *to2 = to;
-
-  while (*from && (len > 0))
-  { *to2++ = *from++;
-    len--;
-  }
-  *to2 = '\0';
-  return (to2);
-}
-
-
 /*static char *stpncpy_noesc(char *to,const char *from,int len)*/
 static char *stpncpy_noesc(char *to,char *from,int len)
 {
@@ -673,38 +659,45 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
 
 
 
-static BOOL CCB_string(struct NLData *data,char **cbstr,char *str,LONG len,char lc,BOOL skipesc)
+static BOOL CCB_string(struct NLData *data, char **cbstr, char *str, LONG len, char lc, BOOL skipesc)
 {
   char *tmpcb;
   char *tmp;
   LONG tmpcblen;
 
-  if (str)
+  if(str != NULL)
   {
     tmpcblen = len + 2;
-    if (*cbstr)
+    if(*cbstr != NULL)
       tmpcblen += strlen(*cbstr);
 
-    if((tmpcb = NL_Malloc(data,tmpcblen,"CCB_string")))
+    if((tmpcb = NL_Malloc(data, tmpcblen, "CCB_string")) != NULL)
     {
       tmp = tmpcb;
-      if (*cbstr)
+
+      if(*cbstr != NULL)
       {
-        tmp = stpcpy(tmp,*cbstr);
-        NL_Free(data,*cbstr,"CCB_string");
+        tmp += strlcpy(tmp, *cbstr, tmpcblen);
+        NL_Free(data, *cbstr, "CCB_string");
       }
-      if (skipesc)
+
+      if(skipesc)
         tmp = stpncpy_noesc(tmp,str,len);
       else
-        tmp = stpncpy(tmp,str,len);
+        tmp += strlcpy(tmp, str, len);
+
       tmp[0] = lc;
       tmp[1] = '\0';
+
       *cbstr = tmpcb;
-      return (TRUE);
+
+      return TRUE;
     }
-    return (FALSE);
+
+    return FALSE;
   }
-  return (TRUE);
+
+  return TRUE;
 }
 
 
