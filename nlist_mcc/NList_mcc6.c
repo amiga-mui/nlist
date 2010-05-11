@@ -1575,7 +1575,6 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
 
     data->DragHeight = data->vinc;
     data->DragWidth = data->mwidth;
-    D(DBF_ALWAYS,"dragcol %ld, draglines %ld, numlines %ld",data->NList_DragColOnly,data->NList_DragLines,numlines);
 
     if(data->NList_DragColOnly < 0)
     {
