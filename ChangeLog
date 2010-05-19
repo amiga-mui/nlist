@@ -11,6 +11,7 @@ $URL$
     by our stripped down test application. A few bells and whistles less than
     the former demo application, but at least it works without problems and
     shows the new handling of raw image data.
+  * added stuff for automated build of release archives.
 
 #### v0.105 RELEASE ###########################################################
 
