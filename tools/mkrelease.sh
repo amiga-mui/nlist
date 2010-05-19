@@ -21,7 +21,7 @@
 #
 # NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 #
-# $Id: Makefile 362 2009-10-24 21:12:55Z damato $
+# $Id$
 #
 ############################################################################
 
