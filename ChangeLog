@@ -5,12 +5,19 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-05-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/NBitmap-Demo.c: replaced the old and complete broken demo application
+    by our stripped down test application. A few bells and whistles less than
+    the former demo application, but at least it works without problems and
+    shows the new handling of raw image data.
+
 #### v0.105 RELEASE ###########################################################
 
 2010-05-16  Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: final v0.105 release preparations
- 
+
 2010-05-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/mui/NList_mcc.h: added a comment to skip certain method IDs for
