@@ -58,8 +58,7 @@ make -C nlisttree_mcp release
 make -C nlistviews_mcp release
 make -C demo release
 
-#for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
-for os in os3 os4 mos; do
+for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
 	case $os in
 	    os3)         fullsys="AmigaOS3";;
 	    os4)         fullsys="AmigaOS4";;
@@ -70,44 +69,45 @@ for os in os3 os4 mos; do
 	esac
 	mkdir -p "release/MCC_NList/Demos/$fullsys"
 	mkdir -p "release/MCC_NList/Libs/MUI/$fullsys"
-	cp demo/bin_$os/NBitmap-Demo "release/MCC_NList/Demos/$fullysys/"
-	cp demo/bin_$os/NList-Demo "release/MCC_NList/Demos/$fullysys/"
-	cp demo/bin_$os/NListtree-Demo "release/MCC_NList/Demos/$fullysys/"
-	cp nbalance_mcc/bin_$os/NBalance.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
-	cp nbitmap_mcc/bin_$os/NBitmap.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
-	cp nfloattext_mcc/bin_$os/NFloattext.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
-	cp nlist_mcc/bin_$os/NList.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
-	cp nlisttree_mcc/bin_$os/NListtree.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
-	cp nlistview_mcc/bin_$os/NListview.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
-	cp nlisttree_mcp/bin_$os/NListtree.mcp "release/MCC_NList/Libs/MUI/$fullsys/"
-	cp nlistviews_mcp/bin_$os/NListviews.mcp "release/MCC_NList/Libs/MUI/$fullsys/"
+	cp -a demo/bin_$os/NBitmap-Demo "release/MCC_NList/Demos/$fullsys/"
+	cp -a nbitmap_mcc/icon.png "release/MCC_NList/Demos/$fullsys/"
+	cp -a demo/bin_$os/NList-Demo "release/MCC_NList/Demos/$fullsys/"
+	cp -a demo/bin_$os/NListtree-Demo "release/MCC_NList/Demos/$fullsys/"
+	cp -a nbalance_mcc/bin_$os/NBalance.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
+	cp -a nbitmap_mcc/bin_$os/NBitmap.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
+	cp -a nfloattext_mcc/bin_$os/NFloattext.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
+	cp -a nlist_mcc/bin_$os/NList.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
+	cp -a nlisttree_mcc/bin_$os/NListtree.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
+	cp -a nlistview_mcc/bin_$os/NListview.mcc "release/MCC_NList/Libs/MUI/$fullsys/"
+	cp -a nlisttree_mcp/bin_$os/NListtree.mcp -a "release/MCC_NList/Libs/MUI/$fullsys/"
+	cp -a nlistviews_mcp/bin_$os/NListviews.mcp -a "release/MCC_NList/Libs/MUI/$fullsys/"
 done
 
 make -C nlisttree_mcp catalogs
 make -C nlistviews_mcp catalogs
 for language in czech french german swedish; do
 	mkdir -p "release/MCC_NList/Locale/Catalogs/$language"
-	cp nlisttree_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListtree_mcp.catalog"
-	cp nlistviews_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListviews_mcp.catalog"
+	cp -a nlisttree_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListtree_mcp.catalog"
+	cp -a nlistviews_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListviews_mcp.catalog"
 done
 
-cp -R dist/* "release/"
-cp AUTHORS ChangeLog COPYING "release/MCC_NList/"
-cp docs/ReadMe "release/MCC_NList/ReadMe"
-cp docs/*.doc "release/MCC_NList/Developer/Autodocs/"
-cp demo/*.c "release/MCC_NList/Developer/C/Examples/"
-cp demo/Makefile "release/MCC_NList/Developer/C/Examples/"
-cp include/mui/NBalance_mcc.h "release/MCC_NList/Developer/C/include/mui/"
-cp include/mui/NBitmap_mcc.h "release/MCC_NList/Developer/C/include/mui/"
-cp include/mui/NFloattext_mcc.h "release/MCC_NList/Developer/C/include/mui/"
-cp include/mui/NList_mcc.h "release/MCC_NList/Developer/C/include/mui/"
-cp include/mui/NListtree_mcc.h "release/MCC_NList/Developer/C/include/mui/"
-cp include/mui/NListview_mcc.h "release/MCC_NList/Developer/C/include/mui/"
-cp nlisttree_mcp/locale/NListtree_mcp.cd "release/MCC_NList/Locale/"
-cp nlistviews_mcp/locale/NListviews_mcp.cd "release/MCC_NList/Locale/"
+cp -a -R dist/* "release/"
+cp -a AUTHORS ChangeLog COPYING "release/MCC_NList/"
+cp -a docs/ReadMe "release/MCC_NList/ReadMe"
+cp -a docs/*.doc "release/MCC_NList/Developer/Autodocs/"
+cp -a demo/*.c "release/MCC_NList/Developer/C/Examples/"
+cp -a demo/Makefile "release/MCC_NList/Developer/C/Examples/"
+cp -a include/mui/NBalance_mcc.h "release/MCC_NList/Developer/C/include/mui/"
+cp -a include/mui/NBitmap_mcc.h "release/MCC_NList/Developer/C/include/mui/"
+cp -a include/mui/NFloattext_mcc.h "release/MCC_NList/Developer/C/include/mui/"
+cp -a include/mui/NList_mcc.h "release/MCC_NList/Developer/C/include/mui/"
+cp -a include/mui/NListtree_mcc.h "release/MCC_NList/Developer/C/include/mui/"
+cp -a include/mui/NListview_mcc.h "release/MCC_NList/Developer/C/include/mui/"
+cp -a nlisttree_mcp/locale/NListtree_mcp.cd "release/MCC_NList/Locale/"
+cp -a nlistviews_mcp/locale/NListviews_mcp.cd "release/MCC_NList/Locale/"
 
 echo "  MK MCC_NList-0.$1.lha"
 find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
 pushd release >/dev/null
-lha -aq2 ../MCC_NList-0.$1.lha *
+lha -aq ../MCC_NList-0.$1.lha *
 popd >/dev/null
