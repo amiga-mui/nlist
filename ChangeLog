@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-05-20 Thore Böckelmann <tboeckel@gmx.de>
+
+  * Makefiles: add varargs stubs only for those systems which really need it.
+
 2010-05-19 Thore Böckelmann <tboeckel@gmx.de>
 
   * demo/NBitmap-Demo.c: replaced the old and complete broken demo application

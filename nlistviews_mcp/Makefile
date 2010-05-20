@@ -179,7 +179,6 @@ LOBJS = library.o
 
 COBJS = locale.o \
         NListviews.o \
-        vastubs.o \
         icon.o \
         Debug.o
 
@@ -236,6 +235,9 @@ ifeq ($(OS), os3)
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
+
+  # additional object files required
+  COBJS += vastubs.o
 
 else
 ifeq ($(OS), mos)

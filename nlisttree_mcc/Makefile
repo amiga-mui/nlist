@@ -177,8 +177,7 @@ LOBJS = library.o
 COBJS = NListtree.o \
         ClipboardServer.o \
         QuickSort.o \
-        Debug.o \
-        vastubs.o
+        Debug.o
 
 TOBJS = #NListtree-Test.o
 
@@ -227,6 +226,9 @@ ifeq ($(OS), os3)
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
+
+  # additional object files required
+  COBJS += vastubs.o
 
 else
 ifeq ($(OS), mos)

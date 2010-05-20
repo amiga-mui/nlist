@@ -195,8 +195,7 @@ COBJS = NList_mcc.o       \
         NList_img2.o      \
         ClipboardServer.o \
         Pointer.o         \
-        Debug.o           \
-        vastubs.o
+        Debug.o
 
 TOBJS = NList-Test.o
 
@@ -244,7 +243,9 @@ ifeq ($(OS), os3)
   LDLIBS  += -ldebug -lmui
 
   # only the OS3 build needs the custom memory pool implementations if run on OS2.x
-  COBJS  += libpool.o
+  COBJS += libpool.o
+  # additional object files required
+  COBJS += vastubs.o
 
 else
 ifeq ($(OS), mos)

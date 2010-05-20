@@ -177,8 +177,7 @@ LDLIBS   =
 LOBJS = library.o
 
 COBJS = NListview.o \
-        Debug.o \
-        vastubs.o
+        Debug.o
 
 TOBJS = #NListview-Test.o
 
@@ -227,6 +226,9 @@ ifeq ($(OS), os3)
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
+
+  # additional object files required
+  COBJS += vastubs.o
 
 else
 ifeq ($(OS), mos)
