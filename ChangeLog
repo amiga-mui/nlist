@@ -5,6 +5,20 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-05-20 Mariusz Danilewicz <mandi@interia.pl>
+
+ * ChangeLog: updated - missed last time.
+
+2010-05-20 Mariusz Danilewicz <mandi@interia.pl>
+
+ * nlistviews_mcp\locale\NListviews_mcp.cd: fixed typo in
+   MSG_FUNC_DEFALLORDERCOL and updated (c) notice in MSG_EXAMPLE_TEXT
+ * nlistviews_mcp\locale\polish.ct: added Polish translation
+ * nlisttree_mcp\locale\polish.ct: added Polish translation
+ * tools\mkrelease.sh: added generating Polish catalog to release
+ * nlistviews_mcp\makefile and mmakefile.src: added generating Polish catalog
+ * nlisttree_mcp\makefile and mmakefile.src: added generating Polish catalog
+
 2010-05-20 Thore Böckelmann <tboeckel@gmx.de>
 
   * Makefiles: add varargs stubs only for those systems which really need it.
