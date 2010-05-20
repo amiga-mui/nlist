@@ -85,7 +85,7 @@ done
 
 make -C nlisttree_mcp catalogs
 make -C nlistviews_mcp catalogs
-for language in czech french german swedish; do
+for language in czech french german swedish polish; do
 	mkdir -p "release/MCC_NList/Locale/Catalogs/$language"
 	cp -a nlisttree_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListtree_mcp.catalog"
 	cp -a nlistviews_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListviews_mcp.catalog"
