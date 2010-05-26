@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-05-26 Thore Böckelmann <tboeckel@gmx.de>
+
+  * dist/Install-MCC: added the first version of a generic MCC Installer script.
+    To use this script for other classes only the name and the set of supported
+    languages needs to be adapted.
+
 2010-05-20 Mariusz Danilewicz <mandi@interia.pl>
 
  * ChangeLog: updated - missed last time.
