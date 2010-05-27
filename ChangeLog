@@ -12,6 +12,8 @@ $URL$
     specified in the script's icon as application name. This makes it possible
     to use the script for arbitrary classes without modification.
   * dist/icons: set some reasonable default icon positions.
+  * nlist_mcc: removed the permanent copy of the exported stuff as this is not
+    needed at all outside the export function.
 
 2010-05-26 Thore Böckelmann <tboeckel@gmx.de>
 

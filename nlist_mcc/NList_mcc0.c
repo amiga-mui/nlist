@@ -126,12 +126,13 @@ static IPTR mNL_Hide(struct IClass *cl,Object *obj,Msg msg)
 
 static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   ULONG id;
-  LONG *nlie;
 
-  if((id = (muiNotifyData(obj)->mnd_ObjectID)))
+  if((id = (muiNotifyData(obj)->mnd_ObjectID)) != 0)
   {
+    LONG *nlie;
+
     if ((nlie = (LONG *) DoMethod(msg->dataspace,MUIM_Dataspace_Find,id)) &&
         (nlie[0] == MAKE_ID('E','X','P','T')))
     {
@@ -147,7 +148,8 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
       while (id)
       {
         if      (nlie[nliepos] == MAKE_ID('A','C','T','V'))
-        { nliepos++;
+        {
+          nliepos++;
           if (data->NList_Imports & MUIV_NList_Imports_Active)
             NL_List_Active(obj,data,nlie[nliepos],NULL,MUIV_NList_Select_On,TRUE);
           nliepos++;
@@ -155,7 +157,8 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           data->do_draw = TRUE;
         }
         else if (nlie[nliepos] == MAKE_ID('F','R','S','T'))
-        { nliepos++;
+        {
+          nliepos++;
           if (data->NList_Imports & MUIV_NList_Imports_First)
             NL_List_First(obj,data,nlie[nliepos],NULL);
           nliepos++;
@@ -163,9 +166,11 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           data->do_draw = TRUE;
         }
         else if (nlie[nliepos] == MAKE_ID('T','I','T','L'))
-        { nliepos++;
+        {
+          nliepos++;
           if (data->NList_Imports & MUIV_NList_Imports_TitleMark)
-          { set(obj,MUIA_NList_SortType, nlie[nliepos]);
+          {
+            set(obj,MUIA_NList_SortType, nlie[nliepos]);
             set(obj,MUIA_NList_TitleMark, nlie[nliepos]);
           }
           nliepos++;
@@ -173,9 +178,11 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           data->do_draw_all = data->do_draw = TRUE;
         }
         else if (nlie[nliepos] == MAKE_ID('T','I','T','2'))
-        { nliepos++;
+        {
+          nliepos++;
           if (data->NList_Imports & MUIV_NList_Imports_TitleMark)
-          { set(obj,MUIA_NList_SortType2, nlie[nliepos]);
+          {
+            set(obj,MUIA_NList_SortType2, nlie[nliepos]);
             set(obj,MUIA_NList_TitleMark2, nlie[nliepos]);
           }
           nliepos++;
@@ -183,10 +190,12 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           data->do_draw_all = data->do_draw = TRUE;
         }
         else if (nlie[nliepos] == MAKE_ID('W','I','D','T'))
-        { nliepos++;
+        {
+          nliepos++;
           num_widt = nlie[nliepos++];
           for (numcol = 0; numcol < num_widt; numcol++)
-          { if (data->NList_Imports & MUIV_NList_Imports_ColWidth)
+          {
+            if (data->NList_Imports & MUIV_NList_Imports_ColWidth)
               NL_ColWidth(obj,data,numcol,nlie[nliepos]);
             nliepos++;
 /*D(bug("%lx|Import_WIDT(%ld)=%ld (%ld)\n",obj,numcol,nlie[nliepos-1],(nliepos-1)));*/
@@ -194,10 +203,12 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           }
         }
         else if (nlie[nliepos] == MAKE_ID('O','R','D','R'))
-        { nliepos++;
+        {
+          nliepos++;
           num_ordr = nlie[nliepos++];
           for (numcol = 0; numcol < num_ordr; numcol++)
-          { if (data->NList_Imports & MUIV_NList_Imports_ColOrder)
+          {
+            if (data->NList_Imports & MUIV_NList_Imports_ColOrder)
               NL_SetCol(obj,data,numcol,nlie[nliepos]);
             nliepos++;
 /*D(bug("%lx|Import_ORDR(%ld)=%ld (%ld)\n",obj,numcol,nlie[nliepos-1],(nliepos-1)));*/
@@ -205,7 +216,8 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           }
         }
         else if (nlie[nliepos] == MAKE_ID('S','E','L','S'))
-        { nliepos++;
+        {
+          nliepos++;
           num_sels = nlie[nliepos++];
           for (numsel = 0; numsel < num_sels; numsel++)
           { if (data->NList_Imports & MUIV_NList_Imports_Selected)
@@ -234,13 +246,13 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
 
 static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   ULONG id;
 
-  if((id = (muiNotifyData(obj)->mnd_ObjectID)))
+  if((id = (muiNotifyData(obj)->mnd_ObjectID)) != 0)
   {
+    LONG *buffer;
     ULONG nliesize = 0;
-    ULONG nliepos = 0;
     LONG pos;
     LONG numsel = 0;
     LONG numcol;
@@ -264,96 +276,110 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
     if (data->NList_Exports & MUIV_NList_Exports_TitleMark)
       n_titr = n_tit2 = 2;
     if (data->NList_Exports & MUIV_NList_Exports_ColWidth)
-    { for (numcol = 0; numcol < data->numcols; numcol++)
-      { if (data->cols[numcol].col >= num_widt)
+    {
+      for (numcol = 0; numcol < data->numcols; numcol++)
+      {
+        if (data->cols[numcol].col >= num_widt)
           num_widt = data->cols[numcol].col + 1;
       }
       n_widt = num_widt + 2;
     }
     if (data->NList_Exports & MUIV_NList_Exports_ColOrder)
-    { num_ordr = data->numcols;
+    {
+      num_ordr = data->numcols;
       n_ordr = num_ordr + 2;
     }
     if ((data->NList_Exports & MUIV_NList_Exports_Selected) &&
         (data->NList_TypeSelect == MUIV_NList_TypeSelect_Line))
-    { NL_List_Select(obj,data,MUIV_NList_Select_All,MUIV_NList_Select_All,MUIV_NList_Select_Ask,&numsel);
+    {
+      NL_List_Select(obj,data,MUIV_NList_Select_All,MUIV_NList_Select_All,MUIV_NList_Select_Ask,&numsel);
+
       if (numsel > 0)
         num_sels = numsel;
       n_sels = num_sels + 2;
     }
 
-    nliesize = (n_actv + n_frst + n_titr + n_tit2 + n_widt + n_ordr + n_sels + 3) * 4;
+    nliesize = (n_actv + n_frst + n_titr + n_tit2 + n_widt + n_ordr + n_sels + 3) * sizeof(buffer[0]);
 
-    if (data->nlie)
-    { NL_Free(data,(void *)data->nlie,"NL_Export");
-      data->nlie = NULL;
-    }
-
-    if((data->nlie = (LONG *) NL_Malloc(data,nliesize,"NL_Export")))
+    if((buffer = (LONG *)NL_Malloc(data,nliesize, "NL_Export")) != NULL)
     {
-      nliepos = 0;
-      data->nlie[nliepos++] = MAKE_ID('E','X','P','T');
+      ULONG nliepos = 0;
+
+      buffer[nliepos++] = MAKE_ID('E','X','P','T');
 
       if (data->NList_Exports & MUIV_NList_Exports_Active)
-      { data->nlie[nliepos++] = MAKE_ID('A','C','T','V');
-        data->nlie[nliepos++] = data->NList_Active;
-/*D(bug("%lx|Export_ACTV=%ld (%ld)\n",obj,data->nlie[nliepos-1],(nliepos-1)));*/
+      {
+        buffer[nliepos++] = MAKE_ID('A','C','T','V');
+        buffer[nliepos++] = data->NList_Active;
+/*D(bug("%lx|Export_ACTV=%ld (%ld)\n",obj,buffer[nliepos-1],(nliepos-1)));*/
       }
       if (data->NList_Exports & MUIV_NList_Exports_First)
-      { data->nlie[nliepos++] = MAKE_ID('F','R','S','T');
-        data->nlie[nliepos++] = data->NList_First;
-/*D(bug("%lx|Export_FRST=%ld (%ld)\n",obj,data->nlie[nliepos-1],(nliepos-1)));*/
+      {
+        buffer[nliepos++] = MAKE_ID('F','R','S','T');
+        buffer[nliepos++] = data->NList_First;
+/*D(bug("%lx|Export_FRST=%ld (%ld)\n",obj,buffer[nliepos-1],(nliepos-1)));*/
       }
       if (data->NList_Exports & MUIV_NList_Exports_TitleMark)
-      { data->nlie[nliepos++] = MAKE_ID('T','I','T','L');
-        data->nlie[nliepos++] = data->NList_TitleMark;
-/*D(bug("%lx|Export_TITL=0x%lx (%ld)\n",obj,data->nlie[nliepos-1],(nliepos-1)));*/
+      {
+        buffer[nliepos++] = MAKE_ID('T','I','T','L');
+        buffer[nliepos++] = data->NList_TitleMark;
+/*D(bug("%lx|Export_TITL=0x%lx (%ld)\n",obj,buffer[nliepos-1],(nliepos-1)));*/
       }
       if (data->NList_Exports & MUIV_NList_Exports_TitleMark)
-      { data->nlie[nliepos++] = MAKE_ID('T','I','T','2');
-        data->nlie[nliepos++] = data->NList_TitleMark2;
-/*D(bug("%lx|Export_TIT2=0x%lx (%ld)\n",obj,data->nlie[nliepos-1],(nliepos-1)));*/
+      {
+        buffer[nliepos++] = MAKE_ID('T','I','T','2');
+        buffer[nliepos++] = data->NList_TitleMark2;
+/*D(bug("%lx|Export_TIT2=0x%lx (%ld)\n",obj,buffer[nliepos-1],(nliepos-1)));*/
       }
       if (data->NList_Exports & MUIV_NList_Exports_ColWidth)
-      { data->nlie[nliepos++] = MAKE_ID('W','I','D','T');
-        data->nlie[nliepos++] = num_widt;
+      { buffer[nliepos++] = MAKE_ID('W','I','D','T');
+        buffer[nliepos++] = num_widt;
         for (numcol = 0; numcol < num_widt; numcol++)
-        { data->nlie[nliepos++] = (LONG) NL_ColWidth(obj,data,numcol,MUIV_NList_ColWidth_Get);
-/*D(bug("%lx|Export_WIDT(%ld)=%ld (%ld)\n",obj,numcol,data->nlie[nliepos-1],(nliepos-1)));*/
+        {
+          buffer[nliepos++] = (LONG) NL_ColWidth(obj,data,numcol,MUIV_NList_ColWidth_Get);
+/*D(bug("%lx|Export_WIDT(%ld)=%ld (%ld)\n",obj,numcol,buffer[nliepos-1],(nliepos-1)));*/
         }
       }
       if (data->NList_Exports & MUIV_NList_Exports_ColOrder)
-      { data->nlie[nliepos++] = MAKE_ID('O','R','D','R');
-        data->nlie[nliepos++] = num_ordr;
+      {
+        buffer[nliepos++] = MAKE_ID('O','R','D','R');
+        buffer[nliepos++] = num_ordr;
         for (numcol = 0; numcol < num_ordr; numcol++)
-        { data->nlie[nliepos++] = NL_ColumnToCol(obj,data,numcol);
-/*D(bug("%lx|Export_ORDR(%ld)=%ld (%ld)\n",obj,numcol,data->nlie[nliepos-1],(nliepos-1)));*/
+        {
+          buffer[nliepos++] = NL_ColumnToCol(obj,data,numcol);
+/*D(bug("%lx|Export_ORDR(%ld)=%ld (%ld)\n",obj,numcol,buffer[nliepos-1],(nliepos-1)));*/
         }
       }
       if ((data->NList_Exports & MUIV_NList_Exports_Selected) &&
           (data->NList_TypeSelect == MUIV_NList_TypeSelect_Line))
-      { struct  MUIP_NList_NextSelected nlns;
-        data->nlie[nliepos++] = MAKE_ID('S','E','L','S');
-        data->nlie[nliepos++] = num_sels;
+      {
+        struct  MUIP_NList_NextSelected nlns;
+
+        buffer[nliepos++] = MAKE_ID('S','E','L','S');
+        buffer[nliepos++] = num_sels;
         pos = MUIV_NList_NextSelected_Start;
         numsel = 0;
         nlns.pos = &pos;
         while ((numsel < num_sels) && mNL_List_NextSelected(cl,obj,&nlns) && (pos != MUIV_NList_NextSelected_End))
-        { data->nlie[nliepos++] = pos;
-/*D(bug("%lx|Export_SELS(%ld)=%ld (%ld)\n",obj,numsel,data->nlie[nliepos-1],(nliepos-1)));*/
+        {
+          buffer[nliepos++] = pos;
+/*D(bug("%lx|Export_SELS(%ld)=%ld (%ld)\n",obj,numsel,buffer[nliepos-1],(nliepos-1)));*/
           numsel++;
         }
         while (numsel < num_sels)
-        { data->nlie[nliepos++] = -1;
-/*D(bug("%lx|Export_SELS(%ld)=%ld ! (%ld)\n",obj,numsel,data->nlie[nliepos-1],(nliepos-1)));*/
+        {
+          buffer[nliepos++] = -1;
+/*D(bug("%lx|Export_SELS(%ld)=%ld ! (%ld)\n",obj,numsel,buffer[nliepos-1],(nliepos-1)));*/
           numsel++;
         }
       }
-      data->nlie[nliepos++] = MAKE_ID('E','N','D','.');
+      buffer[nliepos++] = MAKE_ID('E','N','D','.');
 /*D(bug("%lx|Export_END. (%ld)\n",obj,(nliepos-1)));*/
 
-      DoMethod(msg->dataspace,MUIM_Dataspace_Add,data->nlie,nliesize,id);
+      DoMethod(msg->dataspace,MUIM_Dataspace_Add,buffer,nliesize,id);
 /*D(bug("%lx|Exports=%lx Dataspace=%lx done.\n",obj,data->NList_Imports,msg->dataspace));*/
+
+      NL_Free(data, buffer, "NL_Export");
     }
   }
   return (0);

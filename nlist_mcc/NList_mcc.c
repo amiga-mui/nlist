@@ -569,7 +569,6 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->MOUSE_MOVE = FALSE;
   data->pad1 = -1;
   data->pad2 = TRUE;
-  data->nlie = NULL;
   data->isActiveObject = FALSE;
   data->NList_KeyUpFocus = NULL;
   data->NList_KeyDownFocus = NULL;
@@ -997,11 +996,6 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
     NL_Free(data,data->NList_UseImages,"Dispose_useimages");
   data->NList_UseImages = NULL;
   data->LastImage = 0;
-
-  if (data->nlie)
-  { NL_Free(data,(void *)data->nlie,"Dispose_Export struct");
-    data->nlie = NULL;
-  }
 
   FreeAffInfo(obj,data);
 

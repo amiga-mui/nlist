@@ -339,7 +339,6 @@ struct NLData
   LONG  ListCompatibility;
   struct KeyBinding *NList_Keys;
   struct KeyBinding *Wheel_Keys;
-  LONG  *nlie;
   UBYTE *NList_Columns;
   ULONG HLINE_thick_pen;
   LONG  ContextMenu;
