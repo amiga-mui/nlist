@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-05-27 Thore Böckelmann <tboeckel@gmx.de>
+
+  * dist/Install-MCC: the supported languages are now collected dynamically
+    instead of being defined statically. Furthermore the .mcc name must be
+    specified in the script's icon as application name. This makes it possible
+    to use the script for arbitrary classes without modification.
+
 2010-05-26 Thore Böckelmann <tboeckel@gmx.de>
 
   * dist/Install-MCC: added the first version of a generic MCC Installer script.
@@ -13,17 +20,17 @@ $URL$
 
 2010-05-20 Mariusz Danilewicz <mandi@interia.pl>
 
- * ChangeLog: updated - missed last time.
+  * ChangeLog: updated - missed last time.
 
 2010-05-20 Mariusz Danilewicz <mandi@interia.pl>
 
- * nlistviews_mcp\locale\NListviews_mcp.cd: fixed typo in
-   MSG_FUNC_DEFALLORDERCOL and updated (c) notice in MSG_EXAMPLE_TEXT
- * nlistviews_mcp\locale\polish.ct: added Polish translation
- * nlisttree_mcp\locale\polish.ct: added Polish translation
- * tools\mkrelease.sh: added generating Polish catalog to release
- * nlistviews_mcp\makefile and mmakefile.src: added generating Polish catalog
- * nlisttree_mcp\makefile and mmakefile.src: added generating Polish catalog
+  * nlistviews_mcp\locale\NListviews_mcp.cd: fixed typo in
+    MSG_FUNC_DEFALLORDERCOL and updated (c) notice in MSG_EXAMPLE_TEXT
+  * nlistviews_mcp\locale\polish.ct: added Polish translation
+  * nlisttree_mcp\locale\polish.ct: added Polish translation
+  * tools\mkrelease.sh: added generating Polish catalog to release
+  * nlistviews_mcp\makefile and mmakefile.src: added generating Polish catalog
+  * nlisttree_mcp\makefile and mmakefile.src: added generating Polish catalog
 
 2010-05-20 Thore Böckelmann <tboeckel@gmx.de>
 
