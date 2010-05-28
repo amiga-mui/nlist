@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-05-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc: cleaned up the config import and export functions.
+
 2010-05-27 Thore Böckelmann <tboeckel@gmx.de>
 
   * dist/Install-MCC: the supported languages are now collected dynamically
