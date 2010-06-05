@@ -360,7 +360,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
   /*D(bug("NL: mNL_HandleEvent() /before \n"));*/
 
   if (msg->imsg && !data->NList_Quiet && !data->NList_Disabled)
-  { LONG tagval,tagval2;
+  { SIPTR tagval,tagval2;
     LONG drag_ok = FALSE;
     WORD hfirst = data->NList_Horiz_AffFirst & ~1;
     WORD hfirsthpos = hfirst - data->hpos;
@@ -526,9 +526,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           #endif
 
           if((tagval = xget(_win(obj), MUIA_Window_ActiveObject)) &&
-             ((tagval == (LONG)obj) ||
-               (tagval && (tagval2 = xget((Object *)tagval, MUIA_Listview_List)) && (tagval2 == (LONG)obj)) ||
-               (!tagval && (tagval2 = xget(_win(obj), MUIA_Window_DefaultObject)) && (tagval2 == (LONG)obj)))
+             ((tagval == (SIPTR)obj) ||
+               (tagval && (tagval2 = xget((Object *)tagval, MUIA_Listview_List)) && (tagval2 == (SIPTR)obj)) ||
+               (!tagval && (tagval2 = xget(_win(obj), MUIA_Window_DefaultObject)) && (tagval2 == (SIPTR)obj)))
              )
           {
             if (data->NList_AutoCopyToClip)
@@ -984,7 +984,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               {
                 ULONG tst = xget(_win(obj), MUIA_Window_ActiveObject);
 
-                if((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (ULONG) obj))
+                if((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (IPTR) obj))
                 {
                   if (data->NList_MakeActive)
                     newActiveObject = (Object *)data->NList_MakeActive;
@@ -994,7 +994,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   modifyActiveObject = TRUE;
                 }
 
-                set(_win(obj), MUIA_Window_DefaultObject, (LONG) obj);
+                set(_win(obj), MUIA_Window_DefaultObject, (IPTR) obj);
               }
               else if(data->NList_MakeActive)
               {
@@ -1138,7 +1138,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               /* click was not in _isinobject2() */
               ULONG tst = xget(_win(obj), MUIA_Window_DefaultObject);
 
-              if(tst == (ULONG)obj)
+              if(tst == (IPTR)obj)
                 set(_win(obj), MUIA_Window_DefaultObject, NULL);
 
               // do not return MUI_EventHandlerRC_Eat, because this click happened outside

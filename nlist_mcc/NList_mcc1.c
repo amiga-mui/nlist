@@ -694,7 +694,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
               data->NList_MultiSelect = MUIV_NList_MultiSelect_Default;
               { LONG *multisel;
 
-                if (data->SETUP && DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, (LONG) (&multisel)))
+                if (data->SETUP && DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, (SIPTR) (&multisel)))
                   data->multiselect = *multisel & 0x0007;
                 else
                   data->multiselect = MUIV_NList_MultiSelect_Shifted;
@@ -1228,9 +1228,9 @@ IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_Listview_Input:
     case MUIA_NList_Input:						*msg->opg_Storage = (ULONG) data->NList_Input;				return( TRUE );
     case MUIA_List_Format:
-    case MUIA_NList_Format:					*msg->opg_Storage = (ULONG) data->NList_Format;				return( TRUE );
+    case MUIA_NList_Format:					*msg->opg_Storage = (IPTR) data->NList_Format;				return( TRUE );
     case MUIA_List_Title:
-    case MUIA_NList_Title:						*msg->opg_Storage = (ULONG) data->NList_Title;				return( TRUE );
+    case MUIA_NList_Title:						*msg->opg_Storage = (IPTR) data->NList_Title;				return( TRUE );
     case MUIA_NList_TitleSeparator:			*msg->opg_Storage = (ULONG) data->NList_TitleSeparator;	return( TRUE );
     case MUIA_List_DragSortable:
     case MUIA_NList_DragSortable:			*msg->opg_Storage = (ULONG) data->NList_DragSortable;		return( TRUE );
@@ -1268,27 +1268,27 @@ IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_List_AutoVisible:
     case MUIA_NList_AutoVisible:				*msg->opg_Storage = (ULONG) data->NList_AutoVisible;		return( TRUE );
     case MUIA_NList_TabSize:					*msg->opg_Storage = (ULONG) data->NList_TabSize;			return( TRUE );
-    case MUIA_NList_SkipChars:				*msg->opg_Storage = (ULONG) data->NList_SkipChars;			return( TRUE );
-    case MUIA_NList_WordSelectChars:		*msg->opg_Storage = (ULONG) data->NList_WordSelectChars;	return( TRUE );
+    case MUIA_NList_SkipChars:				*msg->opg_Storage = (IPTR) data->NList_SkipChars;			return( TRUE );
+    case MUIA_NList_WordSelectChars:		*msg->opg_Storage = (IPTR) data->NList_WordSelectChars;	return( TRUE );
     case MUIA_NList_EntryValueDependent:	*msg->opg_Storage = (ULONG) data->NList_EntryValueDependent;	return( TRUE );
     case MUIA_NList_SortType:					*msg->opg_Storage = (ULONG) data->NList_SortType;			return( TRUE );
     case MUIA_NList_SortType2:				*msg->opg_Storage = (ULONG) data->NList_SortType2;			return( TRUE );
     case MUIA_NList_ButtonClick:				*msg->opg_Storage = (ULONG) data->NList_ButtonClick;		return( TRUE );
     case MUIA_NList_MinColSortable:			*msg->opg_Storage = (ULONG) data->NList_MinColSortable;	return( TRUE );
-    case MUIA_NList_Columns:					*msg->opg_Storage = (ULONG) NL_Columns(obj,data,NULL);	return( TRUE );
+    case MUIA_NList_Columns:					*msg->opg_Storage = (IPTR) NL_Columns(obj,data,NULL);	return( TRUE );
     case MUIA_NList_Imports:					*msg->opg_Storage = (ULONG) data->NList_Imports;			return( TRUE );
     case MUIA_NList_Exports:					*msg->opg_Storage = (ULONG) data->NList_Exports;			return( TRUE );
     case MUIA_NList_TitleMark:				*msg->opg_Storage = (ULONG) data->NList_TitleMark;			return( TRUE );
     case MUIA_NList_TitleMark2:				*msg->opg_Storage = (ULONG) data->NList_TitleMark2;		return( TRUE );
     case MUIA_NList_AutoClip:				*msg->opg_Storage = (ULONG) data->NList_AutoClip;     return(TRUE);
-    case MUIA_NList_PrivateData:		*msg->opg_Storage = (ULONG) data->NList_PrivateData;	return(TRUE);
+    case MUIA_NList_PrivateData:		*msg->opg_Storage = (IPTR) data->NList_PrivateData;	return(TRUE);
 
-    case MUIA_NList_IgnoreSpecialChars: *msg->opg_Storage = (ULONG)data->NList_IgnoreSpecialChars; return(TRUE);
+    case MUIA_NList_IgnoreSpecialChars: *msg->opg_Storage = (IPTR)data->NList_IgnoreSpecialChars; return(TRUE);
 
-    case MUIA_NList_KeyUpFocus:     *msg->opg_Storage = (ULONG)data->NList_KeyUpFocus;    return(TRUE);
-    case MUIA_NList_KeyDownFocus:   *msg->opg_Storage = (ULONG)data->NList_KeyDownFocus;  return(TRUE);
-    case MUIA_NList_KeyLeftFocus:   *msg->opg_Storage = (ULONG)data->NList_KeyLeftFocus;  return(TRUE);
-    case MUIA_NList_KeyRightFocus:  *msg->opg_Storage = (ULONG)data->NList_KeyRightFocus; return(TRUE);
+    case MUIA_NList_KeyUpFocus:     *msg->opg_Storage = (IPTR)data->NList_KeyUpFocus;    return(TRUE);
+    case MUIA_NList_KeyDownFocus:   *msg->opg_Storage = (IPTR)data->NList_KeyDownFocus;  return(TRUE);
+    case MUIA_NList_KeyLeftFocus:   *msg->opg_Storage = (IPTR)data->NList_KeyLeftFocus;  return(TRUE);
+    case MUIA_NList_KeyRightFocus:  *msg->opg_Storage = (IPTR)data->NList_KeyRightFocus; return(TRUE);
 
     case MUIA_Version:							*msg->opg_Storage = (ULONG) LIB_VERSION;						  return(TRUE);
     case MUIA_Revision:							*msg->opg_Storage = (ULONG) LIB_REVISION;						  return(TRUE);

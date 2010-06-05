@@ -68,7 +68,7 @@ static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
 
     ie.ie_Code         = imsg->Code & ~dccode;
     ie.ie_Qualifier    = imsg->Qualifier & ~dcquali;
-    ie.ie_EventAddress = (APTR *)*((ULONG *)imsg->IAddress);
+    ie.ie_EventAddress = (APTR *)*((IPTR *)imsg->IAddress);
 
     #if defined(__amigaos4__)
     ie.ie_TimeStamp.Seconds = imsg->Seconds;
@@ -251,7 +251,7 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
     {
       LONG *scrollbar;
 
-      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (LONG)&scrollbar))
+      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (IPTR)&scrollbar))
         data->VertSB = *scrollbar;
       else
         data->VertSB = MUIV_NListview_VSB_Always;
@@ -291,7 +291,7 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
     {
       LONG *scrollbar;
 
-      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (LONG)&scrollbar))
+      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (IPTR)&scrollbar))
         data->HorizSB = *scrollbar;
       else
         data->HorizSB = DEFAULT_HSB;
@@ -558,7 +558,7 @@ static IPTR mNLV_New(struct IClass *cl, Object *obj, struct opSet *msg)
 
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NListview_Horiz_ScrollBar, MUIV_EveryTime, obj, 3, MUIM_Set, MUIA_NListview_Horiz_ScrollBar, MUIV_TriggerValue);
 
-    set(data->LI_NList, MUIA_NList_KeepActive, (LONG)obj);
+    set(data->LI_NList, MUIA_NList_KeepActive, (IPTR)obj);
   }
 
   RETURN(obj);

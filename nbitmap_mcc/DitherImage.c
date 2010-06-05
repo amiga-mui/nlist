@@ -48,7 +48,7 @@ APTR DitherImageA(struct TagItem *tags)
 
   ENTER();
 
-  while((tag = NextTagItem(&tags)) != NULL)
+  while((tag = NextTagItem((APTR)&tags)) != NULL)
   {
     switch(tag->ti_Tag)
     {
@@ -207,7 +207,14 @@ APTR DitherImageA(struct TagItem *tags)
   return result;
 }
 
-#if !defined(PPC)
+#if defined(__AROS__)
+APTR DitherImage(Tag tag1, ...)
+{
+  AROS_SLOWSTACKTAGS_PRE(tag1)
+  retval = (IPTR)DitherImageA(AROS_SLOWSTACKTAGS_ARG(tag1));
+  AROS_SLOWSTACKTAGS_POST
+}
+#elif !defined(PPC)
 APTR VARARGS68K DitherImage(Tag tag1, ...)
 {
   return DitherImageA((struct TagItem *)&tag1);

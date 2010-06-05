@@ -1219,7 +1219,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
       {
         if((tagobj == obj) && xget(o, MUIA_NListview_NList) == 0)
         {
-          LONG tagval;
+          SIPTR tagval;
 
           data->listviewobj = o;
           WANT_NOTIFY(NTF_LV_Select);

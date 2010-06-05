@@ -267,7 +267,7 @@ static IPTR mNFT_Get(struct IClass *cl,Object *obj,Msg msg)
       break;
     case MUIA_Floattext_Text:
     case MUIA_NFloattext_Text:
-      *store = (LONG) data->NFloattext_Text;
+      *store = (IPTR) data->NFloattext_Text;
       return(TRUE);
     case MUIA_Floattext_Justify:
     case MUIA_NFloattext_Justify:

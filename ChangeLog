@@ -9,6 +9,7 @@ $URL$
 
   * mmakefile.src: updated to recent changes
   * mccinit.c: updated to current version
+  * some fixes for 64-bit AROS (ULONG -> IPTR)
 
 2010-05-28 Thore Böckelmann <tboeckel@gmx.de>
 

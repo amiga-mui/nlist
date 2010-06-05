@@ -173,8 +173,8 @@ extern IPTR mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NLi
 
 /* NList_func3.c */
 
-extern ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message);
-extern ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...);
+extern IPTR MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message);
+extern IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...);
 extern LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG bufsize,struct KeyMap *kmap);
 extern char *ltoa(ULONG val, char *buffer, int len);
 
@@ -192,7 +192,7 @@ extern VOID	NL2_Free( struct NLData *data, APTR memory, STRPTR string );
 
 extern void NL_Free_Format(Object *obj,struct NLData *data);
 extern BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist);
-extern LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook);
+extern SIPTR NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook);
 
 extern IPTR mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip *msg);
 extern IPTR mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *msg);
