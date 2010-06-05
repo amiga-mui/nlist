@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-06-05 Matthias Rustler <mrustler@gmx.de>
+
+  * mmakefile.src: updated to recent changes
+  * mccinit.c: updated to current version
+
 2010-05-28 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc: cleaned up the config import and export functions.
