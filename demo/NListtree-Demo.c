@@ -823,7 +823,7 @@ HOOKPROTONHNP(numselfunc, LONG, Object *obj)
 		{
 			DoMethod( obj, MUIM_NListtree_NextSelected, &tn );
 
-			if ( (IPTR)tn == MUIV_NListtree_NextSelected_End )
+			if ( (IPTR)tn == (IPTR)MUIV_NListtree_NextSelected_End )
 				break;
 
 			D(bug( "Next TreeNode: 0x%08lx - %s\n", tn, tn->tn_Name ) );
@@ -837,7 +837,7 @@ HOOKPROTONHNP(numselfunc, LONG, Object *obj)
 		{
 			DoMethod( obj, MUIM_NListtree_PrevSelected, &tn );
 
-			if ( (IPTR)tn == MUIV_NListtree_PrevSelected_End )
+			if ( (IPTR)tn == (IPTR)MUIV_NListtree_PrevSelected_End )
 				break;
 
 			D(bug( "Prev TreeNode: 0x%08lx - %s\n", tn, tn->tn_Name ) );

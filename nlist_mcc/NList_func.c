@@ -1987,9 +1987,9 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
       newMsg.params[63] = 0;
     }
 
-    if((IPTR)msg->DestObj == MUIV_NList_DoMethod_Self)
+    if((IPTR)msg->DestObj == (IPTR)MUIV_NList_DoMethod_Self)
       dest = (APTR) obj;
-    else if((IPTR)msg->DestObj == MUIV_NList_DoMethod_App)
+    else if((IPTR)msg->DestObj == (IPTR)MUIV_NList_DoMethod_App)
     {
       if(data->SETUP)
         dest = (APTR) _app(obj);
@@ -2013,7 +2013,7 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
       ent = 0;
     while((ent >= 0) && (ent < data->NList_Entries))
     {
-      if((IPTR) msg->DestObj == MUIV_NList_DoMethod_Entry)
+      if((IPTR) msg->DestObj == (IPTR)MUIV_NList_DoMethod_Entry)
         dest = data->EntriesArray[ent]->Entry;
       if(dest)
       {

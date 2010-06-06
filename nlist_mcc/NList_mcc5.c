@@ -1252,7 +1252,7 @@ IPTR mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuB
 
       MenuObj = (Object *) DoMethod(obj,MUIM_NList_ContextMenuBuild,msg->mx,msg->my,res.entry,column,flags,ontop);
 
-      if ((IPTR) (MenuObj) == -1)
+      if ((IPTR)MenuObj == (IPTR)-1)
         return (0);
 
       if (!MenuObj)

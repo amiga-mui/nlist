@@ -8,6 +8,7 @@ $URL$
 2010-06-06 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/SDI_compiler.h: updated to latest version.
+  * misc: added lots of type casts due to latest AROS changes.
 
 2010-06-06 Matthias Rustler <mrustler@gmx.de>
 
