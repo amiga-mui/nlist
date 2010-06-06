@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-06-06 Matthias Rustler <mrustler@gmx.de>
+
+  * nbitmap_mcc/private.h: fixed definition of types. You can't assume that
+    "long" is 32 bit on all systems.
+  * demo/NBitmap-Demo.c: wrong type caused corrupt images on 64-bit AROS.
+  * mmakefile.src: fixed copying of png.icon
+  * some warnings removed, some TODO comments added.
+
 2010-06-05 Matthias Rustler <mrustler@gmx.de>
 
   * mmakefile.src: updated to recent changes
