@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-06-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/SDI_compiler.h: updated to latest version.
+
 2010-06-06 Matthias Rustler <mrustler@gmx.de>
 
   * nbitmap_mcc/private.h: fixed definition of types. You can't assume that
