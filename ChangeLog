@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-06-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * Install-MCC: extended the final message that a reboot might be necessary to
+    be able to use the just installed version.
+
 2010-06-06 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/SDI_compiler.h: updated to latest version.
