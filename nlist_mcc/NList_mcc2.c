@@ -1274,7 +1274,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         //retval = MUI_EventHandlerRC_Eat;
         break;
       case IDCMP_INTUITICKS:
-        {
+      {
         struct MUI_NList_TestPos_Result res;
 /*
 ** Store Current Values to Temp Variables
@@ -1324,11 +1324,16 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         data->affbuttoncol = tempbuttoncol;
         data->affbuttonstate = tempbuttonstate;
         data->storebutton = tempstorebutton;
-        if (data->NumIntuiTick > 0)
-           { data->NumIntuiTick--;
-             break;
-           }
+        if(data->NumIntuiTick > 0)
+        {
+          data->NumIntuiTick--;
+          break;
         }
+      }
+
+      if(!_isinobject(msg->imsg->MouseX,msg->imsg->MouseY) && data->moves == FALSE)
+        HideCustomPointer(obj, data);
+
       // walk through to next case...
 
       case IDCMP_MOUSEMOVE:
@@ -1547,6 +1552,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
         {
           struct MUI_NList_TestPos_Result res;
+
           res.char_number = -2;
           NL_List_TestPos(obj,data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
 
@@ -1568,20 +1574,20 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           }
           else
           {
-            BOOL onWindow = NL_OnWindow(obj, data, msg->imsg->MouseX, msg->imsg->MouseY);
+            BOOL overObject = _isinobject(msg->imsg->MouseX, msg->imsg->MouseY);
 
             if (((data->adjustbar >= 0) ||
                  ((!data->moves) && (data->adjustbar >= -1) &&
                   (res.flags & MUI_NLPR_BAR) && (res.flags & MUI_NLPR_ONTOP) &&
                   (res.column < data->numcols) && (res.column >= 0))) &&
-                (onWindow == TRUE))
+                (overObject == TRUE))
             {
               // set a custom mouse pointer
               ShowCustomPointer(obj, data, PT_SIZE);
             }
             else if(data->NList_SelectPointer == TRUE &&
-                    (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char) &&
-                    (onWindow == TRUE))
+                    data->NList_TypeSelect == MUIV_NList_TypeSelect_Char &&
+                    overObject == TRUE)
             {
               // in case the NList object is in charwise selection mode and the mouse
               // is above the object itself we show a specialized selection pointer

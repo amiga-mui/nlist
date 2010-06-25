@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-06-25 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: the custom pointers will be shown only if the mouse
+    is over the respective object instead of just being over the list's window.
+    Although I could not reproduce the effect with AmigaOS3 this should fix the
+    problems on MorphOS.
+
 2010-06-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * Install-MCC: extended the final message that a reboot might be necessary to
