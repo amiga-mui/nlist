@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-06-29 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/swedish.ct: added ##codeset line.
+
 2010-06-25 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc2.c: the custom pointers will be shown only if the mouse
