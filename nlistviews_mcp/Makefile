@@ -409,7 +409,7 @@ locale.c: $(LOCALE)/NListviews_mcp.cd C_h.sd C_c.sd
 
 ## CATALOG GENERATION #################
 
-$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct $(LOCALE)/NListviews_mcp.cd
 	@echo "  GN $@"
 	@$(FC) $(LOCALE)/NListviews_mcp.cd $< CATALOG $@
 
