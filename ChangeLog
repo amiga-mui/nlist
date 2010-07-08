@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-07-08 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.c: setting the active entry will now try to show the
+    entry centered within the visible lines if it was outside before. Further-
+    more NList will ensure that the last item is shown on the last line (no
+    empty space below the last line).
+
 2010-06-29 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/swedish.ct: added ##codeset line.

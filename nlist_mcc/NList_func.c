@@ -712,8 +712,11 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
     }
     else if (la >= data->NList_First + data->NList_Visible)
     {
-      data->NList_First = la - data->NList_Visible + 1;
-
+      // center the item in the visible area
+      data->NList_First = la - data->NList_Visible/2;
+      // make sure that the last item is displayed in the last line
+      while(data->NList_First + data->NList_Visible > data->NList_Entries)
+        data->NList_First--;
       if (data->NList_First < 0)
         data->NList_First = 0;
 
@@ -914,7 +917,11 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
         }
         else if (la >= data->NList_First + data->NList_Visible)
         {
-          data->NList_First = la - data->NList_Visible + 1;
+          // center the item in the visible area
+          data->NList_First = la - data->NList_Visible/2;
+          // make sure that the last item is displayed in the last line
+          while(data->NList_First + data->NList_Visible > data->NList_Entries)
+            data->NList_First--;
           if (data->NList_First < 0)
             data->NList_First = 0;
 
