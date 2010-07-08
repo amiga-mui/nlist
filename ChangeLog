@@ -11,6 +11,7 @@ $URL$
     entry centered within the visible lines if it was outside before. Further-
     more NList will ensure that the last item is shown on the last line (no
     empty space below the last line).
+  * all/Debug.c: added CleanupDebug() function needed by the latest mccinit.c.
 
 2010-06-29 Thore Böckelmann <tboeckel@gmx.de>
 
