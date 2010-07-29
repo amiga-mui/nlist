@@ -11,6 +11,8 @@ $URL$
     MUIA_NList_Active/DefaultObjectOnClick get()able to let the surrounding
     NListview object derive the "active border visible" from the embedded list
     object.
+  * nlist_mcc/NList_mcc2.c: the "active object on click" feature must set the
+    surrounding listview as active object instead of itself.
 
 2010-07-08 Thore Böckelmann <tboeckel@gmx.de>
 
