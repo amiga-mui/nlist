@@ -712,8 +712,7 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
     }
     else if (la >= data->NList_First + data->NList_Visible)
     {
-      // center the item in the visible area
-      data->NList_First = la - data->NList_Visible/2;
+      data->NList_First = la - data->NList_Visible + 1;
       // make sure that the last item is displayed in the last line
       while(data->NList_First + data->NList_Visible > data->NList_Entries)
         data->NList_First--;
@@ -917,8 +916,7 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
         }
         else if (la >= data->NList_First + data->NList_Visible)
         {
-          // center the item in the visible area
-          data->NList_First = la - data->NList_Visible/2;
+          data->NList_First = la - data->NList_Visible + 1;
           // make sure that the last item is displayed in the last line
           while(data->NList_First + data->NList_Visible > data->NList_Entries)
             data->NList_First--;
@@ -1597,42 +1595,64 @@ IPTR mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetE
 
 IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   LONG pos = msg->pos;
+
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  switch (pos)
-  { case MUIV_NList_Jump_Top :
+  switch(pos)
+  {
+    case MUIV_NList_Jump_Top:
+    {
       pos = 0;
-      break;
-    case MUIV_NList_Jump_Bottom :
+    }
+    break;
+
+    case MUIV_NList_Jump_Bottom:
+    {
       pos = data->NList_Entries - 1;
-      break;
-    case MUIV_NList_Jump_Active :
+    }
+    break;
+
+    case MUIV_NList_Jump_Active:
+    {
       pos = data->NList_Active;
-      break;
-    case MUIV_NList_Jump_Up :
+    }
+    break;
+
+    case MUIV_NList_Jump_Up:
+    {
       pos = data->NList_First - 1;
-      break;
-    case MUIV_NList_Jump_Down :
+    }
+    break;
+
+    case MUIV_NList_Jump_Down:
+    {
       pos = data->NList_First + data->NList_Visible;
-      break;
-  }
-  if ((pos >= 0) && (pos < data->NList_Entries))
-  { if (pos < data->NList_First)
-    { data->NList_First = pos;
-      DO_NOTIFY(NTF_First);
-      REDRAW;
     }
-    else if (pos >= data->NList_First + data->NList_Visible)
-    { data->NList_First = pos - data->NList_Visible + 1;
-      if (data->NList_First < 0)
-        data->NList_First = 0;
-      DO_NOTIFY(NTF_First);
-      REDRAW;
-    }
+    break;
   }
+
+  if(pos >= 0 && pos < data->NList_Entries)
+  {
+    LONG first;
+
+    // center the item in the visible area
+    first = pos - data->NList_Visible/2;
+
+    // make sure that the last item is displayed in the last line
+    while(first + data->NList_Visible > data->NList_Entries)
+      first--;
+    if(first < 0)
+      first = 0;
+
+    data->NList_First = first;
+    DO_NOTIFY(NTF_First);
+    REDRAW;
+  }
+
 /*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
-  return (TRUE);
+
+  return TRUE;
 }
 
 
