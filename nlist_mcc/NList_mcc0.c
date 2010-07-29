@@ -559,7 +559,6 @@ static IPTR mNL_List_Display( struct IClass *cl, Object *obj, UNUSED struct MUIP
 static IPTR mNL_GoActive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_GoActive *msg)
 {
   struct NLData *data = INST_DATA(cl, obj);
-  IPTR result = 0;
 
   ENTER();
 
@@ -568,14 +567,13 @@ static IPTR mNL_GoActive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NLis
   if(data->NList_ActiveObjectOnClick == TRUE)
     DoMethod(obj, MUIM_NList_Redraw, MUIV_NList_Redraw_Selected);
 
-  RETURN(result);
-  return result;
+  RETURN(TRUE);
+  return TRUE;
 }
 
 static IPTR mNL_GoInactive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_GoActive *msg)
 {
   struct NLData *data = INST_DATA(cl, obj);
-  ULONG result = 0;
 
   ENTER();
 
@@ -584,8 +582,8 @@ static IPTR mNL_GoInactive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NL
   if(data->NList_ActiveObjectOnClick == TRUE)
     DoMethod(obj, MUIM_NList_Redraw, MUIV_NList_Redraw_Selected);
 
-  RETURN(result);
-  return result;
+  RETURN(TRUE);
+  return TRUE;
 }
 
 #define FS (data = INST_DATA(cl,obj)); (NotNotify = data->DoNotify)
