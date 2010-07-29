@@ -220,7 +220,7 @@ NList.mcc/MUIM_NList_UseImage
 NList.mcc/MUIA_NList_ActiveObjectOnClick
 
     NAME
-        MUIA_NList_ActiveObjectOnClick -- [IS.], BOOL
+        MUIA_NList_ActiveObjectOnClick -- [ISG], BOOL
 
     FUNCTION
         If set to TRUE, the NList object will become the
@@ -545,7 +545,7 @@ NList.mcc/MUIM_NList_UseImage
 NList.mcc/MUIA_NList_DefaultObjectOnClick
 
     NAME
-        MUIA_NList_DefaultObjectOnClick -- [IS.], BOOL
+        MUIA_NList_DefaultObjectOnClick -- [ISG], BOOL
 
     FUNCTION
         If set to TRUE, the NList object will become the

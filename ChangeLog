@@ -13,6 +13,7 @@ $URL$
     object.
   * nlist_mcc/NList_mcc2.c: the "active object on click" feature must set the
     surrounding listview as active object instead of itself.
+  * doc/MCC_NList.doc: updated Autodocs according to latest changes.
 
 2010-07-08 Thore Böckelmann <tboeckel@gmx.de>
 
