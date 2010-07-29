@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-07-29 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/misc, nlistview_mcc/misc: made the two attributes
+    MUIA_NList_Active/DefaultObjectOnClick get()able to let the surrounding
+    NListview object derive the "active border visible" from the embedded list
+    object.
+
 2010-07-08 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func.c: setting the active entry will now try to show the
