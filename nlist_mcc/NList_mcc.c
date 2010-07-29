@@ -795,7 +795,15 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     data->NList_DefaultObjectOnClick = (LONG) tag->ti_Data;
 
   if((tag = FindTagItem(MUIA_NList_ActiveObjectOnClick, taglist)))
+  {
     data->NList_ActiveObjectOnClick = (BOOL)tag->ti_Data;
+    if(data->NList_ActiveObjectOnClick)
+    {
+      // disable that the object will automatically get a border when
+      // the ActiveObjectOnClick option is active
+      _flags(obj) |= (1<<7);
+    }
+  }
 
   if((tag = FindTagItem(MUIA_NList_MinLineHeight, taglist)))
     data->NList_MinLineHeight = (LONG) tag->ti_Data;
@@ -1090,11 +1098,6 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
     return(FALSE);
   }
-
-  // disable that the object will automatically get a border when
-  // the ActiveObjectOnClick option is active
-  if(data->NList_ActiveObjectOnClick == TRUE)
-    _flags(obj) |= (1<<7);
 
   data->rp = NULL;
 
@@ -1547,11 +1550,6 @@ IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
   release_pen(data->mri, &data->NList_SelectPen);
   release_pen(data->mri, &data->NList_CursorPen);
   release_pen(data->mri, &data->NList_UnselCurPen);
-
-  // enable that the object will automatically get a border when
-  // the ActiveObjectOnClick option is active
-  if(data->NList_ActiveObjectOnClick == TRUE)
-    _flags(obj) &= ~(1<<7);
 
   retval = DoSuperMethodA(cl,obj,(Msg) msg);
 

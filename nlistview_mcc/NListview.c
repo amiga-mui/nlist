@@ -559,6 +559,10 @@ static IPTR mNLV_New(struct IClass *cl, Object *obj, struct opSet *msg)
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NListview_Horiz_ScrollBar, MUIV_EveryTime, obj, 3, MUIM_Set, MUIA_NListview_Horiz_ScrollBar, MUIV_TriggerValue);
 
     set(data->LI_NList, MUIA_NList_KeepActive, (IPTR)obj);
+
+    // derive the "active border visible" setting from the embedded list
+    if(xget(data->LI_NList, MUIA_NList_ActiveObjectOnClick) == TRUE)
+      _flags(obj) |= (1<<7);
   }
 
   RETURN(obj);

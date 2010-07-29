@@ -932,12 +932,16 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
           // disable that the object will automatically get a border when
           // the ActiveObjectOnClick option is active
           _flags(obj) |= (1<<7);
+          if(data->listviewobj != NULL)
+            _flags(data->listviewobj) |= (1<<7);
         }
         else
         {
           // enable that the object will automatically get a border when
           // the ActiveObjectOnClick option is active
           _flags(obj) &= ~(1<<7);
+          if(data->listviewobj != NULL)
+            _flags(data->listviewobj) &= ~(1<<7);
         }
       }
       break;
@@ -1284,6 +1288,9 @@ IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_NList_PrivateData:		*msg->opg_Storage = (IPTR) data->NList_PrivateData;	return(TRUE);
 
     case MUIA_NList_IgnoreSpecialChars: *msg->opg_Storage = (IPTR)data->NList_IgnoreSpecialChars; return(TRUE);
+
+    case MUIA_NList_DefaultObjectOnClick: *msg->opg_Storage = (ULONG)data->NList_DefaultObjectOnClick; return(TRUE);
+    case MUIA_NList_ActiveObjectOnClick:  *msg->opg_Storage = (ULONG)data->NList_ActiveObjectOnClick; return(TRUE);
 
     case MUIA_NList_KeyUpFocus:     *msg->opg_Storage = (IPTR)data->NList_KeyUpFocus;    return(TRUE);
     case MUIA_NList_KeyDownFocus:   *msg->opg_Storage = (IPTR)data->NList_KeyDownFocus;  return(TRUE);

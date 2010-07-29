@@ -980,9 +980,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                 }
               }
 
-              if(data->NList_DefaultObjectOnClick)
+              if(data->NList_DefaultObjectOnClick == TRUE)
               {
-                ULONG tst = xget(_win(obj), MUIA_Window_ActiveObject);
+                IPTR tst = xget(_win(obj), MUIA_Window_ActiveObject);
 
                 if((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (IPTR) obj))
                 {
@@ -994,7 +994,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   modifyActiveObject = TRUE;
                 }
 
-                set(_win(obj), MUIA_Window_DefaultObject, (IPTR) obj);
+                set(_win(obj), MUIA_Window_DefaultObject, obj);
               }
               else if(data->NList_MakeActive)
               {
@@ -1004,7 +1004,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
               // now we check if the user wants to set this object
               // as the active one or not.
-              if(data->NList_ActiveObjectOnClick && data->isActiveObject == FALSE)
+              if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
               {
                 newActiveObject = obj;
                 modifyActiveObject = TRUE;
