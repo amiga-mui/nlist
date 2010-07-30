@@ -326,6 +326,7 @@ struct NLData
   LONG  NList_VerticalCenteredText;
   BOOL  NList_AutoClip;
   BOOL  NList_SelectPointer;
+  BOOL  NList_CenterOnJump;
 
   // object pointers for forwarding the
   // key focus to other objects.

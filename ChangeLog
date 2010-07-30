@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-07-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc: added new attribute MUIA_NList_CenterOnJump to make the method
+    MUIM_NList_Jump not just jump to the given entry but also center the display
+    on that entry.
+
 2010-07-29 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/misc, nlistview_mcc/misc: made the two attributes

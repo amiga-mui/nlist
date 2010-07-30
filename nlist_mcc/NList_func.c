@@ -1634,20 +1634,42 @@ IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
 
   if(pos >= 0 && pos < data->NList_Entries)
   {
-    LONG first;
+    if(data->NList_CenterOnJump == TRUE)
+    {
+      // center the item in the visible area
+      LONG first = pos - data->NList_Visible/2;
 
-    // center the item in the visible area
-    first = pos - data->NList_Visible/2;
+      // make sure that the last item is displayed in the last line
+      while(first + data->NList_Visible > data->NList_Entries)
+        first--;
+      if(first < 0)
+        first = 0;
 
-    // make sure that the last item is displayed in the last line
-    while(first + data->NList_Visible > data->NList_Entries)
-      first--;
-    if(first < 0)
-      first = 0;
+      data->NList_First = first;
 
-    data->NList_First = first;
-    DO_NOTIFY(NTF_First);
-    REDRAW;
+      DO_NOTIFY(NTF_First);
+      REDRAW;
+    }
+    else
+    {
+      // old style jump, just make the requested item visible
+      if(pos < data->NList_First)
+      {
+        data->NList_First = pos;
+
+        DO_NOTIFY(NTF_First);
+        REDRAW;
+      }
+      else if(pos >= data->NList_First + data->NList_Visible)
+      {
+        data->NList_First = pos - data->NList_Visible + 1;
+        if(data->NList_First < 0)
+          data->NList_First = 0;
+
+        DO_NOTIFY(NTF_First);
+        REDRAW;
+      }
+    }
   }
 
 /*  do_notifies(NTF_AllChanges|NTF_MinMax);*/

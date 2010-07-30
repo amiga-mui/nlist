@@ -1150,6 +1150,9 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         data->NList_IgnoreSpecialChars = (char *)tag->ti_Data;
       break;
 
+      case MUIA_NList_CenterOnJump:
+        data->NList_CenterOnJump = (BOOL)tag->ti_Data;
+      break;
 
 /*
  *       case 0x8042AC64 :
@@ -1289,13 +1292,15 @@ IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
 
     case MUIA_NList_IgnoreSpecialChars: *msg->opg_Storage = (IPTR)data->NList_IgnoreSpecialChars; return(TRUE);
 
-    case MUIA_NList_DefaultObjectOnClick: *msg->opg_Storage = (ULONG)data->NList_DefaultObjectOnClick; return(TRUE);
-    case MUIA_NList_ActiveObjectOnClick:  *msg->opg_Storage = (ULONG)data->NList_ActiveObjectOnClick; return(TRUE);
+    case MUIA_NList_DefaultObjectOnClick: *msg->opg_Storage = (IPTR)data->NList_DefaultObjectOnClick; return(TRUE);
+    case MUIA_NList_ActiveObjectOnClick:  *msg->opg_Storage = (IPTR)data->NList_ActiveObjectOnClick; return(TRUE);
 
     case MUIA_NList_KeyUpFocus:     *msg->opg_Storage = (IPTR)data->NList_KeyUpFocus;    return(TRUE);
     case MUIA_NList_KeyDownFocus:   *msg->opg_Storage = (IPTR)data->NList_KeyDownFocus;  return(TRUE);
     case MUIA_NList_KeyLeftFocus:   *msg->opg_Storage = (IPTR)data->NList_KeyLeftFocus;  return(TRUE);
     case MUIA_NList_KeyRightFocus:  *msg->opg_Storage = (IPTR)data->NList_KeyRightFocus; return(TRUE);
+
+    case MUIA_NList_CenterOnJump:   *msg->opg_Storage = (ULONG)data->NList_CenterOnJump; return(TRUE);
 
     case MUIA_Version:							*msg->opg_Storage = (ULONG) LIB_VERSION;						  return(TRUE);
     case MUIA_Revision:							*msg->opg_Storage = (ULONG) LIB_REVISION;						  return(TRUE);
