@@ -932,16 +932,16 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
           // disable that the object will automatically get a border when
           // the ActiveObjectOnClick option is active
           _flags(obj) |= (1<<7);
-          if(data->listviewobj != NULL)
-            _flags(data->listviewobj) |= (1<<7);
+          if(data->nlistviewobj != NULL)
+            _flags(data->nlistviewobj) |= (1<<7);
         }
         else
         {
           // enable that the object will automatically get a border when
           // the ActiveObjectOnClick option is active
           _flags(obj) &= ~(1<<7);
-          if(data->listviewobj != NULL)
-            _flags(data->listviewobj) &= ~(1<<7);
+          if(data->nlistviewobj != NULL)
+            _flags(data->nlistviewobj) &= ~(1<<7);
         }
       }
       break;

@@ -994,7 +994,8 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   modifyActiveObject = TRUE;
                 }
 
-                set(_win(obj), MUIA_Window_DefaultObject, data->listviewobj);
+                // set our parent NListview object as new default object
+                set(_win(obj), MUIA_Window_DefaultObject, data->nlistviewobj);
               }
               else if(data->NList_MakeActive)
               {
@@ -1006,7 +1007,8 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               // as the active one or not.
               if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
               {
-                newActiveObject = data->listviewobj;
+                // set our parent NListview object as new active object
+                newActiveObject = data->nlistviewobj;
                 modifyActiveObject = TRUE;
               }
 

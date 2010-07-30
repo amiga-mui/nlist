@@ -11,6 +11,9 @@ $URL$
     MUIM_NList_Jump not just jump to the given entry but also center the display
     on that entry.
   * nlistview_mcc/NListview.c: moved some inlined code to separate functions.
+  * nlist_mcc: the parent NListview object is now determined during MUIM_Setup
+    to correctly fulfil the "active object on click" feature due to the latest
+    changes.
 
 2010-07-29 Thore Böckelmann <tboeckel@gmx.de>
 

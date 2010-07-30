@@ -219,6 +219,7 @@ struct NImgList
 struct NLData
 {
   Object *this;         // pointer to the own object
+  Object *nlistviewobj; // pointer to the parent/listview
   Object *listviewobj;  // pointer to the parent/listview if listview is Listview.mui
   Object *scrollersobj; // pointer to the scrollers object
 

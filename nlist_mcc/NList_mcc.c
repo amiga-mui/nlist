@@ -349,6 +349,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     return(0);
 
   data->this = obj;
+  data->nlistviewobj = NULL;
   data->listviewobj = NULL;
   data->scrollersobj = NULL;
   data->SETUP = FALSE;
@@ -1024,9 +1025,9 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
 
 IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 {
-  register struct NLData *data;
+  struct NLData *data = INST_DATA(cl,obj);
   LONG ent;
-  data = INST_DATA(cl,obj);
+  Object *o;
 
 /*D(bug("%lx|mNL_Setup() 1 \n",obj));*/
 
@@ -1211,61 +1212,73 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
   }
 
+  // determine our parent NListview object
+  data->nlistviewobj = NULL;
+  o = obj;
+  while((o = (Object *)xget(o, MUIA_Parent)) != NULL)
+  {
+    // check if the parent object return ourself as its NList object
+    // this one will be our parent NListview object
+    if((Object *)xget(o, MUIA_NListview_NList) == obj)
+    {
+      data->nlistviewobj = o;
+      D(DBF_STARTUP, "found parent NListview object %08lx", data->nlistviewobj);
+      break;
+    }
+  }
+
   // now we try to see if the parent listview object is
   // an NListview or a plain Listview.mui object so that we
   // can set the listviewobj pointer accordingly
   data->listviewobj = NULL;
+  o = obj;
+  while((o = (Object *)xget(o, MUIA_Parent)))
   {
-    Object *o = obj;
+    Object *tagobj;
 
-    while((o = (Object *)xget(o, MUIA_Parent)))
+    if((tagobj = (Object *)xget(o, MUIA_Listview_List)) != NULL)
     {
-      Object *tagobj;
-
-      if((tagobj = (Object *)xget(o, MUIA_Listview_List)))
+      if(tagobj == obj && (Object *)xget(o, MUIA_NListview_NList) == NULL)
       {
-        if((tagobj == obj) && xget(o, MUIA_NListview_NList) == 0)
+        SIPTR tagval;
+
+        data->listviewobj = o;
+        WANT_NOTIFY(NTF_LV_Select);
+        WANT_NOTIFY(NTF_LV_Doubleclick);
+        WANT_NOTIFY(NTF_L_Active);
+        WANT_NOTIFY(NTF_Entries);
+
+        // check if we have a DragType attribute or not
+        if(GetAttr(MUIA_Listview_DragType, data->listviewobj, (IPTR *)&tagval) != FALSE)
+          data->NList_DragType = tagval;
+
+        // in case this is MUI 3.8 we can query more detailed information
+        // by directly accessing the raw instance data of the Listview.mui
+        // object. Puh, what a hack!
+        if(MUIMasterBase->lib_Version <= 19 && data->pad2)
         {
-          SIPTR tagval;
+          struct IClass *lcl,*lcl1,*lcl2,*lcl3,*lcl4;
+          UBYTE *ldata = ((UBYTE *) o) + 178;
+          lcl = lcl1 = lcl2 = lcl3 = lcl4 = OCLASS(o);
 
-          data->listviewobj = o;
-          WANT_NOTIFY(NTF_LV_Select);
-          WANT_NOTIFY(NTF_LV_Doubleclick);
-          WANT_NOTIFY(NTF_L_Active);
-          WANT_NOTIFY(NTF_Entries);
+          while (lcl->cl_Super)     /* when loop is finished : */
+          { lcl4 = lcl3;            /*  Listview  */
+            lcl3 = lcl2;            /*  Group     */
+            lcl2 = lcl1;            /*  Area      */
+            lcl1 = lcl;             /*  Notify    */
+            lcl = lcl->cl_Super;    /*  rootclass */
+          }
 
-          // check if we have a DragType attribute or not
-          if(GetAttr(MUIA_Listview_DragType, data->listviewobj, (IPTR *)&tagval) != FALSE)
-            data->NList_DragType = tagval;
-
-          // in case this is MUI 3.8 we can query more detailed information
-          // by directly accessing the raw instance data of the Listview.mui
-          // object. Puh, what a hack!
-          if(MUIMasterBase->lib_Version <= 19 && data->pad2)
+          if (lcl4->cl_InstSize == 68)  /* data size of Listview.mui class in 3.8 */
           {
-            struct IClass *lcl,*lcl1,*lcl2,*lcl3,*lcl4;
-            UBYTE *ldata = ((UBYTE *) o) + 178;
-            lcl = lcl1 = lcl2 = lcl3 = lcl4 = OCLASS(o);
-
-            while (lcl->cl_Super)     /* when loop is finished : */
-            { lcl4 = lcl3;            /*  Listview  */
-              lcl3 = lcl2;            /*  Group     */
-              lcl2 = lcl1;            /*  Area      */
-              lcl1 = lcl;             /*  Notify    */
-              lcl = lcl->cl_Super;    /*  rootclass */
-            }
-
-            if (lcl4->cl_InstSize == 68)  /* data size of Listview.mui class in 3.8 */
-            {
-              data->multiselect = data->NList_MultiSelect = (LONG) ldata[43];
-              data->NList_Input = (LONG) ldata[65];
-              ldata[40] = ldata[41] = ldata[42] = ldata[43] = 0;
-              ldata[64] = ldata[65] = 0;
-            }
+            data->multiselect = data->NList_MultiSelect = (LONG) ldata[43];
+            data->NList_Input = (LONG) ldata[65];
+            ldata[40] = ldata[41] = ldata[42] = ldata[43] = 0;
+            ldata[64] = ldata[65] = 0;
           }
         }
-        break;
       }
+      break;
     }
   }
 

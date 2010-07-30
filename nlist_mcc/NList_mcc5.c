@@ -239,7 +239,7 @@ LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which)
   if(NEED_NOTIFY(NTF_LV_Doubleclick) & which)
   {
     DONE_NOTIFY(NTF_LV_Doubleclick);
-    if(data->listviewobj)
+    if(data->listviewobj != NULL)
       DoMethod(data->listviewobj, MUIM_Set, MUIA_Listview_DoubleClick, (LONG)TRUE);
     else
       set(obj,MUIA_Listview_DoubleClick,(LONG) TRUE);
@@ -282,7 +282,7 @@ LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which)
   if (NEED_NOTIFY(NTF_LV_Select) & which)
   {
     DONE_NOTIFY(NTF_LV_Select);
-    if(data->listviewobj)
+    if(data->listviewobj != NULL)
       DoMethod(data->listviewobj, MUIM_Set, MUIA_Listview_SelectChange, (LONG)TRUE);
     else
       set(obj,MUIA_Listview_SelectChange,(LONG) TRUE);
