@@ -816,6 +816,28 @@ static IPTR mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
   return result;
 }
 
+static IPTR mNLV_GoActive(struct IClass *cl, Object *obj, Msg msg)
+{
+  struct NLVData *data = INST_DATA(cl, obj);
+
+  // forward the method to the NList object
+  if(data->LI_NList != NULL)
+    DoMethod(data->LI_NList, MUIM_NList_GoActive);
+
+  return DoSuperMethodA(cl, obj, msg);
+}
+
+static IPTR mNLV_GoInactive(struct IClass *cl, Object *obj, Msg msg)
+{
+  struct NLVData *data = INST_DATA(cl, obj);
+
+  // forward the method to the NList object
+  if(data->LI_NList != NULL)
+    DoMethod(data->LI_NList, MUIM_NList_GoInactive);
+
+  return DoSuperMethodA(cl, obj, msg);
+}
+
 DISPATCHER(_Dispatcher)
 {
   switch(msg->MethodID)
@@ -837,18 +859,8 @@ DISPATCHER(_Dispatcher)
     case MUIM_KillNotifyObj         :
     case MUIM_Notify                : return (mNLV_Notify(cl,obj,(APTR)msg));
 
-    // in case the listview is receiving the
-    // active/inactive method we forward it to
-    // the nlist object itself
-    case MUIM_GoActive:
-    case MUIM_GoInactive:
-    {
-      struct NLVData *data = INST_DATA(cl, obj);
-
-      if(data->LI_NList != NULL)
-        DoMethod(data->LI_NList, msg->MethodID == MUIM_GoActive ? MUIM_NList_GoActive: MUIM_NList_GoInactive);
-    }
-    break;
+    case MUIM_GoActive              : return mNLV_GoActive(cl, obj, msg);
+    case MUIM_GoInactive            : return mNLV_GoInactive(cl, obj, msg);
 
     // the following method calls are all forwarded
     // to the corresponding NList object
@@ -901,12 +913,12 @@ DISPATCHER(_Dispatcher)
     {
       struct NLVData *data = INST_DATA(cl, obj);
 
-      if(data->LI_NList)
+      if(data->LI_NList != NULL)
         return DoMethodA(data->LI_NList, msg);
       else
         return 0;
     }
-  }
 
-  return DoSuperMethodA(cl, obj, msg);
+    default: return DoSuperMethodA(cl, obj, msg);
+  }
 }
