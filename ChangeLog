@@ -16,6 +16,8 @@ $URL$
     changes.
   * nlistview_mcc/NListview.c: forward any modifications of the key focus
     attributes to the NList object.
+  * docs/MCC_NList.doc: added documentation for new MUIA_NList_CenterOnJump
+    attribute.
 
 2010-07-29 Thore Böckelmann <tboeckel@gmx.de>
 

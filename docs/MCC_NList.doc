@@ -8,6 +8,7 @@ NList.mcc/MUIA_NList_AdjustWidth
 NList.mcc/MUIA_NList_AutoCopyToClip
 NList.mcc/MUIA_NList_AutoVisible
 NList.mcc/MUIA_NList_ButtonClick
+NList.mcc/MUIA_NList_CenterOnJump
 NList.mcc/MUIA_NList_ClickColumn
 NList.mcc/MUIA_NList_Columns
 NList.mcc/MUIA_NList_CompareHook
@@ -344,6 +345,19 @@ NList.mcc/MUIM_NList_UseImage
 
    SEE ALSO
         MUIA_List_AutoVisible, MUIA_NList_Active
+NList.mcc/MUIA_NList_CenterOnJump
+
+    NAME
+        MUIA_NList_CenterOnJump -- [ISGN], BOOL
+
+    FUNCTION
+        If this attribute is set to TRUE any invocation of the MUIM_NList_Jump
+        method will try to displayed the requested entry centered within the
+        visible list instead of possibly placing the entry on the first or last
+        line.
+
+    SEE ALSO
+        MUIM_NList_Jump
 NList.mcc/MUIA_NList_ButtonClick
 
     NAME
@@ -361,7 +375,7 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_NList_DisplayHook, MUIA_NList_DoubleClick, MUIA_NList_MultiClick,
-        MUIA_NList_EntryClick, MUIA_NList_TitleClick.
+        MUIA_NList_EntryClick, MUIA_NList_TitleClick
 NList.mcc/MUIA_NList_ClickColumn
 
     NAME
