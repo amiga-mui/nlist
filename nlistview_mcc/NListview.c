@@ -729,6 +729,17 @@ static IPTR mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
         }
       }
       break;
+
+      case MUIA_NList_KeyUpFocus:
+      case MUIA_NList_KeyDownFocus:
+      case MUIA_NList_KeyLeftFocus:
+      case MUIA_NList_KeyRightFocus:
+      {
+        // forward these to the embedded list object
+        if(data->LI_NList != NULL)
+          set(data->LI_NList, tag->ti_Tag, tag->ti_Data);
+      }
+      break;
     }
   }
 
@@ -821,6 +832,7 @@ static IPTR mNLV_GoActive(struct IClass *cl, Object *obj, Msg msg)
   struct NLVData *data = INST_DATA(cl, obj);
 
   // forward the method to the NList object
+  D(DBF_ALWAYS, "go active %08lx", obj);
   if(data->LI_NList != NULL)
     DoMethod(data->LI_NList, MUIM_NList_GoActive);
 
@@ -831,6 +843,7 @@ static IPTR mNLV_GoInactive(struct IClass *cl, Object *obj, Msg msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
 
+  D(DBF_ALWAYS, "go inactive %08lx", obj);
   // forward the method to the NList object
   if(data->LI_NList != NULL)
     DoMethod(data->LI_NList, MUIM_NList_GoInactive);

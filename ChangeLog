@@ -14,6 +14,8 @@ $URL$
   * nlist_mcc: the parent NListview object is now determined during MUIM_Setup
     to correctly fulfil the "active object on click" feature due to the latest
     changes.
+  * nlistview_mcc/NListview.c: forward any modifications of the key focus
+    attributes to the NList object.
 
 2010-07-29 Thore Böckelmann <tboeckel@gmx.de>
 
