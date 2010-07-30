@@ -1901,28 +1901,32 @@ LONG InsertTreeNodeVisible( struct NListtree_Data *data, struct MUI_NListtree_Tr
 
 
 
-VOID ShowTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
+VOID ShowTree(struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn)
 {
-  LONG first, visible, max, pos, a, b, treeentries = 0, jmp;
-
-  if ( tn->tn_Flags & TNF_OPEN )
+  if(isFlagSet(tn->tn_Flags, TNF_OPEN))
   {
-    first = xget( data->Obj, MUIA_NList_First );
-    visible = xget( data->Obj, MUIA_NList_Visible );
+    LONG first = xget(data->Obj, MUIA_NList_First);
+    LONG visible = xget(data->Obj, MUIA_NList_Visible);
+    LONG max;
+    LONG pos;
+    LONG a;
+    LONG b;
+    LONG treeentries = 0;
+    LONG jmp;
 
-    pos = GetVisualPos( data, tn );
-    GetVisualEntriesMax( data, tn, pos, &treeentries, visible );
+    pos = GetVisualPos(data, tn);
+    GetVisualEntriesMax(data, tn, pos, &treeentries, visible);
 
     a = pos - first;
     b = visible - a - 1;
 
     max = a + b;
-    jmp = pos + MIN( max, treeentries );
+    jmp = pos + MIN(max, treeentries);
 
     D(DBF_LISTTREE, "first: %ld, visible: %ld, pos: %ld, treeentries: %ld, a: %ld, b: %ld, max: %ld, jmp: %ld",
       first, visible, pos, treeentries, a, b, max, jmp);
 
-    DoMethod( data->Obj, MUIM_NList_Jump, jmp );
+    DoMethod(data->Obj, MUIM_NList_Jump, jmp);
   }
 }
 
@@ -2236,59 +2240,58 @@ VOID CloseTreeNodeListCollapse( struct NListtree_Data *data, struct MUI_NListtre
 
 
 
-VOID ActivateTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
+VOID ActivateTreeNode(struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn)
 {
   struct MUI_NListtree_TreeNode *tn2 = tn;
   ULONG jmppos;
   LONG newact;
 
-  if ( data->ActiveNode )
+  if(data->ActiveNode != NULL)
   {
-    switch( data->AutoVisible )
+    switch(data->AutoVisible)
     {
       case MUIV_NListtree_AutoVisible_Off:
-        break;
-
+      {
+        // nothing to do
+      }
+      break;
 
       case MUIV_NListtree_AutoVisible_Normal:
-
-        if ( tn2->tn_IFlags & TNIF_VISIBLE )
+      {
+        if(isFlagSet(tn2->tn_IFlags, TNIF_VISIBLE))
         {
-          jmppos = GetVisualPos( data, tn2 );
-          DoMethod( data->Obj, MUIM_NList_Jump, jmppos );
+          jmppos = GetVisualPos(data, tn2);
+          DoMethod(data->Obj, MUIM_NList_Jump, jmppos);
         }
-
-        break;
-
+      }
+      break;
 
       case MUIV_NListtree_AutoVisible_FirstOpen:
-
-        while ( !( tn2->tn_IFlags & TNIF_VISIBLE ) )
-        {
+      {
+        while(isFlagClear(tn2->tn_IFlags, TNIF_VISIBLE))
           tn2 = tn2->tn_Parent;
-        }
 
-        jmppos = GetVisualPos( data, tn2 );
-        DoMethod( data->Obj, MUIM_NList_Jump, jmppos );
-
-        break;
-
+        jmppos = GetVisualPos(data, tn2);
+        DoMethod(data->Obj, MUIM_NList_Jump, jmppos);
+      }
+      break;
 
       case MUIV_NListtree_AutoVisible_Expand:
+      {
+        while((tn2 = tn2->tn_Parent) != NULL)
+          OpenTreeNode(data, tn2);
 
-        while((tn2 = tn2->tn_Parent))
-        {
-          OpenTreeNode( data, tn2 );
-        }
-
-        jmppos = GetVisualPos( data, tn2 );
-        DoMethod( data->Obj, MUIM_NList_Jump, jmppos );
-
-        break;
+        jmppos = GetVisualPos(data, tn2);
+        DoMethod(data->Obj, MUIM_NList_Jump, jmppos);
+      }
+      break;
     }
   }
 
-  newact = tn ? GetVisualPos( data, tn ) : MUIV_NList_Active_Off;
+  if(tn != NULL)
+    newact = GetVisualPos(data, tn);
+  else
+    newact = MUIV_NList_Active_Off;
 
   /* sba: set the new entry only if it really changes, otherwise we lose some
      MUIA_NList_Active notifications */
