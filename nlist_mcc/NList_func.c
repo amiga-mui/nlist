@@ -1630,14 +1630,11 @@ IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
       pos = data->NList_First + data->NList_Visible;
     }
     break;
-  }
 
-  if(pos >= 0 && pos < data->NList_Entries)
-  {
-    if(data->NList_CenterOnJump == TRUE)
+    case MUIV_NList_Jump_Active_Center:
     {
       // center the item in the visible area
-      LONG first = pos - data->NList_Visible/2;
+      LONG first = data->NList_Active - data->NList_Visible/2;
 
       // make sure that the last item is displayed in the last line
       while(first + data->NList_Visible > data->NList_Entries)
@@ -1649,26 +1646,30 @@ IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
 
       DO_NOTIFY(NTF_First);
       REDRAW;
+ 
+      pos = -1;
     }
-    else
+    break;
+  }
+
+  if(pos >= 0 && pos < data->NList_Entries)
+  {
+    // old style jump, just make the requested item visible
+    if(pos < data->NList_First)
     {
-      // old style jump, just make the requested item visible
-      if(pos < data->NList_First)
-      {
-        data->NList_First = pos;
+      data->NList_First = pos;
 
-        DO_NOTIFY(NTF_First);
-        REDRAW;
-      }
-      else if(pos >= data->NList_First + data->NList_Visible)
-      {
-        data->NList_First = pos - data->NList_Visible + 1;
-        if(data->NList_First < 0)
-          data->NList_First = 0;
+      DO_NOTIFY(NTF_First);
+      REDRAW;
+    }
+    else if(pos >= data->NList_First + data->NList_Visible)
+    {
+      data->NList_First = pos - data->NList_Visible + 1;
+      if(data->NList_First < 0)
+        data->NList_First = 0;
 
-        DO_NOTIFY(NTF_First);
-        REDRAW;
-      }
+      DO_NOTIFY(NTF_First);
+      REDRAW;
     }
   }
 

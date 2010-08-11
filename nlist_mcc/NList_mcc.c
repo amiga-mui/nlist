@@ -495,7 +495,6 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_DefClickColumn = 0;
   data->NList_AutoCopyToClip = TRUE;
   data->NList_AutoClip = TRUE;
-  data->NList_CenterOnJump = FALSE;
   data->NList_UseImages = NULL;
   data->NList_TabSize = 8;
   data->NList_SkipChars = NULL;
@@ -756,9 +755,6 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
   if((tag = FindTagItem(MUIA_NList_AutoClip, taglist)))
     data->NList_AutoClip = (BOOL)tag->ti_Data;
-
-  if((tag = FindTagItem(MUIA_NList_CenterOnJump, taglist)))
-    data->NList_CenterOnJump = (BOOL)tag->ti_Data;
 
   if((tag = FindTagItem(MUIA_NList_TabSize, taglist)))
     data->NList_TabSize = (LONG) tag->ti_Data;

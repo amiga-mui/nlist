@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-11  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc: replaced the recently added global MUIA_NList_CenterOnJump
+    attribute with an additional MUIV_NList_Jump_Active_Center value that can
+    be supplied to the MUIM_NList_Jump method to perform a centered jump for
+    the currently active entry. This should be a bit more convienent than having
+    to set a global attribute.
+
 2010-07-30 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc: added new attribute MUIA_NList_CenterOnJump to make the method
