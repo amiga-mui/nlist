@@ -32,6 +32,7 @@
 
 // static functions in this file
 static BOOL NL_List_Jump(struct NLData *data, LONG pos);
+static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos);
 
 /* Extent the selection between ent1 and ent2.
    Make the first_change and last_change optimal for redrawing optimiztion */
@@ -626,7 +627,7 @@ BOOL NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag)
 }
 
 
-BOOL NL_List_Active(Object *obj, struct NLData *data, LONG la, struct TagItem *tag, LONG newactsel, LONG acceptsame)
+BOOL NL_List_Active(Object *obj, struct NLData *data, LONG la, struct TagItem *tag, LONG newactsel, LONG acceptsame, ULONG flags)
 {
   struct TagItem ltag;
   struct TagItem *tag2 = tag;
@@ -706,6 +707,11 @@ BOOL NL_List_Active(Object *obj, struct NLData *data, LONG la, struct TagItem *t
       la = data->NList_Entries - 1;
 
     data->pad1 = la;
+
+    // if the SetActive_Jump_Center flag is active we make sure
+    // the new active entry will be centered
+    if(isFlagSet(flags, MUIV_NList_SetActive_Jump_Center))
+      la = MUIV_NList_Jump_Active_Center;
 
     // make sure the entry is visible
     if(NL_List_Jump(data, la) == TRUE)
@@ -899,6 +905,11 @@ BOOL NL_List_Active(Object *obj, struct NLData *data, LONG la, struct TagItem *t
 
         tag->ti_Data = la;
         data->do_draw_active = TRUE;
+
+        // if the SetActive_Jump_Center flag is active we make sure
+        // the new active entry will be centered
+        if(isFlagSet(flags, MUIV_NList_SetActive_Jump_Center))
+          la = MUIV_NList_Jump_Active_Center;
 
         // make sure the entry is visible
         if(NL_List_Jump(data, la) == TRUE)
@@ -1657,7 +1668,6 @@ static BOOL NL_List_Jump(struct NLData *data, LONG pos)
   return result;
 }
 
-
 IPTR mNL_List_Jump(struct IClass *cl, Object *obj, struct MUIP_NList_Jump *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
@@ -1676,6 +1686,28 @@ IPTR mNL_List_Jump(struct IClass *cl, Object *obj, struct MUIP_NList_Jump *msg)
   return TRUE;
 }
 
+IPTR mNL_List_SetActive(struct IClass *cl, Object *obj, struct MUIP_NList_SetActive *msg)
+{
+  BOOL result = FALSE;
+  struct NLData *data = INST_DATA(cl,obj);
+  LONG pos = msg->pos;
+
+  ENTER();
+
+  // check if the user used msg->pos for specifying the entry position (integer)
+  // or by using the entry address
+  if(isFlagSet(msg->flags, MUIV_NList_SetActive_Entry))
+    NL_List_GetPos(data, (APTR)msg->pos, &pos);
+
+  result = NL_List_Active(obj, data, pos, NULL, data->NList_List_Select, FALSE, msg->flags);
+  if(result == TRUE)
+  {
+    DO_NOTIFY(NTF_Active | NTF_L_Active);
+  }
+
+  RETURN(result);
+  return result;
+}
 
 IPTR mNL_List_Select(struct IClass *cl,Object *obj,struct MUIP_NList_Select *msg)
 {
@@ -2120,32 +2152,59 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
   return (TRUE);
 }
 
+static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos)
+{
+  BOOL result = FALSE;
+
+  ENTER();
+
+  if(entry == NULL)
+  { 
+    *pos = MUIV_NList_GetPos_End;
+    result = FALSE;
+  }
+  else if((ULONG)entry == (ULONG)-2)
+  {
+    if(data->NList_LastInserted == -1)
+      *pos = (data->NList_Entries - 1);
+    else
+      *pos = data->NList_LastInserted;
+
+    result = TRUE;
+  }
+  else
+  {
+    LONG ent = *pos + 1;
+
+    while(ent < data->NList_Entries)
+    { 
+      if(data->EntriesArray[ent]->Entry == entry)
+      { 
+        *pos = ent;
+
+        result = TRUE;
+        break;
+      }
+      ent++;
+    }
+
+    if(result == FALSE)
+    {
+      *pos = MUIV_NList_GetPos_End;
+      result = TRUE;
+    }
+  }
+
+  RETURN(result);
+  return result;
+}
 
 IPTR mNL_List_GetPos(struct IClass *cl,Object *obj,struct MUIP_NList_GetPos *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
-  LONG ent = *msg->pos + 1;
-  if (!msg->entry)
-  { *msg->pos = MUIV_NList_GetPos_End;
-    return (FALSE);
-  }
-  else if ( (ULONG)msg->entry == (ULONG)-2 )
-  {
-    if ( data->NList_LastInserted == -1 )
-      *msg->pos = ( data->NList_Entries - 1 );
-    else
-      *msg->pos = data->NList_LastInserted;
+  struct NLData *data = INST_DATA(cl,obj);
+  BOOL result;
 
-    return(TRUE);
-  }
+  result = NL_List_GetPos(data, msg->entry, msg->pos);
 
-  while (ent < data->NList_Entries)
-  { if (data->EntriesArray[ent]->Entry == msg->entry)
-    { *msg->pos = ent;
-      return (TRUE);
-    }
-    ent++;
-  }
-  *msg->pos = MUIV_NList_GetPos_End;
-  return (TRUE);
+  return result;
 }

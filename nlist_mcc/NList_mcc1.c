@@ -457,14 +457,14 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         break;
       case MUIA_List_Active :
         if (!NOTIFYING(NTF_L_Active))
-          NL_List_Active(obj,data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE);
+          NL_List_Active(obj,data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE,0);
         NOTIFY_END(NTF_L_Active);
         DONE_NOTIFY(NTF_L_Active);
         break;
       case MUIA_NList_Active :
       	D(DBF_ALWAYS, "MUIA_NList_Active %ld was %ld %ld %ld",tag->ti_Data,data->NList_Active,NOTIFYING(NTF_Active),WANTED_NOTIFY(NTF_Active));
         if (!NOTIFYING(NTF_Active))
-          NL_List_Active(obj,data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE);
+          NL_List_Active(obj,data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE,0);
         NOTIFY_END(NTF_Active);
         DONE_NOTIFY(NTF_Active);
         break;
@@ -626,15 +626,20 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_Horiz_Visible :
         data->old_horiz_visible = tag->ti_Data;
         break;
-      case MUIA_NList_Horiz_First :
+
+      case MUIA_NList_Horiz_First:
+      {
         if (do_things)
-        { data->old_horiz_first = tag->ti_Data;
+        { 
+          data->old_horiz_first = tag->ti_Data;
           NL_List_Horiz_First(obj,data,(long) tag->ti_Data,tag);
           data->ScrollBarsTime = SCROLLBARSTIME;
         }
         if (tag->ti_Tag == MUIA_NList_Horiz_First)
           data->old_horiz_first = tag->ti_Data;
-        break;
+      }
+      break;
+
       case MUIA_List_Title :
       case MUIA_NList_Title :
         data->display_ptr = NULL;
@@ -709,7 +714,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
               (data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
           { NL_UnSelectAll(obj,data,data->NList_Active);
             data->selectmode = MUIV_NList_Select_On;
-            NL_List_Active(obj,data,data->NList_Active,NULL,data->selectmode,TRUE);
+            NL_List_Active(obj,data,data->NList_Active,NULL,data->selectmode,TRUE,0);
           }
         }
         break;

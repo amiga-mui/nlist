@@ -199,7 +199,7 @@ static void AddHorizontalScroller(Object *obj, struct NLVData *data)
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_Entries,    MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_Entries, MUIV_TriggerValue);
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_Visible,    MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_Visible, MUIV_TriggerValue);
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Horiz_First,      MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_First, MUIV_TriggerValue);
-    DoMethod(data->PR_Horiz, MUIM_Notify, MUIA_Prop_First,             MUIV_EveryTime, data->LI_NList, 3, MUIM_NoNotifySet, MUIA_NList_Horiz_First, MUIV_TriggerValue);
+    //DoMethod(data->PR_Horiz, MUIM_Notify, MUIA_Prop_First,             MUIV_EveryTime, data->LI_NList, 3, MUIM_NoNotifySet, MUIA_NList_Horiz_First, MUIV_TriggerValue);
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_HorizDeltaFactor, MUIV_EveryTime, data->PR_Horiz, 3, MUIM_NoNotifySet, MUIA_Prop_DeltaFactor, MUIV_TriggerValue);
 
     data->Horiz_Attached = TRUE;
@@ -672,7 +672,10 @@ static IPTR mNLV_Notify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
     case MUIA_List_Active:
     case MUIA_Listview_SelectChange:
     case MUIA_Listview_DoubleClick:
+    {
+    W(DBF_STARTUP, "mNLV_Notify: %ld", msg->TrigAttr);
       return DoMethodA(data->LI_NList, (Msg)msg);
+    }
 
     default:
       return DoSuperMethodA(cl, obj, (Msg)msg);

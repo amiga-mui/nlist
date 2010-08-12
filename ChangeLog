@@ -7,6 +7,12 @@ $URL$
 
 2010-08-12  Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlist_mcc: implemented new MUIM_NList_SetActive method which will replace
+    the old method of setting an entry active via MUIA_NList_Active. The new
+    method allows to set the entry active and make it immediately visible via
+    an internal call to MUIM_NList_Jump. In addition this method allows to
+    set additional flags and should perform a bit faster instead of executing
+    a MUIA_NList_Active call together with a Jump call.
   * nlist_mcc/NList_func.c: moved the functionality of MUIM_NList_Jump into an
     own static function NL_List_Jump() and made NL_List_Active() also utilizing
     this new function for jumping to the right entry to make it visible.

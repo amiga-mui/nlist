@@ -178,7 +178,7 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           {
             D(DBF_STARTUP, "objID '%s', importing ACTV entry", getIDStr(muiNotifyData(obj)->mnd_ObjectID));
             if(isFlagSet(data->NList_Imports, MUIV_NList_Imports_Active))
-              NL_List_Active(obj, data, nlie[nliepos], NULL, MUIV_NList_Select_On, TRUE);
+              NL_List_Active(obj, data, nlie[nliepos], NULL, MUIV_NList_Select_On, TRUE,0);
             nliepos++;
             data->do_draw = TRUE;
           }
@@ -684,6 +684,7 @@ DISPATCHER(_Dispatcher)
     case MUIM_GoInactive               : mNL_GoInactive(cl,obj,(APTR)msg); return(DoSuperMethodA(cl,obj,msg));
     case MUIM_NList_GoActive           :     retval =              mNL_GoActive(cl,obj,(APTR)msg); break;
     case MUIM_NList_GoInactive         :     retval =            mNL_GoInactive(cl,obj,(APTR)msg); break;
+    case MUIM_NList_SetActive          : FS; retval =        mNL_List_SetActive(cl,obj,(APTR)msg); break;
 
     default:
       return(DoSuperMethodA(cl,obj,msg));

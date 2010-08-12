@@ -115,7 +115,7 @@ extern void UnSelectCharSel(Object *obj,struct NLData *data,BOOL redraw);
 extern void SelectFirstPoint(Object *obj,struct NLData *data,WORD x,WORD y);
 extern void SelectSecondPoint(Object *obj,struct NLData *data,WORD x,WORD y);
 extern BOOL NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag);
-extern BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame);
+extern BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame,ULONG flags);
 extern BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem *tag);
 extern LONG NList_Compare(Object *obj,struct NLData *data,APTR s1,APTR s2);
 extern ULONG NL_List_SelectChar(Object *obj,struct NLData *data,LONG pos,LONG seltype,LONG *state);
@@ -126,6 +126,7 @@ extern ULONG NL_List_TestPos(Object *obj,struct NLData *data,LONG x,LONG y,struc
 extern IPTR mNL_List_GetEntry(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntry *msg);
 extern IPTR mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntryInfo *msg);
 extern IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg);
+extern IPTR mNL_List_SetActive(struct IClass *cl,Object *obj,struct MUIP_NList_SetActive *msg);
 extern IPTR mNL_List_Select(struct IClass *cl,Object *obj,struct  MUIP_NList_Select *msg);
 extern IPTR mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *msg);
 extern IPTR mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos *msg);

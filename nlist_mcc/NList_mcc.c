@@ -930,7 +930,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
       NL_List_First(obj,data,(long) tag->ti_Data,tag);
 
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
-      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
+      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
   }
   else if((tag = FindTagItem(MUIA_NList_SourceString, taglist)) && tag->ti_Data)
   {
@@ -943,7 +943,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
       NL_List_First(obj,data,(long) tag->ti_Data,tag);
 
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
-      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
+      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
   }
   else if((tag = FindTagItem(MUIA_NList_SourceArray, taglist)) ||
           (tag = FindTagItem(MUIA_List_SourceArray, taglist)))
@@ -957,7 +957,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
       NL_List_First(obj,data,(long) tag->ti_Data,tag);
 
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
-      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
+      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
   }
 
   if((tag = FindTagItem(MUIA_NList_IgnoreSpecialChars, taglist)))
