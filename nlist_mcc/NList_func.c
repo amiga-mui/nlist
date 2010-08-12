@@ -30,6 +30,9 @@
 
 #include "NList_func.h"
 
+// static functions in this file
+static BOOL NL_List_Jump(struct NLData *data, LONG pos);
+
 /* Extent the selection between ent1 and ent2.
    Make the first_change and last_change optimal for redrawing optimiztion */
 void NL_SegChanged(struct NLData *data,LONG ent1,LONG ent2)
@@ -623,15 +626,16 @@ BOOL NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag)
 }
 
 
-BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame)
+BOOL NL_List_Active(Object *obj, struct NLData *data, LONG la, struct TagItem *tag, LONG newactsel, LONG acceptsame)
 {
-  struct TagItem ltag,*tag2 = tag;
+  struct TagItem ltag;
+  struct TagItem *tag2 = tag;
   LONG ent;
   BOOL changed = FALSE;
 
   ENTER();
 
-//	D(bug("0x%lx la=%ld newactsel=%ld acceptsame=%ld data->pad1=%ld\n",obj,la,newactsel,acceptsame,data->pad1));
+	//D(DBF_STARTUP, "NL_List_Active: 0x%lx la=%ld newactsel=%ld acceptsame=%ld data->pad1=%ld",obj,la,newactsel,acceptsame,data->pad1);
 
   if (data->NList_TypeSelect || !data->NList_Input)
   {
@@ -647,7 +651,7 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
     }
     else if (la < 0)
     {
-      if(!tag2)
+      if(tag2 == NULL)
       {
         changed = NL_List_First(obj,data,la,tag);
 
@@ -702,23 +706,10 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
       la = data->NList_Entries - 1;
 
     data->pad1 = la;
-    if(la < data->NList_First)
-    {
-      DO_NOTIFY(NTF_First);
-      data->NList_First = la;
-      REDRAW;
 
-      changed = TRUE;
-    }
-    else if (la >= data->NList_First + data->NList_Visible)
+    // make sure the entry is visible
+    if(NL_List_Jump(data, la) == TRUE)
     {
-      data->NList_First = la - data->NList_Visible + 1;
-      // make sure that the last item is displayed in the last line
-      while(data->NList_First + data->NList_Visible > data->NList_Entries)
-        data->NList_First--;
-      if (data->NList_First < 0)
-        data->NList_First = 0;
-
       DO_NOTIFY(NTF_First);
       REDRAW;
 
@@ -908,26 +899,15 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
 
         tag->ti_Data = la;
         data->do_draw_active = TRUE;
-        if (la < data->NList_First)
-        {
-          DO_NOTIFY(NTF_First);
-          data->NList_First = la;
-          REDRAW;
-        }
-        else if (la >= data->NList_First + data->NList_Visible)
-        {
-          data->NList_First = la - data->NList_Visible + 1;
-          // make sure that the last item is displayed in the last line
-          while(data->NList_First + data->NList_Visible > data->NList_Entries)
-            data->NList_First--;
-          if (data->NList_First < 0)
-            data->NList_First = 0;
 
+        // make sure the entry is visible
+        if(NL_List_Jump(data, la) == TRUE)
+        {
           DO_NOTIFY(NTF_First);
-          REDRAW;
         }
-        else
-          REDRAW;
+
+        // redraw at all means
+        REDRAW;
       }
       else if (la == MUIV_NList_Active_Off)
       {
@@ -1592,13 +1572,11 @@ IPTR mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetE
   return (TRUE);
 }
 
-
-IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
+static BOOL NL_List_Jump(struct NLData *data, LONG pos)
 {
-  struct NLData *data = INST_DATA(cl,obj);
-  LONG pos = msg->pos;
+  BOOL result = FALSE;
+  ENTER();
 
-  /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   switch(pos)
   {
     case MUIV_NList_Jump_Top:
@@ -1639,14 +1617,13 @@ IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
       // make sure that the last item is displayed in the last line
       while(first + data->NList_Visible > data->NList_Entries)
         first--;
+
       if(first < 0)
         first = 0;
 
       data->NList_First = first;
 
-      DO_NOTIFY(NTF_First);
-      REDRAW;
- 
+      result = TRUE;
       pos = -1;
     }
     break;
@@ -1659,22 +1636,43 @@ IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
     {
       data->NList_First = pos;
 
-      DO_NOTIFY(NTF_First);
-      REDRAW;
+      result = TRUE;
     }
     else if(pos >= data->NList_First + data->NList_Visible)
     {
       data->NList_First = pos - data->NList_Visible + 1;
+
+      // make sure that the last item is displayed in the last line
+      while(data->NList_First + data->NList_Visible > data->NList_Entries)
+        data->NList_First--;
+
       if(data->NList_First < 0)
         data->NList_First = 0;
 
-      DO_NOTIFY(NTF_First);
-      REDRAW;
+      result = TRUE;
     }
   }
 
+  RETURN(result);
+  return result;
+}
+
+
+IPTR mNL_List_Jump(struct IClass *cl, Object *obj, struct MUIP_NList_Jump *msg)
+{
+  struct NLData *data = INST_DATA(cl,obj);
+
+  ENTER();
+
+  if(NL_List_Jump(data, msg->pos) == TRUE)
+  {
+    DO_NOTIFY(NTF_First);
+    REDRAW;
+  }
+ 
 /*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
 
+  RETURN(TRUE);
   return TRUE;
 }
 

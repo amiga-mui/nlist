@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-12  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/NList_func.c: moved the functionality of MUIM_NList_Jump into an
+    own static function NL_List_Jump() and made NL_List_Active() also utilizing
+    this new function for jumping to the right entry to make it visible.
+
 2010-08-11  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: replaced the recently added global MUIA_NList_CenterOnJump
