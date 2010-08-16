@@ -462,7 +462,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
         DONE_NOTIFY(NTF_L_Active);
         break;
       case MUIA_NList_Active :
-      	D(DBF_ALWAYS, "MUIA_NList_Active %ld was %ld %ld %ld",tag->ti_Data,data->NList_Active,NOTIFYING(NTF_Active),WANTED_NOTIFY(NTF_Active));
+//      	D(DBF_ALWAYS, "MUIA_NList_Active %ld was %ld %ld %ld",tag->ti_Data,data->NList_Active,NOTIFYING(NTF_Active),WANTED_NOTIFY(NTF_Active));
         if (!NOTIFYING(NTF_Active))
           NL_List_Active(obj,data,(long) tag->ti_Data,tag,data->NList_List_Select,FALSE,0);
         NOTIFY_END(NTF_Active);
@@ -630,7 +630,7 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_Horiz_First:
       {
         if (do_things)
-        { 
+        {
           data->old_horiz_first = tag->ti_Data;
           NL_List_Horiz_First(obj,data,(long) tag->ti_Data,tag);
           data->ScrollBarsTime = SCROLLBARSTIME;
