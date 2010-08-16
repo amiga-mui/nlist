@@ -108,6 +108,5 @@ cp -a nlistviews_mcp/locale/NListviews_mcp.cd "release/MCC_NList/Locale/"
 
 echo "  MK MCC_NList-0.$1.lha"
 find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
-pushd release >/dev/null
+cd release
 lha -aq ../MCC_NList-0.$1.lha *
-popd >/dev/null
