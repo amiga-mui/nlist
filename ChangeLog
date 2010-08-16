@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c: raised the eventhandler's priority to +1. This solves
+    the problem that the NList object was no longer getting key presses as soon
+    as a horizontal scrollbar was added due a resized window.
+
 2010-08-12  Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc: implemented new MUIM_NList_SetActive method which will replace

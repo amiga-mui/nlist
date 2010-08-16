@@ -1497,8 +1497,8 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   data->MOUSE_MOVE = FALSE;
 /*  data->ehnode.ehn_Events = (IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_INTUITICKS|IDCMP_MOUSEMOVE);*/
   data->ehnode.ehn_Events = (IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_INTUITICKS|IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW);
-  data->ehnode.ehn_Priority = 0;
-  data->ehnode.ehn_Flags = 0;
+  data->ehnode.ehn_Priority = 1;
+  data->ehnode.ehn_Flags = MUI_EHF_GUIMODE;
   data->ehnode.ehn_Object = obj;
   data->ehnode.ehn_Class  = cl;
 
