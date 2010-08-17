@@ -44,21 +44,21 @@
 #include "private.h"
 #include "version.h"
 
-#define	VERSION				LIB_VERSION
-#define	REVISION			LIB_REVISION
+#define	VERSION             LIB_VERSION
+#define	REVISION            LIB_REVISION
 
-#define CLASS				  MUIC_NListviews_mcp
-#define SUPERCLASSP		MUIC_Mccprefs
+#define CLASS               MUIC_NListviews_mcp
+#define SUPERCLASSP         MUIC_Mccprefs
 
-#define	INSTDATAP     NListviews_MCP_Data
+#define	INSTDATAP           NListviews_MCP_Data
 
-#define USERLIBID     CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	19
+#define USERLIBID           CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
+#define MASTERVERSION       19
 
 #define	CLASSINIT
 #define	CLASSEXPUNGE
 
-#define MIN_STACKSIZE 8192
+#define MIN_STACKSIZE       8192
 
 #include "locale.h"
 
