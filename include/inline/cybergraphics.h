@@ -128,47 +128,9 @@
 	LP7(0xba, ULONG, ExtractColor, struct RastPort *, a0arg, a0, struct BitMap *, BitMap, a1, ULONG, Colour, d0, ULONG, SrcX, d1, ULONG, SrcY, d2, ULONG, Width, d3, ULONG, Height, d4, \
 	, CYBERGRAPHICS_BASE_NAME)
 
-/*
 #define WriteLUTPixelArray(srcRect, SrcX, SrcY, SrcMod, a1arg, ColorTab, DestX, DestY, SizeX, SizeY, CTFormat) \
 	LP11(0xc6, ULONG, WriteLUTPixelArray, APTR, srcRect, a0, UWORD, SrcX, d0, UWORD, SrcY, d1, UWORD, SrcMod, d2, struct RastPort *, a1arg, a1, APTR, ColorTab, a2, UWORD, DestX, d3, UWORD, DestY, d4, UWORD, SizeX, d5, UWORD, SizeY, d6, UBYTE, CTFormat, d7, \
 	, CYBERGRAPHICS_BASE_NAME)
-*/
-
-#define WriteLUTPixelArray(srcRect, SrcX, SrcY, SrcMod, a1arg, ColorTab, DestX, DestY, SizeX, SizeY, CTFormat) ({ \
-  APTR _WriteLUTPixelArray_srcRect = (srcRect); \
-  ULONG _WriteLUTPixelArray_SrcX = (SrcX); \
-  ULONG _WriteLUTPixelArray_SrcY = (SrcY); \
-  ULONG _WriteLUTPixelArray_SrcMod = (SrcMod); \
-  struct RastPort * _WriteLUTPixelArray_a1arg = (a1arg); \
-  APTR _WriteLUTPixelArray_ColorTab = (ColorTab); \
-  ULONG _WriteLUTPixelArray_DestX = (DestX); \
-  ULONG _WriteLUTPixelArray_DestY = (DestY); \
-  ULONG _WriteLUTPixelArray_SizeX = (SizeX); \
-  ULONG _WriteLUTPixelArray_SizeY = (SizeY); \
-  ULONG _WriteLUTPixelArray_CTFormat = (CTFormat); \
-  ULONG _WriteLUTPixelArray__re = \
-  ({ \
-  register struct CyberGfxBase * const __WriteLUTPixelArray__bn __asm("a6") = (struct CyberGfxBase *) (CYBERGRAPHICS_BASE_NAME);\
-  register ULONG __WriteLUTPixelArray__re __asm("d0"); \
-  register APTR __WriteLUTPixelArray_srcRect __asm("a0") = (_WriteLUTPixelArray_srcRect); \
-  register ULONG __WriteLUTPixelArray_SrcX __asm("d0") = (_WriteLUTPixelArray_SrcX); \
-  register ULONG __WriteLUTPixelArray_SrcY __asm("d1") = (_WriteLUTPixelArray_SrcY); \
-  register ULONG __WriteLUTPixelArray_SrcMod __asm("d2") = (_WriteLUTPixelArray_SrcMod); \
-  register struct RastPort * __WriteLUTPixelArray_a1arg __asm("a1") = (_WriteLUTPixelArray_a1arg); \
-  register APTR __WriteLUTPixelArray_ColorTab __asm("a2") = (_WriteLUTPixelArray_ColorTab); \
-  register ULONG __WriteLUTPixelArray_DestX __asm("d3") = (_WriteLUTPixelArray_DestX); \
-  register ULONG __WriteLUTPixelArray_DestY __asm("d4") = (_WriteLUTPixelArray_DestY); \
-  register ULONG __WriteLUTPixelArray_SizeX __asm("d5") = (_WriteLUTPixelArray_SizeX); \
-  register ULONG __WriteLUTPixelArray_SizeY __asm("d6") = (_WriteLUTPixelArray_SizeY); \
-  register ULONG __WriteLUTPixelArray_CTFormat __asm("d7") = (_WriteLUTPixelArray_CTFormat); \
-  __asm volatile ("jsr a6@(-198:W)" \
-  : "=r"(__WriteLUTPixelArray__re) \
-  : "r"(__WriteLUTPixelArray__bn), "r"(__WriteLUTPixelArray_srcRect), "r"(__WriteLUTPixelArray_SrcX), "r"(__WriteLUTPixelArray_SrcY), "r"(__WriteLUTPixelArray_SrcMod), "r"(__WriteLUTPixelArray_a1arg), "r"(__WriteLUTPixelArray_ColorTab), "r"(__WriteLUTPixelArray_DestX), "r"(__WriteLUTPixelArray_DestY), "r"(__WriteLUTPixelArray_SizeX), "r"(__WriteLUTPixelArray_SizeY), "r"(__WriteLUTPixelArray_CTFormat)  \
-  : "d1", "a0", "a1", "fp0", "fp1", "cc", "memory"); \
-  __WriteLUTPixelArray__re; \
-  }); \
-  _WriteLUTPixelArray__re; \
-})
 
 #define WritePixelArrayAlpha(srcRect, SrcX, SrcY, SrcMod, a1arg, DestX, DestY, SizeX, SizeY, AlphaValue) \
 	LP10(0xd8, ULONG, WritePixelArrayAlpha, APTR, srcRect, a0, UWORD, SrcX, d0, UWORD, SrcY, d1, UWORD, SrcMod, d2, struct RastPort *, a1arg, a1, UWORD, DestX, d3, UWORD, DestY, d4, UWORD, SizeX, d5, UWORD, SizeY, d6, ULONG, AlphaValue, d7, \
