@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-17 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mccinit.c, SDI_compiler.h: the MCC init code now ensures that the entry code
+    is really the first code to be executed in case the .mcc is executed like a
+    regular command by accident.
+
 #### v0.106 RELEASE ###########################################################
 
 2010-08-16  Jens Langner <Jens.Langner@light-speed.de>
