@@ -7,11 +7,8 @@ $URL$
 
 2010-08-17 Thore Böckelmann <tboeckel@gmx.de>
 
-  * misc/library.c: removed several wrong dependencies on other .mcc's. The
-    .mcc's should not depend on their corresponding .mcp.
-  * mccinit.c, SDI_compiler.h: the MCC init code now ensures that the entry code
-    is really the first code to be executed in case the .mcc is executed like a
-    regular command by accident.
+  * nlisttree_mcc/NListtree.c: raised the eventhandler's priority to 2. This
+    fixes the double click issue to open closed nodes.
 
 #### v0.106 RELEASE ###########################################################
 

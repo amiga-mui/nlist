@@ -5962,7 +5962,7 @@ IPTR _Show(struct IClass *cl, Object *obj, Msg msg)
   if (!DoSuperMethodA( cl, obj, (Msg)msg))
     return 0;
 
-  data->EHNode.ehn_Priority = 1;
+  data->EHNode.ehn_Priority = 2;
   data->EHNode.ehn_Flags    = 0;
   data->EHNode.ehn_Object   = obj;
   data->EHNode.ehn_Class    = cl;
