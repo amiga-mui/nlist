@@ -54,6 +54,10 @@
 
 #define	CLASSINIT
 #define	CLASSEXPUNGE
+
+#define USEDCLASSESP used_mcps
+static const char *used_mcps[] = { "NListtree.mcp", "NListviews.mcp", NULL };
+
 #define MIN_STACKSIZE   8192
 
 /******************************************************************************/

@@ -57,6 +57,10 @@
 
 #define	CLASSINIT
 #define	CLASSEXPUNGE
+
+#define USEDCLASSESP used_mcps
+static const char *used_mcps[] = { "NListviews.mcp", NULL };
+
 #define MIN_STACKSIZE       16384
 
 #if defined(__MORPHOS__)

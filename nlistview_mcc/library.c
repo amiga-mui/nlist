@@ -56,6 +56,9 @@
 #define	CLASSINIT
 #define	CLASSEXPUNGE
 
+#define USEDCLASSESP used_mcps
+static const char *used_mcps[] = { "NListviews.mcp", NULL };
+
 #define MIN_STACKSIZE       8192
 
 struct Library *KeymapBase = NULL;
