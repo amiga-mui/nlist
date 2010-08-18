@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.107 RELEASE ###########################################################
+
+2010-08-18  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.107 release preparations
+
 2010-08-17 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: raised the eventhandler's priority to 2. This
