@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-24 Matthias Rustler <mrustler@gmx.de>
+
+  * mmakefile.src: changes of the AROS build system required some fixes
+
 #### v0.107 RELEASE ###########################################################
 
 2010-08-18  Jens Langner <Jens.Langner@light-speed.de>

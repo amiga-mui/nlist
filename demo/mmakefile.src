@@ -36,10 +36,7 @@ USER_CFLAGS := -DNO_INLINE_STDARG
     progname=NBitmap-Demo targetdir=$(EXEDIR) \
     files=NBitmap-Demo uselibs="mui arossupport amiga arosc"
 
-#MM
-contrib-zune-classes-nbitmap-demo-cpy :
-
-%copy_files_q files=icon.png src=../nbitmap_mcc dst=$(EXEDIR) \
-    maketarget=contrib-zune-classes-nbitmap-demo-cpy
+%copy_files_q mmake=contrib-zune-classes-nbitmap-demo-cpy \
+    files=icon.png src=../nbitmap_mcc dst=$(EXEDIR)
 
 %common
