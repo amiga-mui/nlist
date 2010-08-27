@@ -6334,6 +6334,11 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
     }
   }
 
+  #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+  if(ret != MUI_EventHandlerRC_Eat && MUIMasterBase != NULL && MUIMasterBase->lib_Version <= 19)
+    ret = DoSuperMethodA(cl, obj, (Msg)msg);
+  #endif
+
   return( ret );
 }
 
