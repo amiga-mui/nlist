@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-27 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: added a workaround for MUI 3.8. The embedded list
+    object does not get the MUIM_HandleEvent method, we must forward it ourself.
+    This is no issue with MUI 3.9+.
+
 2010-08-24 Matthias Rustler <mrustler@gmx.de>
 
   * mmakefile.src: changes of the AROS build system required some fixes

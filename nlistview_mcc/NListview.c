@@ -93,18 +93,29 @@ static IPTR mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleE
 
   ENTER();
 
-  if(imsg != NULL && data->LI_NList != NULL)
+  if(data->LI_NList != NULL)
   {
-    switch(imsg->Class)
+    #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+    // with MUI 3.8 the embedded list object doesn't get this method,
+    // hence we must forward it ourself.
+    if(MUIMasterBase != NULL && MUIMasterBase->lib_Version <= 19 && msg->muikey != MUIKEY_NONE)
     {
-      case IDCMP_RAWKEY:
+      DoMethodA(data->LI_NList, (Msg)msg);
+    }
+    #endif
+    if(imsg != NULL)
+    {
+      switch(imsg->Class)
       {
-        if(data->ControlChar != '\0' && IMsgToChar(imsg, 0, (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT)) == data->ControlChar)
+        case IDCMP_RAWKEY:
         {
-          set(data->LI_NList, MUIA_NList_Active, imsg->Qualifier & (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT) ? MUIV_NList_Active_Up: MUIV_NList_Active_Down);
+          if(data->ControlChar != '\0' && IMsgToChar(imsg, 0, (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT)) == data->ControlChar)
+          {
+            set(data->LI_NList, MUIA_NList_Active, imsg->Qualifier & (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT) ? MUIV_NList_Active_Up: MUIV_NList_Active_Down);
+          }
         }
+        break;
       }
-      break;
     }
   }
 
@@ -118,11 +129,11 @@ static IPTR mNLV_HandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleI
 
   ENTER();
 
-  if(msg->muikey != MUIKEY_NONE)
+  if(data->LI_NList != NULL)
   {
-    if(data->LI_NList != NULL)
+    if(msg->muikey != MUIKEY_NONE)
     {
-      DoMethod(data->LI_NList, MUIM_HandleInput, msg->imsg, msg->muikey);
+      DoMethodA(data->LI_NList, (Msg)msg);
 
       LEAVE();
       return 0;
@@ -171,7 +182,9 @@ static void RemoveVerticalScroller(Object *obj, struct NLVData *data)
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_Entries,    data->PR_Vert);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_Visible,    data->PR_Vert);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_First,      data->PR_Vert);
+*/
     DoMethod(data->PR_Vert,  MUIM_KillNotifyObj, MUIA_Prop_First,            data->LI_NList);
+/*
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_VertDeltaFactor, data->PR_Vert);
 */
 
@@ -223,7 +236,9 @@ static void RemoveHorizontalScroller(Object *obj, struct NLVData *data)
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_Entries,    data->PR_Horiz);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_Visible,    data->PR_Horiz);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_First,      data->PR_Horiz);
+*/
     DoMethod(data->PR_Horiz, MUIM_KillNotifyObj, MUIA_Prop_First,             data->LI_NList);
+/*
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_HorizDeltaFactor, data->PR_Horiz);
 */
 
