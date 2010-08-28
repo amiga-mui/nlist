@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-29 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlistviews_mcp,NListviews_mcp.h: changed the default keybindings to select
+    entries in the listview with the ALT key rather than the CONTROL key because
+    the default MUI keybindings are already using the CONTROL key for scrolling
+    up/down thus clashes with the default NList settings.
+
 2010-08-27 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: added a similar workaround as for NListview.mcc
