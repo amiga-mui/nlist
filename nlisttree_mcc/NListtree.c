@@ -5518,7 +5518,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
           struct NListtree_Data *data = INST_DATA(cl, obj);
           struct Task *mytask;
           const char *taskname;
-          ULONG ver, rev;
+          ULONG ver=0, rev=0;
 
           CopyMem( &ld, data, sizeof( struct NListtree_Data ) );
 

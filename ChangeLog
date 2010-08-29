@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-30 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: fixed some AROS related compiler warnings
+
 2010-08-29 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlistviews_mcp,NListviews_mcp.h: changed the default keybindings to select
