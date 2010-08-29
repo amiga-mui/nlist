@@ -7,6 +7,9 @@ $URL$
 
 2010-08-30 Jens Langner <Jens.Langner@light-speed.de>
 
+  * misc: changed all makefiles to use -O2 for the optimization level for AROS
+    compiles. This should hopefully fix the crashes with the latest versions
+    released. It seems something prevents to compile NList with -O3 on AROS.
   * misc: fixed some AROS related compiler warnings
 
 2010-08-29 Jens Langner <Jens.Langner@light-speed.de>
