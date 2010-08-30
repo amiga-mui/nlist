@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/DitherImage.c: allocate chip RAM for the dithered images
+    instead of any RAM. This should fix display problems on systems with native
+    chipset.
+
 2010-08-30 Jens Langner <Jens.Langner@light-speed.de>
 
   * misc: changed all makefiles to use -O2 for the optimization level for AROS

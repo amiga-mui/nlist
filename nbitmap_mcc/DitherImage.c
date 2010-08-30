@@ -84,7 +84,7 @@ APTR DitherImageA(struct TagItem *tags)
 
   if(data != NULL && colorMap != NULL && width > 0 && height > 0)
   {
-    if((result = AllocVec(width * height, MEMF_SHARED)) != NULL)
+    if((result = AllocVec(width * height, MEMF_SHARED|MEMF_CHIP)) != NULL)
     {
       uint8 *mask = NULL;
       uint8 *mPtr = NULL;
@@ -97,7 +97,7 @@ APTR DitherImageA(struct TagItem *tags)
       // function is interested in a mask at all
       if(format == MUIV_NBitmap_Type_ARGB32 && maskPtr != NULL)
       {
-        mask = AllocVec(RAWIDTH(width) * height, MEMF_SHARED|MEMF_CLEAR|MEMF_CHIP);
+        mask = AllocVec(RAWIDTH(width) * height, MEMF_SHARED|MEMF_CHIP);
         *maskPtr = mask;
         mPtr = mask;
       }
