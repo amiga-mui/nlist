@@ -12,7 +12,9 @@ $URL$
     chipset.
 
 2010-08-30 Jens Langner <Jens.Langner@light-speed.de>
-
+  
+  * misc: unified all DoSuperNew() methods to be static and to use the VA_LIST
+    macros defined in SDI_stdarg.h rather than using the SLOWSTACK stuff on AROS.
   * misc: changed all makefiles to use -O2 for the optimization level for AROS
     compiles. This should hopefully fix the crashes with the latest versions
     released. It seems something prevents to compile NList with -O3 on AROS.

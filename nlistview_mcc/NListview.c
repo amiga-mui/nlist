@@ -405,29 +405,30 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
   LEAVE();
 }
 
-#ifdef __AROS__
-IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
-IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
+#if defined(__AROS__)
+static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
-  AROS_SLOWSTACKTAGS_PRE(tag1)
-
-  retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
-
-  AROS_SLOWSTACKTAGS_POST
-}
-#elif !defined(__MORPHOS__)
-Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
+  IPTR rc;
+#else
+static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
+#endif
   VA_LIST args;
 
+  ENTER();
+
   VA_START(args, obj);
+  #if defined(__AROS__)
+  rc = (IPTR)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
+  #else
   rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  #endif
   VA_END(args);
 
+  RETURN(rc);
   return rc;
 }
-#endif
 
 /* static ULONG mNLV_New(struct IClass *cl,Object *obj,Msg msg) */
 static IPTR mNLV_New(struct IClass *cl, Object *obj, struct opSet *msg)
