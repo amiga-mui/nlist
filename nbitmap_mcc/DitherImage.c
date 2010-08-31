@@ -34,10 +34,9 @@
 
 #define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
 
-APTR DitherImageA(struct TagItem *tags)
+APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
 {
   struct TagItem *tag;
-  CONST_APTR data = NULL;
   uint32 width = 0;
   uint32 height = 0;
   uint32 format = 0;
@@ -52,10 +51,6 @@ APTR DitherImageA(struct TagItem *tags)
   {
     switch(tag->ti_Tag)
     {
-      case DITHERA_Data:
-        data = (APTR)tag->ti_Data;
-      break;
-
       case DITHERA_Width:
         width = tag->ti_Data;
       break;
@@ -207,17 +202,17 @@ APTR DitherImageA(struct TagItem *tags)
   return result;
 }
 
-#if defined(__AROS__)
-APTR DitherImage(Tag tag1, ...)
+#if !defined(__PPC__)
+APTR STDARGS VARARGS68K DitherImage(CONST_APTR data, ...)
 {
-  AROS_SLOWSTACKTAGS_PRE(tag1)
-  retval = (IPTR)DitherImageA(AROS_SLOWSTACKTAGS_ARG(tag1));
-  AROS_SLOWSTACKTAGS_POST
-}
-#elif !defined(__PPC__)
-APTR VARARGS68K DitherImage(Tag tag1, ...)
-{
-  return DitherImageA((struct TagItem *)&tag1);
+  APTR ret;
+  VA_LIST args;
+
+  VA_START(args, data);
+  ret = DitherImageA(data, (struct TagItem *)VA_ARG(args, IPTR));
+  VA_END(args);
+
+  return ret;
 }
 #endif
 

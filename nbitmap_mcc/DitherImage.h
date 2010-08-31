@@ -30,15 +30,14 @@
   #include <utility/tagitem.h>
 #endif
 
-APTR DitherImageA(struct TagItem *tags);
+APTR DitherImageA(CONST_APTR data, struct TagItem *tags);
 #if defined(__PPC__)
-#define DitherImage(...) ({ ULONG _tags[] = { __VA_ARGS__ }; DitherImageA((struct TagItem *)_tags); })
+#define DitherImage(data, ...) ({ ULONG _tags[] = { __VA_ARGS__ }; DitherImageA(data, (struct TagItem *)_tags); })
 #else
-APTR VARARGS68K DitherImage(Tag tag1, ...);
+APTR STDARGS VARARGS68K DitherImage(CONST_APTR data, ...);
 #endif
 void FreeDitheredImage(APTR image, APTR mask);
 
-#define DITHERA_Data                   (TAG_USER+1)
 #define DITHERA_Width                  (TAG_USER+2)
 #define DITHERA_Height                 (TAG_USER+3)
 #define DITHERA_Format                 (TAG_USER+4)

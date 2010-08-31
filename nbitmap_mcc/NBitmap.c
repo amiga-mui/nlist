@@ -730,7 +730,7 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
             if(data->data[i] != NULL)
             {
               // create a dithered copy of the raw image
-              data->ditheredImage[i] = DitherImage(DITHERA_Data, (IPTR)data->data[i],
+              data->ditheredImage[i] = DitherImage((CONST_APTR)data->data[i],
                                                    DITHERA_Width, data->width,
                                                    DITHERA_Height, data->height,
                                                    DITHERA_Format, data->type,
