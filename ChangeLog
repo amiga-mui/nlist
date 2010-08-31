@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-31 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: readded the custom implementation of
+    WritePixelArrayAlpha() for OS3 systems which don't have this function yet.
+    The alpha channel calculation is not yet perfect, but it works. This fixes
+    bug #3055632 of TextEditor.mcc.
+
 2010-08-30 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/DitherImage.c: allocate chip RAM for the dithered images
@@ -12,7 +19,7 @@ $URL$
     chipset.
 
 2010-08-30 Jens Langner <Jens.Langner@light-speed.de>
-  
+
   * misc: unified all DoSuperNew() methods to be static and to use the VA_LIST
     macros defined in SDI_stdarg.h rather than using the SLOWSTACK stuff on AROS.
   * misc: changed all makefiles to use -O2 for the optimization level for AROS

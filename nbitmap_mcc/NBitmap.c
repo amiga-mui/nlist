@@ -80,6 +80,21 @@ const uint32 defaultColorMap[256] =
 
 ///
 
+#if defined(__MORPHOS__) || defined(__AROS__)
+// MorphOS and AROS always have a working WPAA() function
+#define WPAA(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha) \
+  WritePixelArrayAlpha(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha)
+#elif !defined(__amigaos4__)
+// for AmigaOS3 this is only true for CGX V43+
+#define WPAA(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha) \
+{ \
+  if(CyberGfxBase->lib_Version >= 43) \
+    WritePixelArrayAlpha(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha); \
+  else \
+    _WPAA(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha); \
+}
+#endif
+
 // functions
 /// GetConfigItem()
 //
@@ -990,7 +1005,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
               if(data->depth == 24)
                 WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
               else
-                WritePixelArrayAlpha(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
+                WPAA(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
 
               #endif
             }
@@ -1130,7 +1145,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
               break;
 
               case MUIV_NBitmap_Type_ARGB32:
-                WritePixelArrayAlpha(data->data[item], 0, 0, data->width*4, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, data->alpha);
+                WPAA(data->data[item], 0, 0, data->width*4, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, data->alpha);
               break;
             }
             #endif // __amigaos4__
@@ -1190,9 +1205,13 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
         #else
 
         if(data->pressed)
-          WritePixelArrayAlpha(data->pressedShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
+        {
+          WPAA(data->pressedShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
+        }
         else
-          WritePixelArrayAlpha(data->overShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
+        {
+          WPAA(data->overShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
+        }
 
         #endif
       }
