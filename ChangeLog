@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-08-31 Jens Langner <Jens.Langner@light-speed.de>
+  
+  * misc: checked all varargs function to not use the SLOWSTACK stuff on AROS
+    as this might be the reason for our recent problems with NList and AROS. With
+    the SDI stdarg macros all this SLOWSTACK stuff does not seem to be required
+    anymore.
+
 2010-08-31 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: readded the custom implementation of

@@ -736,26 +736,17 @@ INLINE ULONG MyCallHookA(struct Hook *hook, struct NListtree_Data *data, struct 
 }
 #endif
 
-#ifdef __AROS__
-static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
+static IPTR STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
-    AROS_SLOWSTACKHOOKS_PRE(data)
-    retval = CallHookPkt(hook, data->Obj, AROS_SLOWSTACKHOOKS_ARG(data));
-    AROS_SLOWSTACKHOOKS_POST
-}
-#else
-static ULONG STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
-{
-  ULONG ret;
+  IPTR ret;
   VA_LIST va;
 
   VA_START(va, data);
   ret = CallHookPkt(hook, data->Obj, VA_ARG(va, APTR));
   VA_END(va);
 
-  return(ret);
+  return ret;
 }
-#endif
 
 /*
 **  Release a pen.

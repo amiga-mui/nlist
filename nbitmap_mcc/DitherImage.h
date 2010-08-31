@@ -31,7 +31,7 @@
 #endif
 
 APTR DitherImageA(struct TagItem *tags);
-#if defined(PPC)
+#if defined(__PPC__)
 #define DitherImage(...) ({ ULONG _tags[] = { __VA_ARGS__ }; DitherImageA((struct TagItem *)_tags); })
 #else
 APTR VARARGS68K DitherImage(Tag tag1, ...);

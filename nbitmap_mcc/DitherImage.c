@@ -214,7 +214,7 @@ APTR DitherImage(Tag tag1, ...)
   retval = (IPTR)DitherImageA(AROS_SLOWSTACKTAGS_ARG(tag1));
   AROS_SLOWSTACKTAGS_POST
 }
-#elif !defined(PPC)
+#elif !defined(__PPC__)
 APTR VARARGS68K DitherImage(Tag tag1, ...)
 {
   return DitherImageA((struct TagItem *)&tag1);
