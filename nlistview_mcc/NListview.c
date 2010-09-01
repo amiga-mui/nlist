@@ -90,6 +90,7 @@ static IPTR mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleE
 {
   struct NLVData *data = INST_DATA(cl, obj);
   struct IntuiMessage *imsg = msg->imsg;
+  IPTR result = 0;
 
   ENTER();
 
@@ -100,7 +101,7 @@ static IPTR mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleE
     // hence we must forward it ourself.
     if(MUIMasterBase != NULL && MUIMasterBase->lib_Version <= 19 && msg->muikey != MUIKEY_NONE)
     {
-      DoMethodA(data->LI_NList, (Msg)msg);
+      result = DoMethodA(data->LI_NList, (Msg)msg);
     }
     #endif
     if(imsg != NULL)
@@ -119,29 +120,24 @@ static IPTR mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleE
     }
   }
 
-  LEAVE();
-  return 0;
+  RETURN(result);
+  return result;
 }
 
 static IPTR mNLV_HandleInput(struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg)
 {
   struct NLVData *data = INST_DATA(cl, obj);
+  IPTR result = 0;
 
   ENTER();
 
-  if(data->LI_NList != NULL)
-  {
-    if(msg->muikey != MUIKEY_NONE)
-    {
-      DoMethodA(data->LI_NList, (Msg)msg);
+  if(data->LI_NList != NULL && msg->muikey != MUIKEY_NONE)
+    result = DoMethodA(data->LI_NList, (Msg)msg);
+  else
+    result = DoSuperMethodA(cl, obj, (Msg)msg);
 
-      LEAVE();
-      return 0;
-    }
-  }
-
-  LEAVE();
-  return DoSuperMethodA(cl, obj, (Msg)msg);
+  RETURN(result);
+  return result;
 }
 
 static void AddVerticalScroller(Object *obj, struct NLVData *data)
