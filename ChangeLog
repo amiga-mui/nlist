@@ -5,8 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-09-01 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/WritePixelArrayAlpha.c: fixed the final image calculation by
+    combining the correct RGB values. This makes it possible to correctly
+    display alpha blended images even with V42 CGX/OS3 systems.
+
 2010-08-31 Jens Langner <Jens.Langner@light-speed.de>
- 
+
   * nbitmap_mcc: changed the DitherImageA() function to have 2 arguments rather than
     a single one. This allowed to get rid of the SLOWSTACK stuff in DitherImage()
     and thus have a single unified function.
