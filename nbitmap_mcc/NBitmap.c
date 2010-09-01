@@ -715,7 +715,11 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
       {
         // in case we are to be displayed on a colormapped screen we have to create
         // dithered copies of the images
+        #if defined(__amigaos4__)
+        if(data->scrdepth <= 8)
+        #else
         if(data->scrdepth <= 8 || CyberGfxBase == NULL)
+        #endif
         {
           ULONG i;
           const uint32 *colorMap;
