@@ -45,6 +45,8 @@ void _WPA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, U
         SetAPen(rp, _src[x]);
         WritePixel(rp, destx+x, desty+y);
       }
+
+      _src += srcmod;
     }
   }
 }
