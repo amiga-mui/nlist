@@ -228,7 +228,8 @@ ifeq ($(OS), os3)
   LDLIBS  += -ldebug -lmui
 
   # additional object files required
-  COBJS += WritePixelArrayAlpha.o \
+  COBJS += WritePixelArray.o \
+           WritePixelArrayAlpha.o \
            vastubs.o
 
 else

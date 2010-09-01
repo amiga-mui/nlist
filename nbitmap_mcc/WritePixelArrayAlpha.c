@@ -25,6 +25,8 @@
 #include <proto/graphics.h>
 #include <cybergraphx/cybergraphics.h>
 
+#include "private.h"
+
 static LONG do_alpha(LONG a, LONG v)
 {
   LONG tmp  = (a*v);

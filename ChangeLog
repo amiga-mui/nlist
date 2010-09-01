@@ -7,6 +7,9 @@ $URL$
 
 2010-09-01 Thore Böckelmann <tboeckel@gmx.de>
 
+  * nbitmap_mcc/WritePixelArray.c, nbitmap_mcc/NBitmap.c: added a quite dumb but
+    working reimplementation of WritePixelArray() for OS3 systems without CGX or
+    P96. This fixes bug #3057361.
   * nbitmap_mcc/WritePixelArrayAlpha.c: fixed the final image calculation by
     combining the correct RGB values. This makes it possible to correctly
     display alpha blended images even with V42 CGX/OS3 systems.

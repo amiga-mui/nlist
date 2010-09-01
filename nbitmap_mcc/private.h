@@ -149,6 +149,7 @@ BOOL NBitmap_SetupShades(struct InstData *data);
 void NBitmap_CleanupShades(struct InstData *data);
 
 #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+void _WPA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG fmt);
 void _WPAA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha);
 #endif
 

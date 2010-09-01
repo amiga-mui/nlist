@@ -81,14 +81,23 @@ const uint32 defaultColorMap[256] =
 ///
 
 #if defined(__MORPHOS__) || defined(__AROS__)
-// MorphOS and AROS always have a working WPAA() function
+// MorphOS and AROS always have working WPA() and WPAA() functions
+#define WPA(src, srcx, srcy, srcmod, rp, destx, desty, width, height, fmt) \
+  WritePixelArray(src, srcx, srcy, srcmod, rp, destx, desty, width, height, fmt)
 #define WPAA(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha) \
   WritePixelArrayAlpha(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha)
 #elif !defined(__amigaos4__)
 // for AmigaOS3 this is only true for CGX V43+
+#define WPA(src, srcx, srcy, srcmod, rp, destx, desty, width, height, fmt) \
+{ \
+  if(CyberGfxBase != NULL) \
+    WritePixelArray(src, srcx, srcy, srcmod, rp, destx, desty, width, height, fmt); \
+  else \
+    _WPA(src, srcx, srcy, srcmod, rp, destx, desty, width, height, fmt); \
+}
 #define WPAA(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha) \
 { \
-  if(CyberGfxBase->lib_Version >= 43) \
+  if(CyberGfxBase != NULL && CyberGfxBase->lib_Version >= 43) \
     WritePixelArrayAlpha(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha); \
   else \
     _WPAA(src, srcx, srcy, srcmod, rp, destx, desty, width, height, globalalpha); \
@@ -706,7 +715,7 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
       {
         // in case we are to be displayed on a colormapped screen we have to create
         // dithered copies of the images
-        if(data->scrdepth <= 8)
+        if(data->scrdepth <= 8 || CyberGfxBase == NULL)
         {
           ULONG i;
           const uint32 *colorMap;
@@ -743,15 +752,15 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
               if(data->ditheredImage[i] != NULL)
               {
                 // CyberGraphics cannot blit raw data through a mask, thus we have to
-                // take this ugly workaround and take the detour using a bitmap.
+                // use this ugly workaround and take the detour using a bitmap.
                 if((data->ditheredBitmap[i] = AllocBitMap(data->width, data->height, 8, BMF_MINPLANES, NULL)) != NULL)
                 {
-                  struct RastPort tempRP;
+                  struct RastPort remapRP;
 
-                  InitRastPort(&tempRP);
-                  tempRP.BitMap = data->ditheredBitmap[i];
+                  InitRastPort(&remapRP);
+                  remapRP.BitMap = data->ditheredBitmap[i];
 
-                  WritePixelArray(data->ditheredImage[i], 0, 0, data->width, &tempRP, 0, 0, data->width, data->height, RECTFMT_LUT8);
+                  WPA(data->ditheredImage[i], 0, 0, data->width, &remapRP, 0, 0, data->width, data->height, RECTFMT_LUT8);
                 }
               }
               #endif // !__amigaos4__
@@ -1065,7 +1074,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
             }
           }
           #else // __amigaos4__
-          if(data->scrdepth <= 8 && data->ditheredBitmap[item] != NULL)
+          if((data->scrdepth <= 8 && data->ditheredBitmap[item] != NULL) || CyberGfxBase == NULL)
           {
             // CyberGraphics cannot blit raw data through a mask, thus we have to
             // take this ugly workaround and take the detour using a bitmap.
