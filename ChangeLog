@@ -7,6 +7,8 @@ $URL$
 
 2010-09-01 Thore Böckelmann <tboeckel@gmx.de>
 
+  * nbitmap_mcc/DitherImage.c: clear the mask bitmap, otherwise we will get
+    trashed graphics.
   * nlistview_mcc/NListview.c: if the HandleEvent or HandleInput methods must be
     forwarded to the embedded NList object the methods' return code is now
     correctly returned to MUI itself. This fixes ticket #200 of YAM.

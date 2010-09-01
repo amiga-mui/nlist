@@ -92,7 +92,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
       // function is interested in a mask at all
       if(format == MUIV_NBitmap_Type_ARGB32 && maskPtr != NULL)
       {
-        mask = AllocVec(RAWIDTH(width) * height, MEMF_SHARED|MEMF_CHIP);
+        mask = AllocVec(RAWIDTH(width) * height, MEMF_SHARED|MEMF_CLEAR|MEMF_CHIP);
         *maskPtr = mask;
         mPtr = mask;
       }
