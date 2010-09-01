@@ -751,6 +751,7 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
               #if !defined(__amigaos4__)
               if(data->ditheredImage[i] != NULL)
               {
+                D(DBF_ALWAYS, "setting up dithered bitmap %ld", i);
                 // CyberGraphics cannot blit raw data through a mask, thus we have to
                 // use this ugly workaround and take the detour using a bitmap.
                 if((data->ditheredBitmap[i] = AllocBitMap(data->width, data->height, 8, BMF_MINPLANES, NULL)) != NULL)
@@ -1012,9 +1013,13 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
               #else
 
               if(data->depth == 24)
-                WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
+              {
+                WPA(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
+              }
               else
+              {
                 WPAA(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
+              }
 
               #endif
             }
@@ -1150,7 +1155,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
               break;
 
               case MUIV_NBitmap_Type_RGB24:
-                WritePixelArray(data->data[item], 0, 0, data->width*3, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, RECTFMT_RGB);
+                WPA(data->data[item], 0, 0, data->width*3, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, RECTFMT_RGB);
               break;
 
               case MUIV_NBitmap_Type_ARGB32:

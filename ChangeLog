@@ -7,6 +7,8 @@ $URL$
 
 2010-09-01 Thore Böckelmann <tboeckel@gmx.de>
 
+  * nbitmap_mcc/NBitmap.c: replaced the last occurences of WritePixelArray() by
+    the WPA() macro which is aware of the minimum required version of CGX.
   * nbitmap_mcc/WritePixelArray.c: added missing increase of source pointer.
   * nbitmap_mcc/DitherImage.c: clear the mask bitmap, otherwise we will get
     trashed graphics.
