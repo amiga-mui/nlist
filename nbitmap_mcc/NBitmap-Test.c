@@ -37,7 +37,6 @@
 struct Library *IntuitionBase = NULL;
 struct Library *UtilityBase = NULL;
 struct Library *GfxBase = NULL;
-struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
 struct Library *MUIMasterBase = NULL;
 #else
@@ -57,9 +56,14 @@ struct Library *MUIMasterBase = NULL;
 struct IntuitionIFace *IIntuition = NULL;
 struct UtilityIFace *IUtility = NULL;
 struct GraphicsIFace *IGraphics = NULL;
-struct CyberGfxIFace *ICyberGfx = NULL;
 struct DataTypesIFace *IDataTypes = NULL;
 struct MUIMasterIFace *IMUIMaster = NULL;
+#endif
+
+#if defined(__amigaos4__)
+#undef USE_CGX
+#else
+#define USE_CGX
 #endif
 
 const unsigned long icon32_normal[] = {
@@ -128,9 +132,11 @@ int main(void)
       if((GfxBase = (APTR)OpenLibrary("graphics.library", 36)) &&
         GETINTERFACE(IGraphics, GfxBase))
       {
+        #if defined(USE_CGX)
         if((CyberGfxBase = OpenLibrary("cybergraphics.library", 40)) &&
           GETINTERFACE(ICyberGfx, CyberGfxBase))
         {
+        #endif
           if((DataTypesBase = OpenLibrary("datatypes.library", 36)) &&
             GETINTERFACE(IDataTypes, DataTypesBase))
           {
@@ -216,16 +222,17 @@ int main(void)
               DataTypesBase = NULL;
             }
 
+          #if defined(USE_CGX)
             DROPINTERFACE(ICyberGfx);
             CloseLibrary(CyberGfxBase);
             CyberGfxBase = NULL;
           }
+          #endif
 
           DROPINTERFACE(IGraphics);
           CloseLibrary((struct Library *)GfxBase);
           GfxBase = NULL;
         }
-
 
         DROPINTERFACE(IMUIMaster);
         CloseLibrary(MUIMasterBase);
