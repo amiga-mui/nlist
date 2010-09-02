@@ -401,6 +401,7 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
   LEAVE();
 }
 
+#if !defined(__MORPHOS__)
 #if defined(__AROS__)
 static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
@@ -425,6 +426,7 @@ static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
   RETURN(rc);
   return rc;
 }
+#endif // !__MORPHOS__
 
 /* static ULONG mNLV_New(struct IClass *cl,Object *obj,Msg msg) */
 static IPTR mNLV_New(struct IClass *cl, Object *obj, struct opSet *msg)

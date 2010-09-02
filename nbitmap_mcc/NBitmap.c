@@ -743,14 +743,13 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
             if(data->data[i] != NULL)
             {
               // create a dithered copy of the raw image
-              data->ditheredImage[i] = DitherImage((CONST_APTR)data->data[i],
-                                                   DITHERA_Width, data->width,
-                                                   DITHERA_Height, data->height,
-                                                   DITHERA_Format, data->type,
-                                                   DITHERA_ColorMap, (IPTR)colorMap,
-                                                   DITHERA_PenMap, (IPTR)data->ditherPenMap,
-                                                   DITHERA_MaskPlane, (IPTR)&data->ditheredMask[i],
-                                                   TAG_DONE);
+              data->ditheredImage[i] = DitherImage((CONST_APTR)data->data[i], DITHERA_Width, data->width,
+                                                                              DITHERA_Height, data->height,
+                                                                              DITHERA_Format, data->type,
+                                                                              DITHERA_ColorMap, (IPTR)colorMap,
+                                                                              DITHERA_PenMap, (IPTR)data->ditherPenMap,
+                                                                              DITHERA_MaskPlane, (IPTR)&data->ditheredMask[i],
+                                                                              TAG_DONE);
 
               #if !defined(__amigaos4__)
               if(data->ditheredImage[i] != NULL)

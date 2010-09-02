@@ -232,6 +232,7 @@ void obtain_pen(struct MUI_RenderInfo *mri, ULONG *pen, struct MUI_PenSpec *ps)
   *pen = MUI_ObtainPen(mri, ps, 0);
 }
 
+#if !defined(__MORPHOS__)
 #if defined(__AROS__)
 static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
@@ -256,6 +257,7 @@ static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
   RETURN(rc);
   return rc;
 }
+#endif // !__MORPHOS__
 
 IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {

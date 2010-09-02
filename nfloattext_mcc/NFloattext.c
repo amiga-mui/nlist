@@ -55,6 +55,7 @@ static char *CopyText(char *textin)
   return (textout);
 }
 
+#if !defined(__MORPHOS__)
 #if defined(__AROS__)
 static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
@@ -79,6 +80,7 @@ static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
   RETURN(rc);
   return rc;
 }
+#endif // !__MORPHOS__
 
 static IPTR mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {

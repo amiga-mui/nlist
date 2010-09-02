@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-09-02 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: fixed the definition of DoSuperNew() for all builds except MorphOS.
+
 2010-09-01 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: replaced the last occurences of WritePixelArray() by

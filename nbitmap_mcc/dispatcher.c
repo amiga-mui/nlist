@@ -40,6 +40,7 @@
 #include "Debug.h"
 
 /* Object *DoSuperNew() */
+#if !defined(__MORPHOS__)
 #if defined(__AROS__)
 static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
@@ -64,6 +65,7 @@ static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
   RETURN(rc);
   return rc;
 }
+#endif // !__MORPHOS__
 
 /* VOID setstr() */
 static VOID setstr(STRPTR *dest, STRPTR str)
