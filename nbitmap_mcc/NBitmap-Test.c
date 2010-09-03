@@ -60,12 +60,6 @@ struct DataTypesIFace *IDataTypes = NULL;
 struct MUIMasterIFace *IMUIMaster = NULL;
 #endif
 
-#if defined(__amigaos4__)
-#undef USE_CGX
-#else
-#define USE_CGX
-#endif
-
 const unsigned long icon32_normal[] = {
 	0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff,
 	0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x49da7d7f, 0xebd87e80, 0xffd5856b, 0xc5c3725d, 0x37bb5e4f, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff, 0x00ff00ff,
@@ -132,107 +126,108 @@ int main(void)
       if((GfxBase = (APTR)OpenLibrary("graphics.library", 36)) &&
          GETINTERFACE(IGraphics, GfxBase))
       {
-        #if defined(USE_CGX)
-        if((CyberGfxBase = OpenLibrary("cybergraphics.library", 40)) &&
-           GETINTERFACE(ICyberGfx, CyberGfxBase))
+        if((DataTypesBase = OpenLibrary("datatypes.library", 36)) &&
+           GETINTERFACE(IDataTypes, DataTypesBase))
         {
-        #endif
-          if((DataTypesBase = OpenLibrary("datatypes.library", 36)) &&
-             GETINTERFACE(IDataTypes, DataTypesBase))
+          if((MUIMasterBase = OpenLibrary("muimaster.library", 19)) &&
+             GETINTERFACE(IMUIMaster, MUIMasterBase))
           {
-            if((MUIMasterBase = OpenLibrary("muimaster.library", 19)) &&
-               GETINTERFACE(IMUIMaster, MUIMasterBase))
+            struct MUI_CustomClass *mcc;
+
+            #if !defined(__amigaos4__)
+            // don't check for success, we can live without it
+            CyberGfxBase = OpenLibrary("cybergraphics.library", 40);
+            #endif
+
+            mcc = MUI_CreateCustomClass(NULL, "Area.mui", NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
+
+            if(mcc != NULL)
             {
-              struct MUI_CustomClass *mcc;
+              Object *app, *window;
+              const char * const classes[] = { "NBitmap.mcc", NULL };
 
-              mcc = MUI_CreateCustomClass(NULL, "Area.mui", NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
+              app = MUI_NewObject("Application.mui",
+                    MUIA_Application_Author,      "NBitmap.mcc Open Source Team",
+                    MUIA_Application_Base,        "NBitmap-Test",
+                    MUIA_Application_Copyright,   "(c) 2007 NBitmap.mcc Open Source Team",
+                    MUIA_Application_Description, "NBitmap.mcc test program",
+                    MUIA_Application_Title,       "NBitmap-Test",
+                    MUIA_Application_Version,     "$VER: NBitmap-Test (" __DATE__ ")",
+                    MUIA_Application_UsedClasses, classes,
 
-              if(mcc != NULL)
-              {
-                Object *app, *window;
-                const char * const classes[] = { "NBitmap.mcc", NULL };
-
-                app = MUI_NewObject("Application.mui",
-                      MUIA_Application_Author,      "NBitmap.mcc Open Source Team",
-                      MUIA_Application_Base,        "NBitmap-Test",
-                      MUIA_Application_Copyright,   "(c) 2007 NBitmap.mcc Open Source Team",
-                      MUIA_Application_Description, "NBitmap.mcc test program",
-                      MUIA_Application_Title,       "NBitmap-Test",
-                      MUIA_Application_Version,     "$VER: NBitmap-Test (" __DATE__ ")",
-                      MUIA_Application_UsedClasses, classes,
-
-                      MUIA_Application_Window,
-                        window = WindowObject,
-                        MUIA_Window_Title,    "NBitmap-Test",
-                        MUIA_Window_ID,       MAKE_ID('M','A','I','N'),
-                        MUIA_Window_RootObject, VGroup,
-                          Child, HGroup,
-                            Child, NewObject(mcc->mcc_Class, NULL,
-                              MUIA_NBitmap_Type,   MUIV_NBitmap_Type_File,
-                              MUIA_NBitmap_Normal, "PROGDIR:icon.png",
-                              MUIA_NBitmap_Label,  "Music",
-                              MUIA_NBitmap_Button, TRUE,
-                            End,
-                            Child, NewObject(mcc->mcc_Class, NULL,
-                              MUIA_NBitmap_Width,  ICON32_WIDTH,
-                              MUIA_NBitmap_Height, ICON32_HEIGHT,
-                              MUIA_NBitmap_Type,   MUIV_NBitmap_Type_ARGB32,
-                              MUIA_NBitmap_Normal, icon32_normal,
-                              MUIA_NBitmap_Selected, icon32_selected,
-                              MUIA_NBitmap_Label,  "ICON32",
-                              MUIA_NBitmap_Button, TRUE,
-                            End,
-                            Child, RectangleObject, End,
+                    MUIA_Application_Window,
+                      window = WindowObject,
+                      MUIA_Window_Title,    "NBitmap-Test",
+                      MUIA_Window_ID,       MAKE_ID('M','A','I','N'),
+                      MUIA_Window_RootObject, VGroup,
+                        Child, HGroup,
+                          Child, NewObject(mcc->mcc_Class, NULL,
+                            MUIA_NBitmap_Type,   MUIV_NBitmap_Type_File,
+                            MUIA_NBitmap_Normal, "PROGDIR:icon.png",
+                            MUIA_NBitmap_Label,  "Music",
+                            MUIA_NBitmap_Button, TRUE,
+                          End,
+                          Child, NewObject(mcc->mcc_Class, NULL,
+                            MUIA_NBitmap_Width,  ICON32_WIDTH,
+                            MUIA_NBitmap_Height, ICON32_HEIGHT,
+                            MUIA_NBitmap_Type,   MUIV_NBitmap_Type_ARGB32,
+                            MUIA_NBitmap_Normal, icon32_normal,
+                            MUIA_NBitmap_Selected, icon32_selected,
+                            MUIA_NBitmap_Label,  "ICON32",
+                            MUIA_NBitmap_Button, TRUE,
                           End,
                           Child, RectangleObject, End,
                         End,
+                        Child, RectangleObject, End,
                       End,
-                    End;
+                    End,
+                  End;
 
-                if(app != NULL)
+              if(app != NULL)
+              {
+                ULONG sigs = 0;
+
+                DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+
+                //set(window, MUIA_Window_ActiveObject, editorgad);
+                set(window, MUIA_Window_Open, TRUE);
+
+                while((LONG)DoMethod(app, MUIM_Application_NewInput, &sigs) != (LONG)MUIV_Application_ReturnID_Quit)
                 {
-                  ULONG sigs = 0;
-
-                  DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
-
-                  //set(window, MUIA_Window_ActiveObject, editorgad);
-                  set(window, MUIA_Window_Open, TRUE);
-
-                  while((LONG)DoMethod(app, MUIM_Application_NewInput, &sigs) != (LONG)MUIV_Application_ReturnID_Quit)
+                  if(sigs)
                   {
-                    if(sigs)
-                    {
-                      sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+                    sigs = Wait(sigs | SIGBREAKF_CTRL_C);
 
-                      if(sigs & SIGBREAKF_CTRL_C)
-                        break;
-                    }
+                    if(sigs & SIGBREAKF_CTRL_C)
+                      break;
                   }
-
-                  MUI_DisposeObject(app);
                 }
-                else
-                  PutStr("Failed to create application\n");
 
-                MUI_DeleteCustomClass(mcc);
+                MUI_DisposeObject(app);
               }
+              else
+                PutStr("Failed to create application\n");
 
-              DROPINTERFACE(IMUIMaster);
-              CloseLibrary(MUIMasterBase);
-              MUIMasterBase = NULL;
+              MUI_DeleteCustomClass(mcc);
             }
 
-            DROPINTERFACE(IDataTypes);
-            CloseLibrary(DataTypesBase);
-            DataTypesBase = NULL;
+            #if !defined(__amigaos4__)
+            if(CyberGfxBase != NULL)
+            {
+              CloseLibrary(CyberGfxBase);
+              CyberGfxBase = NULL;
+            }
+            #endif
+
+            DROPINTERFACE(IMUIMaster);
+            CloseLibrary(MUIMasterBase);
+            MUIMasterBase = NULL;
           }
 
-        #if defined(USE_CGX)
-          DROPINTERFACE(ICyberGfx);
-          CloseLibrary(CyberGfxBase);
-          CyberGfxBase = NULL;
+          DROPINTERFACE(IDataTypes);
+          CloseLibrary(DataTypesBase);
+          DataTypesBase = NULL;
         }
-        #endif
 
         DROPINTERFACE(IGraphics);
         CloseLibrary((struct Library *)GfxBase);
