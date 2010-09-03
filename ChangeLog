@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-09-03 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap-Test.c: close the libraries in exact reverse open order.
+
 2010-09-02 Thore Böckelmann <tboeckel@gmx.de>
 
   * misc: fixed the definition of DoSuperNew() for all builds except MorphOS.

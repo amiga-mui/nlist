@@ -120,28 +120,28 @@ DISPATCHERPROTO(_Dispatcher);
 int main(void)
 {
   if((IntuitionBase = (APTR)OpenLibrary("intuition.library", 36)) &&
-    GETINTERFACE(IIntuition, IntuitionBase))
+     GETINTERFACE(IIntuition, IntuitionBase))
   {
     #if defined(DEBUG)
     SetupDebug();
     #endif
 
     if((UtilityBase = (APTR)OpenLibrary("utility.library", 36)) &&
-      GETINTERFACE(IUtility, UtilityBase))
+       GETINTERFACE(IUtility, UtilityBase))
     {
       if((GfxBase = (APTR)OpenLibrary("graphics.library", 36)) &&
-        GETINTERFACE(IGraphics, GfxBase))
+         GETINTERFACE(IGraphics, GfxBase))
       {
         #if defined(USE_CGX)
         if((CyberGfxBase = OpenLibrary("cybergraphics.library", 40)) &&
-          GETINTERFACE(ICyberGfx, CyberGfxBase))
+           GETINTERFACE(ICyberGfx, CyberGfxBase))
         {
         #endif
           if((DataTypesBase = OpenLibrary("datatypes.library", 36)) &&
-            GETINTERFACE(IDataTypes, DataTypesBase))
+             GETINTERFACE(IDataTypes, DataTypesBase))
           {
             if((MUIMasterBase = OpenLibrary("muimaster.library", 19)) &&
-              GETINTERFACE(IMUIMaster, MUIMasterBase))
+               GETINTERFACE(IMUIMaster, MUIMasterBase))
             {
               struct MUI_CustomClass *mcc;
 
@@ -217,38 +217,36 @@ int main(void)
                 MUI_DeleteCustomClass(mcc);
               }
 
-              DROPINTERFACE(IDataTypes);
-              CloseLibrary(DataTypesBase);
-              DataTypesBase = NULL;
+              DROPINTERFACE(IMUIMaster);
+              CloseLibrary(MUIMasterBase);
+              MUIMasterBase = NULL;
             }
 
-          #if defined(USE_CGX)
-            DROPINTERFACE(ICyberGfx);
-            CloseLibrary(CyberGfxBase);
-            CyberGfxBase = NULL;
+            DROPINTERFACE(IDataTypes);
+            CloseLibrary(DataTypesBase);
+            DataTypesBase = NULL;
           }
-          #endif
 
-          DROPINTERFACE(IGraphics);
-          CloseLibrary((struct Library *)GfxBase);
-          GfxBase = NULL;
+        #if defined(USE_CGX)
+          DROPINTERFACE(ICyberGfx);
+          CloseLibrary(CyberGfxBase);
+          CyberGfxBase = NULL;
         }
+        #endif
 
-        DROPINTERFACE(IMUIMaster);
-        CloseLibrary(MUIMasterBase);
-        MUIMasterBase = NULL;
+        DROPINTERFACE(IGraphics);
+        CloseLibrary((struct Library *)GfxBase);
+        GfxBase = NULL;
       }
 
       DROPINTERFACE(IUtility);
       CloseLibrary((struct Library *)UtilityBase);
       UtilityBase = NULL;
     }
-  }
 
-  if(IntuitionBase)
-  {
     DROPINTERFACE(IIntuition);
     CloseLibrary((struct Library *)IntuitionBase);
+    IntuitionBase = NULL;
   }
 
   return 0;
