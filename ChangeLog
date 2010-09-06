@@ -5,6 +5,16 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-09-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc4.c: fixed a serious issue when an application wanted to
+    override the MUIM_NList_Display method. The supplied preparses pointer was
+    completely wrong and using it caused instant crashes. The internal fallback
+    to one of the hook functions worked only because NList's internal display
+    function never used the pointers, but relied on its private knowledge about
+    the source of the pointers. I can't believe no developer complained about
+    this bug before!
+
 2010-09-03 Thore Böckelmann <tboeckel@gmx.de>
 
   * mccinit.c, #?/ClipboardServer.c: updated to the latest version and clear all
