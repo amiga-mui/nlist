@@ -7,6 +7,10 @@ $URL$
 
 2010-09-06 Thore Böckelmann <tboeckel@gmx.de>
 
+  * mccinit.c: added missing #include <string.h> for memset().
+
+2010-09-06 Thore Böckelmann <tboeckel@gmx.de>
+
   * nlist_mcc/NList_mcc4.c: fixed a serious issue when an application wanted to
     override the MUIM_NList_Display method. The supplied preparses pointer was
     completely wrong and using it caused instant crashes. The internal fallback
