@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-09-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c: removed the globally cached muiRenderInfo pointer.
+    The pointer is now obtained whenever it is needed.
+
 2010-09-08 Mariusz Danilewicz <mandi@interia.pl>
 
   * AUTHORS: added translators section (please check and update missing persons).
