@@ -407,13 +407,13 @@ $(TESTTARGET): $(TESTOBJS)
 
 locale.h: locale.c
 locale.c: $(LOCALE)/NListviews_mcp.cd C_h.sd C_c.sd
-	@echo "  GN $@"
+	@echo "  FC $@"
 	@$(FC) $(LOCALE)/NListviews_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
 
 ## CATALOG GENERATION #################
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct $(LOCALE)/NListviews_mcp.cd
-	@echo "  GN $@"
+	@echo "  FC $@"
 	@$(FC) $(LOCALE)/NListviews_mcp.cd $< CATALOG $@
 
 .IGNORE: $(CATALOGS)
