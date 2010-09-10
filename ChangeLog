@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-09-10 Thore Böckelmann <tboeckel@gmx.de>
+
+  * tools/mkrelease.sh: split up the catalog copying due to the different
+    translations available.
+  * nlisttree_mcp/Makefile: removed the utterly outdated russian translation
+    until it is updated again.
+
 2010-09-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc.c: removed the globally cached muiRenderInfo pointer.
