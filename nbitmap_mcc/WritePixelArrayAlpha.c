@@ -33,8 +33,12 @@ static LONG do_alpha(LONG a, LONG v)
   return ((tmp<<8) + tmp + 32768)>>16;
 }
 
-void _WPAA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha)
+ULONG _WPAA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha)
 {
+  ULONG pixels = 0;
+
+  ENTER();
+
   if(width > 0 && height > 0)
   {
     ULONG *buf;
@@ -86,6 +90,7 @@ void _WPAA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, 
           }
 
           *dpix++ = dstpix;
+          pixels++;
         }
 
         WritePixelArray(buf, 0, 0, width * 4, rp, destx, desty + y, width, 1, RECTFMT_ARGB);
@@ -94,4 +99,7 @@ void _WPAA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, 
       FreeVec(buf);
     }
   }
+
+  RETURN(pixels);
+  return pixels;
 }

@@ -1,7 +1,7 @@
 /***************************************************************************
 
  NBitmap.mcc - New Bitmap MUI Custom Class
- Copyright (C) 2007 by NList Open Source Team
+ Copyright (C) 2007-2010 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -149,7 +149,7 @@ int main(void)
               app = MUI_NewObject("Application.mui",
                     MUIA_Application_Author,      "NBitmap.mcc Open Source Team",
                     MUIA_Application_Base,        "NBitmap-Test",
-                    MUIA_Application_Copyright,   "(c) 2007 NBitmap.mcc Open Source Team",
+                    MUIA_Application_Copyright,   "(c) 2007-2010 NBitmap.mcc Open Source Team",
                     MUIA_Application_Description, "NBitmap.mcc test program",
                     MUIA_Application_Title,       "NBitmap-Test",
                     MUIA_Application_Version,     "$VER: NBitmap-Test (" __DATE__ ")",
@@ -189,7 +189,6 @@ int main(void)
 
                 DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
 
-                //set(window, MUIA_Window_ActiveObject, editorgad);
                 set(window, MUIA_Window_Open, TRUE);
 
                 while((LONG)DoMethod(app, MUIM_Application_NewInput, &sigs) != (LONG)MUIV_Application_ReturnID_Quit)

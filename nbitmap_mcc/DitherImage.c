@@ -79,7 +79,8 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
 
   if(data != NULL && colorMap != NULL && width > 0 && height > 0)
   {
-    if((result = AllocVec(width * height, MEMF_SHARED|MEMF_CHIP)) != NULL)
+    // the 8bit chunky data don't need to reside in chip memory
+    if((result = AllocVec(width * height, MEMF_SHARED)) != NULL)
     {
       uint8 *mask = NULL;
       uint8 *mPtr = NULL;
@@ -92,6 +93,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
       // function is interested in a mask at all
       if(format == MUIV_NBitmap_Type_ARGB32 && maskPtr != NULL)
       {
+        // the mask must reside in chip memory
         mask = AllocVec(RAWIDTH(width) * height, MEMF_SHARED|MEMF_CLEAR|MEMF_CHIP);
         *maskPtr = mask;
         mPtr = mask;
@@ -105,8 +107,8 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
         for(x = 0; x < width; x++)
         {
           uint8 a, r, g, b;
-          uint32 i;
-          uint32 bestIndex;
+          int32 i;
+          int32 bestIndex;
           uint32 bestError;
 
           // obtain the pixel's A, R, G and B values from the raw data
@@ -145,7 +147,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
           }
 
           // now calculate the best matching color from the given color map
-          bestIndex = 0;
+          bestIndex = -1;
           bestError = 0xffffffffUL;
 
           for(i = 0; i < 256; i++)
@@ -166,17 +168,26 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
               bestIndex = i;
 
               // bail out if we found an exact match
-              if(error == 0x00000000)
+              if(error == 0x00000000UL)
                 break;
             }
           }
 
           // put the calculated color number into the destination LUT8 image
           // using an additional pen map if available
-          if(penMap != NULL)
-            *resultPtr++ = penMap[bestIndex];
+          if(bestIndex != -1)
+          {
+            if(penMap != NULL)
+              *resultPtr++ = penMap[bestIndex];
+            else
+              *resultPtr++ = bestIndex;
+          }
           else
-            *resultPtr++ = bestIndex;
+          {
+            // no matching color found, use color 0
+            // can this happen at all?
+            *resultPtr++ = 0;
+          }
 
           if(mPtr != NULL)
           {

@@ -23,12 +23,14 @@
 #include <proto/graphics.h>
 #include <cybergraphx/cybergraphics.h>
 
-#include "SDI_compiler.h"
-
 #include "private.h"
 
-void _WPA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG fmt)
+ULONG _WPA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG fmt)
 {
+  ULONG pixels = 0;
+
+  ENTER();
+
   if(width > 0 && height > 0 && fmt == RECTFMT_LUT8)
   {
     UBYTE *_src = (UBYTE *)src + srcmod * srcy + srcx;
@@ -44,9 +46,13 @@ void _WPA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, U
       {
         SetAPen(rp, _src[x]);
         WritePixel(rp, destx+x, desty+y);
+        pixels++;
       }
 
       _src += srcmod;
     }
   }
+
+  RETURN(pixels);
+  return pixels;
 }

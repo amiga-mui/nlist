@@ -91,7 +91,7 @@ static VOID setstr(STRPTR *dest, STRPTR str)
 }
 
 /* ULONG NBitmap_New() */
-IPTR NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
+static IPTR NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
 {
   if((obj = (Object *)DoSuperNew(cl, obj,
     MUIA_CycleChain, TRUE,
@@ -210,10 +210,10 @@ IPTR NBitmap_New(struct IClass *cl, Object *obj, struct opSet *msg)
 }
 
 /* ULONG NBitmap_Get() */
-ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
+static ULONG NBitmap_Get(struct IClass *cl, Object *obj, struct opGet *msg)
 {
   ULONG result = FALSE;
-  IPTR *store = ((struct opGet *)msg)->opg_Storage;
+  IPTR *store = msg->opg_Storage;
   struct InstData *data = INST_DATA(cl, obj);
 
   ENTER();
@@ -242,14 +242,14 @@ ULONG NBitmap_Get(struct IClass *cl, Object *obj, Msg msg)
   }
 
   if(result == FALSE)
-    result = DoSuperMethodA(cl,obj,msg);
+    result = DoSuperMethodA(cl, obj, (Msg)msg);
 
   RETURN(result);
   return result;
 }
 
 /* ULONG NBitmap_Set() */
-IPTR NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
+static IPTR NBitmap_Set(struct IClass *cl,Object *obj, struct opSet *msg)
 {
   struct InstData *data = INST_DATA(cl, obj);
   struct TagItem *tags, *tag;
@@ -257,7 +257,7 @@ IPTR NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
 
   ENTER();
 
-  for(tags = ((struct opSet *)msg)->ops_AttrList; (tag = NextTagItem((APTR)&tags)) != NULL; )
+  for(tags = msg->ops_AttrList; (tag = NextTagItem((APTR)&tags)) != NULL; )
   {
     switch(tag->ti_Tag)
     {
@@ -312,14 +312,14 @@ IPTR NBitmap_Set(struct IClass *cl,Object *obj, Msg msg)
     }
   }
 
-  result = DoSuperMethodA(cl, obj, msg);
+  result = DoSuperMethodA(cl, obj, (Msg)msg);
 
   RETURN(result);
   return result;
 }
 
 /* ULONG NBitmap_Dispose() */
-IPTR NBitmap_Dispose(struct IClass *cl, Object *obj, Msg msg)
+static IPTR NBitmap_Dispose(struct IClass *cl, Object *obj, Msg msg)
 {
   IPTR result;
 
@@ -334,13 +334,13 @@ IPTR NBitmap_Dispose(struct IClass *cl, Object *obj, Msg msg)
 }
 
 /* ULONG NBitmap_Setup() */
-IPTR NBitmap_Setup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
+static IPTR NBitmap_Setup(struct IClass *cl, Object *obj, Msg msg)
 {
   IPTR result;
 
   ENTER();
 
-  if((result = DoSuperMethodA(cl, obj, (Msg)rinfo)) != 0)
+  if((result = DoSuperMethodA(cl, obj, msg)) != 0)
   {
     result = NBitmap_SetupImage(cl, obj);
   }
@@ -350,7 +350,7 @@ IPTR NBitmap_Setup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo)
 }
 
 /* ULONG NBitmap_Cleanup() */
-IPTR NBitmap_Cleanup(struct IClass *cl, Object *obj, Msg msg)
+static IPTR NBitmap_Cleanup(struct IClass *cl, Object *obj, Msg msg)
 {
   IPTR result;
 
@@ -365,12 +365,12 @@ IPTR NBitmap_Cleanup(struct IClass *cl, Object *obj, Msg msg)
 }
 
 /* ULONG NBitmap_HandleEvent() */
-IPTR NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
+static IPTR NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
   struct InstData *data;
   IPTR result;
 
-  ENTER();
+  //ENTER();
 
   result = 0;
 
@@ -449,12 +449,12 @@ IPTR NBitmap_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent
   if(result == 0)
     result = DoSuperMethodA(cl, obj, (Msg)msg);
 
-  RETURN(result);
+  //RETURN(result);
   return result;
 }
 
 /* ULONG  NBitmap_AskMinMax() */
-IPTR NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
+static IPTR NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
   struct InstData *data;
 
@@ -525,7 +525,7 @@ IPTR NBitmap_AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *ms
 }
 
 /* ULONG NBitmap_Draw() */
-IPTR NBitmap_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
+static IPTR NBitmap_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
   IPTR result;
 
@@ -547,7 +547,7 @@ DISPATCHER(_Dispatcher)
 {
   IPTR result;
 
-  ENTER();
+  //ENTER();
 
   switch(msg->MethodID)
   {
@@ -556,11 +556,11 @@ DISPATCHER(_Dispatcher)
     break;
 
     case OM_SET:
-      result = NBitmap_Set(cl, obj, msg);
+      result = NBitmap_Set(cl, obj, (struct opSet *)msg);
     break;
 
     case OM_GET:
-      result = NBitmap_Get(cl, obj, msg);
+      result = NBitmap_Get(cl, obj, (struct opGet *)msg);
     break;
 
     case OM_DISPOSE:
@@ -568,11 +568,11 @@ DISPATCHER(_Dispatcher)
     break;
 
     case MUIM_Setup:
-      result = NBitmap_Setup(cl, obj, (struct MUI_RenderInfo *)msg);
+      result = NBitmap_Setup(cl, obj, msg);
     break;
 
     case MUIM_HandleEvent:
-      result = NBitmap_HandleEvent(cl, obj, (APTR)msg);
+      result = NBitmap_HandleEvent(cl, obj, (struct MUIP_HandleEvent *)msg);
     break;
 
     case MUIM_Cleanup:
@@ -592,6 +592,6 @@ DISPATCHER(_Dispatcher)
     break;
   }
 
-  RETURN(result);
+  //RETURN(result);
   return result;
 }

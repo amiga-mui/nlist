@@ -297,7 +297,6 @@ static BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, 
 VOID NBitmap_UpdateImage(uint32 item, STRPTR filename, struct IClass *cl, Object *obj)
 {
   struct InstData *data = NULL;
-  struct Screen *scr = NULL;
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
@@ -324,14 +323,10 @@ VOID NBitmap_UpdateImage(uint32 item, STRPTR filename, struct IClass *cl, Object
           /* setup new image */
           if((NBitmap_ExamineData(data->dt_obj[item], item, cl, obj)) != FALSE)
           {
-            /* screen */
-            scr = _screen(obj);
-            data->scrdepth = GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH);
-
             if(data->fmt == PBPAFMT_LUT8)
             {
               /* layout image */
-              SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
+              SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, _screen(obj), TAG_DONE);
               if(DoMethod(data->dt_obj[item], DTM_PROCLAYOUT, NULL, 1))
               {
                 GetDTAttrs(data->dt_obj[item], PDTA_CRegs, &data->dt_colours[item], TAG_DONE);
@@ -653,14 +648,10 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
-    struct Screen *scr = NULL;
-
     /* stored config */
     InitConfig(obj, data);
 
-    /* screen */
-    scr = _screen(obj);
-    data->scrdepth = GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH);
+    data->scrdepth = GetBitMapAttr(_screen(obj)->RastPort.BitMap, BMA_DEPTH);
 
     /* input */
     if(data->button)
@@ -689,7 +680,7 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
           for(i = 0; i < 3; i++)
           {
             // set the new screen for this object
-            SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
+            SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, _screen(obj), TAG_DONE);
             if(DoMethod(data->dt_obj[i], DTM_PROCLAYOUT, NULL, 1))
             {
               GetDTAttrs(data->dt_obj[i], PDTA_CRegs, &data->dt_colours[i],
@@ -713,11 +704,15 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
       case MUIV_NBitmap_Type_RGB24:
       case MUIV_NBitmap_Type_ARGB32:
       {
+        SHOWVALUE(DBF_ALWAYS, data->scrdepth);
         // in case we are to be displayed on a colormapped screen we have to create
         // dithered copies of the images
         #if defined(__amigaos4__)
         if(data->scrdepth <= 8)
         #else
+        SHOWVALUE(DBF_ALWAYS, CyberGfxBase);
+        if(CyberGfxBase != NULL)
+          SHOWVALUE(DBF_ALWAYS, CyberGfxBase->lib_Version);
         if(data->scrdepth <= 8 || CyberGfxBase == NULL)
         #endif
         {
@@ -726,22 +721,34 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
 
           // use a user definable colormap or the default color map
           if(data->clut != NULL)
+          {
+            D(DBF_ALWAYS, "using user defined color map");
             colorMap = data->clut;
+          }
           else
+          {
+            D(DBF_ALWAYS, "using default color map");
             colorMap = defaultColorMap;
+          }
 
+          D(DBF_ALWAYS, "obtaining pens");
           // allocate all pens
           for(i = 0; i < 256; i++)
-            data->ditherPenMap[i] = ObtainBestPen(scr->ViewPort.ColorMap, ((colorMap[i] >> 16) & 0xff) * 0x01010101UL,
-                                                                          ((colorMap[i] >>  8) & 0xff) * 0x01010101UL,
-                                                                          ((colorMap[i] >>  0) & 0xff) * 0x01010101UL,
-                                                                          OBP_Precision, PRECISION_IMAGE,
-                                                                          TAG_DONE);
+          {
+            data->ditherPenMap[i] = ObtainBestPen(_screen(obj)->ViewPort.ColorMap, ((colorMap[i] >> 16) & 0x000000ffUL) << 24,
+                                                                                   ((colorMap[i] >>  8) & 0x000000ffUL) << 24,
+                                                                                   ((colorMap[i] >>  0) & 0x000000ffUL) << 24,
+                                                                                   OBP_Precision, PRECISION_IMAGE,
+                                                                                   TAG_DONE);
+            if(data->ditherPenMap[i] == -1)
+              E(DBF_ALWAYS, "failed to obtain pen %ld RGB=%06lx", i, colorMap[i]);
+          }
 
           for(i = 0; i < 3; i++)
           {
             if(data->data[i] != NULL)
             {
+              D(DBF_ALWAYS, "dithering image %ld", i);
               // create a dithered copy of the raw image
               data->ditheredImage[i] = DitherImage((CONST_APTR)data->data[i], DITHERA_Width, data->width,
                                                                               DITHERA_Height, data->height,
@@ -757,7 +764,7 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
                 D(DBF_ALWAYS, "setting up dithered bitmap %ld", i);
                 // CyberGraphics cannot blit raw data through a mask, thus we have to
                 // use this ugly workaround and take the detour using a bitmap.
-                if((data->ditheredBitmap[i] = AllocBitMap(data->width, data->height, 8, BMF_MINPLANES, NULL)) != NULL)
+                if((data->ditheredBitmap[i] = AllocBitMap(data->width, data->height, MIN(8, data->scrdepth), BMF_CLEAR|BMF_MINPLANES, _screen(obj)->RastPort.BitMap)) != NULL)
                 {
                   struct RastPort remapRP;
 
@@ -788,6 +795,8 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
 VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
 {
   struct InstData *data;
+
+  ENTER();
 
   if((data = INST_DATA(cl, obj)) != NULL)
   {
@@ -825,23 +834,26 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
         // free the possibly dithered image copies
         for(i = 0; i < 3; i++)
         {
-          if(data->ditheredImage[i] != NULL)
-          {
-            FreeDitheredImage(data->ditheredImage[i], data->ditheredMask[i]);
-            data->ditheredImage[i] = NULL;
-          }
           #if !defined(__amigaos4__)
           if(data->ditheredBitmap[i] != NULL)
           {
+            D(DBF_ALWAYS, "freeing dithered bitmap %ld", i);
             FreeBitMap(data->ditheredBitmap[i]);
             data->ditheredBitmap[i] = NULL;
           }
           #endif // !__amigaos4__
+          if(data->ditheredImage[i] != NULL)
+          {
+            D(DBF_ALWAYS, "freeing dithered image %ld", i);
+            FreeDitheredImage(data->ditheredImage[i], data->ditheredMask[i]);
+            data->ditheredImage[i] = NULL;
+          }
         }
 
         // release all allocated pens
         if(data->scrdepth <= 8)
         {
+          D(DBF_ALWAYS, "releasing pens");
           for(i = 0; i < 256; i++)
           {
             if(data->ditherPenMap[i] != -1)
@@ -857,6 +869,8 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
     // stored config
     FreeConfig(data);
   }
+
+  LEAVE();
 }
 
 ///
@@ -899,9 +913,9 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
     twidth = (data->width + data->border_horiz) - 2;      /* subtract standard 1 pixel border */
     theight = (data->height + data->border_vert) - 2;
 
-    /* clear */
-    if(data->button)
-      DoMethod(obj, MUIM_DrawBackground, _left(obj), _top(obj), _width(obj), _height(obj), 0, 0);
+    // clear the background first, otherwise a multiply applied alpha channel
+    // will become darker and darker every time
+    DoMethod(obj, MUIM_DrawBackground, _mleft(obj), _mtop(obj), _mwidth(obj), _mheight(obj), _left(obj), _top(obj), 0);
 
     /* label */
     if(data->label != NULL && data->button != FALSE)
@@ -1042,6 +1056,10 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
         if(data->button && data->pressed && data->overlay && data->data[2] != NULL)
           item = 2;
 
+        SHOWVALUE(DBF_ALWAYS, data->scrdepth);
+        SHOWVALUE(DBF_ALWAYS, data->ditheredImage[item]);
+        SHOWVALUE(DBF_ALWAYS, data->ditheredMask[item]);
+
         if(data->data[item] != NULL)
         {
           #if defined(__amigaos4__)
@@ -1049,6 +1067,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
           {
             if(data->ditheredMask[item] != NULL)
             {
+              D(DBF_ALWAYS, "drawing remapped/dithered image with mask");
               BltBitMapTags(BLITA_Source, data->ditheredImage[item],
                             BLITA_Dest, _rp(obj),
                             BLITA_SrcX, 0,
@@ -1066,6 +1085,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
             }
             else
             {
+              D(DBF_ALWAYS, "drawing remapped/dithered image without mask");
               BltBitMapTags(BLITA_Source, data->ditheredImage[item],
                             BLITA_Dest, _rp(obj),
                             BLITA_SrcX, 0,
@@ -1082,16 +1102,18 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
             }
           }
           #else // __amigaos4__
-          if((data->scrdepth <= 8 && data->ditheredBitmap[item] != NULL) || CyberGfxBase == NULL)
+          if((data->scrdepth <= 8 || CyberGfxBase == NULL) && data->ditheredBitmap[item] != NULL)
           {
             // CyberGraphics cannot blit raw data through a mask, thus we have to
             // take this ugly workaround and take the detour using a bitmap.
             if(data->ditheredMask[item] != NULL)
             {
+              D(DBF_ALWAYS, "drawing remapped/dithered image with mask");
               BltMaskBitMapRastPort(data->ditheredBitmap[item], 0, 0, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, (ABC|ABNC|ANBC), data->ditheredMask[item]);
             }
             else
             {
+              D(DBF_ALWAYS, "drawing remapped/dithered image without mask");
               BltBitMapRastPort(data->ditheredBitmap[item], 0, 0, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, (ABC|ABNC));
             }
           }
@@ -1118,6 +1140,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
               break;
 
               case MUIV_NBitmap_Type_RGB24:
+                D(DBF_ALWAYS, "drawing RGB image");
                 BltBitMapTags(BLITA_Source, data->data[item],
                               BLITA_Dest, _rp(obj),
                               BLITA_SrcX, 0,
@@ -1134,6 +1157,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
               break;
 
               case MUIV_NBitmap_Type_ARGB32:
+                D(DBF_ALWAYS, "drawing ARGB image");
                 BltBitMapTags(BLITA_Source, data->data[item],
                               BLITA_Dest, _rp(obj),
                               BLITA_SrcX, 0,
@@ -1158,10 +1182,12 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
               break;
 
               case MUIV_NBitmap_Type_RGB24:
+                D(DBF_ALWAYS, "drawing RGB image");
                 WPA(data->data[item], 0, 0, data->width*3, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, RECTFMT_RGB);
               break;
 
               case MUIV_NBitmap_Type_ARGB32:
+                D(DBF_ALWAYS, "drawing ARGB image");
                 WPAA(data->data[item], 0, 0, data->width*4, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, data->alpha);
               break;
             }

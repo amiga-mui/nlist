@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-09-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/misc: fixed lots of bugs when having to dither raw truecolor
+    images for a colormapped screen. Additionally the background is now drawn
+    correctly in case a pattern is used.
+
 2010-09-10 Thore Böckelmann <tboeckel@gmx.de>
 
   * tools/mkrelease.sh: split up the catalog copying due to the different
