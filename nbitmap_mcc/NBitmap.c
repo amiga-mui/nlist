@@ -764,7 +764,7 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
                 D(DBF_ALWAYS, "setting up dithered bitmap %ld", i);
                 // CyberGraphics cannot blit raw data through a mask, thus we have to
                 // use this ugly workaround and take the detour using a bitmap.
-                if((data->ditheredBitmap[i] = AllocBitMap(data->width, data->height, min(8, data->scrdepth), BMF_CLEAR|BMF_MINPLANES, _screen(obj)->RastPort.BitMap)) != NULL)
+                if((data->ditheredBitmap[i] = AllocBitMap(data->width, data->height, min(8, data->scrdepth), BMF_CLEAR|BMF_MINPLANES, NULL)) != NULL)
                 {
                   struct RastPort remapRP;
 
