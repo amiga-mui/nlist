@@ -52,6 +52,7 @@
 // local includes
 #include "private.h"
 #include "NBitmap.h"
+#include "Chunky2Bitmap.h"
 #include "DitherImage.h"
 #include "version.h"
 #include "Debug.h"
@@ -759,21 +760,10 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
                                                                               TAG_DONE);
 
               #if !defined(__amigaos4__)
-              if(data->ditheredImage[i] != NULL)
-              {
-                D(DBF_ALWAYS, "setting up dithered bitmap %ld", i);
-                // CyberGraphics cannot blit raw data through a mask, thus we have to
-                // use this ugly workaround and take the detour using a bitmap.
-                if((data->ditheredBitmap[i] = AllocBitMap(data->width, data->height, min(8, data->scrdepth), BMF_CLEAR|BMF_MINPLANES, NULL)) != NULL)
-                {
-                  struct RastPort remapRP;
-
-                  InitRastPort(&remapRP);
-                  remapRP.BitMap = data->ditheredBitmap[i];
-
-                  WPA(data->ditheredImage[i], 0, 0, data->width, &remapRP, 0, 0, data->width, data->height, RECTFMT_LUT8);
-                }
-              }
+              // CyberGraphics cannot blit raw data through a mask, thus we have to
+              // use this ugly workaround and take the detour using a bitmap.
+              D(DBF_ALWAYS, "setting up dithered bitmap %ld", i);
+              data->ditheredBitmap[i] = Chunky2Bitmap(data->ditheredImage[i], data->width, data->height, data->scrdepth);
               #endif // !__amigaos4__
             }
           }

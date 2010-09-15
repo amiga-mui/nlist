@@ -21,40 +21,52 @@
 ***************************************************************************/
 
 #include <proto/graphics.h>
-#include <cybergraphx/cybergraphics.h>
+
+#include "Chunky2Bitmap.h"
 
 #include "private.h"
 
-ULONG _WPA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG fmt)
+struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth)
 {
-  ULONG pixels = 0;
+  struct BitMap *bm = NULL;
 
   ENTER();
 
-  if(width > 0 && height > 0 && fmt == RECTFMT_LUT8)
+  if(chunky != NULL && width > 0 && height > 0)
   {
-    struct BitMap *tempBM;
-
-    if((tempBM = AllocBitMap(width, 1, GetBitMapAttr(rp->BitMap, BMA_DEPTH), BMF_CLEAR, NULL)) != NULL)
+    if((bm = AllocBitMap(width, height, min(8, depth), BMF_CLEAR|BMF_MINPLANES, NULL)) != NULL)
     {
-      struct RastPort tempRP;
-      UBYTE *_src = (UBYTE *)src + srcmod * srcy + srcx;
-      UWORD y;
+      struct BitMap *tempBM;
 
-      InitRastPort(&tempRP);
-      tempRP.BitMap = tempBM;
-
-      for(y = 0; y < height; y++)
+      if((tempBM = AllocBitMap(width, 1, min(8, depth), BMF_CLEAR, NULL)) != NULL)
       {
-        WritePixelLine8(rp, destx, desty+y, width, _src, &tempRP);
-        _src += srcmod;
-        pixels += width;
-      }
+        struct RastPort remapRP;
+        struct RastPort tempRP;
+        ULONG y;
+        char *chunkyPtr = chunky;
 
-      FreeBitMap(tempBM);
+        InitRastPort(&remapRP);
+        remapRP.BitMap = bm;
+
+        InitRastPort(&tempRP);
+        tempRP.BitMap = tempBM;
+
+        for(y = 0; y < height; y++)
+        {
+          WritePixelLine8(&remapRP, 0, y, width, chunkyPtr, &tempRP);
+          chunkyPtr += width;
+        }
+
+        FreeBitMap(tempBM);
+      }
+      else
+      {
+        FreeBitMap(bm);
+        bm = NULL;
+      }
     }
   }
 
-  RETURN(pixels);
-  return pixels;
+  RETURN(bm);
+  return bm;
 }

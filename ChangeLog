@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-09-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc: the chunky->bitmap conversion needed for systems using either
+    native graphics or CyberGraphics is now done using WritePixelLine8() instead
+    of WritePixelArray() or our own reimplementation. The WPA() reimplementation
+    also uses WPL8() instead of the dead slow SetAPen/WritePixel combo.
+
 2010-09-14 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/misc: fixed lots of bugs when having to dither raw truecolor
