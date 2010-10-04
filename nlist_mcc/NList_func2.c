@@ -1534,10 +1534,6 @@ ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
       break;
     }
 
-/*
-    if(ent2 > ent1)
-      ent2 -= 1;
-*/
     if(ent2 == data->NList_Entries)
       ent2 = data->NList_Entries - 1;
     if(ent2 >= 0 && ent2 < data->NList_Entries && isFlagSet(data->EntriesArray[ent2]->Wrap, TE_Wrap_TmpLine))
