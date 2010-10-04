@@ -9,6 +9,8 @@ $URL$
 
 2010-10-04 Thore Böckelmann <tboeckel@gmx.de>
 
+  * nlist_mcc/NList_func2.c: fixed another wrong handling of the special value
+    MUIV_NList_Move_Next.
   * nlist_mcc/NList_func2.c, nlist_mcc/move.c: fixed the wrong behaviour of
     MUIM_NList_Move. The destination position was always decremented and the
     item was moved to the position ahead of the inteded one. Now NList behaves
