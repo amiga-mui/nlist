@@ -222,8 +222,8 @@ extern IPTR mNL_UseImage(struct IClass *cl,Object *obj,struct MUIP_NList_UseImag
 
 /* Move.c */
 
-extern void  NL_Move(void *dest,void *src,LONG len,long newpos);
-extern void  NL_MoveD(void *dest,void *src,LONG len,long newpos);
+extern void NL_Move(struct TypeEntry **dest, struct TypeEntry **src, LONG count, LONG newpos);
+extern void NL_MoveD(struct TypeEntry **dest, struct TypeEntry **src, LONG count, LONG newpos);
 
 // ClipboardServer.c
 BOOL StartClipboardServer(void);

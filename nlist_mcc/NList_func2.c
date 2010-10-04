@@ -99,7 +99,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
       { LONG de = newpos - ent1;
         if ((maxent - ent) < de)
           de = maxent - ent;
-        NL_Move(&newentries[ent],&data->EntriesArray[ent1],de*sizeof(struct TypeEntry *),ent);
+        NL_Move(&newentries[ent],&data->EntriesArray[ent1],de,ent);
         ent += de;
         ent1 += de;
       }
@@ -122,7 +122,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
         { LONG de = data->NList_Entries - ent1;
           if ((maxent - ent) < de)
             de = maxent - ent;
-          NL_Move(&newentries[ent],&data->EntriesArray[ent1],de*sizeof(struct TypeEntry *),ent);
+          NL_Move(&newentries[ent],&data->EntriesArray[ent1],de,ent);
           ent += de;
         }
 
@@ -159,7 +159,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
       data->NList_First++;
 
     ent = data->NList_Entries;
-    NL_MoveD(&data->EntriesArray[ent+1],&data->EntriesArray[ent],(ent-newpos)*sizeof(struct TypeEntry *),ent+1);
+    NL_MoveD(&data->EntriesArray[ent+1],&data->EntriesArray[ent],ent-newpos,ent+1);
     ent = newpos;
 
     if((newentry = NL_Malloc(data,sizeof(struct TypeEntry),"InsertTmpLine")))
@@ -245,7 +245,7 @@ void NL_DeleteTmpLine(struct NLData *data,Object *obj,LONG pos)
     }
 
     NL_Free(data,data->EntriesArray[ent],"DeleteTmpLine");
-    NL_Move(&data->EntriesArray[ent],&data->EntriesArray[ent+1],(data->NList_Entries-ent)*sizeof(struct TypeEntry *),ent);
+    NL_Move(&data->EntriesArray[ent],&data->EntriesArray[ent+1],data->NList_Entries-ent,ent);
     ent = data->NList_Entries;
 
     data->EntriesArray[ent] = NULL;
@@ -426,7 +426,7 @@ static ULONG NL_List_SortMore(Object *obj,struct NLData *data,LONG newpos)
     { /* move  newpos  to  lent  */
       newentry = data->EntriesArray[newpos];
 
-      NL_MoveD(&data->EntriesArray[newpos+1],&data->EntriesArray[newpos],(newpos-lent)*sizeof(struct TypeEntry *),newpos+1);
+      NL_MoveD(&data->EntriesArray[newpos+1],&data->EntriesArray[newpos],newpos-lent,newpos+1);
 
       data->EntriesArray[lent] = newentry;
       data->EntriesArray[lent]->entpos = lent;
@@ -576,7 +576,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
             if ((maxent - ent) < de)
               de = maxent - ent;
 
-            NL_Move(&data->EntriesArray[ent],&oldentries[ent1],de*sizeof(struct TypeEntry *),ent);
+            NL_Move(&data->EntriesArray[ent],&oldentries[ent1],de,ent);
             //D(bug( "Moving %ld old entries to new array (from %ld to %ld).\n", de, ent1, ent ));
 
             ent += de;
@@ -632,7 +632,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
             if ((maxent - ent) < de)
               de = maxent - ent;
 
-            NL_Move(&data->EntriesArray[ent],&oldentries[ent1],de*sizeof(struct TypeEntry *),ent);
+            NL_Move(&data->EntriesArray[ent],&oldentries[ent1],de,ent);
             //D(bug( "Moving %ld old entries to new array (from %ld to %ld).\n", de, ent1, ent ));
             ent += de;
           }
@@ -709,7 +709,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
         data->NList_Entries += count;
         DO_NOTIFY(NTF_Entries|NTF_MinMax);
 
-        NL_MoveD(&data->EntriesArray[ent+count],&data->EntriesArray[ent],(ent-newpos)*sizeof(struct TypeEntry *),ent+count);
+        NL_MoveD(&data->EntriesArray[ent+count],&data->EntriesArray[ent],ent-newpos,ent+count);
         //D(bug( "Moving %ld entries (from %ld to %ld).\n", ent-newpos, ent, ent+count ));
 
         ent = newpos;
@@ -772,7 +772,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
         count -= count2;
         if (count2)
         {
-          NL_Move(&data->EntriesArray[ent],&data->EntriesArray[ent+count2],(data->NList_Entries-ent)*sizeof(struct TypeEntry *),ent);
+          NL_Move(&data->EntriesArray[ent],&data->EntriesArray[ent+count2],data->NList_Entries-ent,ent);
           //D(bug( "Moving %ld entries (from %ld to %ld).\n", data->NList_Entries-ent, ent+count2, ent ));
         }
 
@@ -1142,7 +1142,7 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
 
       NL_Free(data,data->EntriesArray[ent],"Remove_Entries");
 
-      NL_Move(&data->EntriesArray[ent],&data->EntriesArray[ent+1],(nlentries-ent)*sizeof(struct TypeEntry *),ent);
+      NL_Move(&data->EntriesArray[ent],&data->EntriesArray[ent+1],nlentries-ent,ent);
       ent = nlentries;
 
       data->EntriesArray[ent] = NULL;
@@ -1181,7 +1181,7 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
       data->LastEntry = maxent;
       maxent = 0;
 
-      NL_Move(&newentries[ent1],&data->EntriesArray[ent1],(data->NList_Entries-ent1)*sizeof(struct TypeEntry *),ent1);
+      NL_Move(&newentries[ent1],&data->EntriesArray[ent1],data->NList_Entries-ent1,ent1);
       ent1 = data->NList_Entries;
 
       newentries[ent1] = NULL;
@@ -1213,16 +1213,16 @@ ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
 {
   LONG ent1, ent2;
   switch (pos1)
-  { case MUIV_NList_Exchange_Top :
+  { case MUIV_NList_Exchange_Top:
       ent1 = 0;
       break;
-    case MUIV_NList_Exchange_Bottom :
+    case MUIV_NList_Exchange_Bottom:
       ent1 = data->NList_Entries - 1;
       break;
-    case MUIV_NList_Exchange_Active :
+    case MUIV_NList_Exchange_Active:
       ent1 = data->NList_Active;
       break;
-    default :
+    default:
       ent1 = pos1;
       break;
   }
@@ -1230,22 +1230,22 @@ ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
     ent1 -= data->EntriesArray[ent1]->dnum;
   if ((ent1 >= 0) && (ent1 < data->NList_Entries))
   { switch (pos2)
-    { case MUIV_NList_Exchange_Top :
+    { case MUIV_NList_Exchange_Top:
         ent2 = 0;
         break;
-      case MUIV_NList_Exchange_Bottom :
+      case MUIV_NList_Exchange_Bottom:
         ent2 = data->NList_Entries - 1;
         break;
-      case MUIV_NList_Exchange_Active :
+      case MUIV_NList_Exchange_Active:
         ent2 = data->NList_Active;
         break;
-      case MUIV_NList_Exchange_Next :
+      case MUIV_NList_Exchange_Next:
         ent2 = ent1 + 1;
         break;
-      case MUIV_NList_Exchange_Previous :
+      case MUIV_NList_Exchange_Previous:
         ent2 = ent1 - 1;
         break;
-      default :
+      default:
         ent2 = pos2;
         break;
     }
@@ -1366,16 +1366,16 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
     return (NL_List_Move(data,obj,last,to));
   else
   { switch (to)
-    { case MUIV_NList_Move_Top :
+    { case MUIV_NList_Move_Top:
         dest = 0;
         break;
-      case MUIV_NList_Move_Bottom :
+      case MUIV_NList_Move_Bottom:
         dest = data->NList_Entries;
         break;
-      case MUIV_NList_Move_Active :
+      case MUIV_NList_Move_Active:
         dest = data->NList_Active;
         break;
-      default :
+      default:
         dest = to;
         if ((dest < 0) || (dest > data->NList_Entries))
           dest = data->NList_Entries;
@@ -1449,7 +1449,7 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
       }
       ent2++;
 
-      NL_Move(&data->EntriesArray[ent2],&EntriesArray[0],ent3*sizeof(struct TypeEntry *),ent2);
+      NL_Move(&data->EntriesArray[ent2],&EntriesArray[0],ent3,ent2);
       NL_Free(data,EntriesArray,"MoveSel_tmpentries");
 
       if (dest < first)
@@ -1480,116 +1480,138 @@ ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
 {
   LONG ent1, ent2;
 
-  if (from == MUIV_NList_Move_Selected)
-    return (NL_List_Move_Selected(data,obj,to));
+  if(from == MUIV_NList_Move_Selected)
+    return NL_List_Move_Selected(data, obj, to);
 
-  switch (from)
+  switch(from)
   {
-    case MUIV_NList_Move_Top :
+    case MUIV_NList_Move_Top:
       ent1 = 0;
-      break;
-    case MUIV_NList_Move_Bottom :
+    break;
+
+    case MUIV_NList_Move_Bottom:
       ent1 = data->NList_Entries - 1;
-      break;
-    case MUIV_NList_Move_Active :
+    break;
+
+    case MUIV_NList_Move_Active:
       ent1 = data->NList_Active;
-      break;
-    default :
+    break;
+
+    default:
       ent1 = from;
-      break;
+    break;
   }
-  if ((ent1 >= 0) && (ent1 < data->NList_Entries) && (data->EntriesArray[ent1]->Wrap & TE_Wrap_TmpLine))
+
+  if(ent1 >= 0 && ent1 < data->NList_Entries && isFlagSet(data->EntriesArray[ent1]->Wrap, TE_Wrap_TmpLine))
     ent1 -= data->EntriesArray[ent1]->dnum;
-  if ((ent1 >= 0) && (ent1 < data->NList_Entries))
+
+  if(ent1 >= 0 && ent1 < data->NList_Entries)
   {
-    switch (to)
+    switch(to)
     {
-      case MUIV_NList_Move_Top :
+      case MUIV_NList_Move_Top:
         ent2 = 0;
-        break;
-      case MUIV_NList_Move_Bottom :
+      break;
+
+      case MUIV_NList_Move_Bottom:
         ent2 = data->NList_Entries;
-        break;
-      case MUIV_NList_Move_Active :
+      break;
+
+      case MUIV_NList_Move_Active:
         ent2 = data->NList_Active;
-        break;
-      case MUIV_NList_Move_Next :
+      break;
+
+      case MUIV_NList_Move_Next:
         ent2 = ent1 + 2;
-        break;
-      case MUIV_NList_Move_Previous :
+      break;
+
+      case MUIV_NList_Move_Previous:
         ent2 = ent1 - 1;
-        break;
-      default :
+      break;
+
+      default:
         ent2 = to;
-        break;
+      break;
     }
-    if (ent2 > ent1)
+
+/*
+    if(ent2 > ent1)
       ent2 -= 1;
-    if (ent2 == data->NList_Entries)
+*/
+    if(ent2 == data->NList_Entries)
       ent2 = data->NList_Entries - 1;
-    if ((ent2 >= 0) && (ent2 < data->NList_Entries) && (data->EntriesArray[ent2]->Wrap & TE_Wrap_TmpLine))
+    if(ent2 >= 0 && ent2 < data->NList_Entries && isFlagSet(data->EntriesArray[ent2]->Wrap, TE_Wrap_TmpLine))
       ent2 -= data->EntriesArray[ent2]->dnum;
 
-    if ((ent2 >= 0) && (ent2 < data->NList_Entries) && (ent1 != ent2))
-    { struct TypeEntry *newentry;
+    if(ent2 >= 0 && ent2 < data->NList_Entries && ent1 != ent2)
+    {
+      struct TypeEntry *newentry;
 
       data->display_ptr = NULL;
 
-      if (ent1 < ent2)
-      { if (data->EntriesArray[ent2]->Wrap && !(data->EntriesArray[ent2]->Wrap & TE_Wrap_TmpLine))
+      if(ent1 < ent2)
+      {
+        if(data->EntriesArray[ent2]->Wrap != 0 && isFlagClear(data->EntriesArray[ent2]->Wrap, TE_Wrap_TmpLine))
           ent2 += (data->EntriesArray[ent2]->dnum - 1);
 
         newentry = data->EntriesArray[ent1];
 
-        if (data->EntriesArray[ent1]->Wrap && !(data->EntriesArray[ent1]->Wrap & TE_Wrap_TmpLine) && (data->EntriesArray[ent1]->len >= 0))
-        { newentry->pos = (WORD) NL_GetSelects(data,obj,ent1);
+        if(data->EntriesArray[ent1]->Wrap != 0 && isFlagClear(data->EntriesArray[ent1]->Wrap, TE_Wrap_TmpLine) && data->EntriesArray[ent1]->len >= 0)
+        {
+          newentry->pos = (WORD)NL_GetSelects(data, obj, ent1);
           newentry->len = -1;
           data->do_wwrap = TRUE;
         }
 
-        NL_Move(&data->EntriesArray[ent1],&data->EntriesArray[ent1+1],(ent2-ent1)*sizeof(struct TypeEntry *),ent1);
+        NL_Move(&data->EntriesArray[ent1], &data->EntriesArray[ent1+1], ent2-ent1, ent1);
 
         data->EntriesArray[ent2] = newentry;
         data->EntriesArray[ent2]->entpos = ent2;
 
-        if ((data->NList_Active > ent1) && (data->NList_Active <= ent2))
-        { set_Active(data->NList_Active - 1);
+        if(data->NList_Active > ent1 && data->NList_Active <= ent2)
+        {
+          set_Active(data->NList_Active - 1);
         }
-        else if (data->NList_Active == ent1)
-        { set_Active(ent2);
+        else if(data->NList_Active == ent1)
+        {
+          set_Active(ent2);
         }
-        NL_SegChanged(data,ent1,ent2);
+        NL_SegChanged(data, ent1, ent2);
         data->NList_LastInserted = ent2;
         DO_NOTIFY(NTF_Insert);
       }
       else
       {
         newentry = data->EntriesArray[ent1];
-        if (data->EntriesArray[ent1]->Wrap && !(data->EntriesArray[ent1]->Wrap & TE_Wrap_TmpLine) && (data->EntriesArray[ent1]->len >= 0))
-        { newentry->pos = (WORD) NL_GetSelects(data,obj,ent1);
+
+        if(data->EntriesArray[ent1]->Wrap != 0 && isFlagClear(data->EntriesArray[ent1]->Wrap, TE_Wrap_TmpLine) && data->EntriesArray[ent1]->len >= 0)
+        {
+          newentry->pos = (WORD)NL_GetSelects(data, obj, ent1);
           newentry->len = -1;
           data->do_wwrap = TRUE;
         }
 
-        NL_MoveD(&data->EntriesArray[ent1+1],&data->EntriesArray[ent1],(ent1-ent2)*sizeof(struct TypeEntry *),ent1+1);
+        NL_MoveD(&data->EntriesArray[ent1+1], &data->EntriesArray[ent1], ent1-ent2, ent1+1);
 
         data->EntriesArray[ent2] = newentry;
         data->EntriesArray[ent2]->entpos = ent2;
 
-        if ((data->NList_Active >= ent2) && (data->NList_Active < ent1))
-        { set_Active(data->NList_Active + 1);
+        if(data->NList_Active >= ent2 && data->NList_Active < ent1)
+        {
+          set_Active(data->NList_Active + 1);
         }
-        else if (data->NList_Active == ent1)
-        { set_Active(ent2);
+        else if(data->NList_Active == ent1)
+        {
+          set_Active(ent2);
         }
         NL_SegChanged(data,ent2,ent1);
         data->NList_LastInserted = ent2;
         DO_NOTIFY(NTF_Insert);
       }
       data->sorted = FALSE;
-      UnSelectCharSel(obj,data,FALSE);
+      UnSelectCharSel(obj, data, FALSE);
       Make_Active_Visible;
-      NL_DoWrapAll(obj,data,FALSE,FALSE);
+      NL_DoWrapAll(obj, data, FALSE, FALSE);
       data->do_updatesb = TRUE;
       REDRAW;
 /*      do_notifies(NTF_AllChanges|NTF_MinMax);*/
