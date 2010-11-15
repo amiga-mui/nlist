@@ -9,6 +9,7 @@ $URL$
 
   * nbitmap_mcc/Chunky2Bitmap.c: don't use WritePixelLine8() on plain OS3.1
     systems, as this function is broken there and may trash memory.
+  * demo/NBitmap-Demo.c: added some error messages in case something went wrong.
 
 2010-10-05 Thore Böckelmann <tboeckel@gmx.de>
 
