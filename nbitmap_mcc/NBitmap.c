@@ -1049,6 +1049,9 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
         SHOWVALUE(DBF_ALWAYS, data->scrdepth);
         SHOWVALUE(DBF_ALWAYS, data->ditheredImage[item]);
         SHOWVALUE(DBF_ALWAYS, data->ditheredMask[item]);
+        #if !defined(__amigaos4__)
+        SHOWVALUE(DBF_ALWAYS, data->ditheredBitmap[item]);
+        #endif
 
         if(data->data[item] != NULL)
         {
