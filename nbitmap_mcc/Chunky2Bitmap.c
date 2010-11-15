@@ -46,6 +46,7 @@ struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth
         ULONG y;
         char *chunkyPtr = chunky;
         #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+        // WritePixelLine8() is broken on plain OS3.1 systems, don't use it!
         BOOL useWPL8 = (GfxBase->LibNode.lib_Version > 40);
         #endif // !__amigaos4 && !__MORPHOS__ && !__AROS__
 
