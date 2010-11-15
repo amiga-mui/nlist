@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-11-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/Chunky2Bitmap.c: don't use WritePixelLine8() on plain OS3.1
+    systems, as this function is broken there and may trash memory.
+
 2010-10-05 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/mccinit.c: make sure that removing the library during LibClose()

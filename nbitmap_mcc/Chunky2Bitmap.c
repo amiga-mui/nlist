@@ -21,6 +21,7 @@
 ***************************************************************************/
 
 #include <proto/graphics.h>
+#include <graphics/gfxbase.h>
 
 #include "Chunky2Bitmap.h"
 
@@ -44,6 +45,9 @@ struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth
         struct RastPort tempRP;
         ULONG y;
         char *chunkyPtr = chunky;
+        #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+        BOOL useWPL8 = (GfxBase->LibNode.lib_Version > 40);
+        #endif // !__amigaos4 && !__MORPHOS__ && !__AROS__
 
         InitRastPort(&remapRP);
         remapRP.BitMap = bm;
@@ -53,7 +57,25 @@ struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth
 
         for(y = 0; y < height; y++)
         {
+          #if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
           WritePixelLine8(&remapRP, 0, y, width, chunkyPtr, &tempRP);
+          #else // __amigaos4__ || __MORPHOS__ || __AROS__
+          if(useWPL8 == TRUE)
+          {
+            WritePixelLine8(&remapRP, 0, y, width, chunkyPtr, &tempRP);
+          }
+          else
+          {
+            ULONG x;
+
+            for(x = 0; x < width; x++)
+            {
+              SetAPen(&remapRP, chunkyPtr[x]);
+              WritePixel(&remapRP, x, y);
+            }
+          }
+          #endif // __amigaos4__ || __MORPHOS__ || __AROS__
+
           chunkyPtr += width;
         }
 
