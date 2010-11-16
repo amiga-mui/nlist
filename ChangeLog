@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-11-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: redraw the background only if we are told to be a
+    button. Otherwise the truecolor .mcp images will not be drawn correctly.
+
 2010-11-15 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/Chunky2Bitmap.c: don't use WritePixelLine8() on plain OS3.1
