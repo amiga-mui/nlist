@@ -9,6 +9,8 @@ $URL$
 
   * nbitmap_mcc/NBitmap.c: redraw the background only if we are told to be a
     button. Otherwise the truecolor .mcp images will not be drawn correctly.
+  * nbitmap_mcc/SetPatch.c: replaced the version check of graphics.library by a
+    more appropriate check of the installed SetPatch command.
 
 2010-11-15 Thore Böckelmann <tboeckel@gmx.de>
 
