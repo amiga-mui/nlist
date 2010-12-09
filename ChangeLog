@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-12-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: replaced the NList display hook by a method. This
+    requires at least NList 20.127.
+
 2010-11-16 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: redraw the background only if we are told to be a

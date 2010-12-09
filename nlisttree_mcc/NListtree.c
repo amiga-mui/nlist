@@ -3306,53 +3306,6 @@ HOOKPROTONHNO(_FindUserDataFunc_PointerCompare, LONG, struct MUIP_NListtree_Find
 }
 MakeStaticHook(_FindUserDataHook_PointerCompare, _FindUserDataFunc_PointerCompare);
 
-HOOKPROTONO(NList_DispFunc, IPTR, struct NList_DisplayMessage *msg)
-{
-  struct NListtree_Data *data = hook->h_Data;
-  struct MUI_NListtree_TreeNode *tn = CTN( msg->entry );
-
-  /*
-  if ( !strcmp( "comp", tn->tn_Name ) )
-    DEBUGBREAK;
-  */
-
-  if ( data->DisplayHook )
-  {
-    MyCallHook( data->DisplayHook, data, MUIA_NListtree_DisplayHook, tn, msg->entry_pos, msg->strings, msg->preparses );
-  }
-
-  if ( tn )
-  {
-    D(DBF_DRAW, "render flags=%lx %s %s",tn->tn_Flags,(tn->tn_Flags & TNF_LIST)?" list":"",msg->strings[1]);
-
-    if ( !data->DisplayHook || !msg->strings[data->TreeColumn] )
-    {
-      msg->strings[data->TreeColumn] = tn->tn_Name;
-    }
-
-    /*
-    **  Reset image position. Will be updated inside DrawPos().
-    */
-    tn->tn_ImagePos = 0;
-
-    // NUL terminate the string
-    data->buf[0] = '\0';
-    if ( !( data->Flags & NLTF_NO_TREE ) )
-      DrawImages( tn, tn, data, 0 );
-
-    if ( msg->preparses[data->TreeColumn] )
-      strlcat(data->buf, msg->preparses[data->TreeColumn], DATA_BUF_SIZE);
-
-    strlcat(data->buf, msg->strings[data->TreeColumn], DATA_BUF_SIZE);
-
-    D(DBF_DRAW, "%s - %s", ( data->Flags & NLTF_QUIET ) ? "QUIET" : "RUN", data->buf);
-
-    msg->strings[data->TreeColumn] = data->buf;
-  }
-
-  return( (IPTR)tn );
-}
-MakeStaticHook(NList_DispHook, NList_DispFunc);
 
 /*****************************************************************************\
 *******************************************************************************
@@ -5482,137 +5435,129 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
       **  If all hooks successfully installed, set up
       **  the class for use.
       */
-      if((ld.IntDisplayHook = AllocVecPooled(ld.MemoryPool, sizeof(struct Hook))))
+      /*
+      **  Finally create the superclass.
+      */
+      obj = (Object *)DoSuperNew( cl, obj,
+        //$$$ MUIA_Listview_Input
+        MUIA_NList_Input,       TRUE,
+        //$$$ MUIA_Listview_MultiSelect
+        MUIA_NList_MultiSelect,     ld.MultiSelect,
+        ( ld.MultiSelect != 0 )     ? MUIA_NList_MultiTestHook : TAG_IGNORE,  &NList_MultiTestHook,
+        //$$$ MUIA_Listview_DragType
+        MUIA_NList_DragType,        ( ld.Flags & NLTF_DRAGDROPSORT ) ? MUIV_NList_DragType_Default : MUIV_NList_DragType_None,
+        MUIA_NList_DragSortable,    ( ld.Flags & NLTF_DRAGDROPSORT ) ? TRUE : FALSE,
+        MUIA_NList_ShowDropMarks,   ( ld.Flags & NLTF_DRAGDROPSORT ) ? TRUE : FALSE,
+        //$$$ Remove
+        MUIA_NList_EntryValueDependent, TRUE,
+        ( ld.Flags & NLTF_TITLE )   ? MUIA_NList_Title  : TAG_IGNORE, TRUE,
+        ld.Format           ? MUIA_NList_Format : TAG_IGNORE, ld.Format,
+        //$$$ Not implemented
+        MUIA_ContextMenu,       MUIV_NList_ContextMenu_Always,
+        TAG_MORE, msg->ops_AttrList );
+
+      if ( obj )
       {
-        /*
-        **  Finally create the superclass.
-        */
-        obj = (Object *)DoSuperNew( cl, obj,
-          //$$$ MUIA_Listview_Input
-          MUIA_NList_Input,       TRUE,
-          //$$$ MUIA_Listview_MultiSelect
-          MUIA_NList_MultiSelect,     ld.MultiSelect,
-          ( ld.MultiSelect != 0 )     ? MUIA_NList_MultiTestHook : TAG_IGNORE,  &NList_MultiTestHook,
-          //$$$ MUIA_Listview_DragType
-          MUIA_NList_DragType,        ( ld.Flags & NLTF_DRAGDROPSORT ) ? MUIV_NList_DragType_Default : MUIV_NList_DragType_None,
-          MUIA_NList_DragSortable,    ( ld.Flags & NLTF_DRAGDROPSORT ) ? TRUE : FALSE,
-          MUIA_NList_ShowDropMarks,   ( ld.Flags & NLTF_DRAGDROPSORT ) ? TRUE : FALSE,
-          //$$$ MUIA_List_DisplayHook (other register format)
-          MUIA_NList_DisplayHook2,    ld.IntDisplayHook,
-          //$$$ Remove
-          MUIA_NList_EntryValueDependent, TRUE,
-          ( ld.Flags & NLTF_TITLE )   ? MUIA_NList_Title  : TAG_IGNORE, TRUE,
-          ld.Format           ? MUIA_NList_Format : TAG_IGNORE, ld.Format,
-          //$$$ Not implemented
-          MUIA_ContextMenu,       MUIV_NList_ContextMenu_Always,
-          TAG_MORE, msg->ops_AttrList );
+        struct NListtree_Data *data = INST_DATA(cl, obj);
+        struct Task *mytask;
+        const char *taskname;
+        ULONG ver=0, rev=0;
 
-        if ( obj )
+        CopyMem( &ld, data, sizeof( struct NListtree_Data ) );
+
+        data->IntCompareHook.h_Data = data; /* now we have the correct address of data */
+
+        if(data->Flags & NLTF_INT_COMPAREHOOK)
+          data->CompareHook = &data->IntCompareHook; /* and now we also have the correct address of the hook */
+
+        data->Flags |= NLTF_GET_PARENT_ATTR;
+        ver = xget(obj, MUIA_Version);
+        rev = xget(obj, MUIA_Revision);
+        data->Flags &= ~NLTF_GET_PARENT_ATTR;
+
+        D(DBF_ALWAYS, "NList version: %ld.%ld", ver, rev);
+
+        mytask = FindTask( NULL );
+
+        if ( mytask->tc_Node.ln_Name )
+          taskname = mytask->tc_Node.ln_Name;
+        else
+          taskname = "MUI Application";
+
+        if ( ( ver < 20 ) || ( ( ver == 20 ) && ( rev < 127 ) ) )
         {
-          struct NListtree_Data *data = INST_DATA(cl, obj);
-          struct Task *mytask;
-          const char *taskname;
-          ULONG ver=0, rev=0;
+          struct EasyStruct es;
 
-          CopyMem( &ld, data, sizeof( struct NListtree_Data ) );
+          memset(&es,0,sizeof(es));
+          es.es_StructSize = sizeof(struct EasyStruct);
+          es.es_Title      = (STRPTR)"Update information...";
+          es.es_TextFormat = (STRPTR)"NListtree.mcc has detected that your version of\n"
+                                     "NList.mcc which is used by task `%s'\n"
+                                     "is outdated (V%ld.%ld). Please update at least to\n"
+                                     "version 20.127, which is available at\n\n"
+                                     "http://www.sf.net/projects/nlist-classes\n\n"
+                                     "NListtree will terminate now to avoid problems...\n";
+          es.es_GadgetFormat = (STRPTR)"Terminate";
 
-          data->IntCompareHook.h_Data = data; /* now we have the correct address of data */
+          EasyRequest( NULL, &es, NULL, (IPTR)taskname, ver, rev );
 
-          if(data->Flags & NLTF_INT_COMPAREHOOK)
-            data->CompareHook = &data->IntCompareHook; /* and now we also have the correct address of the hook */
+          //CoerceMethod( cl, obj, OM_DISPOSE );
+          return( 0 );
+        }
 
-          data->Flags |= NLTF_GET_PARENT_ATTR;
-          get( obj, MUIA_Version, &ver );
-          get( obj, MUIA_Revision, &rev );
-          data->Flags &= ~NLTF_GET_PARENT_ATTR;
+        data->Flags |= NLTF_NLIST_DIRECT_ENTRY_SUPPORT;
 
-          D(DBF_ALWAYS, "NList version: %ld.%ld", ver, rev);
+        /*
+        **  Save instance data in private NList data field.
+        */
+        set( obj, MUIA_UserData, data );
 
-          mytask = FindTask( NULL );
+        /*
+        **  Instance data is now valid. Here we set
+        **  up the default hooks.
+        */
+        if(!data->FindNameHook)
+        {
+          data->FindNameHook = AllocVecPooled( data->MemoryPool, sizeof( struct Hook ) );
 
-          if ( mytask->tc_Node.ln_Name )
-            taskname = mytask->tc_Node.ln_Name;
-          else
-            taskname = "MUI Application";
+          InitHook(data->FindNameHook, _FindNameHook_CaseInsensitive, data);
+        }
 
-          if ( ( ver < 20 ) || ( ( ver == 20 ) && ( rev <= 104 ) ) )
+        if ( !data->FindUserDataHook )
+        {
+          data->FindUserDataHook = AllocVecPooled( data->MemoryPool, sizeof( struct Hook ) );
+
+          InitHook(data->FindUserDataHook, _FindUserDataHook_CaseInsensitive, data);
+        }
+
+        data->buf = AllocVecPooled( data->MemoryPool, DATA_BUF_SIZE );
+        data->Obj = obj;
+
+        /*
+        **  Here we initialize the root list and setting
+        **  some important values to it.
+        */
+        NewList( (struct List *)&data->RootList.ln_List );
+
+        data->RootList.ln_Parent  = NULL;
+        data->RootList.ln_Flags   |= TNF_LIST | TNF_OPEN;
+        data->RootList.ln_IFlags  |= TNIF_VISIBLE | TNIF_ROOT;
+
+        /*
+        **  Initialize Selected-Table.
+        */
+        data->SelectedTable.tb_Current = -2;
+
+        /*
+        **  Setup spacial image class and tree image.
+        */
+        if((data->CL_TreeImage = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Area, NULL, sizeof(struct TreeImage_Data ), ENTRY(TreeImage_Dispatcher))))
+        {
+          if((data->CL_NodeImage = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Image, NULL, sizeof(struct TreeImage_Data), ENTRY(NodeImage_Dispatcher))))
           {
-            struct EasyStruct es;
+            ActivateNotify( data );
 
-            memset(&es,0,sizeof(es));
-            es.es_StructSize = sizeof(struct EasyStruct);
-            es.es_Title      = (STRPTR)"Update information...";
-            es.es_TextFormat = (STRPTR)"NListtree.mcc has detected that your version of\n"
-                                       "NList.mcc which is used by task `%s'\n"
-                                       "is outdated (V%ld.%ld). Please update at least to\n"
-                                       "version 20.105, which is available at\n\n"
-                                       "http://www.sf.net/projects/nlist-classes\n\n"
-                                       "NListtree will terminate now to avoid problems...\n";
-            es.es_GadgetFormat = (STRPTR)"Terminate";
-
-            EasyRequest( NULL, &es, NULL, (IPTR)taskname, ver, rev );
-
-            //CoerceMethod( cl, obj, OM_DISPOSE );
-            return( 0 );
-          }
-
-          data->Flags |= NLTF_NLIST_DIRECT_ENTRY_SUPPORT;
-
-          /*
-          **  Save instance data in private NList data field.
-          */
-          set( obj, MUIA_UserData, data );
-
-          /*
-          **  Instance data is now valid. Here we set
-          **  up the default hooks.
-          */
-
-          InitHook(data->IntDisplayHook, NList_DispHook, data);
-
-          if(!data->FindNameHook)
-          {
-            data->FindNameHook = AllocVecPooled( data->MemoryPool, sizeof( struct Hook ) );
-
-            InitHook(data->FindNameHook, _FindNameHook_CaseInsensitive, data);
-          }
-
-          if ( !data->FindUserDataHook )
-          {
-            data->FindUserDataHook = AllocVecPooled( data->MemoryPool, sizeof( struct Hook ) );
-
-            InitHook(data->FindUserDataHook, _FindUserDataHook_CaseInsensitive, data);
-          }
-
-          data->buf = AllocVecPooled( data->MemoryPool, DATA_BUF_SIZE );
-          data->Obj = obj;
-
-          /*
-          **  Here we initialize the root list and setting
-          **  some important values to it.
-          */
-          NewList( (struct List *)&data->RootList.ln_List );
-
-          data->RootList.ln_Parent  = NULL;
-          data->RootList.ln_Flags   |= TNF_LIST | TNF_OPEN;
-          data->RootList.ln_IFlags  |= TNIF_VISIBLE | TNIF_ROOT;
-
-          /*
-          **  Initialize Selected-Table.
-          */
-          data->SelectedTable.tb_Current = -2;
-
-          /*
-          **  Setup spacial image class and tree image.
-          */
-          if((data->CL_TreeImage = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Area, NULL, sizeof(struct TreeImage_Data ), ENTRY(TreeImage_Dispatcher))))
-          {
-            if((data->CL_NodeImage = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Image, NULL, sizeof(struct TreeImage_Data), ENTRY(NodeImage_Dispatcher))))
-            {
-              ActivateNotify( data );
-
-              return( (IPTR)obj );
-            }
+            return( (IPTR)obj );
           }
         }
       }
@@ -6769,6 +6714,54 @@ IPTR _DragNDrop_DragDrop(struct IClass *cl, Object *obj, UNUSED Msg msg)
   data->Flags &= ~NLTF_DRAGDROP;
 
   return( 0 );
+}
+
+
+IPTR _NList_Display(struct IClass *cl, Object *obj, struct MUIP_NList_Display *msg)
+{
+  struct NListtree_Data *data = INST_DATA(cl, obj);
+  struct MUI_NListtree_TreeNode *tn = CTN( msg->entry );
+
+  /*
+  if ( !strcmp( "comp", tn->tn_Name ) )
+    DEBUGBREAK;
+  */
+
+  if ( data->DisplayHook )
+  {
+    MyCallHook( data->DisplayHook, data, MUIA_NListtree_DisplayHook, tn, msg->entry_pos, msg->strings, msg->preparses );
+  }
+
+  if ( tn )
+  {
+    D(DBF_DRAW, "render flags=%lx %s %s",tn->tn_Flags,(tn->tn_Flags & TNF_LIST)?" list":"",msg->strings[1]);
+
+    if ( !data->DisplayHook || !msg->strings[data->TreeColumn] )
+    {
+      msg->strings[data->TreeColumn] = tn->tn_Name;
+    }
+
+    /*
+    **  Reset image position. Will be updated inside DrawPos().
+    */
+    tn->tn_ImagePos = 0;
+
+    // NUL terminate the string
+    data->buf[0] = '\0';
+    if ( !( data->Flags & NLTF_NO_TREE ) )
+      DrawImages( tn, tn, data, 0 );
+
+    if ( msg->preparses[data->TreeColumn] )
+      strlcat(data->buf, msg->preparses[data->TreeColumn], DATA_BUF_SIZE);
+
+    strlcat(data->buf, msg->strings[data->TreeColumn], DATA_BUF_SIZE);
+
+    D(DBF_DRAW, "%s - %s", ( data->Flags & NLTF_QUIET ) ? "QUIET" : "RUN", data->buf);
+
+    msg->strings[data->TreeColumn] = data->buf;
+  }
+
+  return( (IPTR)tn );
 }
 
 
@@ -10831,11 +10824,10 @@ DISPATCHER(_Dispatcher)
     case MUIM_NList_DropDraw:     return( _DragNDrop_DropDraw     ( cl, obj, (APTR)msg) );
     case MUIM_NListtree_DropDraw:   return( _DragNDrop_NDropDraw    ( cl, obj, (APTR)msg) );
 
-    /*
-    **  Specials.
-    */
-    case MUIM_NList_ContextMenuBuild: return( _ContextMenuBuild     ( cl, obj, (APTR)msg) );
-    case MUIM_ContextMenuChoice:    return( _ContextMenuChoice      ( cl, obj, (APTR)msg) );
+    case MUIM_NList_Display:    return( _NList_Display(cl, obj, (APTR)msg) ); /*
+    **  Specials. */ case MUIM_NList_ContextMenuBuild: return( _ContextMenuBuild
+          ( cl, obj, (APTR)msg) ); case MUIM_ContextMenuChoice:    return(
+                  _ContextMenuChoice      ( cl, obj, (APTR)msg) );
 
 
     /*

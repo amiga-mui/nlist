@@ -121,8 +121,6 @@ struct NListtree_Data
   /*
   **  All hooks used.
   */
-  struct  Hook          *IntDisplayHook;    // *** My own internal display hook.
-
   struct  Hook          *OpenHook,        // ***  Safe place for all hooks the user wants to be called
                         *CloseHook,
 
