@@ -224,7 +224,6 @@ struct NListtree_Data
 #define NLTF_NO_ROOT_TREE                 (1<<20)   // ***  Do not display root tree gfx.
 #define NLTF_SETACTIVE                    (1<<21)   // ***  Set the active entry.
 #define NLTF_AUTOSELECT_CHILDS            (1<<22)   // ***  Automatically select childs if their parents selected.
-#define NLTF_GET_PARENT_ATTR              (1<<23)   // ***  Do not respond to attr queries.
 
 #define NLTF_QUALIFIER_LCOMMAND           (1<<28)   // ***  Rawkey qualifier information.
 #define NLTF_QUALIFIER_LALT               (1<<29)

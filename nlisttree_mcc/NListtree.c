@@ -4530,7 +4530,7 @@ MakeStaticHook(_FindUserDataHook_PointerCompare, _FindUserDataFunc_PointerCompar
 *
 */
 
-VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial )
+static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial )
 {
   struct MUI_NListtree_ListNode *actlist;
   struct MUI_NListtree_TreeNode *actnode;
@@ -5268,7 +5268,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 }
 
 
-BOOL GetAttributes( struct NListtree_Data *data, Msg msg)
+static BOOL GetAttributes( struct NListtree_Data *data, Msg msg)
 {
   IPTR *store = ( (struct opGet *)msg)->opg_Storage;
 
@@ -5470,10 +5470,8 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
         if(data->Flags & NLTF_INT_COMPAREHOOK)
           data->CompareHook = &data->IntCompareHook; /* and now we also have the correct address of the hook */
 
-        data->Flags |= NLTF_GET_PARENT_ATTR;
-        ver = xget(obj, MUIA_Version);
-        rev = xget(obj, MUIA_Revision);
-        data->Flags &= ~NLTF_GET_PARENT_ATTR;
+        DoSuperMethod(cl, obj, OM_GET, MUIA_Version, &ver);
+        DoSuperMethod(cl, obj, OM_GET, MUIA_Revision, &rev);
 
         D(DBF_ALWAYS, "NList version: %ld.%ld", ver, rev);
 
@@ -5630,9 +5628,9 @@ IPTR _Set(struct IClass *cl, Object *obj, struct opSet *msg)
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
 
-  SetAttributes( data, msg, FALSE );
+  SetAttributes(data, msg, FALSE);
 
-  return( DoSuperMethodA( cl, obj, (Msg)msg) );
+  return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
 
@@ -5640,13 +5638,10 @@ IPTR _Get(struct IClass *cl, Object *obj, Msg msg)
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
 
-  if ( !( data->Flags & NLTF_GET_PARENT_ATTR ) )
-  {
-    if ( GetAttributes( data, msg) )
-      return( TRUE );
-  }
+  if(GetAttributes(data, msg) == TRUE)
+    return TRUE;
 
-  return( DoSuperMethodA( cl, obj, msg) );
+  return DoSuperMethodA(cl, obj, msg);
 }
 
 

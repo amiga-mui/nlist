@@ -9,6 +9,8 @@ $URL$
 
   * nlisttree_mcc/NListtree.c: replaced the NList display hook by a method. This
     requires at least NList 20.127.
+  * nlisttree_mcc/NListtree.c: the version of NList.mcc is now queried directly
+    instead of the previous indirect method.
 
 2010-11-16 Thore Böckelmann <tboeckel@gmx.de>
 
