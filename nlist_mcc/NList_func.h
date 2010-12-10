@@ -188,8 +188,8 @@ void FreeVecPooled(APTR, APTR);
 #define AllocTypeEntry()      ItemPoolAlloc(data->EntryPool)
 #define FreeTypeEntry(entry)  ItemPoolFree(data->EntryPool, entry)
 #else
-#define AllocTypeEntry()      AllocVecPooled(data->EntryPool, sizeof(struct TypeEntry))
-#define FreeTypeEntry(entry)  FreeVecPooled(data->EntryPool, entry)
+#define AllocTypeEntry()      AllocPooled(data->EntryPool, sizeof(struct TypeEntry))
+#define FreeTypeEntry(entry)  FreePooled(data->EntryPool, entry, sizeof(struct TypeEntry))
 #endif
 
 #define IS_BAR(c,ci) \
