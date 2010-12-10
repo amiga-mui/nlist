@@ -378,7 +378,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 
     SHOWVALUE(DBF_STARTUP, nliesize);
 
-    if((buffer = (LONG *)AllocVecPooled(data, nliesize)) != NULL)
+    if((buffer = (LONG *)AllocVecPooled(data->Pool, nliesize)) != NULL)
     {
       ULONG nliepos = 0;
 
