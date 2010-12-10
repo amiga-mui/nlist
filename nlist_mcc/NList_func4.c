@@ -30,6 +30,7 @@
 #include <intuition/pointerclass.h>
 #include <datatypes/pictureclass.h>
 
+#include <proto/exec.h>
 #include <proto/graphics.h>
 #include <proto/muimaster.h>
 #include <proto/intuition.h>

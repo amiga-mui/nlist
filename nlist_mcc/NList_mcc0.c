@@ -24,6 +24,7 @@
 ***************************************************************************/
 
 #include <clib/alib_protos.h>
+#include <proto/exec.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
 #include <proto/muimaster.h>
