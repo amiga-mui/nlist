@@ -584,13 +584,24 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   if(( tag = FindTagItem( MUIA_NList_Pool, taglist ) ) ||
      ( tag = FindTagItem( MUIA_List_Pool, taglist ) ) )
   {
-    data->Pool = (APTR) tag->ti_Data;
+    data->Pool = (APTR)tag->ti_Data;
   }
   else
   {
+    ULONG puddleSize = GetTagData(MUIA_NList_PoolPuddleSize, GetTagData(MUIA_List_PoolPuddleSize, MUIV_NList_PoolPuddleSize_Default, taglist), taglist);
+    ULONG threshold = GetTagData(MUIA_NList_PoolThreshSize, GetTagData(MUIA_List_PoolThreshSize, MUIV_NList_PoolThreshSize_Default, taglist), taglist);
+
     /* Create internal pool using specified parameters or default one. */
-    data->Pool = NL_Pool_Create(GetTagData( MUIA_NList_PoolPuddleSize, GetTagData( MUIA_List_PoolPuddleSize, MUIV_NList_PoolPuddleSize_Default, taglist ), taglist ),
-                                GetTagData( MUIA_NList_PoolThreshSize, GetTagData( MUIA_List_PoolThreshSize, MUIV_NList_PoolThreshSize_Default, taglist ), taglist ) );
+    #if defined(__amigaos4__)
+    data->Pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                                  ASOPOOL_Puddle, puddleSize,
+                                                  ASOPOOL_Threshold, threshold,
+                                                  ASOPOOL_Name, "NList.mcc pool",
+                                                  TAG_DONE);
+    #else
+    data->Pool = CreatePool(MEMF_ANY, puddleSize, threshold);
+    #endif
+
     data->PoolInternal = data->Pool;
   }
 
@@ -603,7 +614,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
                                                       TAG_DONE);
   #else
   // all other systems use a standard pool with puddle size and threshold set appropriately
-  data->EntryPool = NL_Pool_Create(sizeof(struct TypeEntry) * 1024, sizeof(struct TypeEntry));
+  data->EntryPool = CreatePool(MEMF_ANY, sizeof(struct TypeEntry) * 1024, sizeof(struct TypeEntry));
   #endif
 
   // are pools available?
@@ -1026,11 +1037,18 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
     #if defined(__amigaos4__)
     FreeSysObject(ASOT_ITEMPOOL, data->EntryPool);
     #else
-    NL_Pool_Delete(data->EntryPool);
+    DeletePool(data->EntryPool);
     #endif
   }
 
-  NL_Pool_Delete(data->PoolInternal);
+  if(data->PoolInternal != NULL)
+  {
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_MEMPOOL, data->PoolInternal);
+    #else
+    DeletePool(data->PoolInternal);
+    #endif
+  }
 
   return(DoSuperMethodA(cl,obj,msg));
 

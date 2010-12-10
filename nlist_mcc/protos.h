@@ -178,18 +178,6 @@ extern IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ..
 extern LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG bufsize,struct KeyMap *kmap);
 extern char *ltoa(ULONG val, char *buffer, int len);
 
-//$$$Sensei: new memory handling functions.
-//sba: Removed some unused functions
-extern APTR  NL_Pool_Create(ULONG, ULONG);
-extern VOID  NL_Pool_Delete(APTR);
-extern APTR  NL_Pool_Internal_Alloc(struct NLData *data, ULONG size);
-extern VOID  NL_Pool_Internal_Free(struct NLData *data, APTR memory, ULONG size);
-
-extern APTR	NL2_Malloc2( APTR pool, ULONG size, STRPTR string );
-extern VOID	NL2_Free2( APTR pool, APTR memory, STRPTR string );
-extern APTR	NL2_Malloc( struct NLData *data, ULONG size, STRPTR string );
-extern VOID	NL2_Free( struct NLData *data, APTR memory, STRPTR string );
-
 extern void NL_Free_Format(Object *obj,struct NLData *data);
 extern BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist);
 extern SIPTR NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook);

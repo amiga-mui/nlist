@@ -25,7 +25,6 @@
 
 #include <exec/types.h>
 #include <proto/exec.h>
-#include "private.h"
 
 /// AllocVecPooled
 // allocate a vector of <memSize> bytes from the pool specified by <poolHeader>
@@ -37,12 +36,7 @@ APTR AllocVecPooled(APTR poolHeader, ULONG memSize)
   memSize += sizeof(ULONG);
 
   // allocate memory from the pool
-  if(LIBVER(SysBase) >= 39)
-    memory = AllocPooled(poolHeader, memSize);
-  else
-    memory = LibAllocPooled(poolHeader, memSize);
-
-  if(memory != NULL)
+  if((memory = AllocPooled(poolHeader, memSize)) != NULL)
   {
     // and finally store the size of the memory block, including the size itself
     *memory++ = memSize;

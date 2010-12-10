@@ -22,6 +22,9 @@ $URL$
     For the AmigaOS4 build this is an item pool, for all other builds a pool
     with appropriate puddle and threshold sizes is used. This should speed up
     entry handling a bit more.
+  * nlist/misc: dropped custom memory pool implementation. This means that OS2.x
+    is no longer supported and OS3.0 is the absolute minimum. But then, who does
+    really still use OS2.x with a monster like NList?
 
 2010-12-09 Thore Böckelmann <tboeckel@gmx.de>
 

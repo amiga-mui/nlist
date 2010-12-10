@@ -182,54 +182,6 @@ static char *stpncpy_noesc(char *to,char *from,int len)
   return (to2);
 }
 
-/*#define DEBUG_ALLOCS*/
-#define MINVER 39
-
-/*  ((struct Library *)SysBase)->lib_Version = 37;*/
-
-//$$$Sensei: new memory handling functions.
-
-/* Create new pool, don't care about KickStart version and MorphOS. */
-/* Called by OM_NEW. */
-APTR NL_Pool_Create( ULONG puddlesize, ULONG threshsize)
-{
-  #if defined(__amigaos4__)
-  return AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
-                                          ASOPOOL_Puddle, puddlesize,
-                                          ASOPOOL_Threshold, threshsize,
-                                          ASOPOOL_Name, "NList.mcc pool",
-                                          TAG_DONE);
-  #elif defined(__MORPHOS__)
-  return(CreatePool(MEMF_ANY, puddlesize, threshsize));
-  #else
-  /* Is KickStart at least V39+? */
-  if( LIBVER( SysBase ) >= MINVER )
-    return(CreatePool(MEMF_ANY, puddlesize, threshsize));
-  else
-    return(LibCreatePool(MEMF_ANY, puddlesize, threshsize));
-  #endif
-}
-
-/* Delete pool created by NL_Pool_Create(). */
-/* Called by OM_DISPOSE. */
-VOID NL_Pool_Delete( APTR pool )
-{
-  if(pool != NULL)
-  {
-    #if defined(__amigaos4__)
-    FreeSysObject(ASOT_MEMPOOL, pool);
-    #elif defined(__MORPHOS__)
-    DeletePool(pool);
-    #else
-    /* KickStart is at least V39+? */
-    if(LIBVER(SysBase) >= MINVER)
-      DeletePool(pool);
-    else
-      LibDeletePool(pool);
-    #endif
-  }
-}
-
 /*
  * #define FORMAT_TEMPLATE "DELTA=D/N,PREPARSE=P/K,WEIGHT=W/N,MINWIDTH=MIW/N,MAXWIDTH=MAW/N,COL=C/N,BAR/S\n"
  *

@@ -25,7 +25,6 @@
 
 #include <exec/types.h>
 #include <proto/exec.h>
-#include "private.h"
 
 /// FreeVecPooled
 // return a vector to the pool
@@ -38,10 +37,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   memSize = *(--mem);
 
   // an return the memory block to the pool
-  if(LIBVER(SysBase) >= 39)
-    FreePooled(poolHeader, mem, memSize);
-  else
-    LibFreePooled(poolHeader, mem, memSize);
+  FreePooled(poolHeader, mem, memSize);
 }
 
 ///

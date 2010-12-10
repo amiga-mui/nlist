@@ -242,8 +242,6 @@ ifeq ($(OS), os3)
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
 
-  # only the OS3 build needs the custom memory pool implementations if run on OS2.x
-  COBJS += libpool.o
   # additional object files required
   COBJS += vastubs.o \
            extrasrc/AllocVecPooled.o \
