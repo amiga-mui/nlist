@@ -112,7 +112,7 @@ HOOKPROTONH(NL_ConstructFunc_String, APTR, APTR pool, char *str)
     len++;
   }
 
-  if((new = (char *)NL_Malloc2(pool, len+1, "DestructHook_String")))
+  if((new = (char *)AllocVecPooled(pool, len+1)) != NULL)
   {
     memcpy(new, str, len*sizeof(char));
     new[len] = '\0'; // we have to terminate with a \0
@@ -124,7 +124,7 @@ MakeHook(NL_ConstructHook_String, NL_ConstructFunc_String);
 
 HOOKPROTONH(NL_DestructFunc_String, void, APTR pool, char *entry)
 {
-  NL_Free2(pool,(void *) entry,"DestructHook_String");
+  FreeVecPooled(pool, entry);
 }
 MakeHook(NL_DestructHook_String, NL_DestructFunc_String);
 
@@ -1003,7 +1003,7 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
   DeleteNImages(obj,data);
 
   if (data->NList_UseImages)
-    NL_Free(data,data->NList_UseImages,"Dispose_useimages");
+    FreeVecPooled(data->Pool, data->NList_UseImages);
   data->NList_UseImages = NULL;
   data->LastImage = 0;
 
@@ -1324,7 +1324,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
     if (data->NList_Keys && (data->NList_Keys != default_keys))
     {
-      NL_Free(data,data->NList_Keys,"NList_Keys");
+      FreeVecPooled(data->Pool, data->NList_Keys);
       data->NList_Keys = default_keys;
     }
 
@@ -1336,7 +1336,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
       while (keys[nk].kb_KeyTag)
         nk++;
 
-      if((data->NList_Keys = NL_Malloc(data,sizeof(struct KeyBinding) * (nk + 1),"NList_Keys")))
+      if((data->NList_Keys = AllocVecPooled(data->Pool, sizeof(struct KeyBinding) * (nk + 1))) != NULL)
       {
         while (nk >= 0)
         {
@@ -1553,7 +1553,8 @@ IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
   NL_DeleteImages(obj,data);
 
   if (data->NList_Keys && (data->NList_Keys != default_keys))
-  { NL_Free(data,data->NList_Keys,"NList_Keys");
+  {
+    FreeVecPooled(data->Pool, data->NList_Keys);
     data->NList_Keys = default_keys;
   }
 

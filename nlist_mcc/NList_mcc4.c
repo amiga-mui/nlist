@@ -151,10 +151,11 @@ BOOL DontDoColumn(struct NLData *data,LONG ent,WORD column)
 
 void FreeAffInfo(UNUSED Object *obj,struct NLData *data)
 {
-  if (data->aff_infos)
-  { NL_Free(data,data->aff_infos,"FreeAffInfo");
+  if(data->aff_infos)
+  {
+    FreeVecPooled(data->Pool, data->aff_infos);
+    data->aff_infos = NULL;
   }
-  data->aff_infos = NULL;
   data->numaff_infos = 0;
 }
 
@@ -171,7 +172,7 @@ BOOL NeedAffInfo(Object *obj,struct NLData *data,WORD niask)
 
 	//D(bug( "Adding %ld aff infos.\n", num ));
 
-    if((affinfotmp = (struct affinfo *) NL_Malloc(data,sizeof(struct affinfo)*num,"NeedAffInfo")))
+    if((affinfotmp = (struct affinfo *)AllocVecPooled(data->Pool, sizeof(struct affinfo)*num)) != NULL)
     {
       ni = 0;
       while (ni < data->numaff_infos)

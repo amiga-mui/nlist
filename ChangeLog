@@ -13,6 +13,11 @@ $URL$
     removed some parameters being passed separately although they are globally
     available through the instance data which is passed as well and there are
     no alternatives to affected the parameters.
+  * nlist_mcc/misc: heavily cleaned up the memory management by removing all the
+    wrapper functions and using Alloc/FreeVecPooled directly. For the 68k build
+    appropriate reimplementations have been added which are still compatible
+    with OS2.x. This saves lots of additional jumps and passing of unused
+    parameters.
 
 2010-12-09 Thore Böckelmann <tboeckel@gmx.de>
 

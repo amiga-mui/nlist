@@ -1532,7 +1532,7 @@ void DisposeDragRPort(UNUSED Object *obj,struct NLData *data)
   {
     struct BitMap *bm = data->DragRPort->BitMap;
 
-    NL_Free(data, data->DragRPort, "DisposeDragRPort");
+    FreeVecPooled(data->Pool, data->DragRPort);
     data->DragRPort = NULL;
 
     if(bm != NULL)
@@ -1553,7 +1553,7 @@ void DisposeDragRPort(UNUSED Object *obj,struct NLData *data)
           if(bm->Planes[ktr] != NULL)
             FreeRaster(bm->Planes[ktr], bmimg->width, bmimg->height);
         }
-        NL_Free(data, bmimg, "DisposeDragRPort");
+        FreeVecPooled(data->Pool, bmimg);
       }
     }
   }
@@ -1613,7 +1613,7 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
   }
 
   if(data->DragRPort == NULL &&
-     ((data->DragRPort = (struct RastPort *)NL_Malloc(data, sizeof(struct RastPort), "CreateDragRPort"))) != NULL)
+     ((data->DragRPort = (struct RastPort *)AllocVecPooled(data->Pool, sizeof(struct RastPort)))) != NULL)
   {
     struct BitMap *fbm = _window(obj)->RPort->BitMap;
     ULONG fbmDepth;
@@ -1632,7 +1632,7 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
       fbmDepth = MIN(fbm->Depth, 8);
 
       data->DragRPort->BitMap = NULL;
-      if((bmimg = NL_Malloc(data, sizeof(struct BitMapImage), "CreateDragRPort")) != NULL)
+      if((bmimg = AllocVecPooled(data, sizeof(struct BitMapImage))) != NULL)
       {
         ULONG ktr;
         BOOL bmimg_failed = FALSE;
@@ -1657,7 +1657,7 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
             if(bmimg->imgbmp.Planes[ktr] != NULL)
               FreeRaster(bmimg->imgbmp.Planes[ktr], bmimg->width, bmimg->height);
           }
-          NL_Free(data,bmimg,"dispBMI_bmimg");
+          FreeVecPooled(data->Pool, bmimg);
           bmimg = NULL;
         }
 
@@ -1677,7 +1677,7 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
     }
     else
     {
-      NL_Free(data,data->DragRPort,"CreateDragRPort");
+      FreeVecPooled(data->Pool, data->DragRPort);
       data->DragRPort = NULL;
     }
   }

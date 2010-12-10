@@ -377,7 +377,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 
     SHOWVALUE(DBF_STARTUP, nliesize);
 
-    if((buffer = (LONG *)NL_Malloc(data, nliesize, "NL_Export")) != NULL)
+    if((buffer = (LONG *)AllocVecPooled(data, nliesize)) != NULL)
     {
       ULONG nliepos = 0;
 
@@ -448,7 +448,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 
       DoMethod(msg->dataspace, MUIM_Dataspace_Add, buffer, nliesize, id);
 
-      NL_Free(data, buffer, "NL_Export");
+      FreeVecPooled(data->Pool, buffer);
     }
   }
 

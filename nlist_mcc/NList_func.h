@@ -177,11 +177,12 @@
 /*data->cols[column].style*/
 
 
-#define NL_Malloc2(pool,len,str)  NL2_Malloc2((pool),(len),NULL)
-#define NL_Free2(pool,ptr,str)    NL2_Free2((pool),(ptr),NULL)
-#define NL_Malloc(data,len,str)   NL2_Malloc((data),(len),NULL)
-#define NL_Free(data,ptr,str)     NL2_Free((data),(ptr),NULL)
-
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+// AllocVecPooled.c
+APTR AllocVecPooled(APTR, ULONG);
+// FreeVecPooled.c
+void FreeVecPooled(APTR, APTR);
+#endif
 
 
 #define IS_BAR(c,ci) \

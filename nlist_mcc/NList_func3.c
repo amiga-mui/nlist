@@ -193,21 +193,21 @@ static char *stpncpy_noesc(char *to,char *from,int len)
 /* Called by OM_NEW. */
 APTR NL_Pool_Create( ULONG puddlesize, ULONG threshsize)
 {
-   #if defined(__amigaos4__)
-   return AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
-                                           ASOPOOL_Puddle, puddlesize,
-                                           ASOPOOL_Threshold, threshsize,
-                                           ASOPOOL_Name, "NList.mcc pool",
-                                           TAG_DONE);
-   #elif defined(__MORPHOS__)
-   return(CreatePool(MEMF_ANY, puddlesize, threshsize));
-   #else
-	/* Is KickStart at least V39+? */
-	if( LIBVER( SysBase ) >= MINVER )
-	  return(CreatePool(MEMF_ANY, puddlesize, threshsize));
-	else
-	  return(LibCreatePool(MEMF_ANY, puddlesize, threshsize));
-   #endif
+  #if defined(__amigaos4__)
+  return AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                          ASOPOOL_Puddle, puddlesize,
+                                          ASOPOOL_Threshold, threshsize,
+                                          ASOPOOL_Name, "NList.mcc pool",
+                                          TAG_DONE);
+  #elif defined(__MORPHOS__)
+  return(CreatePool(MEMF_ANY, puddlesize, threshsize));
+  #else
+  /* Is KickStart at least V39+? */
+  if( LIBVER( SysBase ) >= MINVER )
+    return(CreatePool(MEMF_ANY, puddlesize, threshsize));
+  else
+    return(LibCreatePool(MEMF_ANY, puddlesize, threshsize));
+  #endif
 }
 
 /* Delete pool created by NL_Pool_Create(). */
@@ -221,11 +221,11 @@ VOID NL_Pool_Delete( APTR pool )
     #elif defined(__MORPHOS__)
     DeletePool(pool);
     #else
-	/* KickStart is at least V39+? */
-	if(LIBVER(SysBase) >= MINVER)
-	  DeletePool(pool);
-	else
-	  LibDeletePool(pool);
+    /* KickStart is at least V39+? */
+    if(LIBVER(SysBase) >= MINVER)
+      DeletePool(pool);
+    else
+      LibDeletePool(pool);
     #endif
   }
 }
@@ -233,79 +233,44 @@ VOID NL_Pool_Delete( APTR pool )
 /* Low level alloc memory of pool created by NL_Pool_Create(). */
 STATIC APTR NL_Pool_Alloc(APTR pool, ULONG size)
 {
-   #if defined(__amigaos4__) || defined(__MORPHOS__)
-   // AmigaOS4 and MorphOS should have a AllocPooled() function
-   return AllocPooled( pool, size );
-   #else
-	if(LIBVER( SysBase ) >= MINVER)
-		return(AllocPooled(pool, size));
-	else
-		return(LibAllocPooled(pool, size));
-   #endif
+  #if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+  // AmigaOS4 and MorphOS have a AllocPooled() function
+  return AllocPooled( pool, size );
+  #else
+  if(LIBVER( SysBase ) >= MINVER)
+    return(AllocPooled(pool, size));
+  else
+    return(LibAllocPooled(pool, size));
+  #endif
 }
 
 /* Low level free memory allocated by NL_Pool_Alloc(). */
 STATIC VOID NL_Pool_Free( APTR pool, APTR memory, ULONG size )
 {
-   #if defined(__amigaos4__) || defined(__MORPHOS__)
-   // on AmigaOS4 and MorphOS we can savely take FreePooled()
-   FreePooled( pool, memory, size );
-   #else
-	if( LIBVER( SysBase ) >= MINVER )
-		FreePooled( pool, memory, size );
-	else
-		LibFreePooled( pool, memory, size );
-   #endif
-}
-
-/* Low level alloc memory and remember . */
-STATIC APTR NL_Pool_AllocVec( APTR pool, ULONG size )
-{
-	ULONG	*memory;
-	if((memory = NL_Pool_Alloc( pool, size + sizeof(*memory))))
-		*memory++	= size;
-	return( memory );
-}
-
-/* Low level free memory of unknown size. */
-STATIC VOID NL_Pool_FreeVec( APTR pool, APTR memory )
-{
-	ULONG	*memory1	= (ULONG *) memory - 1;
-	if( memory )	NL_Pool_Free( pool, memory1, *memory1 + sizeof( *memory1 ) );
+  #if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+  // on AmigaOS4 and MorphOS we can savely take FreePooled()
+  FreePooled( pool, memory, size );
+  #else
+  if( LIBVER( SysBase ) >= MINVER )
+    FreePooled( pool, memory, size );
+  else
+    LibFreePooled( pool, memory, size );
+  #endif
 }
 
 /* High level alloc memory. */
+
 /*
  * Memory allocated by this routine will be freed when object is disposing
  * but it should never happened!
  */
-APTR	NL_Pool_Internal_Alloc( struct NLData *data, ULONG size )
-{
-	return( NL_Pool_Alloc( data->Pool, size ) );
-}
-
-APTR	NL_Pool_Internal_AllocVec( struct NLData *data, ULONG size )
-{
-	return( NL_Pool_AllocVec( data->Pool, size ) );
-}
-
-/* High level free memory. */
-VOID	NL_Pool_Internal_Free( struct NLData *data, APTR memory, ULONG size )
-{
-	NL_Pool_Free( data->Pool, memory, size );
-}
-
-VOID	NL_Pool_Internal_FreeVec( struct NLData *data, APTR memory )
-{
-	NL_Pool_FreeVec( data->Pool, memory );
-}
 
 /* These wrappers slow down, we should use macros or correct functions directly instead... */
 APTR	NL2_Malloc2( APTR pool, ULONG size, UNUSED STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
-	return( NL_Pool_AllocVec( pool, size ) );
+	return AllocVecPooled(pool, size);
 
 }
 
@@ -313,7 +278,7 @@ VOID	NL2_Free2( APTR pool, APTR memory, UNUSED STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
-	NL_Pool_FreeVec( pool, memory );
+	FreeVecPooled(pool, memory);
 
 }
 
@@ -321,7 +286,7 @@ APTR	NL2_Malloc( struct NLData *data, ULONG size, UNUSED STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
-	return( NL_Pool_Internal_AllocVec( data, size ) );
+	return AllocVecPooled(data->Pool, size);
 
 }
 
@@ -329,7 +294,7 @@ VOID	NL2_Free( struct NLData *data, APTR memory, UNUSED STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
-	NL_Pool_Internal_FreeVec( data, memory );
+	FreeVecPooled(data->Pool, memory);
 
 }
 
@@ -381,11 +346,12 @@ void NL_Free_Format(UNUSED Object *obj,struct NLData *data)
   if (data->cols)
   { WORD column = 0;
     while (column < data->numcols)
-    { if (data->cols[column].preparse)
-        NL_Free(data,data->cols[column].preparse,"FreeFormat_preparse");
+    {
+      if(data->cols[column].preparse != NULL)
+        FreeVecPooled(data->Pool, data->cols[column].preparse);
       column++;
     }
-    NL_Free(data,data->cols,"FreeFormat_cols");
+    FreeVecPooled(data->Pool, data->cols);
   }
   data->cols = NULL;
   data->numcols = data->numcols2 = 0;
@@ -400,7 +366,8 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
   struct RDArgs *rdargs,*ptr;
   struct parse_format Line;
   struct colinfo *tmpcols;
-  if (strformat && (sf = NL_Malloc(data,strlen(strformat)+4,"ReadFormat_sf")))
+
+  if (strformat && (sf = AllocVecPooled(data->Pool, strlen(strformat)+4)) != NULL)
   {
     if((ptr = AllocDosObject(DOS_RDARGS, NULL)))
     {
@@ -411,7 +378,7 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
           colmax++;
         pos2++;
       }
-      if ((colmax > 0) && (colmax < DISPLAY_ARRAY_MAX) && (tmpcols = NL_Malloc(data,(colmax+1)*sizeof(struct colinfo),"ReadFormat_cols")))
+      if ((colmax > 0) && (colmax < DISPLAY_ARRAY_MAX) && (tmpcols = AllocVecPooled(data->Pool, (colmax+1)*sizeof(struct colinfo))) != NULL)
       { NL_Free_Format(obj,data);
         data->cols = tmpcols;
         data->numcols = data->numcols2 = colmax;
@@ -485,7 +452,7 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
             if (Line.preparse)
             {
               int len = strlen((char *)Line.preparse)+2;
-              if((data->cols[column].preparse = NL_Malloc(data,len,"ReadFormat_preparse")))
+              if((data->cols[column].preparse = AllocVecPooled(data->Pool,len)) != NULL)
                 strlcpy(data->cols[column].preparse, (char *)Line.preparse, len);
             }
             if (Line.col)      data->cols[column].col = (WORD) *Line.col;
@@ -571,7 +538,7 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
 /*        data->cols[colmax-1].width = (WORD) 100;*/
 
         FreeDosObject(DOS_RDARGS, ptr);
-        NL_Free(data,sf,"ReadFormat_sf");
+        FreeVecPooled(data->Pool, sf);
 
         col = colmax;
         column = 1;
@@ -623,7 +590,7 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
       }
       FreeDosObject(DOS_RDARGS, ptr);
     }
-    NL_Free(data,sf,"ReadFormat_sf2");
+    FreeVecPooled(data->Pool ,sf);
   }
   return (FALSE);
 }
@@ -642,14 +609,14 @@ static BOOL CCB_string(struct NLData *data, char **cbstr, char *str, LONG len, c
     if(*cbstr != NULL)
       tmpcblen += strlen(*cbstr);
 
-    if((tmpcb = NL_Malloc(data, tmpcblen, "CCB_string")) != NULL)
+    if((tmpcb = AllocVecPooled(data->Pool, tmpcblen)) != NULL)
     {
       tmp = tmpcb;
 
       if(*cbstr != NULL)
       {
         tmp += strlcpy(tmp, *cbstr, tmpcblen);
-        NL_Free(data, *cbstr, "CCB_string");
+        FreeVecPooled(data->Pool, *cbstr);
       }
 
       if(skipesc)
@@ -1021,7 +988,7 @@ SIPTR NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cl
   }
 
   if(clipstr != NULL)
-    NL_Free(data, clipstr, "CopyTo");
+    FreeVecPooled(data->Pool, clipstr);
 
   RETURN(ok);
   return ok;

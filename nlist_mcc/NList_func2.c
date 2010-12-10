@@ -85,7 +85,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
     struct TypeEntry **newentries = NULL;
     LONG le = ((maxent << 1) + 0x00FFL) & ~0x000FL;
 
-    if((newentries = NL_Malloc(data, sizeof(struct TypeEntry *) * (le + 1),"Insert_Entries")))
+    if((newentries = AllocVecPooled(data->Pool, sizeof(struct TypeEntry *) * (le + 1))) != NULL)
     {
       struct TypeEntry *newentry = NULL;
 
@@ -104,7 +104,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
         ent1 += de;
       }
 
-      if((newentry = NL_Malloc(data, sizeof(struct TypeEntry),"InsertTmpLine")))
+      if((newentry = AllocVecPooled(data->Pool, sizeof(struct TypeEntry))) != NULL)
       {
         newentries[ent] = newentry;
 
@@ -128,7 +128,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
 
         newentries[ent] = NULL;
         if (data->EntriesArray)
-          NL_Free(data,data->EntriesArray,"Insert_Entries");
+          FreeVecPooled(data->Pool, data->EntriesArray);
         data->EntriesArray = newentries;
         data->NList_Entries = ent;
         if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
@@ -147,7 +147,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
         return (TRUE);
       }
 
-      NL_Free(data,newentries,"InsertTmpLine");
+      FreeVecPooled(data->Pool, newentries);
       return (FALSE);
     }
   }
@@ -162,7 +162,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
     NL_MoveD(&data->EntriesArray[ent+1],&data->EntriesArray[ent],ent-newpos,ent+1);
     ent = newpos;
 
-    if((newentry = NL_Malloc(data,sizeof(struct TypeEntry),"InsertTmpLine")))
+    if((newentry = AllocVecPooled(data->Pool, sizeof(struct TypeEntry))) != NULL)
     {
       data->EntriesArray[ent] = newentry;
 
@@ -244,7 +244,7 @@ void NL_DeleteTmpLine(struct NLData *data,Object *obj,LONG pos)
     { set_Active(data->NList_Entries - 1);
     }
 
-    NL_Free(data,data->EntriesArray[ent],"DeleteTmpLine");
+    FreeVecPooled(data->Pool, data->EntriesArray[ent]);
     NL_Move(&data->EntriesArray[ent],&data->EntriesArray[ent+1],data->NList_Entries-ent,ent);
     ent = data->NList_Entries;
 
@@ -307,7 +307,7 @@ static ULONG NL_List_SortPart(Object *obj,struct NLData *data,LONG fent,LONG len
 
   lent++;
 
-  if((entry = (struct sort_entry *) NL_Malloc(data,sizeof(struct sort_entry) * (lent-fent),"SortPart")))
+  if((entry = (struct sort_entry *)AllocVecPooled(data->Pool, sizeof(struct sort_entry) * (lent-fent))) != NULL)
   {
     for (ent = fent; ent < lent; ent++)
     {
@@ -368,7 +368,7 @@ static ULONG NL_List_SortPart(Object *obj,struct NLData *data,LONG fent,LONG len
 
 //D(DBF_ALWAYS, "qsort stat: %ld exchanges, %ld follows.",numexch,numfollow);
 
-    NL_Free(data,entry,"SortPart");
+    FreeVecPooled(data->Pool, entry);
   }
 
   RETURN(has_changed);
@@ -550,7 +550,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
       	struct TypeEntry **newentries = NULL,**oldentries = data->EntriesArray;
         LONG le = ((maxent << 1) + 0x00FFL) & ~0x000FL;
 
-        if((newentries = NL_Malloc(data,sizeof(struct TypeEntry *) * (le + 1),"Insert_Entries")))
+        if((newentries = AllocVecPooled(data->Pool, sizeof(struct TypeEntry *) * (le + 1))) != NULL)
         {
           struct TypeEntry *newentry = NULL;
 
@@ -585,7 +585,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
 
           while ((ent < maxent) && (ent3 < count))
           {
-            if((newentry = NL_Malloc(data,sizeof(struct TypeEntry),"Insert_Entries")))
+            if((newentry = AllocVecPooled(data->Pool, sizeof(struct TypeEntry))) != NULL)
             {
               data->EntriesArray[ent] = newentry;
 
@@ -641,7 +641,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
 
           data->EntriesArray[ent] = NULL;
           if (oldentries)
-            NL_Free(data,oldentries,"Insert_Entries");
+            FreeVecPooled(data->Pool, oldentries);
 
           if (data->NList_Entries != ent)
           {
@@ -725,7 +725,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
 
         while ((ent < data->LastEntry) && (ent3 < count))
         {
-          if((newentry = NL_Malloc(data,sizeof(struct TypeEntry),"Insert_Entries")))
+          if((newentry = AllocVecPooled(data->Pool, sizeof(struct TypeEntry))) != NULL)
           {
             data->EntriesArray[ent] = newentry;
 
@@ -983,11 +983,11 @@ ULONG NL_List_Clear(struct NLData *data,Object *obj)
       if (!(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
           DoMethod( obj, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool );
 #endif
-      NL_Free(data,data->EntriesArray[ent],"Clear_Entries");
+      FreeVecPooled(data->Pool, data->EntriesArray[ent]);
       ent--;
     }
 
-    NL_Free(data,data->EntriesArray,"Clear_Entries");
+    FreeVecPooled(data->Pool, data->EntriesArray);
   }
 
   data->EntriesArray = NULL;
@@ -1140,7 +1140,7 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
       { set_Active(nlentries - 1);
       }
 
-      NL_Free(data,data->EntriesArray[ent],"Remove_Entries");
+      FreeVecPooled(data->Pool, data->EntriesArray[ent]);
 
       NL_Move(&data->EntriesArray[ent],&data->EntriesArray[ent+1],nlentries-ent,ent);
       ent = nlentries;
@@ -1176,7 +1176,7 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
     if (data->NList_Entries < ((data->LastEntry/2) & ~0x000FL))
       maxent = (data->LastEntry/2) & ~0x000FL;
 
-    if ((maxent > 0) && (newentries = NL_Malloc(data,sizeof(struct TypeEntry *) * (maxent + 1),"Remove_entries")))
+    if ((maxent > 0) && (newentries = AllocVecPooled(data->Pool, sizeof(struct TypeEntry *) * (maxent + 1))))
     { LONG ent1 = 0;
       data->LastEntry = maxent;
       maxent = 0;
@@ -1186,7 +1186,7 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
 
       newentries[ent1] = NULL;
       if (data->EntriesArray)
-        NL_Free(data,data->EntriesArray,"Remove_Entries");
+        FreeVecPooled(data->Pool, data->EntriesArray);
       data->EntriesArray = newentries;
     }
 	*/
@@ -1391,7 +1391,7 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
       }
       return (TRUE);
     }
-    else if((EntriesArray = (struct TypeEntry **) NL_Malloc(data,sizeof(struct TypeEntry *)*num_sel,"MoveSel_tmpentries")))
+    else if((EntriesArray = (struct TypeEntry **)AllocVecPooled(data->Pool, sizeof(struct TypeEntry *)*num_sel)) != NULL)
     {
       data->display_ptr = NULL;
       ent = ent2 = first;
@@ -1450,7 +1450,7 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
       ent2++;
 
       NL_Move(&data->EntriesArray[ent2],&EntriesArray[0],ent3,ent2);
-      NL_Free(data,EntriesArray,"MoveSel_tmpentries");
+      FreeVecPooled(data->Pool, EntriesArray);
 
       if (dest < first)
         first = dest;
