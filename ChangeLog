@@ -5,6 +5,15 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-12-10 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: implemented construct, destruct, compare and
+    display methods which can be overloaded by subclasses. These methods fall
+    back to the corresponding old hooks in case they are not overloaded. Also
+    removed some parameters being passed separately although they are globally
+    available through the instance data which is passed as well and there are
+    no alternatives to affected the parameters.
+
 2010-12-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: replaced the NList display hook by a method. This

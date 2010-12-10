@@ -157,7 +157,7 @@ LONG __stack = 16384;
 **  Type definition for compare function.
 */
 
-void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct Hook *chook, struct NListtree_Data *data);
+void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct NListtree_Data *data);
 
 /*
 **  Some prototypes.
@@ -1622,13 +1622,13 @@ LONG TreeNodeSelect( struct NListtree_Data *data, struct MUI_NListtree_TreeNode 
 
 
 
-struct MUI_NListtree_TreeNode *GetInsertNodeSorted( struct Hook *chook, struct NListtree_Data *data, struct MUI_NListtree_ListNode *li, struct MUI_NListtree_TreeNode *tn )
+struct MUI_NListtree_TreeNode *GetInsertNodeSorted( struct NListtree_Data *data, struct MUI_NListtree_ListNode *li, struct MUI_NListtree_TreeNode *tn )
 {
   struct MUI_NListtree_TreeNode *in, *in2 = NULL;
 
   if((in = CTN(List_First((struct List *)&li->ln_List))))
   {
-    while( (LONG)MyCallHook( chook, data, MUIA_NListtree_CompareHook, in, tn, 0 ) < 0 )
+    while((LONG)DoMethod(data->Obj, MUIM_NListtree_Compare, in, tn, 0) < 0)
     {
       in2 = in;
 
@@ -1641,7 +1641,7 @@ struct MUI_NListtree_TreeNode *GetInsertNodeSorted( struct Hook *chook, struct N
 
   if ( !in2 )
   {
-    in2 = CTN( INSERT_POS_HEAD );
+    in2 = CTN( INSERT_POS_TAIL );
   }
 
   return( in2 );
@@ -2344,8 +2344,7 @@ VOID RemoveNode2( struct NListtree_Data *data, struct MUI_NListtree_ListNode *li
   /*
   **  Call internal/user supplied destruct function.
   */
-  if ( data->DestructHook )
-    MyCallHook( data->DestructHook, data, MUIA_NListtree_DestructHook, tn->tn_Name, tn->tn_User, data->TreePool, 0 );
+  DoMethod(data->Obj, MUIM_NListtree_Destruct, tn->tn_Name, tn->tn_User, data->TreePool, 0);
 
   /*
   **  Free all allocated memory.
@@ -2423,8 +2422,7 @@ VOID QuickRemoveNodes( struct NListtree_Data *data, struct MUI_NListtree_ListNod
       /*
       **  Call internal/user supplied destruct function.
       */
-      if ( data->DestructHook )
-        MyCallHook( data->DestructHook, data, MUIA_NListtree_DestructHook, li->ln_Name, li->ln_User, data->TreePool, 0 );
+      DoMethod(data->Obj, MUIM_NListtree_Destruct, li->ln_Name, li->ln_User, data->TreePool, 0);
     }
   }
 }
@@ -2654,14 +2652,9 @@ struct MUI_NListtree_TreeNode *DuplicateNode( struct NListtree_Data *data, struc
       new->ln_Name = nodetodup->tn_Name;
 
     /*
-    **  Check for internal/user supplied construct
-    **  hook and call it if available.
+    **  Create new user dats
     */
-    if ( data->ConstructHook )
-      user = (APTR)MyCallHook( data->ConstructHook, data, MUIA_NListtree_ConstructHook, nodetodup->tn_Name,
-        nodetodup->tn_User, data->TreePool, MUIV_NListtree_ConstructHook_Flag_AutoCreate );
-    else
-      user = nodetodup->tn_User;
+    user = (APTR)DoMethod(data->Obj, MUIM_NListtree_Construct, nodetodup->tn_Name, nodetodup->tn_User, data->TreePool, MUIV_NListtree_ConstructHook_Flag_AutoCreate);
 
     if ( !new->ln_Name || !user )
     {
@@ -2672,8 +2665,7 @@ struct MUI_NListtree_TreeNode *DuplicateNode( struct NListtree_Data *data, struc
       if ( new->ln_Name && ( new->ln_IFlags & TNIF_ALLOCATED ) )
         FreeVecPooled( data->TreePool, new->ln_Name );
 
-      if ( user && data->DestructHook )
-        MyCallHook( data->DestructHook, data, MUIA_NListtree_DestructHook, new->ln_Name, new->ln_User, data->TreePool, 0 );
+      DoMethod(data->Obj, MUIM_NListtree_Destruct, new->ln_Name, new->ln_User, data->TreePool, 0);
 
       FreeVecPooled( data->TreePool, new );
       new = NULL;
@@ -3106,12 +3098,9 @@ HOOKPROTONHNO(_ConstructFunc, APTR, struct MUIP_NListtree_ConstructMessage *msg)
 
     if((retdata = AllocVecPooled(msg->MemPool, len)))
     {
-      if ( msg->UserData )
-      {
-        strlcpy( (STRPTR)retdata, (STRPTR)msg->UserData, len );
-      }
+      strlcpy( (STRPTR)retdata, (STRPTR)msg->UserData, len );
 
-      D(DBF_LISTTREE, "Internal CostructHook ==> Data: %s", (STRPTR)msg->UserData);
+      D(DBF_LISTTREE, "Internal CostructHook ==> Data: '%s'", (STRPTR)msg->UserData);
 
       return( retdata );
     }
@@ -3123,7 +3112,7 @@ MakeStaticHook(_ConstructHook, _ConstructFunc);
 
 HOOKPROTONHNO(_DestructFunc, ULONG, struct MUIP_NListtree_DestructMessage *msg)
 {
-  D(DBF_LISTTREE, "Internal DestructHook ==> Data: %s", (STRPTR)msg->UserData);
+  D(DBF_LISTTREE, "Internal DestructHook ==> Data: '%s'", (STRPTR)msg->UserData);
 
   /*
   **  Free the string memory.
@@ -3202,7 +3191,7 @@ HOOKPROTONHNO(_CompareFunc_LeavesMixed, LONG, struct MUIP_NListtree_CompareMessa
 }
 MakeStaticHook(_CompareHook_LeavesMixed, _CompareFunc_LeavesMixed);
 
-VOID SortList( struct MUI_NListtree_ListNode *ln, struct Hook *chook, struct NListtree_Data *data )
+VOID SortList( struct MUI_NListtree_ListNode *ln, struct NListtree_Data *data )
 {
   if ( ln->ln_Table.tb_Entries > 1 )
   {
@@ -3210,7 +3199,7 @@ VOID SortList( struct MUI_NListtree_ListNode *ln, struct Hook *chook, struct NLi
     LONG i;
 
     // let's start the quicksort algorithm to sort our entries.
-    qsort2(ln->ln_Table.tb_Table, ln->ln_Table.tb_Entries, chook, data);
+    qsort2(ln->ln_Table.tb_Table, ln->ln_Table.tb_Entries, data);
 
     localtable = ln->ln_Table.tb_Table;
 
@@ -3224,7 +3213,7 @@ VOID SortList( struct MUI_NListtree_ListNode *ln, struct Hook *chook, struct NLi
 }
 
 
-struct MUI_NListtree_ListNode *ListNode_Sort( struct MUI_NListtree_ListNode *ln, struct Hook *chook, struct NListtree_Data *data, ULONG flags )
+struct MUI_NListtree_ListNode *ListNode_Sort( struct MUI_NListtree_ListNode *ln, struct NListtree_Data *data, ULONG flags )
 {
   if ( ( flags & MUIV_NListtree_Sort_Flag_RecursiveAll ) || ( flags & MUIV_NListtree_Sort_Flag_RecursiveOpen ) )
   {
@@ -3235,13 +3224,13 @@ struct MUI_NListtree_ListNode *ListNode_Sort( struct MUI_NListtree_ListNode *ln,
       if ( ln->ln_Flags & TNF_LIST )
       {
         if ( ( ln->ln_Flags & TNF_OPEN ) || ( flags & MUIV_NListtree_Sort_Flag_RecursiveAll ) )
-          ListNode_Sort( ln2, chook, data, flags );
+          ListNode_Sort( ln2, data, flags );
       }
     }
   }
 
   if ( ln->ln_Flags & TNF_LIST )
-    SortList( ln, chook, data );
+    SortList( ln, data );
 
   return( ln );
 }
@@ -6715,23 +6704,21 @@ IPTR _DragNDrop_DragDrop(struct IClass *cl, Object *obj, UNUSED Msg msg)
 IPTR _NList_Display(struct IClass *cl, Object *obj, struct MUIP_NList_Display *msg)
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
-  struct MUI_NListtree_TreeNode *tn = CTN( msg->entry );
+  struct MUI_NListtree_TreeNode *tn = CTN(msg->entry);
 
   /*
   if ( !strcmp( "comp", tn->tn_Name ) )
     DEBUGBREAK;
   */
 
-  if ( data->DisplayHook )
-  {
-    MyCallHook( data->DisplayHook, data, MUIA_NListtree_DisplayHook, tn, msg->entry_pos, msg->strings, msg->preparses );
-  }
+  // invoke the display method, this may be overridden by subclassed instances
+  DoMethod(obj, MUIM_NListtree_Display, tn, msg->entry_pos, msg->strings, msg->preparses);
 
-  if ( tn )
+  if(tn != NULL)
   {
     D(DBF_DRAW, "render flags=%lx %s %s",tn->tn_Flags,(tn->tn_Flags & TNF_LIST)?" list":"",msg->strings[1]);
 
-    if ( !data->DisplayHook || !msg->strings[data->TreeColumn] )
+    if(msg->strings[data->TreeColumn] == NULL)
     {
       msg->strings[data->TreeColumn] = tn->tn_Name;
     }
@@ -6743,20 +6730,75 @@ IPTR _NList_Display(struct IClass *cl, Object *obj, struct MUIP_NList_Display *m
 
     // NUL terminate the string
     data->buf[0] = '\0';
-    if ( !( data->Flags & NLTF_NO_TREE ) )
-      DrawImages( tn, tn, data, 0 );
+    if(!( data->Flags & NLTF_NO_TREE))
+      DrawImages(tn, tn, data, 0);
 
-    if ( msg->preparses[data->TreeColumn] )
+    if(msg->preparses[data->TreeColumn] != NULL)
       strlcat(data->buf, msg->preparses[data->TreeColumn], DATA_BUF_SIZE);
 
     strlcat(data->buf, msg->strings[data->TreeColumn], DATA_BUF_SIZE);
 
-    D(DBF_DRAW, "%s - %s", ( data->Flags & NLTF_QUIET ) ? "QUIET" : "RUN", data->buf);
+    D(DBF_DRAW, "%s - %s", (data->Flags & NLTF_QUIET) ? "QUIET" : "RUN", data->buf);
 
     msg->strings[data->TreeColumn] = data->buf;
   }
 
-  return( (IPTR)tn );
+  return (IPTR)tn;
+}
+
+
+IPTR _NListtree_Construct(struct IClass *cl, Object *obj, struct MUIP_NListtree_Construct *msg)
+{
+  struct NListtree_Data *data = INST_DATA(cl, obj);
+  IPTR result;
+
+  // we just fallback to the construct hook, if any is set
+  if(data->ConstructHook != NULL)
+    result = (IPTR)MyCallHook(data->ConstructHook, data, MUIA_NListtree_ConstructHook, msg->Name, msg->UserData, msg->MemPool, msg->Flags);
+  else
+    result = (IPTR)msg->UserData;
+
+  return result;
+}
+
+
+IPTR _NListtree_Destruct(struct IClass *cl, Object *obj, struct MUIP_NListtree_Destruct *msg)
+{
+  struct NListtree_Data *data = INST_DATA(cl, obj);
+
+  if(data->DestructHook != NULL)
+    MyCallHook(data->DestructHook, data, MUIA_NListtree_DestructHook, msg->Name, msg->UserData, msg->MemPool, msg->Flags);
+
+  return 0;
+}
+
+
+IPTR _NListtree_Display(struct IClass *cl, Object *obj, struct MUIP_NListtree_Display *msg)
+{
+  struct NListtree_Data *data = INST_DATA(cl, obj);
+
+  // we just fallback to the display hook, if any is set
+  if(data->DisplayHook != NULL)
+    MyCallHook(data->DisplayHook, data, MUIA_NListtree_DisplayHook, msg->TreeNode, msg->EntryPos, msg->Array, msg->Preparse);
+  else
+    msg->Array[data->TreeColumn] = NULL;
+
+  return 0;
+}
+
+
+IPTR _NListtree_Compare(struct IClass *cl, Object *obj, struct MUIP_NListtree_Compare *msg)
+{
+  struct NListtree_Data *data = INST_DATA(cl, obj);
+  LONG cmp;
+
+  // fall back to the compare hook if one is given, otherwise we assume node1 < node2
+  if(data->CompareHook != NULL)
+    cmp = (LONG)MyCallHook(data->CompareHook, data, MUIA_NListtree_CompareHook, msg->TreeNode1, msg->TreeNode2, 0);
+  else
+    cmp = -1;
+
+  return cmp;
 }
 
 
@@ -7303,13 +7345,9 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
   D(DBF_LISTTREE, "MUIM_NListtree_Insert: name=%s flags=0x%lx listnode:0x%lx prevnode:0x%lx  %ld",msg->Name,msg->Flags,msg->ListNode,msg->PrevNode,data->NumEntries);
 
   /*
-  **  Check for internal/user supplied construct
-  **  hook and call it if available.
+  **  Construct new user data
   */
-  if ( data->ConstructHook )
-    user = (APTR)MyCallHook( data->ConstructHook, data, MUIA_NListtree_ConstructHook, msg->Name, msg->User, data->TreePool, 0 );
-  else
-    user = msg->User;
+  user = (APTR)DoMethod(obj, MUIM_NListtree_Construct, msg->Name, msg->User, data->TreePool, 0);
 
   /*
   **  Allocate memory for the new entry and, if
@@ -7441,24 +7479,15 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
             break;
 
           case MUIV_NListtree_Insert_PrevNode_Sorted:
+            in = GetInsertNodeSorted( data, li, tn );
 
-            if ( data->CompareHook )
+            if ( (IPTR)in == (IPTR)INSERT_POS_TAIL )
             {
-              in = GetInsertNodeSorted( data->CompareHook, data, li, tn );
-
-              if ( (IPTR)in == (IPTR)INSERT_POS_HEAD )
-              {
-                AddHead( (struct List *)&li->ln_List, (struct Node *)&tn->tn_Node );
-              }
-              else
-              {
-                Insert( (struct List *)&li->ln_List, (struct Node *)&tn->tn_Node, (struct Node *)&in->tn_Node );
-              }
+              AddTail( (struct List *)&li->ln_List, (struct Node *)&tn->tn_Node );
             }
             else
             {
-              AddTail( (struct List *)&li->ln_List, (struct Node *)&tn->tn_Node );
-              in = CTN( INSERT_POS_TAIL );
+              Insert( (struct List *)&li->ln_List, (struct Node *)&tn->tn_Node, (struct Node *)&in->tn_Node );
             }
             break;
 
@@ -8516,15 +8545,7 @@ IPTR _NListtree_Move(struct IClass *cl, Object *obj, struct MUIP_NListtree_Move 
       break;
 
     case MUIV_NListtree_Move_NewTreeNode_Sorted:
-
-      if ( data->CompareHook )
-      {
-        tn2 = GetInsertNodeSorted( data->CompareHook, data, ln2, tn1 );
-      }
-      else
-      {
-        tn2 = CTN( INSERT_POS_TAIL );
-      }
+      tn2 = GetInsertNodeSorted( data, ln2, tn1 );
       break;
 
     default:
@@ -8761,15 +8782,7 @@ IPTR _NListtree_Copy(struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy 
       break;
 
     case MUIV_NListtree_Copy_DestTreeNode_Sorted:
-
-      if ( data->CompareHook )
-      {
-        tn2 = GetInsertNodeSorted( data->CompareHook, data, ln2, tn1 );
-      }
-      else
-      {
-        tn2 = CTN( INSERT_POS_TAIL );
-      }
+      tn2 = GetInsertNodeSorted( data, ln2, tn1 );
       break;
 
     default:
@@ -8899,17 +8912,12 @@ IPTR _NListtree_Rename(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ren
   {
     //D(bug( "Node: 0x%08lx - %s - Renaming user field\n", tn, tn->tn_Name ) );
 
-    if ( data->DestructHook )
-      MyCallHook( data->DestructHook, data, MUIA_NListtree_DestructHook, tn->tn_Name, tn->tn_User, data->TreePool, 0 );
+    DoMethod(obj, MUIM_NListtree_Destruct, tn->tn_Name, tn->tn_User, data->TreePool, 0);
 
     /*
-    **  Check for internal/user supplied construct
-    **  hook and call it if available.
+    **  Construct new user data
     */
-    if ( data->ConstructHook )
-      tn->tn_User = (APTR)MyCallHook( data->ConstructHook, data, MUIA_NListtree_ConstructHook, tn->tn_Name, msg->NewName, data->TreePool, 0 );
-    else
-      tn->tn_User = msg->NewName;
+    tn->tn_User = (APTR)DoMethod(obj, MUIM_NListtree_Construct, tn->tn_Name, msg->NewName, data->TreePool, 0);
   }
   else
   {
@@ -9591,52 +9599,49 @@ IPTR _NListtree_Sort(struct IClass *cl, Object *obj, struct MUIP_NListtree_Sort 
   struct MUI_NListtree_ListNode *ln;
   LONG pos;
 
-  if ( data->CompareHook )
+  /*
+  **  Handle special events.
+  */
+  switch( (IPTR)msg->ListNode )
   {
-    /*
-    **  Handle special events.
-    */
-    switch( (IPTR)msg->ListNode )
-    {
-      case MUIV_NListtree_Sort_ListNode_Active:
-        ln = data->ActiveList;
-        break;
+    case MUIV_NListtree_Sort_ListNode_Active:
+      ln = data->ActiveList;
+      break;
 
-      case MUIV_NListtree_Sort_ListNode_Root:
-        ln = &data->RootList;
-        break;
+    case MUIV_NListtree_Sort_ListNode_Root:
+      ln = &data->RootList;
+      break;
 
-      case MUIV_NListtree_Sort_TreeNode_Active:
-        ln = data->ActiveList;
+    case MUIV_NListtree_Sort_TreeNode_Active:
+      ln = data->ActiveList;
 
-        if ( data->ActiveNode )
-        {
-          if ( data->ActiveNode->tn_Flags & TNF_LIST )
-            ln = CLN( data->ActiveNode );
-        }
-        break;
+      if ( data->ActiveNode )
+      {
+        if ( data->ActiveNode->tn_Flags & TNF_LIST )
+          ln = CLN( data->ActiveNode );
+      }
+      break;
 
-      default:
-        ln = CLN( msg->ListNode );
-        break;
-    }
+    default:
+      ln = CLN( msg->ListNode );
+      break;
+  }
 
-    pos = GetVisualPos( data, CTN( ln ) ) + 1;
+  pos = GetVisualPos( data, CTN( ln ) ) + 1;
 
-    DoQuiet( data, TRUE );
-    DeactivateNotify( data );
+  DoQuiet( data, TRUE );
+  DeactivateNotify( data );
 
-    ListNode_Sort( ln, data->CompareHook, data, msg->Flags );
-    ReplaceTreeVisibleSort( data, CTN( ln ), &pos );
+  ListNode_Sort( ln, data, msg->Flags );
+  ReplaceTreeVisibleSort( data, CTN( ln ), &pos );
 
-    ActivateNotify( data );
-    DoQuiet( data, FALSE );
+  ActivateNotify( data );
+  DoQuiet( data, FALSE );
 
-    /* sba: the active note could be changed, but the notify calling was disabled */
-    DoMethod(data->Obj, MUIM_NListtree_GetListActive, 0);
+  /* sba: the active note could be changed, but the notify calling was disabled */
+  DoMethod(data->Obj, MUIM_NListtree_GetListActive, 0);
 
 /*    nnset( obj, MUIA_NListtree_Active, CTN( data->ActiveNode ) );*/
-  }
 
   return( 0 );
 }
@@ -10819,10 +10824,13 @@ DISPATCHER(_Dispatcher)
     case MUIM_NList_DropDraw:     return( _DragNDrop_DropDraw     ( cl, obj, (APTR)msg) );
     case MUIM_NListtree_DropDraw:   return( _DragNDrop_NDropDraw    ( cl, obj, (APTR)msg) );
 
-    case MUIM_NList_Display:    return( _NList_Display(cl, obj, (APTR)msg) ); /*
-    **  Specials. */ case MUIM_NList_ContextMenuBuild: return( _ContextMenuBuild
-          ( cl, obj, (APTR)msg) ); case MUIM_ContextMenuChoice:    return(
-                  _ContextMenuChoice      ( cl, obj, (APTR)msg) );
+    case MUIM_NList_Display:    return( _NList_Display(cl, obj, (APTR)msg) );
+
+    /*
+    **  Specials.
+    */
+    case MUIM_NList_ContextMenuBuild: return( _ContextMenuBuild     ( cl, obj, (APTR)msg) );
+    case MUIM_ContextMenuChoice:    return( _ContextMenuChoice      ( cl, obj, (APTR)msg) );
 
 
     /*
@@ -10857,6 +10865,10 @@ DISPATCHER(_Dispatcher)
 
     case MUIM_NListtree_CopyToClip:   return( _NListtree_CopyToClip   ( cl, obj, (APTR)msg) );
 
+    case MUIM_NListtree_Construct:    return( _NListtree_Construct    ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Destruct:     return( _NListtree_Destruct     ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Display:      return( _NListtree_Display      ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Compare:      return( _NListtree_Compare      ( cl, obj, (APTR)msg) );
 
     /*
     **  Methods, user can use for info or overload
