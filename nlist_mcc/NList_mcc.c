@@ -579,30 +579,39 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /*D(bug("%lx|NEW 1 \n",obj));*/
 
-    //$$$Sensei: major rewrite memory handling. PuddleSize and ThreshSize takes memory, nothing else.
-    /* User pool was specified passed? */
-    if(    ( tag = FindTagItem( MUIA_NList_Pool, taglist ) ) ||
-            ( tag = FindTagItem( MUIA_List_Pool, taglist ) ) )
-    {
-        data->Pool = (APTR) tag->ti_Data;
-    }
-    else
-    {
+  //$$$Sensei: major rewrite memory handling. PuddleSize and ThreshSize takes memory, nothing else.
+  /* User pool was specified passed? */
+  if(( tag = FindTagItem( MUIA_NList_Pool, taglist ) ) ||
+     ( tag = FindTagItem( MUIA_List_Pool, taglist ) ) )
+  {
+    data->Pool = (APTR) tag->ti_Data;
+  }
+  else
+  {
+    /* Create internal pool using specified parameters or default one. */
+    data->Pool = NL_Pool_Create(GetTagData( MUIA_NList_PoolPuddleSize, GetTagData( MUIA_List_PoolPuddleSize, MUIV_NList_PoolPuddleSize_Default, taglist ), taglist ),
+                                GetTagData( MUIA_NList_PoolThreshSize, GetTagData( MUIA_List_PoolThreshSize, MUIV_NList_PoolThreshSize_Default, taglist ), taglist ) );
+    data->PoolInternal = data->Pool;
+  }
 
-        /* Create internal pool using specified parameters or default one. */
-        data->Pool    = data->PoolInternal    = NL_Pool_Create(
-            GetTagData( MUIA_NList_PoolPuddleSize, GetTagData( MUIA_List_PoolPuddleSize, MUIV_NList_PoolPuddleSize_Default, taglist ), taglist ),
-            GetTagData( MUIA_NList_PoolThreshSize, GetTagData( MUIA_List_PoolThreshSize, MUIV_NList_PoolThreshSize_Default, taglist ), taglist ) );
+  #if defined(__amigaos4__)
+  // for OS4 we create an ItemPool
+  data->EntryPool = AllocSysObjectTags(ASOT_ITEMPOOL, ASOITEM_MFlags, MEMF_SHARED,
+                                                      ASOITEM_ItemSize, sizeof(struct TypeEntry),
+                                                      ASOITEM_BatchSize, 1024,
+                                                      ASOITEM_GCPolicy, ITEMGC_AFTERCOUNT,
+                                                      TAG_DONE);
+  #else
+  // all other systems use a standard pool with puddle size and threshold set appropriately
+  data->EntryPool = NL_Pool_Create(sizeof(struct TypeEntry) * 1024, sizeof(struct TypeEntry));
+  #endif
 
-    }
-
-    /* Is pool available? */
-    if(!data->Pool)
-    {
-      /* It's not available, so we've to dispose object and return error. */
-      CoerceMethod( cl, obj, OM_DISPOSE );
-      return(0);
-    }
+  // are pools available?
+  if(data->Pool == NULL || data->EntryPool == NULL)
+  {
+    CoerceMethod(cl, obj, OM_DISPOSE);
+    return(0);
+  }
 
   if ((tag = FindTagItem(MUIA_NList_ConstructHook, taglist)) ||
       (tag = FindTagItem(MUIA_List_ConstructHook, taglist)))
@@ -1004,6 +1013,7 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
 
   if (data->NList_UseImages)
     FreeVecPooled(data->Pool, data->NList_UseImages);
+
   data->NList_UseImages = NULL;
   data->LastImage = 0;
 
@@ -1011,8 +1021,16 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
 
   NL_Free_Format(obj,data);
 
-  //$$$Sensei
-  NL_Pool_Delete( data->PoolInternal );
+  if(data->EntryPool != NULL)
+  {
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_ITEMPOOL, data->EntryPool);
+    #else
+    NL_Pool_Delete(data->EntryPool);
+    #endif
+  }
+
+  NL_Pool_Delete(data->PoolInternal);
 
   return(DoSuperMethodA(cl,obj,msg));
 

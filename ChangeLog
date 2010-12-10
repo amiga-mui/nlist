@@ -18,6 +18,10 @@ $URL$
     appropriate reimplementations have been added which are still compatible
     with OS2.x. This saves lots of additional jumps and passing of unused
     parameters.
+  * nlist_mcc/misc: added a second size optimized pool for the single entries.
+    For the AmigaOS4 build this is an item pool, for all other builds a pool
+    with appropriate puddle and threshold sizes is used. This should speed up
+    entry handling a bit more.
 
 2010-12-09 Thore Böckelmann <tboeckel@gmx.de>
 

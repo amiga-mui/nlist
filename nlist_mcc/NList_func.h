@@ -184,6 +184,13 @@ APTR AllocVecPooled(APTR, ULONG);
 void FreeVecPooled(APTR, APTR);
 #endif
 
+#if defined(__amigaos4__)
+#define AllocTypeEntry()      ItemPoolAlloc(data->EntryPool)
+#define FreeTypeEntry(entry)  ItemPoolFree(data->EntryPool, entry)
+#else
+#define AllocTypeEntry()      AllocVecPooled(data->EntryPool, sizeof(struct TypeEntry))
+#define FreeTypeEntry(entry)  FreeVecPooled(data->EntryPool, entry)
+#endif
 
 #define IS_BAR(c,ci) \
     (((c) < data->numcols-1) ||\
