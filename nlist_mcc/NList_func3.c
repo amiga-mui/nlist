@@ -225,7 +225,7 @@ struct parse_format
 };
 
 
-void NL_Free_Format(UNUSED Object *obj,struct NLData *data)
+void NL_Free_Format(struct NLData *data)
 {
   if (data->cols)
   { WORD column = 0;
@@ -243,7 +243,7 @@ void NL_Free_Format(UNUSED Object *obj,struct NLData *data)
 }
 
 
-BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist)
+BOOL NL_Read_Format(struct NLData *data,char *strformat,BOOL oldlist)
 {
   LONG column,colmax,pos1,pos2,col = 0;
   char *sf = NULL;
@@ -263,7 +263,7 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
         pos2++;
       }
       if ((colmax > 0) && (colmax < DISPLAY_ARRAY_MAX) && (tmpcols = AllocVecPooled(data->Pool, (colmax+1)*sizeof(struct colinfo))) != NULL)
-      { NL_Free_Format(obj,data);
+      { NL_Free_Format(data);
         data->cols = tmpcols;
         data->numcols = data->numcols2 = colmax;
         column = 0;
@@ -466,9 +466,10 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
         data->display_ptr = NULL;
 /*D(bug("%lx|NL_Read_Format >%s<\n",obj,strformat));*/
         if (data->SHOW)
-        { if (!data->DRAW)
-            NL_SetObjInfos(obj,data,TRUE);
-          NL_SetCols(obj,data);
+        {
+          if (!data->DRAW)
+            NL_SetObjInfos(data,TRUE);
+          NL_SetCols(data);
         }
         return (TRUE);
       }
@@ -523,7 +524,7 @@ static BOOL CCB_string(struct NLData *data, char **cbstr, char *str, LONG len, c
 }
 
 
-static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,LONG ent,struct Hook *hook,LONG c1,LONG p1,LONG c2,LONG p2)
+static BOOL CCB_entry(struct NLData *data,char **cbstr,APTR entptr,LONG ent,struct Hook *hook,LONG c1,LONG p1,LONG c2,LONG p2)
 {
   char **display_array = &data->DisplayArray[2];
   char *str;
@@ -531,31 +532,38 @@ static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,L
   char lc;
   BOOL ln = FALSE;
   WORD colwrap,wrap = 0;
+
   if ((ent >= 0) && data->EntriesArray[ent]->Wrap)
-  { LONG ent1 = ent;
+  {
+    LONG ent1 = ent;
+
     if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
       ent1 -= data->EntriesArray[ent]->dnum;
     entptr = data->EntriesArray[ent1]->Entry;
     wrap = data->EntriesArray[ent]->Wrap;
   }
   if (p1 < -PREPARSE_OFFSET_ENTRY)   /* begin in general column preparse string */
-  { p1 += PREPARSE_OFFSET_COL;
+  {
+    p1 += PREPARSE_OFFSET_COL;
     prep1 = 2;
   }
   else if (p1 < -2)
-  { p1 += PREPARSE_OFFSET_ENTRY;     /* begin in display hook column preparse string */
+  {
+    p1 += PREPARSE_OFFSET_ENTRY;     /* begin in display hook column preparse string */
     prep1 = 1;
   }
   else if (p1 == -1)                 /* begin at beginning of column */
     prep1 = 2;
   else
     prep1 = 0;
+
   if (p2 < -PREPARSE_OFFSET_ENTRY)   /* end in general column preparse string */
   { p2 += PREPARSE_OFFSET_COL;
     prep2 = 2;
   }
   else if (p2 < -2)
-  { p2 += PREPARSE_OFFSET_ENTRY;     /* end in display hook column preparse string */
+  {
+    p2 += PREPARSE_OFFSET_ENTRY;     /* end in display hook column preparse string */
     prep2 = 1;
   }
   else if (p2 == -1)                 /* end at beginning of column */
@@ -583,10 +591,10 @@ static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,L
       if (c2 >= data->numcols-1) display_array[3] = (char *) -2;
       if (data->NList_CopyEntryToClipHook2)
       { data->DisplayArray[0] = (char *) entptr;
-        MyCallHookPkt(obj,FALSE,hook,obj,data->DisplayArray);
+        MyCallHookPkt(data->this,FALSE,hook,data->this,data->DisplayArray);
       }
       else
-        MyCallHookPkt(obj,TRUE,hook,display_array,entptr);
+        MyCallHookPkt(data->this,TRUE,hook,display_array,entptr);
       data->display_ptr = NULL;
       return (CCB_string(data,cbstr,display_array[0],strlen(display_array[0]),'\0',FALSE));
     }
@@ -594,7 +602,7 @@ static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,L
     {
       WORD column,col1,col2;
 
-      NL_GetDisplayArray(obj,data,ent);
+      NL_GetDisplayArray(data,ent);
 
       if ((c1 == -2) || (c1 >= data->numcols-1))
         col1 = data->numcols-1;
@@ -650,10 +658,10 @@ static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,L
           display_array[2] = (char *) pos2;
           if (data->NList_CopyColumnToClipHook2)
           { data->DisplayArray[0] = (char *) str;
-            MyCallHookPkt(obj,FALSE,data->NList_CopyColumnToClipHook,obj,data->DisplayArray);
+            MyCallHookPkt(data->this,FALSE,data->NList_CopyColumnToClipHook,data->this,data->DisplayArray);
           }
           else
-            MyCallHookPkt(obj,TRUE,data->NList_CopyColumnToClipHook,display_array,(APTR) str);
+            MyCallHookPkt(data->this,TRUE,data->NList_CopyColumnToClipHook,display_array,(APTR) str);
           data->display_ptr = NULL;
           len = (LONG) display_array[1];
           if (len < 0)
@@ -692,19 +700,19 @@ static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,L
 
 
 #define CCB_ENTRY_PTR_HOOK(ep,h) \
-  ok = CCB_entry(obj,data,&clipstr,ep,-1,h,-1,-1,-2,-2);
+  ok = CCB_entry(data,&clipstr,ep,-1,h,-1,-1,-2,-2);
 
 #define CCB_ENTRY_PTR(ep) \
-  ok = CCB_entry(obj,data,&clipstr,ep,-1,NULL,-1,-1,-2,-2);
+  ok = CCB_entry(data,&clipstr,ep,-1,NULL,-1,-1,-2,-2);
 
 #define CCB_ENTRY(e) \
   { if ((e >= 0) && (e < data->NList_Entries)) \
-    ok = CCB_entry(obj,data,&clipstr,data->EntriesArray[e]->Entry,e,NULL,-1,-1,-2,-2); \
+    ok = CCB_entry(data,&clipstr,data->EntriesArray[e]->Entry,e,NULL,-1,-1,-2,-2); \
   }
 
 #define CCB_ENTRY_START_END(e,c1,p1,c2,p2) \
   { if ((e >= 0) && (e < data->NList_Entries)) \
-    ok = CCB_entry(obj,data,&clipstr,data->EntriesArray[e]->Entry,e,NULL,c1,p1,c2,p2); \
+    ok = CCB_entry(data,&clipstr,data->EntriesArray[e]->Entry,e,NULL,c1,p1,c2,p2); \
   }
 
 static LONG CopyToFile(STRPTR filename, STRPTR buffer)
@@ -744,7 +752,7 @@ static LONG CopyToFile(STRPTR filename, STRPTR buffer)
   return result;
 }
 
-SIPTR NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook)
+SIPTR NL_CopyTo(struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook)
 {
   char *retstr = NULL;
   char *clipstr = NULL;
@@ -887,7 +895,7 @@ IPTR mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip *
   if((LONG)msg->clipnum < 0)
     return (0);
 
-  return ((IPTR) NL_CopyTo(obj,data,msg->pos,NULL,msg->clipnum,msg->entries,msg->hook));
+  return ((IPTR) NL_CopyTo(data,msg->pos,NULL,msg->clipnum,msg->entries,msg->hook));
 }
 
 
@@ -896,7 +904,7 @@ IPTR mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *msg)
   struct NLData *data = INST_DATA(cl,obj);
   LONG res;
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  res = NL_CopyTo(obj,data,msg->pos,msg->filename,-1,msg->entries,NULL);
+  res = NL_CopyTo(data,msg->pos,msg->filename,-1,msg->entries,NULL);
   *msg->result = (APTR) res;
   return ((IPTR)res);
 }

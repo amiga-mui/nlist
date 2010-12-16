@@ -72,15 +72,16 @@ static IPTR mNL_Show(struct IClass *cl,Object *obj,Msg msg)
   data->ScrollBarsTime = 1;
 
   /* GetImages must be done before DoSuperMethodA */
-  GetImages(obj,data);
+  GetImages(data);
 
   data->do_updatesb = data->do_images = TRUE;
 
   retval = DoSuperMethodA(cl,obj,msg);
 
   if (data->ScrollBarsPos == -3)
-  { if (!(LIBVER(GfxBase) >= 39))
-      NL_CreateImages(obj,data);
+  {
+    if (!(LIBVER(GfxBase) >= 39))
+      NL_CreateImages(data);
     data->ScrollBarsPos = -2;
   }
 
@@ -91,7 +92,7 @@ static IPTR mNL_Show(struct IClass *cl,Object *obj,Msg msg)
       set(data->VertPropObject,MUIA_Prop_DoSmooth, FALSE);
   }
 
-  GetNImage_Sizes(obj,data);
+  GetNImage_Sizes(data);
   data->do_images = TRUE;
 
   RETURN(retval);
@@ -109,7 +110,7 @@ static IPTR mNL_Hide(struct IClass *cl,Object *obj,Msg msg)
   data->badrport = FALSE;
 
   // remove any custom pointer
-  HideCustomPointer(obj, data);
+  HideCustomPointer(data);
 
   retval = DoSuperMethodA(cl,obj,msg);
 
@@ -179,7 +180,7 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           {
             D(DBF_STARTUP, "objID '%s', importing ACTV entry", getIDStr(muiNotifyData(obj)->mnd_ObjectID));
             if(isFlagSet(data->NList_Imports, MUIV_NList_Imports_Active))
-              NL_List_Active(obj, data, nlie[nliepos], NULL, MUIV_NList_Select_On, TRUE,0);
+              NL_List_Active(data, nlie[nliepos], NULL, MUIV_NList_Select_On, TRUE,0);
             nliepos++;
             data->do_draw = TRUE;
           }
@@ -189,7 +190,7 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
           {
             D(DBF_STARTUP, "objID '%s', importing FRST entry", getIDStr(muiNotifyData(obj)->mnd_ObjectID));
             if(isFlagSet(data->NList_Imports, MUIV_NList_Imports_First))
-              NL_List_First(obj, data, nlie[nliepos], NULL);
+              NL_List_First(data, nlie[nliepos], NULL);
             nliepos++;
             data->do_draw = TRUE;
           }
@@ -232,7 +233,7 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
               if(isFlagSet(data->NList_Imports, MUIV_NList_Imports_ColWidth))
               {
                 D(DBF_STARTUP, "objID '%s', importing WIDT %ld", getIDStr(muiNotifyData(obj)->mnd_ObjectID), nlie[nliepos]);
-                NL_ColWidth(obj, data, numcol, nlie[nliepos]);
+                NL_ColWidth(data, numcol, nlie[nliepos]);
               }
               nliepos++;
             }
@@ -248,7 +249,7 @@ static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
             for(numcol = 0; numcol < num_ordr; numcol++)
             {
               if(isFlagSet(data->NList_Imports, MUIV_NList_Imports_ColOrder))
-                NL_SetCol(obj, data, numcol, nlie[nliepos]);
+                NL_SetCol(data, numcol, nlie[nliepos]);
               nliepos++;
             }
             data->do_draw_all = TRUE;
@@ -355,7 +356,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 
     if(isFlagSet(data->NList_Exports, MUIV_NList_Exports_Selected) && data->NList_TypeSelect == MUIV_NList_TypeSelect_Line)
     {
-      NL_List_Select(obj, data, MUIV_NList_Select_All, MUIV_NList_Select_All, MUIV_NList_Select_Ask, &numsel);
+      NL_List_Select(data, MUIV_NList_Select_All, MUIV_NList_Select_All, MUIV_NList_Select_Ask, &numsel);
 
       num_sels = 0;
       if(numsel > 0)
@@ -411,7 +412,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
         buffer[nliepos++] = MAKE_ID('W','I','D','T');
         buffer[nliepos++] = num_widt;
         for(numcol = 0; numcol < num_widt; numcol++)
-          buffer[nliepos++] = (LONG)NL_ColWidth(obj, data, numcol, MUIV_NList_ColWidth_Get);
+          buffer[nliepos++] = (LONG)NL_ColWidth(data, numcol, MUIV_NList_ColWidth_Get);
       }
       if(isFlagSet(data->NList_Exports, MUIV_NList_Exports_ColOrder))
       {
@@ -419,7 +420,7 @@ static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
         buffer[nliepos++] = MAKE_ID('O','R','D','R');
         buffer[nliepos++] = num_ordr;
         for(numcol = 0; numcol < num_ordr; numcol++)
-          buffer[nliepos++] = NL_ColumnToCol(obj, data, numcol);
+          buffer[nliepos++] = NL_ColumnToCol(data, numcol);
       }
       if(isFlagSet(data->NList_Exports, MUIV_NList_Exports_Selected) && data->NList_TypeSelect == MUIV_NList_TypeSelect_Line)
       {

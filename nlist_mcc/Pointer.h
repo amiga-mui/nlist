@@ -40,7 +40,7 @@ enum PointerType
 // prototypes
 void SetupCustomPointers(struct NLData *data);
 void CleanupCustomPointers(struct NLData *data);
-void ShowCustomPointer(Object *obj, struct NLData *data, enum PointerType type);
-void HideCustomPointer(Object *obj, struct NLData *data);
+void ShowCustomPointer(struct NLData *data, enum PointerType type);
+void HideCustomPointer(struct NLData *data);
 
 #endif // _POINTER_H_

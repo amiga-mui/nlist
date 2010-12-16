@@ -725,8 +725,10 @@ void CleanupCustomPointers(struct NLData *data)
   LEAVE();
 }
 
-void ShowCustomPointer(Object *obj, struct NLData *data, enum PointerType type)
+void ShowCustomPointer(struct NLData *data, enum PointerType type)
 {
+  Object *obj = data->this;
+
   ENTER();
 
   // even if it seems to be a waste of performance, but
@@ -820,18 +822,20 @@ void ShowCustomPointer(Object *obj, struct NLData *data, enum PointerType type)
       data->activeCustomPointer = type;
     }
     else
-      HideCustomPointer(obj, data);
+      HideCustomPointer(data);
   }
 
   LEAVE();
 }
 
-void HideCustomPointer(Object *obj, struct NLData *data)
+void HideCustomPointer(struct NLData *data)
 {
   ENTER();
 
   if(data->activeCustomPointer != PT_NONE)
   {
+    Object *obj = data->this;
+
     #if defined(__amigaos4__) || defined(__MORPHOS__)
     SetWindowPointer(_window(obj), TAG_DONE);
     #else

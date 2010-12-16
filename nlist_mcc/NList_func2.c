@@ -33,7 +33,7 @@
 
 #include "NList_func.h"
 
-LONG NL_GetSelects(struct NLData *data, UNUSED Object *obj, LONG ent)
+LONG NL_GetSelects(struct NLData *data, LONG ent)
 {
   LONG selects = 0L;
 
@@ -73,7 +73,7 @@ LONG NL_GetSelects(struct NLData *data, UNUSED Object *obj, LONG ent)
 
 
 //$$$ARRAY+
-BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
+BOOL NL_InsertTmpLine(struct NLData *data,LONG pos)
 {
   LONG newpos, ent, ent1, maxent;
 
@@ -143,7 +143,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
         { set_Active(data->NList_Active + 1);
           NL_Changed(data,data->NList_Active);
         }
-        UnSelectCharSel(obj,data,FALSE);
+        UnSelectCharSel(data,FALSE);
         return (TRUE);
       }
 
@@ -191,7 +191,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
         NL_Changed(data,data->NList_Active);
       }
 
-      UnSelectCharSel(obj,data,FALSE);
+      UnSelectCharSel(data,FALSE);
 
       return (TRUE);
     }
@@ -201,7 +201,7 @@ BOOL NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos)
 
 
 //$$$ARRAY+
-void NL_DeleteTmpLine(struct NLData *data,Object *obj,LONG pos)
+void NL_DeleteTmpLine(struct NLData *data,LONG pos)
 {
   LONG ent = pos;
 
@@ -250,7 +250,7 @@ void NL_DeleteTmpLine(struct NLData *data,Object *obj,LONG pos)
 
     data->EntriesArray[ent] = NULL;
 
-    UnSelectCharSel(obj,data,FALSE);
+    UnSelectCharSel(data,FALSE);
   }
 }
 
@@ -272,7 +272,8 @@ static int NL_SortCompar(struct NLData *data,LONG ent1,LONG ent2)
   if (data->EntriesArray[ent2]->Wrap & TE_Wrap_TmpLine)
     ent2 -= data->EntriesArray[ent2]->dnum;
   if (ent1 != ent2)
-  { result = NList_Compare(data->this,data,data->EntriesArray[ent1]->Entry,data->EntriesArray[ent2]->Entry);
+  {
+    result = NList_Compare(data,data->EntriesArray[ent1]->Entry,data->EntriesArray[ent2]->Entry);
     if (!result)
       result = ent1 - ent2;
   }
@@ -292,7 +293,7 @@ static int sort_compar(struct sort_entry *e1, struct sort_entry *e2)
 //$$$ARRAY+
 //fent = first entry
 //lent = last entry
-static ULONG NL_List_SortPart(Object *obj,struct NLData *data,LONG fent,LONG lent)
+static ULONG NL_List_SortPart(struct NLData *data,LONG fent,LONG lent)
 {
   LONG ent, ent1, numfollow, numexch, has_changed;
   struct sort_entry  *entry = NULL;
@@ -376,22 +377,22 @@ static ULONG NL_List_SortPart(Object *obj,struct NLData *data,LONG fent,LONG len
 }
 
 
-ULONG NL_List_Sort(Object *obj,struct NLData *data)
+ULONG NL_List_Sort(struct NLData *data)
 {
   LONG has_changed;
 
-  has_changed = NL_List_SortPart(obj,data,0,data->NList_Entries-1);
+  has_changed = NL_List_SortPart(data,0,data->NList_Entries-1);
 
   if (has_changed || data->do_wwrap)
   {
     data->sorted = TRUE;
     Make_Active_Visible;
-    UnSelectCharSel(obj,data,FALSE);
+    UnSelectCharSel(data,FALSE);
     if (has_changed)
     { DO_NOTIFY(NTF_Select | NTF_LV_Select);
     }
     if (data->do_wwrap)
-      NL_DoWrapAll(obj,data,TRUE,FALSE);
+      NL_DoWrapAll(data,TRUE,FALSE);
     data->do_updatesb = TRUE;
     REDRAW;
   }
@@ -402,18 +403,19 @@ ULONG NL_List_Sort(Object *obj,struct NLData *data)
 
 
 //$$$ARRAY+
-static ULONG NL_List_SortMore(Object *obj,struct NLData *data,LONG newpos)
+static ULONG NL_List_SortMore(struct NLData *data,LONG newpos)
 {
   LONG has_changed=0,fent,ment,lent;
   int comp;
   struct TypeEntry *newentry;
 
   if (newpos < data->NList_Entries-1)
-    has_changed = NL_List_SortPart(obj,data,newpos,data->NList_Entries-1);
+    has_changed = NL_List_SortPart(data,newpos,data->NList_Entries-1);
   fent = 0;
 
   while (newpos < data->NList_Entries)
-  { lent = newpos;
+  {
+    lent = newpos;
     while (fent < lent)
     { ment = (fent+lent)/2;
       comp = NL_SortCompar(data,newpos,ment);
@@ -433,10 +435,12 @@ static ULONG NL_List_SortMore(Object *obj,struct NLData *data,LONG newpos)
 
 
       if ((data->NList_Active >= lent) && (data->NList_Active < newpos))
-      { set_Active(data->NList_Active + 1);
+      {
+        set_Active(data->NList_Active + 1);
       }
       else if (data->NList_Active == newpos)
-      { set_Active(lent);
+      {
+        set_Active(lent);
       }
       NL_SegChanged(data,lent,newpos);
       data->NList_LastInserted = lent;
@@ -449,12 +453,12 @@ static ULONG NL_List_SortMore(Object *obj,struct NLData *data,LONG newpos)
   {
     data->sorted = TRUE;
     Make_Active_Visible;
-    UnSelectCharSel(obj,data,FALSE);
+    UnSelectCharSel(data,FALSE);
     if (has_changed)
     { DO_NOTIFY(NTF_Select | NTF_LV_Select);
     }
     if (data->do_wwrap)
-      NL_DoWrapAll(obj,data,TRUE,FALSE);
+      NL_DoWrapAll(data,TRUE,FALSE);
     data->do_updatesb = TRUE;
     REDRAW;
   }
@@ -463,16 +467,19 @@ static ULONG NL_List_SortMore(Object *obj,struct NLData *data,LONG newpos)
 
 
 //$$$ARRAY+
-ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LONG pos,LONG wrapcol,LONG align,ULONG flags)
+ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG wrapcol,LONG align,ULONG flags)
 {
   LONG newpos,count2;
   BOOL is_string = FALSE;
   char *string;
   wrapcol &= TE_Wrap_TmpMask;
   if (wrapcol)
-  { LONG wrapcol2 = 1;
+  {
+    LONG wrapcol2 = 1;
+
     while (wrapcol2 < TE_Wrap_TmpLine)
-    { if (wrapcol & wrapcol2)
+    {
+      if (wrapcol & wrapcol2)
         break;
       wrapcol2 = wrapcol2 << 1;
     }
@@ -491,7 +498,8 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
     	count = 0;
       while (entries[count] != NULL)
         count++;
-    } else if (count == -2)
+    }
+    else if (count == -2)
     {
     	is_string = TRUE;
       count = 1;
@@ -503,7 +511,8 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
         string++;
       }
       string = (char *) entries;
-    } else if (count > 0)
+    }
+    else if (count > 0)
     {
     	newpos = 0;
       while (newpos < count)
@@ -568,11 +577,14 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
           if (is_string)
             entries = (APTR *)(void*)&string;
           else
-          { while (!entries[ent2])
+          {
+            while (!entries[ent2])
               ent2++;
           }
 
-          { LONG de = newpos - ent1;
+          {
+            LONG de = newpos - ent1;
+
             if ((maxent - ent) < de)
               de = maxent - ent;
 
@@ -589,10 +601,11 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
             {
               data->EntriesArray[ent] = newentry;
 
-              newentry->Entry = (APTR) DoMethod( obj, MUIM_NList_Construct, entries[ent2], data->Pool );
+              newentry->Entry = (APTR) DoMethod(data->this, MUIM_NList_Construct, entries[ent2], data->Pool);
 
               if (newentry->Entry)
-              { newentry->Select = TE_Select_None;
+              {
+                newentry->Select = TE_Select_None;
                 newentry->Wrap = wrapcol;
                 newentry->PixLen = -1;
                 newentry->pos = 0;
@@ -602,7 +615,8 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
                 newentry->entpos = ent;
                 data->NList_LastInserted = ent;
                 DO_NOTIFY(NTF_Insert);
-                if(!(flags & MUIV_NList_Insert_Flag_Raw)) NL_SetColsAdd(obj,data,ent,FALSE);
+                if(!(flags & MUIV_NList_Insert_Flag_Raw))
+                  NL_SetColsAdd(data,ent,FALSE);
                 ent++;
               }
               else
@@ -628,7 +642,9 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
             }
           }
 
-          { LONG de = nlentries - ent1;
+          {
+            LONG de = nlentries - ent1;
+
             if ((maxent - ent) < de)
               de = maxent - ent;
 
@@ -652,8 +668,8 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
           count -= count2;
 
 					/* TODO: This stuff here can be merged with the stuff below */
-          GetNImage_End(obj,data);
-          GetNImage_Sizes(obj,data);
+          GetNImage_End(data);
+          GetNImage_Sizes(data);
           if (count > 0)
           {
           	if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
@@ -667,21 +683,23 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
               NL_Changed(data,data->NList_Active);
             }
 
-            UnSelectCharSel(obj,data,FALSE);
+            UnSelectCharSel(data,FALSE);
             if (wrapcol)
               data->do_wwrap = TRUE;
             if (pos == MUIV_NList_Insert_Sorted)
             {
 	          	int needs_redraw;
 
-	            NL_SetCols(obj,data);
+	            NL_SetCols(data);
 
 							/* NL_List_SortXXX returns wheather sorting has changed anything
 							 * and redraws the entries. If sorting hasn't changed anything
 							 * we still have to redraw the list, because there are new entries
 							 * in the list */
-	            if (data->sorted) needs_redraw = !NL_List_SortMore(obj,data,newpos);
-	            else needs_redraw = !NL_List_Sort(obj,data);
+	            if (data->sorted)
+                needs_redraw = !NL_List_SortMore(data,newpos);
+	            else
+                needs_redraw = !NL_List_Sort(data);
 
 							if (needs_redraw)
 							{
@@ -689,7 +707,8 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
 							}
             }
             else
-            { Make_Active_Visible;
+            {
+              Make_Active_Visible;
               data->do_updatesb = TRUE;
               data->sorted = FALSE;
               REDRAW;
@@ -729,7 +748,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
           {
             data->EntriesArray[ent] = newentry;
 
-            newentry->Entry = (APTR) DoMethod( obj, MUIM_NList_Construct, entries[ent2], data->Pool );
+            newentry->Entry = (APTR) DoMethod(data->this, MUIM_NList_Construct, entries[ent2], data->Pool);
 
             if (newentry->Entry)
             {
@@ -743,7 +762,8 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
               newentry->entpos = ent;
               data->NList_LastInserted = ent;
               DO_NOTIFY(NTF_Insert);
-              if(!(flags & MUIV_NList_Insert_Flag_Raw)) NL_SetColsAdd(obj,data,ent,FALSE);
+              if(!(flags & MUIV_NList_Insert_Flag_Raw))
+                NL_SetColsAdd(data,ent,FALSE);
               ent++;
             }
             else
@@ -776,37 +796,39 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
           //D(bug( "Moving %ld entries (from %ld to %ld).\n", data->NList_Entries-ent, ent+count2, ent ));
         }
 
-        GetNImage_End(obj,data);
-        GetNImage_Sizes(obj,data);
-
+        GetNImage_End(data);
+        GetNImage_Sizes(data);
 
         if (count > 0)
         {
         	if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
-          {
           	NL_SegChanged(data,newpos,data->NList_Entries);
-          }
-          else data->NList_AffFirst += count;
+          else
+            data->NList_AffFirst += count;
+
           if ((data->NList_Active >= newpos) && (data->NList_Active < data->NList_Entries))
           {
           	set_Active(data->NList_Active + count);
             NL_Changed(data,data->NList_Active);
           }
-          UnSelectCharSel(obj,data,FALSE);
-          if (wrapcol) data->do_wwrap = TRUE;
+          UnSelectCharSel(data,FALSE);
+          if (wrapcol)
+            data->do_wwrap = TRUE;
 
           if (pos == MUIV_NList_Insert_Sorted)
           {
           	int needs_redraw;
 
-            NL_SetCols(obj,data);
+            NL_SetCols(data);
 
 						/* NL_List_SortXXX returns wheather sorting has changed anything
 						 * and redraws the entries. If sorting hasn't changed anything
 						 * we still have to redraw the list, because there are new entries
 						 * in the list */
-            if (data->sorted) needs_redraw = !NL_List_SortMore(obj,data,newpos);
-            else needs_redraw = !NL_List_Sort(obj,data);
+            if (data->sorted)
+              needs_redraw = !NL_List_SortMore(data,newpos);
+            else
+              needs_redraw = !NL_List_Sort(data);
 
 						if (needs_redraw)
 						{
@@ -830,7 +852,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
 }
 
 
-ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG wrapcol,LONG align)
+ULONG NL_List_Replace(struct NLData *data,APTR entry,LONG pos,LONG wrapcol,LONG align)
 {
   ULONG result = FALSE;
   LONG ent;
@@ -906,21 +928,21 @@ ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG w
   if(entry != NULL && ent >= 0 && ent < data->NList_Entries)
   {
     // duplicate the given entry
-    entry = (APTR)DoMethod(obj, MUIM_NList_Construct, entry, data->Pool);
+    entry = (APTR)DoMethod(data->this, MUIM_NList_Construct, entry, data->Pool);
 
     if(entry != NULL)
     {
       data->display_ptr = NULL;
-      NL_SetColsRem(obj,data,ent);
+      NL_SetColsRem(data,ent);
 
       if(data->EntriesArray[ent]->Wrap && !(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine) && data->EntriesArray[ent]->len >= 0)
-        data->EntriesArray[ent]->pos = (WORD) NL_GetSelects(data,obj,ent);
+        data->EntriesArray[ent]->pos = (WORD) NL_GetSelects(data,ent);
       else
         data->EntriesArray[ent]->pos = 0;
 
       /* I don't understand this line but... ;) */
       if(!(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-        DoMethod( obj, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool );
+        DoMethod(data->this, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool);
 
       data->EntriesArray[ent]->Entry = entry;
       data->EntriesArray[ent]->Wrap = wrapcol;
@@ -931,9 +953,9 @@ ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG w
       data->EntriesArray[ent]->entpos = ent;
       data->NList_LastInserted = ent;
       DO_NOTIFY(NTF_Insert);
-      NL_SetColsAdd(obj,data,ent,TRUE);
+      NL_SetColsAdd(data,ent,TRUE);
       NL_Changed(data,ent);
-      UnSelectCharSel(obj,data,FALSE);
+      UnSelectCharSel(data,FALSE);
 
       if(wrapcol != 0)
         data->do_wwrap = TRUE;
@@ -946,7 +968,7 @@ ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG w
       result = TRUE;
     }
     else
-      result = NL_List_Remove(data,obj,ent);
+      result = NL_List_Remove(data,ent);
   }
 
   RETURN(result);
@@ -955,12 +977,12 @@ ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG w
 
 
 //$$$ARRAY+
-ULONG NL_List_Clear(struct NLData *data,Object *obj)
+ULONG NL_List_Clear(struct NLData *data)
 {
   LONG ent = data->NList_Entries - 1;
   DONE_NOTIFY(NTF_Select | NTF_LV_Select);
   data->display_ptr = NULL;
-  NL_SetColsRem(obj,data,-2);
+  NL_SetColsRem(data,-2);
 
   if (data->EntriesArray)
   {
@@ -970,19 +992,8 @@ ULONG NL_List_Clear(struct NLData *data,Object *obj)
       {
         DO_NOTIFY(NTF_Select | NTF_LV_Select);
       }
-#if 0
-      /*$$$Sensei*/
-      if (data->NList_DestructHook && !(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-      {
-        if (data->NList_DestructHook2)
-          MyCallHookPktA(obj,data->NList_DestructHook,data->EntriesArray[ent]->Entry,data->Pool);
-        else
-          MyCallHookPkt(obj,TRUE,data->NList_DestructHook,data->Pool,data->EntriesArray[ent]->Entry);
-      }
-#else
       if (!(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-          DoMethod( obj, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool );
-#endif
+          DoMethod(data->this, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool);
       FreeTypeEntry(data->EntriesArray[ent]);
       ent--;
     }
@@ -1017,8 +1028,8 @@ ULONG NL_List_Clear(struct NLData *data,Object *obj)
   set_Active(MUIV_NList_Active_Off);
   data->lastselected = MUIV_NList_Active_Off;
   data->lastactived = MUIV_NList_Active_Off;
-  UnSelectCharSel(obj,data,FALSE);
-  NL_SetColsAdd(obj,data,-1,TRUE);
+  UnSelectCharSel(data,FALSE);
+  NL_SetColsAdd(data,-1,TRUE);
   data->do_parse = data->do_setcols = data->do_updatesb = data->do_wwrap = TRUE;
   data->moves = FALSE;
   REDRAW_ALL;
@@ -1029,7 +1040,7 @@ ULONG NL_List_Clear(struct NLData *data,Object *obj)
 
 
 //$$$ARRAY+
-ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
+ULONG NL_List_Remove(struct NLData *data,LONG pos)
 {
   LONG ent,ent2,skip,nlentries;
   if (pos == MUIV_NList_Remove_First)
@@ -1057,7 +1068,7 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
     ent2 = ent + data->EntriesArray[ent]->dnum;
 
     if (data->NList_Entries <= 1)
-      return (NL_List_Clear(data,obj));
+      return NL_List_Clear(data);
 
     skip = FALSE;
     nlentries = data->NList_Entries;
@@ -1068,20 +1079,10 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
       if (data->EntriesArray[ent]->Wrap)
         data->do_wwrap = TRUE;
 
-      NL_SetColsRem(obj,data,ent);
+      NL_SetColsRem(data,ent);
 
-#if 0
-      /* $$$Sensei */
-      if (data->NList_DestructHook && !(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-      { if (data->NList_DestructHook2)
-          MyCallHookPktA(obj,data->NList_DestructHook,data->EntriesArray[ent]->Entry,data->Pool);
-        else
-          MyCallHookPkt(obj,TRUE,data->NList_DestructHook,data->Pool,data->EntriesArray[ent]->Entry);
-      }
-#else
       if (!(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-          DoMethod( obj, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool );
-#endif
+          DoMethod(data->this, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool);
 
       DONE_NOTIFY(NTF_Select | NTF_LV_Select);
 
@@ -1099,10 +1100,14 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
         data->NList_AffFirst--;
 
       if (data->NList_Active == ent)
-      { DO_NOTIFY(NTF_Active | NTF_L_Active);
+      {
+        DO_NOTIFY(NTF_Active | NTF_L_Active);
+
         if (data->NList_MultiSelect == MUIV_NList_MultiSelect_None)
-        { if (ent+1 <= nlentries)
-          { if (data->EntriesArray[ent+1]->Select == TE_Select_None)
+        {
+          if (ent+1 <= nlentries)
+          {
+            if (data->EntriesArray[ent+1]->Select == TE_Select_None)
               skip = TRUE;
             SELECT(ent+1,TE_Select_Line);
             data->lastselected = ent;
@@ -1115,10 +1120,12 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
           }
         }
         else
-        { if ((ent+1 <= nlentries) &&
+        {
+          if ((ent+1 <= nlentries) &&
               (select == TE_Select_Line) &&
               (data->EntriesArray[ent+1]->Select == TE_Select_None))
-          { if (data->EntriesArray[ent+1]->Select == TE_Select_None)
+          {
+            if (data->EntriesArray[ent+1]->Select == TE_Select_None)
               skip = TRUE;
             SELECT(ent+1,TE_Select_Line);
             data->lastselected = ent;
@@ -1127,17 +1134,20 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
           else if ((ent-1 >= 0) &&
                    (select == TE_Select_Line) &&
                    (data->EntriesArray[ent-1]->Select == TE_Select_None))
-          { SELECT(ent-1,TE_Select_Line);
+          {
+            SELECT(ent-1,TE_Select_Line);
             data->lastselected = ent-1;
             data->lastactived = ent-1;
           }
         }
       }
       else if (data->NList_Active > ent)
-      { set_Active(data->NList_Active - 1);
+      {
+        set_Active(data->NList_Active - 1);
       }
       if (data->NList_Active >= nlentries)
-      { set_Active(nlentries - 1);
+      {
+        set_Active(nlentries - 1);
       }
 
       FreeTypeEntry(data->EntriesArray[ent]);
@@ -1148,7 +1158,8 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
       data->EntriesArray[ent] = NULL;
 
       if (pos == MUIV_NList_Remove_Selected)
-      { if (skip)
+      {
+        if (skip)
           ent = ent2;
         else
           ent = ent2 - 1;
@@ -1156,7 +1167,8 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
         while ((ent < nlentries) && (data->EntriesArray[ent]->Select == TE_Select_None))
           ent++;
         if ((ent >= 0) && (ent < nlentries))
-        { if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
+        {
+          if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
             ent -= data->EntriesArray[ent]->dnum;
           ent2 = ent + data->EntriesArray[ent]->dnum;
         }
@@ -1170,7 +1182,7 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
 
     data->NList_Entries = nlentries;
     if (data->NList_Entries <= 0)
-      return (NL_List_Clear(data,obj));
+      return NL_List_Clear(data);
 
 	/*
     if (data->NList_Entries < ((data->LastEntry/2) & ~0x000FL))
@@ -1192,12 +1204,13 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
 	*/
 
     if ((data->NList_First > 0) && (data->NList_First + data->NList_Visible >= data->NList_Entries))
-    { data->NList_First = data->NList_Entries - data->NList_Visible;
+    {
+      data->NList_First = data->NList_Entries - data->NList_Visible;
       if (data->NList_First < 0)
         data->NList_First = 0;
       DO_NOTIFY(NTF_First);
     }
-    UnSelectCharSel(obj,data,FALSE);
+    UnSelectCharSel(data,FALSE);
     Make_Active_Visible;
     data->do_updatesb = TRUE;
     REDRAW;
@@ -1209,11 +1222,12 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
 }
 
 
-ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
+ULONG NL_List_Exchange(struct NLData *data,LONG pos1,LONG pos2)
 {
   LONG ent1, ent2;
   switch (pos1)
-  { case MUIV_NList_Exchange_Top:
+  {
+    case MUIV_NList_Exchange_Top:
       ent1 = 0;
       break;
     case MUIV_NList_Exchange_Bottom:
@@ -1229,8 +1243,10 @@ ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
   if ((ent1 >= 0) && (ent1 < data->NList_Entries) && (data->EntriesArray[ent1]->Wrap & TE_Wrap_TmpLine))
     ent1 -= data->EntriesArray[ent1]->dnum;
   if ((ent1 >= 0) && (ent1 < data->NList_Entries))
-  { switch (pos2)
-    { case MUIV_NList_Exchange_Top:
+  {
+    switch (pos2)
+    {
+      case MUIV_NList_Exchange_Top:
         ent2 = 0;
         break;
       case MUIV_NList_Exchange_Bottom:
@@ -1252,12 +1268,15 @@ ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
     if ((ent2 >= 0) && (ent2 < data->NList_Entries) && (data->EntriesArray[ent2]->Wrap & TE_Wrap_TmpLine))
       ent2 -= data->EntriesArray[ent2]->dnum;
     if ((ent2 >= 0) && (ent2 < data->NList_Entries) && (ent1 != ent2))
-    { struct TypeEntry *newentry;
+    {
+      struct TypeEntry *newentry;
+
       data->display_ptr = NULL;
 
       newentry = data->EntriesArray[ent1];
       if (data->EntriesArray[ent1]->Wrap && !(data->EntriesArray[ent1]->Wrap & TE_Wrap_TmpLine) && (data->EntriesArray[ent1]->len >= 0))
-      { newentry->pos = (WORD) NL_GetSelects(data,obj,ent1);
+      {
+        newentry->pos = (WORD) NL_GetSelects(data,ent1);
         newentry->len = -1;
         data->do_wwrap = TRUE;
       }
@@ -1265,7 +1284,8 @@ ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
       data->EntriesArray[ent1] = data->EntriesArray[ent2];
       data->EntriesArray[ent1]->entpos = ent1;
       if (data->EntriesArray[ent2]->Wrap && !(data->EntriesArray[ent2]->Wrap & TE_Wrap_TmpLine) && (data->EntriesArray[ent2]->len >= 0))
-      { data->EntriesArray[ent1]->pos = (WORD) NL_GetSelects(data,obj,ent2);
+      {
+        data->EntriesArray[ent1]->pos = (WORD) NL_GetSelects(data,ent2);
         data->EntriesArray[ent1]->len = -1;
         data->do_wwrap = TRUE;
       }
@@ -1274,18 +1294,20 @@ ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
       data->EntriesArray[ent2]->entpos = ent2;
 
       if (data->NList_Active == ent1)
-      { set_Active(ent2);
+      {
+        set_Active(ent2);
       }
       else if (data->NList_Active == ent2)
-      { set_Active(ent1);
+      {
+        set_Active(ent1);
       }
       if ((ent1 >= data->NList_First) && (ent1 < data->NList_First+data->NList_Visible))
         NL_Changed(data,ent1);
       if ((ent2 >= data->NList_First) && (ent2 < data->NList_First+data->NList_Visible))
         NL_Changed(data,ent2);
-      UnSelectCharSel(obj,data,FALSE);
+      UnSelectCharSel(data,FALSE);
       Make_Active_Visible;
-      NL_DoWrapAll(obj,data,FALSE,FALSE);
+      NL_DoWrapAll(data,FALSE,FALSE);
       data->do_updatesb = TRUE;
       data->sorted = FALSE;
       REDRAW;
@@ -1298,7 +1320,7 @@ ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
 
 
 //$$$ARRAY+
-ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
+ULONG NL_List_Move_Selected(struct NLData *data,LONG to)
 {
   LONG num_sel = 0;
   long first,last,ent,ent2,ent3,act,act2,dest;
@@ -1306,14 +1328,19 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
 
   first = last = -1;
   if (!data->NList_TypeSelect)
-  { ent = 0;
+  {
+    ent = 0;
     while (ent < data->NList_Entries)
-    { if (data->EntriesArray[ent]->Select != TE_Select_None)
-      { if (data->EntriesArray[ent]->Wrap)
-        { if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
+    {
+      if (data->EntriesArray[ent]->Select != TE_Select_None)
+      {
+        if (data->EntriesArray[ent]->Wrap)
+        {
+          if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
             ent -= data->EntriesArray[ent]->dnum;
           if (data->EntriesArray[ent]->Wrap && (data->EntriesArray[ent]->len >= 0))
-          { data->EntriesArray[ent]->pos = (WORD) NL_GetSelects(data,obj,ent);
+          {
+            data->EntriesArray[ent]->pos = (WORD) NL_GetSelects(data,ent);
             data->EntriesArray[ent]->len = -1;
             data->do_wwrap = TRUE;
           }
@@ -1325,7 +1352,8 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
           num_sel++;
           ent++;
           while ((ent < data->NList_Entries) && (ent < last) && (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-          { data->EntriesArray[ent]->Select = TE_Select_Line;
+          {
+            data->EntriesArray[ent]->Select = TE_Select_Line;
             data->EntriesArray[ent]->dnum = ent - ent2;
             num_sel++;
             ent++;
@@ -1334,7 +1362,8 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
           last = ent - 1;
         }
         else
-        { if (first == -1)
+        {
+          if (first == -1)
             first = ent;
           last = ent;
           num_sel++;
@@ -1346,7 +1375,8 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
     }
   }
   else
-  { first = data->sel_pt[data->min_sel].ent;
+  {
+    first = data->sel_pt[data->min_sel].ent;
     last = data->sel_pt[data->max_sel].ent;
     if ((data->sel_pt[data->max_sel].column == 0) && (data->sel_pt[data->max_sel].xoffset == PMIN))
       last--;
@@ -1363,10 +1393,12 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
   if (num_sel <= 0)
     return (TRUE);
   else if (num_sel == 1)
-    return (NL_List_Move(data,obj,last,to));
+    return NL_List_Move(data,last,to);
   else
-  { switch (to)
-    { case MUIV_NList_Move_Top:
+  {
+    switch (to)
+    {
+      case MUIV_NList_Move_Top:
         dest = 0;
         break;
       case MUIV_NList_Move_Bottom:
@@ -1385,8 +1417,10 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
       dest -= data->EntriesArray[dest]->dnum;
 
     if ((last-first+1 == num_sel) && (first <= dest) && (dest <= last+1))
-    { if (data->do_wwrap)
-      { NL_DoWrapAll(obj,data,FALSE,FALSE);
+    {
+      if (data->do_wwrap)
+      {
+        NL_DoWrapAll(data,FALSE,FALSE);
         REDRAW;
       }
       return (TRUE);
@@ -1400,7 +1434,8 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
       act2 = MUIV_NList_Active_Off;
 
       while (ent < data->NList_Entries)
-      { if ((!data->NList_TypeSelect && (data->EntriesArray[ent]->Select != TE_Select_None)) ||
+      {
+        if ((!data->NList_TypeSelect && (data->EntriesArray[ent]->Select != TE_Select_None)) ||
             (data->NList_TypeSelect && (ent >= first) && (ent <= last)))
         {
           if (dest > ent2)
@@ -1414,10 +1449,12 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
           ent3++;
         }
         else
-        { data->EntriesArray[ent2] = data->EntriesArray[ent];
+        {
+          data->EntriesArray[ent2] = data->EntriesArray[ent];
           data->EntriesArray[ent2]->entpos = ent2;
           if (data->EntriesArray[ent]->Wrap && !(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine) && (data->EntriesArray[ent]->len >= 0))
-          { data->EntriesArray[ent2]->pos = (WORD) NL_GetSelects(data,obj,ent);
+          {
+            data->EntriesArray[ent2]->pos = (WORD) NL_GetSelects(data,ent);
             data->EntriesArray[ent2]->len = -1;
             data->do_wwrap = TRUE;
           }
@@ -1426,22 +1463,27 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
         ent++;
       }
       if (act2 >= 0)
-      { set_Active(dest + act2);
+      {
+        set_Active(dest + act2);
       }
       else if (act >= dest)
-      { set_Active(act + ent3);
+      {
+        set_Active(act + ent3);
       }
       else
-      { set_Active(act);
+      {
+        set_Active(act);
       }
       data->NList_LastInserted = dest;
       DO_NOTIFY(NTF_Insert);
       ent2--;
       while (ent2 >= dest)
-      { data->EntriesArray[ent2+ent3] = data->EntriesArray[ent2];
+      {
+        data->EntriesArray[ent2+ent3] = data->EntriesArray[ent2];
         data->EntriesArray[ent2+ent3]->entpos = ent2+ent3;
         if (data->EntriesArray[ent2]->Wrap && !(data->EntriesArray[ent2]->Wrap & TE_Wrap_TmpLine) && (data->EntriesArray[ent2]->len >= 0))
-        { data->EntriesArray[ent2+ent3]->pos = (WORD) NL_GetSelects(data,obj,ent2);
+        {
+          data->EntriesArray[ent2+ent3]->pos = (WORD) NL_GetSelects(data,ent2);
           data->EntriesArray[ent2+ent3]->len = -1;
           data->do_wwrap = TRUE;
         }
@@ -1458,16 +1500,17 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
         last = dest+ent3;
 
       NL_SegChanged(data,first,last);
-      UnSelectCharSel(obj,data,FALSE);
+      UnSelectCharSel(data,FALSE);
       Make_Active_Visible;
-      NL_DoWrapAll(obj,data,FALSE,FALSE);
+      NL_DoWrapAll(data,FALSE,FALSE);
       data->do_updatesb = TRUE;
       REDRAW;
 /*      do_notifies(NTF_AllChanges|NTF_MinMax);*/
       return (TRUE);
     }
     else if (data->do_wwrap)
-    { NL_DoWrapAll(obj,data,FALSE,FALSE);
+    {
+      NL_DoWrapAll(data,FALSE,FALSE);
       REDRAW;
     }
   }
@@ -1476,12 +1519,12 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
 
 
 //$$$ARRAY+
-ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
+ULONG NL_List_Move(struct NLData *data,LONG from,LONG to)
 {
   LONG ent1, ent2;
 
   if(from == MUIV_NList_Move_Selected)
-    return NL_List_Move_Selected(data, obj, to);
+    return NL_List_Move_Selected(data, to);
 
   switch(from)
   {
@@ -1552,7 +1595,7 @@ ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
 
         if(data->EntriesArray[ent1]->Wrap != 0 && isFlagClear(data->EntriesArray[ent1]->Wrap, TE_Wrap_TmpLine) && data->EntriesArray[ent1]->len >= 0)
         {
-          newentry->pos = (WORD)NL_GetSelects(data, obj, ent1);
+          newentry->pos = (WORD)NL_GetSelects(data, ent1);
           newentry->len = -1;
           data->do_wwrap = TRUE;
         }
@@ -1580,7 +1623,7 @@ ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
 
         if(data->EntriesArray[ent1]->Wrap != 0 && isFlagClear(data->EntriesArray[ent1]->Wrap, TE_Wrap_TmpLine) && data->EntriesArray[ent1]->len >= 0)
         {
-          newentry->pos = (WORD)NL_GetSelects(data, obj, ent1);
+          newentry->pos = (WORD)NL_GetSelects(data, ent1);
           newentry->len = -1;
           data->do_wwrap = TRUE;
         }
@@ -1603,9 +1646,9 @@ ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
         DO_NOTIFY(NTF_Insert);
       }
       data->sorted = FALSE;
-      UnSelectCharSel(obj, data, FALSE);
+      UnSelectCharSel(data, FALSE);
       Make_Active_Visible;
-      NL_DoWrapAll(obj, data, FALSE, FALSE);
+      NL_DoWrapAll(data, FALSE, FALSE);
       data->do_updatesb = TRUE;
       REDRAW;
 /*      do_notifies(NTF_AllChanges|NTF_MinMax);*/
@@ -1621,7 +1664,7 @@ IPTR mNL_List_Sort(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_Sort
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_Sort(obj,data));
+  return (NL_List_Sort(data));
 }
 
 
@@ -1633,7 +1676,7 @@ IPTR mNL_List_Sort2(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort2 *msg)
   else
     data->NList_SortType = msg->sort_type;
   set(obj,MUIA_NList_SortType,data->NList_SortType);
-  return (NL_List_Sort(obj,data));
+  return (NL_List_Sort(data));
 }
 
 
@@ -1663,7 +1706,7 @@ IPTR mNL_List_Sort3(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort3 *msg)
       set(obj,MUIA_NList_SortType2,data->NList_SortType2);
     }
   }
-  return (NL_List_Sort(obj,data));
+  return (NL_List_Sort(data));
 }
 
 
@@ -1671,7 +1714,7 @@ IPTR mNL_List_Insert(struct IClass *cl,Object *obj,struct  MUIP_NList_Insert *ms
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_Insert(data,obj,msg->entries,msg->count,msg->pos,NOWRAP,ALIGN_LEFT,msg->flags));
+  return (NL_List_Insert(data,msg->entries,msg->count,msg->pos,NOWRAP,ALIGN_LEFT,msg->flags));
 }
 
 
@@ -1680,7 +1723,7 @@ IPTR mNL_List_InsertSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_Inse
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   if (msg->entry)
-    return (NL_List_Insert(data,obj,&(msg->entry),1,msg->pos,NOWRAP,ALIGN_LEFT,0));
+    return (NL_List_Insert(data,&(msg->entry),1,msg->pos,NOWRAP,ALIGN_LEFT,0));
   return (0);
 }
 
@@ -1689,7 +1732,7 @@ IPTR mNL_List_InsertWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_Insert
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_Insert(data,obj,msg->entries,msg->count,msg->pos,msg->wrapcol,msg->align & ALIGN_MASK,msg->flags));
+  return (NL_List_Insert(data,msg->entries,msg->count,msg->pos,msg->wrapcol,msg->align & ALIGN_MASK,msg->flags));
 }
 
 
@@ -1698,7 +1741,7 @@ IPTR mNL_List_InsertSingleWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   if (msg->entry)
-    return (NL_List_Insert(data,obj,&(msg->entry),1,msg->pos,msg->wrapcol,msg->align & ALIGN_MASK,0));
+    return (NL_List_Insert(data,&(msg->entry),1,msg->pos,msg->wrapcol,msg->align & ALIGN_MASK,0));
   return (0);
 }
 
@@ -1707,7 +1750,7 @@ IPTR mNL_List_ReplaceSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_Rep
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_Replace(data,obj,msg->entry,msg->pos,msg->wrapcol,msg->align & ALIGN_MASK));
+  return (NL_List_Replace(data,msg->entry,msg->pos,msg->wrapcol,msg->align & ALIGN_MASK));
 }
 
 
@@ -1715,7 +1758,7 @@ IPTR mNL_List_Exchange(struct IClass *cl,Object *obj,struct MUIP_NList_Exchange 
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_Exchange(data,obj,msg->pos1,msg->pos2));
+  return (NL_List_Exchange(data,msg->pos1,msg->pos2));
 }
 
 
@@ -1723,7 +1766,7 @@ IPTR mNL_List_Move(struct IClass *cl,Object *obj,struct MUIP_NList_Move *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_Move(data,obj,msg->from,msg->to));
+  return (NL_List_Move(data,msg->from,msg->to));
 }
 
 
@@ -1731,7 +1774,7 @@ IPTR mNL_List_Clear(struct IClass *cl, Object *obj, UNUSED struct MUIP_NList_Cle
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_Clear(data,obj));
+  return (NL_List_Clear(data));
 }
 
 
@@ -1739,7 +1782,7 @@ IPTR mNL_List_Remove(struct IClass *cl,Object *obj,struct MUIP_NList_Remove *msg
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  return (NL_List_Remove(data,obj,msg->pos));
+  return (NL_List_Remove(data,msg->pos));
 }
 
 
@@ -1949,22 +1992,27 @@ IPTR mNL_DragFinish(struct IClass *cl,Object *obj,struct MUIP_DragFinish *msg)
 
 IPTR mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   LONG ent = data->NList_DropMark;
+
   if (data->NList_Disabled)
     return (0);
+
   if (data->NList_DragSortable && (msg->obj==obj) && (ent >= 0) && (data->marktype & MUIV_NList_DropType_Mask))
-  { LONG li,res;
+  {
+    LONG li,res;
     if ((data->marktype & MUIV_NList_DropType_Mask) == MUIV_NList_DropType_Below)
       ent++;
     li = data->NList_LastInserted;
     data->NList_LastInserted = -1;
-    res = NL_List_Move_Selected(data,obj,ent);
+    res = NL_List_Move_Selected(data,ent);
     if (data->NList_LastInserted >= 0)
-    { DO_NOTIFY(NTF_DragSortInsert);
+    {
+      DO_NOTIFY(NTF_DragSortInsert);
     }
     else
       data->NList_LastInserted = li;
+
     return ((ULONG)res);
   }
   return(0);

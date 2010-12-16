@@ -718,7 +718,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
      (tag = FindTagItem(MUIA_List_Format, taglist)))
   {
     data->NList_Format = (char *) tag->ti_Data;
-    if (!NL_Read_Format(obj,data,(char *) tag->ti_Data,(tag->ti_Tag == MUIA_List_Format)))
+    if (!NL_Read_Format(data,(char *) tag->ti_Data,(tag->ti_Tag == MUIA_List_Format)))
     {
       CoerceMethod(cl, obj, OM_DISPOSE);
       return(0);
@@ -727,14 +727,14 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   else
   {
     data->NList_Format = NULL;
-    if (!NL_Read_Format(obj,data, (char *)"",FALSE))
+    if (!NL_Read_Format(data, (char *)"",FALSE))
     {
       CoerceMethod(cl, obj, OM_DISPOSE);
       return(0);
     }
   }
 
-  if (!NeedAffInfo(obj,data,AFFINFOS_START_MAX))
+  if (!NeedAffInfo(data,AFFINFOS_START_MAX))
   {
     CoerceMethod(cl, obj, OM_DISPOSE);
     return(0);
@@ -879,7 +879,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     data->NList_TitleMark2 = (LONG) tag->ti_Data;
 
   if((tag = FindTagItem(MUIA_NList_Columns, taglist)))
-    NL_Columns(obj,data,(BYTE *) tag->ti_Data);
+    NL_Columns(data,(BYTE *) tag->ti_Data);
 
   if((tag = FindTagItem(MUIA_NList_KeyUpFocus, taglist)))
     data->NList_KeyUpFocus = (Object *)tag->ti_Data;
@@ -942,43 +942,43 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   {
     struct MUIP_NList_InsertWrap *ins = (struct MUIP_NList_InsertWrap *) tag->ti_Data;
 
-    NL_List_Insert(data,obj,ins->entries,ins->count,ins->pos,ins->wrapcol,ins->align & ALIGN_MASK,0);
+    NL_List_Insert(data,ins->entries,ins->count,ins->pos,ins->wrapcol,ins->align & ALIGN_MASK,0);
 
     if(data->NList_Entries > 0)
       data->NList_SourceArray = 1;
 
     if((tag = FindTagItem(MUIA_NList_First, taglist)))
-      NL_List_First(obj,data,(long) tag->ti_Data,tag);
+      NL_List_First(data,(long) tag->ti_Data,tag);
 
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
-      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
+      NL_List_Active(data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
   }
   else if((tag = FindTagItem(MUIA_NList_SourceString, taglist)) && tag->ti_Data)
   {
-    NL_List_Insert(data,obj,(APTR *) tag->ti_Data,-2,MUIV_NList_Insert_Bottom,0,0,0);
+    NL_List_Insert(data,(APTR *) tag->ti_Data,-2,MUIV_NList_Insert_Bottom,0,0,0);
 
     if(data->NList_Entries > 0)
       data->NList_SourceArray = 1;
 
     if((tag = FindTagItem(MUIA_NList_First, taglist)))
-      NL_List_First(obj,data,(long) tag->ti_Data,tag);
+      NL_List_First(data,(long) tag->ti_Data,tag);
 
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
-      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
+      NL_List_Active(data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
   }
   else if((tag = FindTagItem(MUIA_NList_SourceArray, taglist)) ||
           (tag = FindTagItem(MUIA_List_SourceArray, taglist)))
   {
-    NL_List_Insert(data,obj,(APTR *) tag->ti_Data,-1,MUIV_NList_Insert_Bottom,0,0,0);
+    NL_List_Insert(data,(APTR *) tag->ti_Data,-1,MUIV_NList_Insert_Bottom,0,0,0);
 
     if(data->NList_Entries > 0)
       data->NList_SourceArray = 1;
 
     if((tag = FindTagItem(MUIA_NList_First, taglist)))
-      NL_List_First(obj,data,(long) tag->ti_Data,tag);
+      NL_List_First(data,(long) tag->ti_Data,tag);
 
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
-      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
+      NL_List_Active(data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
   }
 
   if((tag = FindTagItem(MUIA_NList_IgnoreSpecialChars, taglist)))
@@ -1007,20 +1007,21 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
   data->NList_Quiet = 1;
   data->SETUP = 3;
 
-  NL_List_Clear(data,obj);
+  NL_List_Clear(data);
 
   data->format_chge = data->do_draw_all = data->do_draw_title = data->do_draw_active = data->do_draw = FALSE;
   data->do_parse = data->do_images = data->do_setcols = data->do_updatesb = data->do_wwrap = data->force_wwrap = FALSE;
   data->Notify = data->DoNotify = data->Notifying = 0;
 
   if (data->MenuObj)
-  { MUI_DisposeObject(data->MenuObj);
+  {
+    MUI_DisposeObject(data->MenuObj);
     data->MenuObj = NULL;
   }
 
-  DeleteNImages2(obj,data);
+  DeleteNImages2(data);
 
-  DeleteNImages(obj,data);
+  DeleteNImages(data);
 
   if (data->NList_UseImages)
     FreeVecPooled(data->Pool, data->NList_UseImages);
@@ -1028,9 +1029,9 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
   data->NList_UseImages = NULL;
   data->LastImage = 0;
 
-  FreeAffInfo(obj,data);
+  FreeAffInfo(data);
 
-  NL_Free_Format(obj,data);
+  NL_Free_Format(data);
 
   if(data->EntryPool != NULL)
   {
@@ -1073,7 +1074,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   if (data->NList_AdjustWidth)
     data->NList_AdjustWidth = -1;
 
-  GetImages(obj,data);
+  GetImages(data);
 
   data->SETUP = TRUE;
 
@@ -1120,10 +1121,15 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
       data->InUseFont = OpenDiskFont(&myta);
     }
     if (data->InUseFont)
-    { notdoset(obj,MUIA_Font,data->InUseFont);   /*_font(obj) = data->InUseFont;*/ }
+    {
+      notdoset(obj,MUIA_Font,data->InUseFont);
+      /*_font(obj) = data->InUseFont;*/
+    }
     else
-    { notdoset(obj,MUIA_Font,fonttmp); }
-    NL_SetColsRem(obj,data,-2);
+    {
+      notdoset(obj,MUIA_Font,fonttmp);
+    }
+    NL_SetColsRem(data,-2);
   }
 
   if (!(DoSuperMethodA(cl,obj,(Msg) msg)))
@@ -1470,7 +1476,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   data->ScrollBarsTime = -1;
 
   if (LIBVER(GfxBase) >= 39)
-    NL_CreateImages(obj,data);
+    NL_CreateImages(data);
   else
     data->ScrollBarsPos = -3;
 
@@ -1546,7 +1552,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   DoMethod(_app(obj),MUIM_Application_AddInputHandler,&data->ihnode);
 
-/*  GetNImage_Sizes(obj,data);*/
+/*  GetNImage_Sizes(data);*/
 
   data->pad2 = FALSE;
 
@@ -1586,7 +1592,7 @@ IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
   // thing to do while we a cleaning up ourselves.
   data->SETUP = FALSE;
 
-  NL_DeleteImages(obj,data);
+  NL_DeleteImages(data);
 
   if (data->NList_Keys && (data->NList_Keys != default_keys))
   {

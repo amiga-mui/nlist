@@ -5,6 +5,16 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-12-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/all: LOTS of code clean up. For some very obscure reason Gilles
+    decided to pass a pointer to the object and its instance data to all called
+    functions, although the instance data already carry a pointer to the object
+    and many deeply nested function don't need the object pointer at all. This
+    caused lots of stack space to be wasted for no good reason and made NList
+    much slower than necessary due to the additional overhead of passing unused
+    parameters.
+
 2010-12-10 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: implemented construct, destruct, compare and

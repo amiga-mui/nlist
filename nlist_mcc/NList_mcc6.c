@@ -40,8 +40,9 @@
 
 #include "NList_func.h"
 
-WORD DrawTitle(Object *obj,struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
+WORD DrawTitle(struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
 {
+  Object *obj = data->this;
   WORD linelen = 3;
 #ifdef DO_CLIPPING
   APTR clippinghandle;
@@ -66,14 +67,15 @@ WORD DrawTitle(Object *obj,struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
                                    (LONG) maxx-minx,(LONG) data->vdtitleheight,
                                    (LONG) minx + hfirst + data->vdx,(LONG) data->vdtitlepos + data->vdy,(LONG) 0);
   if (data->NList_TitleSeparator)
-  { SetAPen(data->rp,data->pens[MPEN_SHADOW]);
+  {
+    SetAPen(data->rp,data->pens[MPEN_SHADOW]);
     Move(data->rp, minx, data->vpos - 2);
     Draw(data->rp, maxx-1, data->vpos - 2);
     SetAPen(data->rp,data->pens[MPEN_SHINE]);
     Move(data->rp, minx, data->vpos - 1);
     Draw(data->rp, maxx-1, data->vpos - 1);
   }
-  linelen = DrawText(obj,data,-1,data->hpos - hfirst,data->vdtitlepos + data->voff,minx,maxx,MUIPEN(data->NList_TitlePen),data->hinc,FALSE);
+  linelen = DrawText(data,-1,data->hpos - hfirst,data->vdtitlepos + data->voff,minx,maxx,MUIPEN(data->NList_TitlePen),data->hinc,FALSE);
   data->do_draw_title = FALSE;
 #ifdef DO_CLIPPING
   MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
@@ -82,8 +84,9 @@ WORD DrawTitle(Object *obj,struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
 }
 
 
-void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
+void DrawOldLine(struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
 {
+  Object *obj = data->this;
   ULONG mypen;
   BOOL forcepen = FALSE;
   BOOL drawtxt;
@@ -152,7 +155,7 @@ void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WO
 
     DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert1,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
     if (drawtxt)
-      DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
+      DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
   }
 #ifdef DO_CLIPPING
   MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
@@ -160,8 +163,9 @@ void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WO
 }
 
 
-WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfirst,WORD hmax,WORD small,BOOL do_extrems,WORD not_all)
+WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfirst,WORD hmax,WORD small,BOOL do_extrems,WORD not_all)
 {
+  Object *obj = data->this;
   LONG ent,ent2,ent3,ent4,dent,lim1,lim2,lim3;
   WORD cursel,linelen=0;
   ULONG mypen;
@@ -353,7 +357,7 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
         if (!data->NList_First_Incr || do_extrems || ((ent > data->NList_First) && (ent < data->NList_First + data->NList_Visible)))
 #endif
         {
-          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
+          linelen = DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
           if(linelen > hmax)
             hmax = linelen;
         }
@@ -450,17 +454,17 @@ WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG ma
         if (x1 < x2)
         {
           mypen = data->NList_ListPen;
-          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x1,x2-1,MUIPEN(mypen),0,FALSE);
+          linelen = DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,x1,x2-1,MUIPEN(mypen),0,FALSE);
         }
         if (x2 < x3)
         {
           mypen = data->NList_CursorPen;
-          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x2,x3-1,MUIPEN(mypen),0,data->ForcePen);
+          linelen = DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,x2,x3-1,MUIPEN(mypen),0,data->ForcePen);
         }
         if (x3 < x4)
         {
           mypen = data->NList_ListPen;
-          linelen = DrawText(obj,data,ent,data->hpos-hfirst,vert1+data->voff,x3,x4-1,MUIPEN(mypen),0,FALSE);
+          linelen = DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,x3,x4-1,MUIPEN(mypen),0,FALSE);
         }
         if (linelen > hmax)
           hmax = linelen;
@@ -554,12 +558,14 @@ static ULONG myTextFit( struct RastPort *rp, STRPTR string, unsigned long strLen
 #define MPEN_HALFSHADOW 3
 */
 
-void NL_DrawTitleMark( Object *obj, struct NLData *data, LONG xf, WORD yf )
+void NL_DrawTitleMark(struct NLData *data, LONG xf, WORD yf)
 {
   APTR clippinghandle = NULL;
+  Object *obj = data->this;
 
   if (!data->NList_PartialChar)
-  { clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) data->vleft,(WORD) data->vtop,
+  {
+    clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) data->vleft,(WORD) data->vtop,
                                             (WORD) data->vwidth,(WORD) data->vheight);
   }
 
@@ -642,17 +648,20 @@ void NL_DrawTitleMark( Object *obj, struct NLData *data, LONG xf, WORD yf )
   }
 
   if (!data->NList_PartialChar)
-  { MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
+  {
+    MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
   }
 }
 
 
-void NL_DrawTitleMark2( Object *obj, struct NLData *data, LONG xf, WORD yf )
+void NL_DrawTitleMark2(struct NLData *data, LONG xf, WORD yf)
 {
+  Object *obj = data->this;
   APTR clippinghandle = NULL;
 
   if (!data->NList_PartialChar)
-  { clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) data->vleft,(WORD) data->vtop,
+  {
+    clippinghandle = MUI_AddClipping(muiRenderInfo(obj),(WORD) data->vleft,(WORD) data->vtop,
                                             (WORD) data->vwidth,(WORD) data->vheight);
   }
 
@@ -725,13 +734,15 @@ void NL_DrawTitleMark2( Object *obj, struct NLData *data, LONG xf, WORD yf )
   }
 
   if (!data->NList_PartialChar)
-  { MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
+  {
+    MUI_RemoveClipping(muiRenderInfo(obj),clippinghandle);
   }
 }
 
 
-LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,LONG dxpermit,BOOL forcepen)
+LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,LONG dxpermit,BOOL forcepen)
 {
+  Object *obj = data->this;
   /*register*/ struct colinfo *cinfo;
   /*register*/ struct affinfo *afinfo;
   LONG linelen, next_x=0, x2, x2s, x2e, minx2, maxx2, minx3, maxx3, cmaxx;
@@ -761,7 +772,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     SetDrMd(data->rp,JAM1);
   }
 
-  NL_GetDisplayArray(obj,data,ent);
+  NL_GetDisplayArray(data,ent);
 
   xbar = x + data->cols[0].c->minx - 8;
 
@@ -812,12 +823,12 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     if ((ent == -1) && IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark & MUIV_NList_TitleMark_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark(obj,data,xbar-1,ybar);
+      NL_DrawTitleMark(data,xbar-1,ybar);
     }
     else if ((ent == -1) && IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark2 & MUIV_NList_TitleMark2_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark2(obj,data,xbar-1,ybar);
+      NL_DrawTitleMark2(data,xbar-1,ybar);
     }
 */
     if (minx2 < data->mleft - data->NList_PartialChar)
@@ -845,8 +856,8 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     if (DontDoColumn(data,ent,column))
       continue;
 
-    ParseColumn(obj,data,column,mypen);
-    WidthColumn(obj,data,column,0);
+    ParseColumn(data,column,mypen);
+    WidthColumn(data,column,0);
 
     if (IS_HLINE(cinfo->style))
     {
@@ -952,7 +963,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
       }
     }
 
-/*    WidthColumn(obj,data,column,0);*/
+/*    WidthColumn(data,column,0);*/
 
     x2 += cinfo->xoffset;
 
@@ -1324,22 +1335,22 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     if ((ent == -1) && IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark & MUIV_NList_TitleMark_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark(obj,data,xbar-1,ybar);
+      NL_DrawTitleMark(data,xbar-1,ybar);
     }
     else if ((ent == -1) && IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark2 & MUIV_NList_TitleMark2_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark2(obj,data,xbar-1,ybar);
+      NL_DrawTitleMark2(data,xbar-1,ybar);
     }
     if ((ent == -1) && !IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark & MUIV_NList_TitleMark_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark(obj,data,next_x+6,ybar);
+      NL_DrawTitleMark(data,next_x+6,ybar);
     }
     else if ((ent == -1) && !IS_BAR(column,cinfo) &&
         ((data->NList_TitleMark2 & MUIV_NList_TitleMark2_ColMask) == cinfo->col))
     {
-      NL_DrawTitleMark2(obj,data,next_x+6,ybar);
+      NL_DrawTitleMark2(data,next_x+6,ybar);
     }
   }
   SetSoftStyle(data->rp, 0, STYLE_MASK);
@@ -1347,7 +1358,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
 }
 
 
-static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *rp,LONG ent,LONG col,UNUSED LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,BOOL draw)
+static LONG DrawEntryTextOnly(struct NLData *data,struct RastPort *rp,LONG ent,LONG col,UNUSED LONG x,LONG y,LONG minx,LONG maxx,ULONG mypen,BOOL draw)
 {
   struct colinfo *cinfo;
   struct affinfo *afinfo;
@@ -1357,9 +1368,9 @@ static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *r
   struct TextExtent te;
   WORD curclen, dcurclen, ni;
 
-  NL_GetDisplayArray(obj,data,ent);
+  NL_GetDisplayArray(data,ent);
 
-  column = NL_ColToColumn(obj,data,col);
+  column = NL_ColToColumn(data,col);
   if (column < 0)
     return (0);
 
@@ -1367,8 +1378,8 @@ static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *r
 
   if (!DontDoColumn(data,ent,column))
   {
-    ParseColumn(obj,data,column,mypen);
-    WidthColumn(obj,data,column,0);
+    ParseColumn(data,column,mypen);
+    WidthColumn(data,column,0);
     x2 = 1;
     pen = mypen;
 
@@ -1437,17 +1448,21 @@ static LONG DrawEntryTextOnly(Object *obj,struct NLData *data,struct RastPort *r
 }
 
 
-LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
+LONG DrawDragText(struct NLData *data,BOOL draw)
 {
+  Object *obj = data->this;
   struct TextExtent te;
   struct RastPort *rp;
   LONG curclen,x,w;
+
   if (draw)
     rp = data->DragRPort;
   else
     rp = data->rp;
   if (rp && data->DragText)
-  { char *text = data->DragText;
+  {
+    char *text = data->DragText;
+
     x = 0;
     if (draw)
     {
@@ -1470,7 +1485,8 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
       if (LIBVER(GfxBase) >= 39)
         SetABPenDrMd(data->DragRPort,MUIPEN(data->NList_CursorPen),data->pens[MPEN_BACKGROUND],JAM1);
       else
-      { SetAPen(data->DragRPort,MUIPEN(data->NList_CursorPen));
+      {
+        SetAPen(data->DragRPort,MUIPEN(data->NList_CursorPen));
         SetBPen(data->DragRPort,data->pens[MPEN_BACKGROUND]);
         SetDrMd(data->DragRPort,JAM1);
       }
@@ -1494,7 +1510,9 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
     return (w);
   }
   else if (rp && (data->DragEntry >= 0) && (data->NList_DragColOnly >= 0))
-  { LONG ent = data->DragEntry;
+  {
+    LONG ent = data->DragEntry;
+
     if (draw)
     {
       data->DragText = NULL;
@@ -1514,7 +1532,7 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
       _width(obj) = data->width;
       _height(obj) = data->height;
     }
-    w = DrawEntryTextOnly(obj,data,rp,ent,data->NList_DragColOnly,0,data->voff,0,data->DragWidth,MUIPEN(data->NList_CursorPen),draw);
+    w = DrawEntryTextOnly(data,rp,ent,data->NList_DragColOnly,0,data->voff,0,data->DragWidth,MUIPEN(data->NList_CursorPen),draw);
     if (w > data->DragWidth)
       w = data->DragWidth;
     return (w);
@@ -1527,7 +1545,7 @@ LONG DrawDragText(Object *obj,struct NLData *data,BOOL draw)
 }
 
 
-void DisposeDragRPort(UNUSED Object *obj,struct NLData *data)
+void DisposeDragRPort(struct NLData *data)
 {
   if(data->DragRPort != NULL)
   {
@@ -1561,8 +1579,10 @@ void DisposeDragRPort(UNUSED Object *obj,struct NLData *data)
 }
 
 
-struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,LONG first,LONG last)
+struct RastPort *CreateDragRPort(struct NLData *data,LONG numlines,LONG first,LONG last)
 {
+  Object *obj = data->this;
+
   if(last >= first)
   {
     data->DragWidth = data->mwidth;
@@ -1609,7 +1629,7 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
         data->DragEntry = first;
       }
 
-      data->DragWidth = DrawDragText(obj, data, FALSE);
+      data->DragWidth = DrawDragText(data, FALSE);
     }
   }
 
