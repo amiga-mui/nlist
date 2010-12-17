@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-12-18 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: use Exec functions to navigate within a list on
+    AmigaOS4 and AROS.
+
 2010-12-16 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/all: LOTS of code clean up. For some very obscure reason Gilles
