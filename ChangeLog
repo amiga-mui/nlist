@@ -10,6 +10,7 @@ $URL$
   * nlisttree_mcc/NListtree.c: use Exec functions to navigate within a list on
     AmigaOS4 and AROS.
   * nlist_mcc/misc: removed some OS2.x compatibility code.
+  * nbalance_mcc/misc: removed some OS2.x compatibility code.
 
 2010-12-16 Thore Böckelmann <tboeckel@gmx.de>
 
