@@ -1475,10 +1475,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   data->ScrollBars = 0;
   data->ScrollBarsTime = -1;
 
-  if (LIBVER(GfxBase) >= 39)
-    NL_CreateImages(data);
-  else
-    data->ScrollBarsPos = -3;
+  NL_CreateImages(data);
 
   data->drawsuper = FALSE;
   data->format_chge = 1;

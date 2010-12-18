@@ -1353,15 +1353,9 @@ IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 IPTR mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDraw *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
 
-  if (LIBVER(GfxBase) >= 39)
-    SetABPenDrMd(data->rp,data->pens[MPEN_SHINE],data->pens[MPEN_SHADOW],JAM2);
-  else
-  { SetAPen(data->rp,data->pens[MPEN_SHINE]);
-    SetBPen(data->rp,data->pens[MPEN_SHADOW]);
-    SetDrMd(data->rp,JAM2);
-  }
+  SetABPenDrMd(data->rp,data->pens[MPEN_SHINE],data->pens[MPEN_SHADOW],JAM2);
   SetDrPt(data->rp,0xF0F0);
   if ((msg->type & MUIV_NList_DropType_Mask) == MUIV_NList_DropType_Above)
   { Move(data->rp, msg->minx, msg->miny);
@@ -1382,13 +1376,8 @@ IPTR mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDraw *msg)
     Draw(data->rp, msg->maxx, msg->maxy);
   }
   SetDrPt(data->rp,(UWORD)~0);
-  if (LIBVER(GfxBase) >= 39)
-    SetABPenDrMd(data->rp,data->pens[MPEN_TEXT],data->pens[MPEN_BACKGROUND],JAM1);
-  else
-  { SetAPen(data->rp,data->pens[MPEN_TEXT]);
-    SetBPen(data->rp,data->pens[MPEN_BACKGROUND]);
-    SetDrMd(data->rp,JAM1);
-  }
+  SetABPenDrMd(data->rp,data->pens[MPEN_TEXT],data->pens[MPEN_BACKGROUND],JAM1);
+
   return(0);
 }
 

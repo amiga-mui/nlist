@@ -389,15 +389,12 @@ static void disposeBitMapImage(struct NLData *data,struct BitMapImage *bmimg)
     }
     if (bmimg->obtainpens)
     {
-      if (LIBVER(GfxBase) >= 39)
+      ktr = 0;
+      while (bmimg->obtainpens[ktr] != -3)
       {
-        ktr = 0;
-        while (bmimg->obtainpens[ktr] != -3)
-        {
-          if ((bmimg->obtainpens[ktr] >= 0) || (bmimg->obtainpens[ktr] < -3))
-            ReleasePen(_screen(data->this)->ViewPort.ColorMap, (ULONG) bmimg->obtainpens[ktr]);
-          ktr++;
-        }
+        if ((bmimg->obtainpens[ktr] >= 0) || (bmimg->obtainpens[ktr] < -3))
+          ReleasePen(_screen(data->this)->ViewPort.ColorMap, (ULONG) bmimg->obtainpens[ktr]);
+        ktr++;
       }
       FreeVecPooled(data->Pool, bmimg->obtainpens);
     }
@@ -650,52 +647,18 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
                 else if (obtainpens[mypen] == -1)
                 {
                   mycolor = &CI_BM_SourceColors[mypen*3];
-                  if (LIBVER(GfxBase) >= 39)
+
+                  obtainpens[mypen] = (WORD) ObtainBestPen(_screen(data->this)->ViewPort.ColorMap,
+                                                           mycolor[0],mycolor[1],mycolor[2],
+                                                           OBP_Precision, CI_BM_Precision,
+                                                           TAG_END);
+                  if (obtainpens[mypen] == -1)
                   {
                     obtainpens[mypen] = (WORD) ObtainBestPen(_screen(data->this)->ViewPort.ColorMap,
                                                              mycolor[0],mycolor[1],mycolor[2],
-                                                             OBP_Precision, CI_BM_Precision,
+                                                             OBP_Precision, PRECISION_GUI,
                                                              TAG_END);
-                    if (obtainpens[mypen] == -1)
-                    {
-                      obtainpens[mypen] = (WORD) ObtainBestPen(_screen(data->this)->ViewPort.ColorMap,
-                                                               mycolor[0],mycolor[1],mycolor[2],
-                                                               OBP_Precision, PRECISION_GUI,
-                                                               TAG_END);
-                    }
                   }
-                  else
-                  {
-                    ULONG coln,bestn;
-                    LONG col,colr,colg,colb,cr,cg,cb,coldiff,bestdiff;
-
-                    cr = (mycolor[0] >> 24) & 0x000000FF;
-                    cg = (mycolor[1] >> 24) & 0x000000FF;
-                    cb = (mycolor[2] >> 24) & 0x000000FF;
-                    coln = bestn = 0;
-                    coldiff = bestdiff = 1000000;
-                    col = 0;
-                    while (col >= 0)
-                    {
-                      col = GetRGB4(_screen(data->this)->ViewPort.ColorMap,coln);
-                      colr = ((col >> 4) & 0x000000F0) + 8;
-                      colg = ((col)      & 0x000000F0) + 8;
-                      colb = ((col << 4) & 0x000000F0) + 8;
-                      colr -= cr;
-                      colg -= cg;
-                      colb -= cb;
-                      coldiff = colr*colr + colg*colg + colb*colb;
-                      if (coldiff < bestdiff)
-                      {
-                        bestdiff = coldiff;
-                        bestn = coln;
-                      }
-                      coln++;
-                    }
-                    obtainpens[mypen] = bestn;
-                  }
-                  if (last_newnumpen < obtainpens[mypen])
-                    last_newnumpen = obtainpens[mypen];
                 }
                 bit1 = bit1 >> 1;
               }
