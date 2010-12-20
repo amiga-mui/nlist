@@ -11,6 +11,7 @@ $URL$
   * nlist_mcc/NList_mcc5.c: use the class pointer obtained during OM_NEW instead
     of getting it each time anew.
   * nlist_mcc/NList_mcc6.c: got rid of some V37 graphics.library bug workarounds.
+  * nlist_mcc/NList_mcc4.c: got rid of some V37 intuition.library limitations.
 
 2010-12-18 Thore Böckelmann <tboeckel@gmx.de>
 

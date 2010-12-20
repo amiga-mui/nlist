@@ -449,11 +449,7 @@ void ParseColumn(struct NLData *data,WORD column,ULONG mypen)
         else if (ptr1[0] == '8')
         { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[8]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == '9')
-        { if (LIBVER(IntuitionBase) >= 39)
-          { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[9]; SET_FIXPEN(style); } ptr1++; }
-          else
-          { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[2]; SET_FIXPEN(style); } ptr1++; }
-        }
+        { if (data->SHOW) { pen = _dri(data->this)->dri_Pens[9]; SET_FIXPEN(style); } ptr1++; }
         else if (ptr1[0] == 'T')
         { SET_HLINE_T(cinfo->style); SET_HLINE_T(style); ptr1++; }
         else if (ptr1[0] == 'C')
@@ -489,21 +485,25 @@ void ParseColumn(struct NLData *data,WORD column,ULONG mypen)
             while ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != ']'))
               np++;
             if (ptr1[np] == ']')
-            { if (np == np2)
+            {
+              if (np == np2)
               {
               }
               else if (ptr1[np2] == 'M')
-              { pnum = atol(&ptr1[np2+1]);
+              {
+                pnum = atol(&ptr1[np2+1]);
                 if ((pnum >= 0) && (pnum <= 8) && muiRenderInfo(data->this) && _pens(data->this))
                   data->HLINE_thick_pen = MUIPEN(_pens(data->this)[pnum]);
               }
               else if (ptr1[np2] == 'I')
-              { pnum = atol(&ptr1[np2+1]);
+              {
+                pnum = atol(&ptr1[np2+1]);
                 if ((pnum >= 0) && (pnum <= 11))
-                { if ((pnum >= 9) && LIBVER(IntuitionBase) >= 39)
+                {
+                  if (pnum >= 9)
                     pnum = 2;
                   if ((pnum >= 0) && muiRenderInfo(data->this) && _dri(data->this) && _dri(data->this)->dri_Pens)
-                  data->HLINE_thick_pen = _dri(data->this)->dri_Pens[pnum];
+                    data->HLINE_thick_pen = _dri(data->this)->dri_Pens[pnum];
                 }
               }
               else if (np < 8)
