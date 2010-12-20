@@ -658,12 +658,11 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
           if (data->do_draw_all)
           {
             ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-            struct IClass *realclass = OCLASS(data->this);
 
             data->nodraw++;
             OCLASS(data->this) = data->ncl;
             nnset(data->this,MUIA_Background,(IPTR)"0:128");
-            OCLASS(data->this) = realclass;
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
             muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
@@ -683,12 +682,11 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
         if (DoRefresh(data))
         {
           ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-          struct IClass *realclass = OCLASS(data->this);
 
           data->nodraw++;
           OCLASS(data->this) = data->ncl;
           nnset(data->this,MUIA_Background,(IPTR)"0:128");
-          OCLASS(data->this) = realclass;
+          OCLASS(data->this) = data->ocl;
           data->nodraw--;
           muiAreaData(data->this)->mad_Flags = mad_Flags;
           data->actbackground = -1;
@@ -705,12 +703,11 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
         if (DoRefresh(data))
         {
           ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-          struct IClass *realclass = OCLASS(data->this);
 
           data->nodraw++;
           OCLASS(data->this) = data->ncl;
           nnset(data->this,MUIA_Background,(IPTR)"0:128");
-          OCLASS(data->this) = realclass;
+          OCLASS(data->this) = data->ocl;
           data->nodraw--;
           muiAreaData(data->this)->mad_Flags = mad_Flags;
           data->actbackground = -1;
@@ -729,12 +726,11 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
           if (data->do_draw_all)
           {
             ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-            struct IClass *realclass = OCLASS(data->this);
 
             data->nodraw++;
             OCLASS(data->this) = data->ncl;
             nnset(data->this,MUIA_Background,(IPTR)"0:128");
-            OCLASS(data->this) = realclass;
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
             muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
@@ -756,12 +752,11 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
           if (data->do_draw_all)
           {
             ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-            struct IClass *realclass = OCLASS(data->this);
 
             data->nodraw++;
             OCLASS(data->this) = data->ncl;
             nnset(data->this,MUIA_Background,(IPTR)"0:128");
-            OCLASS(data->this) = realclass;
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
             muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
@@ -783,12 +778,11 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
           if (data->do_draw_all)
           {
             ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-            struct IClass *realclass = OCLASS(data->this);
 
             data->nodraw++;
             OCLASS(data->this) = data->ncl;
             nnset(data->this,MUIA_Background,(IPTR)"0:128");
-            OCLASS(data->this) = realclass;
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
             muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
@@ -813,12 +807,11 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
           if (data->do_draw_all)
           {
             ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-            struct IClass *realclass = OCLASS(data->this);
 
             data->nodraw++;
             OCLASS(data->this) = data->ncl;
             nnset(data->this,MUIA_Background,(IPTR)"0:128");
-            OCLASS(data->this) = realclass;
+            OCLASS(data->this) = data->ocl;
             data->nodraw--;
             muiAreaData(data->this)->mad_Flags = mad_Flags;
             data->actbackground = -1;
@@ -836,13 +829,12 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
 
       {
         ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-        struct IClass *realclass = OCLASS(data->this);
 
         data->actbackground = bg;
         data->nodraw++;
         OCLASS(data->this) = data->ncl;
         nnset(data->this,MUIA_Background,bg);
-        OCLASS(data->this) = realclass;
+        OCLASS(data->this) = data->ocl;
         data->nodraw--;
         muiAreaData(data->this)->mad_Flags = mad_Flags;
       }
@@ -853,18 +845,18 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
 
       {
         ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-        struct IClass *realclass = OCLASS(data->this);
 
         OCLASS(data->this) = data->ncl;
         if (bg == data->actbackground)
-        { data->nodraw++;
+        {
+          data->nodraw++;
           nnset(data->this,MUIA_Background,(IPTR)"0:128");
           data->nodraw--;
         }
         data->actbackground = bg;
         data->nodraw++;
         nnset(data->this,MUIA_Background,bg);
-        OCLASS(data->this) = realclass;
+        OCLASS(data->this) = data->ocl;
         data->nodraw--;
         muiAreaData(data->this)->mad_Flags = mad_Flags;
       }
@@ -873,12 +865,15 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
     case 9 :  /* Make_Active_Visible */
 
       if ((data->NList_AutoVisible) && (data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
-      { if (data->NList_Active < data->NList_First)
-        { data->NList_First = data->NList_Active;
+      {
+        if (data->NList_Active < data->NList_First)
+        {
+          data->NList_First = data->NList_Active;
           DO_NOTIFY(NTF_First);
         }
         else if (data->NList_Active >= data->NList_First + data->NList_Visible)
-        { data->NList_First = data->NList_Active - data->NList_Visible + 1;
+        {
+          data->NList_First = data->NList_Active - data->NList_Visible + 1;
           if (data->NList_First < 0)
             data->NList_First = 0;
           DO_NOTIFY(NTF_First);
