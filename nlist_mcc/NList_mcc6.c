@@ -540,18 +540,6 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
 
 
 
-static ULONG myTextFit( struct RastPort *rp, STRPTR string, unsigned long strLen,
-        struct TextExtent *textExtent, struct TextExtent *constrainingExtent,
-        long strDirection, unsigned long constrainingBitWidth,
-        unsigned long constrainingBitHeight )
-{
-  if ((LIBVER(GfxBase) == 37) && (rp->Font->tf_Flags & FPF_PROPORTIONAL))
-    constrainingBitWidth++;
-  return (TextFit(rp,string,strLen,textExtent,constrainingExtent,
-                 strDirection,constrainingBitWidth,constrainingBitHeight));
-}
-
-
 /*
 #define MPEN_HALFSHINE  1
 #define MPEN_BACKGROUND 2
@@ -1235,7 +1223,7 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
           /* skip most of unwanted chars on the right */
           if ((curclen > 0) && (x2e > maxx3))
           { dcurclen = te.te_Extent.MaxX - te.te_Width - te.te_Extent.MinX  +2;
-            curclen = myTextFit(data->rp, ptr1, curclen, &te, NULL,1,maxx3 - x2 + dcurclen,32000);
+            curclen = TextFit(data->rp, ptr1, curclen, &te, NULL,1,maxx3 - x2 + dcurclen,32000);
             if (curclen > 0)
             { TextExtent(data->rp, ptr1, curclen, &te);
               x2e = x2 + te.te_Width;
@@ -1244,7 +1232,7 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
           /* skip most of unwanted chars on the left */
           if ((curclen > 0) && (x2 < minx3))
           {
-            dcurclen = myTextFit(data->rp, ptr1, curclen, &te, NULL,1,minx3 - x2,32000);
+            dcurclen = TextFit(data->rp, ptr1, curclen, &te, NULL,1,minx3 - x2,32000);
             curclen -= dcurclen;
             if (curclen > 0)
             {
@@ -1454,7 +1442,7 @@ static LONG DrawEntryTextOnly(struct NLData *data,struct RastPort *rp,LONG ent,L
         { /* skip most of unwanted chars on the right */
           if ((curclen > 0) && (x2e > maxx))
           { dcurclen = te.te_Extent.MaxX - te.te_Width - te.te_Extent.MinX  +2;
-            curclen = myTextFit(rp, ptr1, curclen, &te, NULL,1,maxx - x2 + dcurclen,32000);
+            curclen = TextFit(rp, ptr1, curclen, &te, NULL,1,maxx - x2 + dcurclen,32000);
             if (curclen > 0)
             { TextExtent(rp, ptr1, curclen, &te);
               x2e = x2 + te.te_Width;
@@ -1528,7 +1516,7 @@ LONG DrawDragText(struct NLData *data,BOOL draw)
     }
     SetSoftStyle(rp, 0, STYLE_MASK);
     curclen = strlen(text);
-    curclen = myTextFit(rp, text, curclen, &te, NULL,1,data->DragWidth,32000);
+    curclen = TextFit(rp, text, curclen, &te, NULL,1,data->DragWidth,32000);
     if (te.te_Extent.MinX < 0)
       x -= te.te_Extent.MinX;
     w = te.te_Extent.MaxX - te.te_Extent.MinX;
