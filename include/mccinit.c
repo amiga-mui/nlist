@@ -1,7 +1,7 @@
 /*******************************************************************************
 
         Name:           mccinit.c
-        Versionstring:  $VER: mccinit.c 1.24 (05.10.2010)
+        Versionstring:  $VER: mccinit.c 1.25 (20.12.2010)
         Author:         Jens Langner <Jens.Langner@light-speed.de>
         Distribution:   PD (public domain)
         Description:    library init file for easy generation of a MUI
@@ -67,6 +67,7 @@
                      to be in A6. We work around this by using an additional
                      function which gets called from LibClose() and LibExpunge()
                      with the correct base pointer.
+  1.25  20.12.2010 : minimum required system version is now OS3.0 (V39).
 
  About:
 
@@ -715,19 +716,19 @@ STATIC ULONG mccLibInit(struct LibraryHeader *base)
   // now that this library/class is going to be initialized for the first time
   // we go and open all necessary libraries on our own
   #if defined(__amigaos4__)
-  if((DOSBase = OpenLibrary("dos.library", 36)) &&
+  if((DOSBase = OpenLibrary("dos.library", 39)) &&
      GETINTERFACE(IDOS, struct DOSIFace *, DOSBase))
-  if((GfxBase = OpenLibrary("graphics.library", 36)) &&
+  if((GfxBase = OpenLibrary("graphics.library", 39)) &&
      GETINTERFACE(IGraphics, struct GraphicsIFace *, GfxBase))
-  if((IntuitionBase = OpenLibrary("intuition.library", 36)) &&
+  if((IntuitionBase = OpenLibrary("intuition.library", 39)) &&
      GETINTERFACE(IIntuition, struct IntuitionIFace *, IntuitionBase))
-  if((UtilityBase = OpenLibrary("utility.library", 36)) &&
+  if((UtilityBase = OpenLibrary("utility.library", 39)) &&
      GETINTERFACE(IUtility, struct UtilityIFace *, UtilityBase))
   #else
-  if((DOSBase = (struct DosLibrary*)OpenLibrary("dos.library", 36)) &&
-     (GfxBase = (struct GfxBase*)OpenLibrary("graphics.library", 36)) &&
-     (IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 36)) &&
-     (UtilityBase = (APTR)OpenLibrary("utility.library", 36)))
+  if((DOSBase = (struct DosLibrary*)OpenLibrary("dos.library", 39)) &&
+     (GfxBase = (struct GfxBase*)OpenLibrary("graphics.library", 39)) &&
+     (IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 39)) &&
+     (UtilityBase = (APTR)OpenLibrary("utility.library", 39)))
   #endif
   {
     // we have to please the internal utilitybase

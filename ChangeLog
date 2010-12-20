@@ -12,6 +12,8 @@ $URL$
     of getting it each time anew.
   * nlist_mcc/NList_mcc6.c: got rid of some V37 graphics.library bug workarounds.
   * nlist_mcc/NList_mcc4.c: got rid of some V37 intuition.library limitations.
+  * include/mccinit.c, #?/library.c: raised the minimum required system version
+    to OS3.0.
 
 2010-12-18 Thore Böckelmann <tboeckel@gmx.de>
 
