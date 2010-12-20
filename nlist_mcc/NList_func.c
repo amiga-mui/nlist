@@ -1081,12 +1081,6 @@ BOOL NL_List_Horiz_First(struct NLData *data,LONG hf,struct TagItem *tag)
 }
 
 
-LONG NList_Compare(struct NLData *data,APTR s1,APTR s2)
-{
-	return( DoMethod( data->this, MUIM_NList_Compare, s1, s2, data->NList_SortType, data->NList_SortType2 ) );
-}
-
-
 ULONG NL_List_SelectChar(struct NLData *data,LONG pos,LONG seltype,LONG *state)
 {
   LONG ent,ent2;
@@ -1662,7 +1656,7 @@ IPTR mNL_List_Jump(struct IClass *cl, Object *obj, struct MUIP_NList_Jump *msg)
     DO_NOTIFY(NTF_First);
     REDRAW;
   }
- 
+
 /*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
 
   RETURN(TRUE);
@@ -2142,7 +2136,7 @@ static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos)
   ENTER();
 
   if(entry == NULL)
-  { 
+  {
     *pos = MUIV_NList_GetPos_End;
     result = FALSE;
   }
@@ -2160,9 +2154,9 @@ static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos)
     LONG ent = *pos + 1;
 
     while(ent < data->NList_Entries)
-    { 
+    {
       if(data->EntriesArray[ent]->Entry == entry)
-      { 
+      {
         *pos = ent;
 
         result = TRUE;

@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2010-12-20 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.c: removed an unneeded function.
+
 2010-12-18 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: use Exec functions to navigate within a list on

@@ -271,15 +271,17 @@ static int NL_SortCompar(struct NLData *data,LONG ent1,LONG ent2)
     ent1 -= data->EntriesArray[ent1]->dnum;
   if (data->EntriesArray[ent2]->Wrap & TE_Wrap_TmpLine)
     ent2 -= data->EntriesArray[ent2]->dnum;
-  if (ent1 != ent2)
+
+  if(ent1 != ent2)
   {
-    result = NList_Compare(data,data->EntriesArray[ent1]->Entry,data->EntriesArray[ent2]->Entry);
-    if (!result)
+    result = (LONG)DoMethod(data->this, MUIM_NList_Compare, data->EntriesArray[ent1]->Entry, data->EntriesArray[ent2]->Entry, data->NList_SortType, data->NList_SortType2);
+    if(result == 0)
       result = ent1 - ent2;
   }
   else
     result = e1 - e2;
-  return ((int) result);
+
+  return (int)result;
 }
 
 

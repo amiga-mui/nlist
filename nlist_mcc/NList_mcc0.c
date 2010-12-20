@@ -522,18 +522,17 @@ static IPTR mNL_List_Destruct( struct IClass *cl, Object *obj, struct MUIP_NList
 // Function directly stolen from original NList_Compare().
 static IPTR mNL_List_Compare( struct IClass *cl, Object *obj, struct MUIP_NList_Compare *msg )
 {
-	struct NLData	*data	= INST_DATA( cl, obj );
-	APTR	s1	= msg->entry1;
-	APTR	s2	= msg->entry2;
-	if( data->NList_CompareHook )
+	struct NLData *data = INST_DATA(cl, obj);
+
+	if(data->NList_CompareHook != NULL)
 	{
-		if( data->NList_CompareHook2 )
-			return ((IPTR) MyCallHookPktA(obj,data->NList_CompareHook,s1,s2,msg->sort_type1,msg->sort_type2));
+		if(data->NList_CompareHook2)
+			return (IPTR)MyCallHookPktA(obj, data->NList_CompareHook, msg->entry1, msg->entry2, msg->sort_type1, msg->sort_type2);
 		else
-			return ((IPTR) MyCallHookPkt(obj,TRUE,data->NList_CompareHook,s2,s1));
+			return (IPTR)MyCallHookPkt(obj, TRUE, data->NList_CompareHook, msg->entry2, msg->entry1);
 	}
 	else
-		return ((IPTR) Stricmp(s1,s2));
+		return (IPTR)Stricmp(msg->entry1, msg->entry2);
 }
 
 //$$$Sensei

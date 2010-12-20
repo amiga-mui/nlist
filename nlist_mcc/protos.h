@@ -117,7 +117,6 @@ extern void SelectSecondPoint(struct NLData *data,WORD x,WORD y);
 extern BOOL NL_List_First(struct NLData *data,LONG lf,struct TagItem *tag);
 extern BOOL NL_List_Active(struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame,ULONG flags);
 extern BOOL NL_List_Horiz_First(struct NLData *data,LONG hf,struct TagItem *tag);
-extern LONG NList_Compare(struct NLData *data,APTR s1,APTR s2);
 extern ULONG NL_List_SelectChar(struct NLData *data,LONG pos,LONG seltype,LONG *state);
 extern ULONG NL_List_Select(struct NLData *data,LONG pos,LONG pos2,LONG seltype,LONG *state);
 extern ULONG NL_List_TestPosOld(struct NLData *data,LONG x,LONG y,struct MUI_List_TestPos_Result *res);
