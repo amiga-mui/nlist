@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-01-02 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc5.c: removed a double check for a pending entry click
+    notification.
+
 2010-12-20 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func.c: removed an unneeded function.

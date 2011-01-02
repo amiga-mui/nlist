@@ -200,39 +200,39 @@ LONG NL_DoNotifies(struct NLData *data,LONG which)
 {
   if (data->NList_Quiet || data->NList_Disabled)
     return (TRUE);
+
   /* notify ButtonClick */
-  if (NEED_NOTIFY(NTF_ButtonClick) & which)
-  { DONE_NOTIFY(NTF_ButtonClick);
+  if(NEED_NOTIFY(NTF_ButtonClick) & which)
+  {
+    DONE_NOTIFY(NTF_ButtonClick);
     notdoset(data->this,MUIA_NList_ButtonClick,data->NList_ButtonClick);
   }
 
   /* notify TitleClick */
-  if (NEED_NOTIFY(NTF_TitleClick) & which)
-  { DONE_NOTIFY(NTF_TitleClick);
+  if(NEED_NOTIFY(NTF_TitleClick) & which)
+  {
+    DONE_NOTIFY(NTF_TitleClick);
     notdoset(data->this,MUIA_NList_TitleClick,data->TitleClick);
   }
 
   /* notify TitleClick2 */
-  if (NEED_NOTIFY(NTF_TitleClick2) & which)
-  { DONE_NOTIFY(NTF_TitleClick2);
+  if(NEED_NOTIFY(NTF_TitleClick2) & which)
+  {
+    DONE_NOTIFY(NTF_TitleClick2);
     notdoset(data->this,MUIA_NList_TitleClick2,data->TitleClick2);
   }
 
   /* notify EntryClick */
-  if (NEED_NOTIFY(NTF_EntryClick) & which)
-  { DONE_NOTIFY(NTF_EntryClick);
-    notdoset(data->this,MUIA_NList_EntryClick,data->click_line);
-  }
-
-  /* notify EntryClick */
-  if (NEED_NOTIFY(NTF_EntryClick) & which)
-  { DONE_NOTIFY(NTF_EntryClick);
+  if(NEED_NOTIFY(NTF_EntryClick) & which)
+  {
+    DONE_NOTIFY(NTF_EntryClick);
     notdoset(data->this,MUIA_NList_EntryClick,data->click_line);
   }
 
   /* notify Doubleclick */
-  if (NEED_NOTIFY(NTF_Doubleclick) & which)
-  { DONE_NOTIFY(NTF_Doubleclick);
+  if(NEED_NOTIFY(NTF_Doubleclick) & which)
+  {
+    DONE_NOTIFY(NTF_Doubleclick);
     notdoset(data->this,MUIA_NList_DoubleClick,data->click_line);
   }
 
@@ -246,40 +246,45 @@ LONG NL_DoNotifies(struct NLData *data,LONG which)
   }
 
   /* notify Multiclick */
-  if (NEED_NOTIFY(NTF_Multiclick) & which)
-  { DONE_NOTIFY(NTF_Multiclick);
+  if(NEED_NOTIFY(NTF_Multiclick) & which)
+  {
+    DONE_NOTIFY(NTF_Multiclick);
     notdoset(data->this,MUIA_NList_MultiClick,data->multiclick + 1);
   }
 
   /* notify Multiclick */
-  if (NEED_NOTIFY(NTF_MulticlickAlone) & which)
-  { DONE_NOTIFY(NTF_MulticlickAlone);
+  if(NEED_NOTIFY(NTF_MulticlickAlone) & which)
+  {
+    DONE_NOTIFY(NTF_MulticlickAlone);
     if (data->multiclickalone > 0)
       data->multiclickalone = -data->multiclickalone;
     notdoset(data->this,MUIA_NList_MultiClickAlone,-data->multiclickalone);
   }
 
   /* notify_Active */
-  if (NEED_NOTIFY(NTF_Active) & which)
-  { DONE_NOTIFY(NTF_Active);
+  if(NEED_NOTIFY(NTF_Active) & which)
+  {
+    DONE_NOTIFY(NTF_Active);
     NOTIFY_START(NTF_Active);
     notdoset(data->this,MUIA_NList_Active,data->NList_Active);
     NOTIFY_END(NTF_Active);
   }
-  if (NEED_NOTIFY(NTF_L_Active) & which)
-  { DONE_NOTIFY(NTF_L_Active);
+  if(NEED_NOTIFY(NTF_L_Active) & which)
+  {
+    DONE_NOTIFY(NTF_L_Active);
     NOTIFY_START(NTF_L_Active);
     notdoset(data->this,MUIA_List_Active,data->NList_Active);
     NOTIFY_END(NTF_L_Active);
   }
 
   /* notify_Select */
-  if (NEED_NOTIFY(NTF_Select) & which)
-  { DONE_NOTIFY(NTF_Select);
+  if(NEED_NOTIFY(NTF_Select) & which)
+  {
+    DONE_NOTIFY(NTF_Select);
     set(data->this,MUIA_NList_SelectChange,(LONG) TRUE);
   }
 
-  if (NEED_NOTIFY(NTF_LV_Select) & which)
+  if(NEED_NOTIFY(NTF_LV_Select) & which)
   {
     DONE_NOTIFY(NTF_LV_Select);
     if(data->listviewobj != NULL)
@@ -289,48 +294,56 @@ LONG NL_DoNotifies(struct NLData *data,LONG which)
   }
 
   /* notify first */
-  if (NEED_NOTIFY(NTF_First) & which)
-  { DONE_NOTIFY(NTF_First);
+  if(NEED_NOTIFY(NTF_First) & which)
+  {
+    DONE_NOTIFY(NTF_First);
     notdoset(data->this,MUIA_NList_First,data->NList_First);
   }
 
   /* notify entries */
-  if (NEED_NOTIFY(NTF_Entries) & which)
-  { DONE_NOTIFY(NTF_Entries);
+  if(NEED_NOTIFY(NTF_Entries) & which)
+  {
+    DONE_NOTIFY(NTF_Entries);
     notdoset(data->this,MUIA_NList_Entries,data->NList_Entries);
     notdoset(data->this,MUIA_List_Entries,data->NList_Entries);
   }
 
   /* notify LineHeight */
-  if (NEED_NOTIFY(NTF_LineHeight) & which)
-  { DONE_NOTIFY(NTF_LineHeight);
+  if(NEED_NOTIFY(NTF_LineHeight) & which)
+  {
+    DONE_NOTIFY(NTF_LineHeight);
     notdoset(data->this,MUIA_NList_LineHeight,data->vinc);
   }
 
   /* notify NTF_DragSortInsert */
-  if (NEED_NOTIFY(NTF_DragSortInsert) & which)
-  { DONE_NOTIFY(NTF_Insert|NTF_DragSortInsert);
+  if(NEED_NOTIFY(NTF_DragSortInsert) & which)
+  {
+    DONE_NOTIFY(NTF_Insert|NTF_DragSortInsert);
     notdoset(data->this,MUIA_NList_DragSortInsert,data->vinc);
   }
 
   /* notify Insert */
-  if (NEED_NOTIFY(NTF_Insert) & which)
-  { DONE_NOTIFY(NTF_Insert);
+  if(NEED_NOTIFY(NTF_Insert) & which)
+  {
+    DONE_NOTIFY(NTF_Insert);
     notdoset(data->this,MUIA_NList_InsertPosition,data->vinc);
   }
 
   /* notify minmax */
-  if (!data->do_wwrap && !data->force_wwrap &&
-      (ASKED_NOTIFY(NTF_MinMax) & which))
-  { DONE_NOTIFY(NTF_MinMax);
+  if(!data->do_wwrap && !data->force_wwrap &&
+     (ASKED_NOTIFY(NTF_MinMax) & which))
+  {
+    DONE_NOTIFY(NTF_MinMax);
     ForceMinMax;
   }
 
   /* notify columns */
-  if (NEED_NOTIFY(NTF_Columns) & which)
-  { DONE_NOTIFY(NTF_Columns);
+  if(NEED_NOTIFY(NTF_Columns) & which)
+  {
+    DONE_NOTIFY(NTF_Columns);
     notdoset(data->this,MUIA_NList_Columns,(IPTR) NL_Columns(data,NULL));
   }
+
   return (TRUE);
 }
 
