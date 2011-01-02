@@ -677,7 +677,8 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
           }
         }
         else if (data->NList_Input)
-        { data->NList_Input = FALSE;
+        {
+          data->NList_Input = FALSE;
           set_Active(MUIV_NList_Active_Off);
           NL_UnSelectAll(data,-1);
           nnset(data->this,MUIA_Frame, MUIV_Frame_ReadList);

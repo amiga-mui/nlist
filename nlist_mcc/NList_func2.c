@@ -132,15 +132,18 @@ BOOL NL_InsertTmpLine(struct NLData *data,LONG pos)
         data->EntriesArray = newentries;
         data->NList_Entries = ent;
         if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
-        { NL_SegChanged(data,newpos,data->NList_Entries);
+        {
+          NL_SegChanged(data,newpos,data->NList_Entries);
           data->do_draw = TRUE;
         }
         else
-        { data->NList_AffFirst += 1;
+        {
+          data->NList_AffFirst += 1;
           data->do_draw = TRUE;
         }
         if ((data->NList_Active >= newpos) && (data->NList_Active < data->NList_Entries))
-        { set_Active(data->NList_Active + 1);
+        {
+          set_Active(data->NList_Active + 1);
           NL_Changed(data,data->NList_Active);
         }
         UnSelectCharSel(data,FALSE);
@@ -178,16 +181,19 @@ BOOL NL_InsertTmpLine(struct NLData *data,LONG pos)
       data->NList_Entries += 1;
 
       if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
-      { NL_SegChanged(data,newpos,data->NList_Entries);
+      {
+        NL_SegChanged(data,newpos,data->NList_Entries);
         data->do_draw = TRUE;
       }
       else
-      { data->NList_AffFirst += 1;
+      {
+        data->NList_AffFirst += 1;
         data->do_draw = TRUE;
       }
 
       if ((data->NList_Active >= newpos) && (data->NList_Active < data->NList_Entries))
-      { set_Active(data->NList_Active + 1);
+      {
+        set_Active(data->NList_Active + 1);
         NL_Changed(data,data->NList_Active);
       }
 
@@ -205,43 +211,51 @@ void NL_DeleteTmpLine(struct NLData *data,LONG pos)
 {
   LONG ent = pos;
 
-  if ((ent >= 0) && (ent < data->NList_Entries) && data->EntriesArray && (data->LastEntry > 0) &&
-      (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
+  if((ent >= 0) && (ent < data->NList_Entries) && data->EntriesArray && (data->LastEntry > 0) &&
+     (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
   {
-    if ((data->NList_First >= pos) && (data->NList_First > 0))
+    if((data->NList_First >= pos) && (data->NList_First > 0))
       data->NList_First--;
     data->NList_Entries -= 1;
 
-    if ((ent >= data->NList_AffFirst) || data->NList_EntryValueDependent)
-    { NL_SegChanged(data,ent,data->NList_Entries + 1);
+    if((ent >= data->NList_AffFirst) || data->NList_EntryValueDependent)
+    {
+      NL_SegChanged(data,ent,data->NList_Entries + 1);
       data->do_draw = TRUE;
     }
     else
-    { data->NList_AffFirst--;
+    {
+      data->NList_AffFirst--;
       data->do_draw = TRUE;
     }
 
-    if (data->NList_Active == ent)
-    { DO_NOTIFY(NTF_Active | NTF_L_Active);
-      if (data->NList_MultiSelect == MUIV_NList_MultiSelect_None)
-      { if (ent+1 <= data->NList_Entries)
-        { if (data->EntriesArray[ent+1]->Select == TE_Select_None)
-          SELECT(ent+1,TE_Select_Line);
+    if(data->NList_Active == ent)
+    {
+      DO_NOTIFY(NTF_Active | NTF_L_Active);
+      if(data->NList_MultiSelect == MUIV_NList_MultiSelect_None)
+      {
+        if(ent+1 <= data->NList_Entries)
+        {
+          if(data->EntriesArray[ent+1]->Select == TE_Select_None)
+            SELECT(ent+1,TE_Select_Line);
           data->lastselected = ent;
           data->lastactived = ent;
         }
-        else if (ent-1 >= 0)
-        { SELECT(ent-1,TE_Select_Line);
+        else if(ent-1 >= 0)
+        {
+          SELECT(ent-1,TE_Select_Line);
           data->lastselected = ent-1;
           data->lastactived = ent-1;
         }
       }
     }
-    else if (data->NList_Active > ent)
-    { set_Active(data->NList_Active - 1);
+    else if(data->NList_Active > ent)
+    {
+      set_Active(data->NList_Active - 1);
     }
-    if (data->NList_Active >= data->NList_Entries)
-    { set_Active(data->NList_Entries - 1);
+    if(data->NList_Active >= data->NList_Entries)
+    {
+      set_Active(data->NList_Entries - 1);
     }
 
     FreeTypeEntry(data->EntriesArray[ent]);
@@ -346,8 +360,10 @@ static ULONG NL_List_SortPart(struct NLData *data,LONG fent,LONG lent)
         NL_Changed(data,ent);
         NL_Changed(data,ent1);
 
-        if (data->NList_Active == ent) set_Active(ent1);
-        else if (data->NList_Active == ent1) set_Active(ent);
+        if (data->NList_Active == ent)
+          set_Active(ent1);
+        else if (data->NList_Active == ent1)
+          set_Active(ent);
 
         if (data->NList_LastInserted == ent)
         {
@@ -681,7 +697,7 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
 
             if ((data->NList_Active >= newpos) && (data->NList_Active < data->NList_Entries))
             {
-            	set_Active(data->NList_Active + count);
+              set_Active(data->NList_Active + count);
               NL_Changed(data,data->NList_Active);
             }
 
@@ -810,7 +826,7 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
 
           if ((data->NList_Active >= newpos) && (data->NList_Active < data->NList_Entries))
           {
-          	set_Active(data->NList_Active + count);
+            set_Active(data->NList_Active + count);
             NL_Changed(data,data->NList_Active);
           }
           UnSelectCharSel(data,FALSE);

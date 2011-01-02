@@ -180,11 +180,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 */
 
   if (!data->SHOW || !data->DRAW)
-    return (0);
+    return 0;
   if (data->NList_First_Incr || data->NList_AffFirst_Incr)
     return (MUI_EventHandlerRC_Eat);
   if (data->NList_Disabled)
-    return (0);
+    return 0;
 
   if ((data->left != _left(obj)) || (data->top != _top(obj)) ||
       (data->width != _width(obj)) || (data->height != _height(obj)))
@@ -760,7 +760,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           // as clicks inside the list. But clicking on the border above the list's title
           // being interpreted like a click the first entry is not very intuitive. Thus
           // we restrict ourself to clicks really inside the object here.
-          if (msg->imsg->Code==SELECTDOWN && _isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
+          if(msg->imsg->Code == SELECTDOWN && _isinobject(msg->imsg->MouseX, msg->imsg->MouseY))
           {
             WORD ly = (msg->imsg->MouseY - data->vpos);
             WORD ly2 = (msg->imsg->MouseY - data->vdtitlepos);
