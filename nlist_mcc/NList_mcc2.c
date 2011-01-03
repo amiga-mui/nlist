@@ -1627,6 +1627,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           WORD lx = (msg->imsg->MouseX - data->hpos);
           WORD sel_x = msg->imsg->MouseX;
           WORD sel_y = msg->imsg->MouseY;
+
           data->NumIntuiTick = 0;
           if ((ly >= 0) && (lyl >= 0) && (lyl < data->NList_Visible) &&
               ((lx < 0) || (lx >= data->NList_Horiz_Visible)))
@@ -1849,7 +1850,8 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               if ((lactive != data->NList_Active) && (lactive >= 0) && (lactive < data->NList_Entries))
               {
                 if (data->multiselect == MUIV_NList_MultiSelect_None)
-                { NL_List_Select(data,data->lastactived,MUIV_NList_Active_Off,MUIV_NList_Select_Off,NULL);
+                {
+                  NL_List_Select(data,data->lastactived,MUIV_NList_Active_Off,MUIV_NList_Select_Off,NULL);
                   data->selectmode = MUIV_NList_Select_On;
                 }
                 if (data->multiselect && data->selectskiped)
@@ -1858,12 +1860,20 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else if (data->multiselect)
-                { data->selectskiped = TRUE;
+                {
+                  data->selectskiped = TRUE;
                   NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
                 {
-                  NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
+                  // NL_List_Active(data,lactive,NULL,data->selectmode,FALSE,0);
+
+                  // Is this call really required???
+                  // It causes NList to misbehave if the user clicks in the list while the
+                  // window has MUIA_Window_Sleep set to TRUE. In this case the click seems
+                  // to be "cached" and is applied again as soon as the window is woken up
+                  // again, which is definitely wrong.
+                  // Well's have to see if commenting out this line causes any new misbehaviour.
                 }
               }
             }
@@ -1872,11 +1882,14 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
             if (data->drag_type != MUIV_NList_DragType_None)
-            { if (DragQual)
-              { drag_ok = TRUE;
+            {
+              if (DragQual)
+              {
+                drag_ok = TRUE;
               }
               else if ((data->drag_type == MUIV_NList_DragType_Immediate) && !data->multiselect && (msg->imsg->Class == IDCMP_MOUSEMOVE))
-              { drag_ok = TRUE;
+              {
+                drag_ok = TRUE;
               }
               else if ((data->drag_type == MUIV_NList_DragType_Immediate) || (data->drag_type == MUIV_NList_DragType_Borders))
                 data->drag_border = TRUE;

@@ -5,6 +5,15 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-01-03 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: fixed a very strange isse which occured when a used
+    clicked inside a list while the window had MUIA_Window_Sleep set to TRUE. In
+    this case the click seemed to be cached and be applied again as soon as the
+    window was woken up again, which is definitely wrong.
+    It remains to be seen if this change causes any new funny things.
+    Thanks to Andreas Falkenhahn for the hint!
+
 2011-01-02 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc5.c: removed a double check for a pending entry click
