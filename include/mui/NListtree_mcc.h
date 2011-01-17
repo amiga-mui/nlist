@@ -213,7 +213,7 @@ struct MUI_NListtree_TestPos_Result {
 #define MUIM_NListtree_Construct                            0xfec81120UL  // *** Construct a treenode
 #define MUIM_NListtree_Destruct                             0xfec81121UL  // *** Destruct a treenode
 #define MUIM_NListtree_Display                              0xfec81122UL  // *** Display a treenode
-#define MUIM_NListtree_Display                              0xfec81123UL  // *** Compare two treenodes
+#define MUIM_NListtree_Compare                              0xfec81123UL  // *** Compare two treenodes
 
 
 /*** Method structs ***/
