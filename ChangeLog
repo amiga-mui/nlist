@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-01-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * all/Makefile: fixed the dependency generation to respect the system specific
+    object file path.
+
 #### v0.109 RELEASE ###########################################################
 
 2011-02-03 Jens Langner <Jens.Langner@light-speed.de>
