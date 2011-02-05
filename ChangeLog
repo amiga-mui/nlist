@@ -5,7 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
-2011-01-04 Thore Böckelmann <tboeckel@gmx.de>
+2011-02-05 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcp/locale, nlistviews_mcp/locale: added turkish catalog
+    translation kindly provided by Alper Sönmez.
+
+2011-02-04 Thore Böckelmann <tboeckel@gmx.de>
 
   * all/Makefile: fixed the dependency generation to respect the system specific
     object file path.

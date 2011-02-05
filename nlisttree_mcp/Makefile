@@ -190,7 +190,8 @@ CATALOGS = \
   $(LOCALE)/german.catalog \
   $(LOCALE)/french.catalog \
   $(LOCALE)/polish.catalog \
-  $(LOCALE)/swedish.catalog
+  $(LOCALE)/swedish.catalog \
+  $(LOCALE)/turkish.catalog \
   # $(LOCALE)/russian.catalog
 
 MCCOBJS  = $(addprefix $(OBJDIR)/,$(LOBJS)) $(addprefix $(OBJDIR)/,$(COBJS))
