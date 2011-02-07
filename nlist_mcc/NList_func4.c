@@ -492,10 +492,12 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
         {
           WORD ktr;
           BOOL bit_map_failed = FALSE;
+          
           InitBitMap(bm_src,CI_BC_Depth,CI_BM_Width,CI_BM_Height);
 
           for (ktr = 0; ktr < bm_src->Depth; ktr++)
-          { if (!(bm_src->Planes[ktr] = (PLANEPTR) AllocRaster(CI_BM_Width,CI_BM_Height)))
+          { 
+            if (!(bm_src->Planes[ktr] = (PLANEPTR) AllocRaster(CI_BM_Width,CI_BM_Height)))
               bit_map_failed = TRUE;
           }
           if (bit_map_failed)
@@ -589,16 +591,16 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
     else
       bm_src = CI_BM_Bitmap;
 
-    if (bm_src)
+    if (bm_src != NULL)
     {
       UBYTE mypen,bit1,bit2;
-		  WORD cptb,cptr,cptd,offr,offr1,cptpen;
+      WORD cptb,cptr,cptd,offr,offr1,cptpen;
 
       last_numpen = (1 << bm_src->Depth);
       last_newnumpen = 0;
       newdepth = bm_src->Depth;
 
-      if (CI_BM_MappingTable)
+      if (CI_BM_MappingTable != NULL)
       {
         LONG num;
 
@@ -614,14 +616,14 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
           last_newnumpen = last_newnumpen >> 1;
         }
       }
-      else if (CI_BM_SourceColors)
+      else if (CI_BM_SourceColors != NULL)
       {
         ULONG *mycolor;
 
         obtainpens = AllocVecPooled(data->Pool, (last_numpen+1)*sizeof(*obtainpens));
-        obtainpens[last_numpen] = -3;
-        if (obtainpens)
+        if (obtainpens != NULL)
         {
+          obtainpens[last_numpen] = -3;
           for (cptpen = 0; cptpen < last_numpen; cptpen++)
             obtainpens[cptpen] = -1;
           for (cptr = 0; cptr < bm_src->Rows; cptr++)
@@ -659,6 +661,8 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
                                                              OBP_Precision, PRECISION_GUI,
                                                              TAG_END);
                   }
+                  if(last_newnumpen < obtainpens[mypen])
+                    last_newnumpen = obtainpens[mypen];
                 }
                 bit1 = bit1 >> 1;
               }
@@ -680,7 +684,7 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
       {
         WORD ktr;
         BOOL bmimg_failed = FALSE;
-
+        
         InitBitMap(&(bmimg->imgbmp),newdepth,CI_BM_Width,CI_BM_Height);
         bmimg->control = MUIM_NList_CreateImage;
         bmimg->width = CI_BM_Width;

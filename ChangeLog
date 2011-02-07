@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-02-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func4.c: readded the pen number check which accidentally got
+    removed during the recent code cleanup and caused bodychunk object to be not
+    displayed anymore, because their color depth was calculated as zero. This 
+    closes bug #317905.
+
 2011-02-05 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcp/locale, nlistviews_mcp/locale: added turkish catalog
