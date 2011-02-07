@@ -1455,11 +1455,11 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   /* Use centered text lines? */
   {
-  	LONG *vert;
+    LONG *vert;
 
-	  data->NList_VerticalCenteredText = DEFAULT_VCENTERED;
-	  if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VCenteredLines, &vert))
-		  data->NList_VerticalCenteredText = *vert;
+    data->NList_VerticalCenteredText = DEFAULT_VCENTERED;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VCenteredLines, &vert))
+      data->NList_VerticalCenteredText = *vert;
   }
 
   if (data->ContextMenu != data->ContextMenuOn)

@@ -328,7 +328,7 @@ static ULONG NL_List_SortPart(struct NLData *data,LONG fent,LONG lent)
   {
     for (ent = fent; ent < lent; ent++)
     {
-    	entry[ent-fent].ent = ent;
+      entry[ent-fent].ent = ent;
       entry[ent-fent].data = data;
     }
 
@@ -340,17 +340,17 @@ static ULONG NL_List_SortPart(struct NLData *data,LONG fent,LONG lent)
 
     for (ent = fent; ent < lent; ent++)
     {
-    	ent1 = entry[ent-fent].ent;
+      ent1 = entry[ent-fent].ent;
       while (ent1 < ent)        /* find a ent1 not already done */
       {
-      	ent1 = entry[ent1-fent].ent;
+        ent1 = entry[ent1-fent].ent;
         numfollow++;
         if(numfollow > lent) break;
       }
 
       if (ent1 > ent)           /* exchange them */
       {
-      	/* DO EXCHANGE */
+        /* DO EXCHANGE */
         newentry = data->EntriesArray[ent];
         data->EntriesArray[ent] = data->EntriesArray[ent1];
         data->EntriesArray[ent1] = newentry;
@@ -367,14 +367,14 @@ static ULONG NL_List_SortPart(struct NLData *data,LONG fent,LONG lent)
 
         if (data->NList_LastInserted == ent)
         {
-        	/* sba: was data->NList_LastInserted--; */
-        	data->NList_LastInserted = ent1;
+          /* sba: was data->NList_LastInserted--; */
+          data->NList_LastInserted = ent1;
           DO_NOTIFY(NTF_Insert);
         } else
         if (data->NList_LastInserted == ent1)
         {
-        	/* sba: was data->NList_LastInserted++; */
-        	data->NList_LastInserted = ent;
+          /* sba: was data->NList_LastInserted++; */
+          data->NList_LastInserted = ent;
           DO_NOTIFY(NTF_Insert);
         }
         has_changed = TRUE;
@@ -506,25 +506,25 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
 
   if (entries)
   {
-  	LONG ent, ent1, ent2, ent3, maxent, nlentries;
+    LONG ent, ent1, ent2, ent3, maxent, nlentries;
 
     //D(bug( "Inserting %ld entries at position %ld\n", count, pos ));
 
     data->display_ptr = NULL;
     if (count == -1)
     {
-    	count = 0;
+      count = 0;
       while (entries[count] != NULL)
         count++;
     }
     else if (count == -2)
     {
-    	is_string = TRUE;
+      is_string = TRUE;
       count = 1;
       string = (char *) entries;
       while (string[0] != '\0')
       {
-      	if ((string[0] == '\n') || (string[0] == '\r')) count++;
+        if ((string[0] == '\n') || (string[0] == '\r')) count++;
         if ((string[0] == '\r') && (string[1] == '\n')) string++;
         string++;
       }
@@ -532,22 +532,22 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
     }
     else if (count > 0)
     {
-    	newpos = 0;
+      newpos = 0;
       while (newpos < count)
       {
-      	if (entries[newpos] == NULL) count--;
+        if (entries[newpos] == NULL) count--;
         newpos++;
       }
     }
 
     if (count > 0)
     {
-    	maxent = count + data->NList_Entries;
+      maxent = count + data->NList_Entries;
       count2 = 0;
 
       switch (pos)
       {
-      	case MUIV_NList_Insert_Top:
+        case MUIV_NList_Insert_Top:
           newpos = 0;
           break;
         case MUIV_NList_Insert_Bottom:
@@ -574,7 +574,7 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
 
       if (maxent >= data->LastEntry)
       {
-      	struct TypeEntry **newentries = NULL,**oldentries = data->EntriesArray;
+        struct TypeEntry **newentries = NULL,**oldentries = data->EntriesArray;
         LONG le = ((maxent << 1) + 0x00FFL) & ~0x000FL;
 
         if((newentries = AllocVecPooled(data->Pool, sizeof(struct TypeEntry *) * (le + 1))) != NULL)
@@ -685,13 +685,13 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
           data->NList_Entries = ent;
           count -= count2;
 
-					/* TODO: This stuff here can be merged with the stuff below */
+          /* TODO: This stuff here can be merged with the stuff below */
           GetNImage_End(data);
           GetNImage_Sizes(data);
           if (count > 0)
           {
-          	if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
-            	NL_SegChanged(data,newpos,data->NList_Entries);
+            if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
+              NL_SegChanged(data,newpos,data->NList_Entries);
             else
               data->NList_AffFirst += count;
 
@@ -706,23 +706,23 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
               data->do_wwrap = TRUE;
             if (pos == MUIV_NList_Insert_Sorted)
             {
-	          	int needs_redraw;
+              int needs_redraw;
 
-	            NL_SetCols(data);
+              NL_SetCols(data);
 
-							/* NL_List_SortXXX returns wheather sorting has changed anything
-							 * and redraws the entries. If sorting hasn't changed anything
-							 * we still have to redraw the list, because there are new entries
-							 * in the list */
-	            if (data->sorted)
+              /* NL_List_SortXXX returns wheather sorting has changed anything
+               * and redraws the entries. If sorting hasn't changed anything
+               * we still have to redraw the list, because there are new entries
+               * in the list */
+              if (data->sorted)
                 needs_redraw = !NL_List_SortMore(data,newpos);
-	            else
+              else
                 needs_redraw = !NL_List_Sort(data);
 
-							if (needs_redraw)
-							{
-								REDRAW;
-							}
+              if (needs_redraw)
+              {
+                REDRAW;
+              }
             }
             else
             {
@@ -756,8 +756,8 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
           entries = (APTR *)(void*)&string;
         else
         {
-        	while (!entries[ent2])
-            ent2++;
+          while (!entries[ent2])
+          ent2++;
         }
 
         while ((ent < data->LastEntry) && (ent3 < count))
@@ -770,7 +770,7 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
 
             if (newentry->Entry)
             {
-            	newentry->Select = TE_Select_None;
+              newentry->Select = TE_Select_None;
               newentry->Wrap = wrapcol;
               newentry->PixLen = -1;
               newentry->pos = 0;
@@ -819,8 +819,8 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
 
         if (count > 0)
         {
-        	if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
-          	NL_SegChanged(data,newpos,data->NList_Entries);
+          if ((newpos >= data->NList_AffFirst) || data->NList_EntryValueDependent)
+            NL_SegChanged(data,newpos,data->NList_Entries);
           else
             data->NList_AffFirst += count;
 
@@ -835,26 +835,26 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
 
           if (pos == MUIV_NList_Insert_Sorted)
           {
-          	int needs_redraw;
+            int needs_redraw;
 
             NL_SetCols(data);
 
-						/* NL_List_SortXXX returns wheather sorting has changed anything
-						 * and redraws the entries. If sorting hasn't changed anything
-						 * we still have to redraw the list, because there are new entries
-						 * in the list */
+            /* NL_List_SortXXX returns wheather sorting has changed anything
+             * and redraws the entries. If sorting hasn't changed anything
+             * we still have to redraw the list, because there are new entries
+             * in the list */
             if (data->sorted)
               needs_redraw = !NL_List_SortMore(data,newpos);
             else
               needs_redraw = !NL_List_Sort(data);
 
-						if (needs_redraw)
-						{
-							REDRAW;
-						}
+            if (needs_redraw)
+            {
+              REDRAW;
+            }
           } else
           {
-          	Make_Active_Visible;
+            Make_Active_Visible;
             data->do_updatesb = TRUE;
             data->sorted = FALSE;
             REDRAW;
@@ -1202,7 +1202,7 @@ ULONG NL_List_Remove(struct NLData *data,LONG pos)
     if (data->NList_Entries <= 0)
       return NL_List_Clear(data);
 
-	/*
+/*
     if (data->NList_Entries < ((data->LastEntry/2) & ~0x000FL))
       maxent = (data->LastEntry/2) & ~0x000FL;
 
@@ -1219,7 +1219,7 @@ ULONG NL_List_Remove(struct NLData *data,LONG pos)
         FreeVecPooled(data->Pool, data->EntriesArray);
       data->EntriesArray = newentries;
     }
-	*/
+*/
 
     if ((data->NList_First > 0) && (data->NList_First + data->NList_Visible >= data->NList_Entries))
     {

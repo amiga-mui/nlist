@@ -38,8 +38,8 @@ static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos);
    Make the first_change and last_change optimal for redrawing optimiztion */
 void NL_SegChanged(struct NLData *data,LONG ent1,LONG ent2)
 {
-//	D(bug("ent1=%ld ent2=%ld\n",ent1,ent2));
-//	D(bug("first_change=%ld last_change=%ld\n",data->first_change,data->last_change));
+// D(bug("ent1=%ld ent2=%ld\n",ent1,ent2));
+// D(bug("first_change=%ld last_change=%ld\n",data->first_change,data->last_change));
   if (ent1 < data->first_change)
   { if (ent1 >= data->NList_First)
     { data->first_change = ent1;
@@ -64,14 +64,14 @@ void NL_SegChanged(struct NLData *data,LONG ent1,LONG ent2)
         data->first_change = data->last_change;
     }
   }
-//	D(bug("NL_SegChanged: first_change=%ld last_change=%ld\n",data->first_change,data->last_change));
+// D(bug("NL_SegChanged: first_change=%ld last_change=%ld\n",data->first_change,data->last_change));
 }
 
 /* Extent the selection by this entry optimal */
 void NL_Changed(struct NLData *data,LONG ent)
 {
-//	D(bug("ent=%ld\n",ent));
-//	D(bug("first_change=%ld last_change=%ld\n",data->first_change,data->last_change));
+// D(bug("ent=%ld\n",ent));
+// D(bug("first_change=%ld last_change=%ld\n",data->first_change,data->last_change));
   if ((ent < data->first_change) && (ent >= data->NList_First))
   { data->first_change = ent;
     if (data->last_change < data->first_change)
@@ -82,7 +82,7 @@ void NL_Changed(struct NLData *data,LONG ent)
     if (data->first_change > data->last_change)
       data->first_change = data->last_change;
   }
-//	D(bug("first_change=%ld last_change=%ld\n",data->first_change,data->last_change));
+// D(bug("first_change=%ld last_change=%ld\n",data->first_change,data->last_change));
 }
 
 
@@ -638,7 +638,7 @@ BOOL NL_List_Active(struct NLData *data, LONG la, struct TagItem *tag, LONG newa
 
   ENTER();
 
-	//D(DBF_STARTUP, "NL_List_Active: 0x%lx la=%ld newactsel=%ld acceptsame=%ld data->pad1=%ld",obj,la,newactsel,acceptsame,data->pad1);
+  //D(DBF_STARTUP, "NL_List_Active: 0x%lx la=%ld newactsel=%ld acceptsame=%ld data->pad1=%ld",obj,la,newactsel,acceptsame,data->pad1);
 
   if (data->NList_TypeSelect || !data->NList_Input)
   {
@@ -1879,10 +1879,10 @@ IPTR mNL_List_RedrawEntry(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw
   }
   if (dodraw)
   {
-  	/* sba: This enforces redrawing the entry completly */
-  	data->display_ptr = NULL;
+    /* sba: This enforces redrawing the entry completly */
+    data->display_ptr = NULL;
 
-	  data->do_draw = TRUE;
+    data->do_draw = TRUE;
     REDRAW;
 
     return (TRUE);
@@ -2034,8 +2034,8 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
     LONG *table1 = (LONG *)&msg->FollowParams;
     struct
     {
-	  ULONG MethodID;
-	  LONG params[64]; /* MAXIMUM 40 (see docs) <aphaso> */
+      ULONG MethodID;
+      LONG params[64]; /* MAXIMUM 40 (see docs) <aphaso> */
     } newMsg;
 
     if(msg->FollowParams > 63) /* MAXIMUM 40 (see docs) <aphaso> */

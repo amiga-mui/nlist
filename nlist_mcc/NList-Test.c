@@ -688,8 +688,8 @@ static VOID fail(APTR APP_Main,const char *str)
   if(ConsoleDevice)
   {
     DROPINTERFACE(IConsole);
-		CloseDevice((struct IORequest *)&ioreq);
-	  ConsoleDevice = NULL;
+    CloseDevice((struct IORequest *)&ioreq);
+    ConsoleDevice = NULL;
   }
 
   if(MUIMasterBase)

@@ -492,11 +492,11 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
         {
           WORD ktr;
           BOOL bit_map_failed = FALSE;
-          
+
           InitBitMap(bm_src,CI_BC_Depth,CI_BM_Width,CI_BM_Height);
 
           for (ktr = 0; ktr < bm_src->Depth; ktr++)
-          { 
+          {
             if (!(bm_src->Planes[ktr] = (PLANEPTR) AllocRaster(CI_BM_Width,CI_BM_Height)))
               bit_map_failed = TRUE;
           }
@@ -684,7 +684,7 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
       {
         WORD ktr;
         BOOL bmimg_failed = FALSE;
-        
+
         InitBitMap(&(bmimg->imgbmp),newdepth,CI_BM_Width,CI_BM_Height);
         bmimg->control = MUIM_NList_CreateImage;
         bmimg->width = CI_BM_Width;
@@ -703,42 +703,44 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
           bmimg = NULL;
         }
         else
-		  {
-			/*
-         int kprintf( const char *, ... );
-			kprintf( "SrcBitMap Width %ld Height %ld Depth %ld BytesPerRow %ld Rows %ld Depth %ld.\n",
-				GetBitMapAttr( bm_src, BMA_WIDTH ),
-				GetBitMapAttr( bm_src, BMA_HEIGHT ),
-				GetBitMapAttr( bm_src, BMA_DEPTH ),
-				bm_src->BytesPerRow,
-				bm_src->Rows,
-				bm_src->Depth );
-			kprintf( "BytesPerRow %ld Rows %ld.\n", bmimg->imgbmp.BytesPerRow, bmimg->imgbmp.Rows );
-			*/
-			 for (cptr = 0; cptr < bmimg->imgbmp.Rows; cptr++)
-			 {
-         offr = cptr * bmimg->imgbmp.BytesPerRow;
-				 offr1 = cptr * bm_src->BytesPerRow;
-         for (cptb = 0; cptb < bmimg->imgbmp.BytesPerRow; cptb++)
-         {
-           bit1 = 0x80;
-           while (bit1)
-           { /* get the source dot pen number */
-             mypen = 0;
-             bit2 = 0x01;
-             for (cptd = 0; cptd < bm_src->Depth; cptd++)
-  					 {
-               if (bm_src->Planes[cptd][offr1+cptb] & bit1)	// here was bug!!!
-                  mypen |= bit2;
-               bit2 = bit2 << 1;
-             }
-               /* map the pen number */
+        {
+/*
+int kprintf( const char *, ... );
+kprintf( "SrcBitMap Width %ld Height %ld Depth %ld BytesPerRow %ld Rows %ld Depth %ld.\n",
+GetBitMapAttr( bm_src, BMA_WIDTH ),
+GetBitMapAttr( bm_src, BMA_HEIGHT ),
+GetBitMapAttr( bm_src, BMA_DEPTH ),
+bm_src->BytesPerRow,
+bm_src->Rows,
+bm_src->Depth );
+kprintf( "BytesPerRow %ld Rows %ld.\n", bmimg->imgbmp.BytesPerRow, bmimg->imgbmp.Rows );
+*/
+          for (cptr = 0; cptr < bmimg->imgbmp.Rows; cptr++)
+          {
+            offr = cptr * bmimg->imgbmp.BytesPerRow;
+            offr1 = cptr * bm_src->BytesPerRow;
+            for (cptb = 0; cptb < bmimg->imgbmp.BytesPerRow; cptb++)
+            {
+              bit1 = 0x80;
+              while (bit1)
+              { /* get the source dot pen number */
+                mypen = 0;
+                bit2 = 0x01;
+                for (cptd = 0; cptd < bm_src->Depth; cptd++)
+                {
+                  if (bm_src->Planes[cptd][offr1+cptb] & bit1) // here was bug!!!
+                    mypen |= bit2;
+                  bit2 = bit2 << 1;
+                }
+                /* map the pen number */
                 if (mypen == CI_BM_Transparent)
-                { bmimg->mask[offr+cptb] &= ~bit1;
+                {
+                  bmimg->mask[offr+cptb] &= ~bit1;
                   mypen = 0;
                 }
                 else
-                { bmimg->mask[offr+cptb] |= bit1;
+                {
+                  bmimg->mask[offr+cptb] |= bit1;
                   if (CI_BM_MappingTable)
                     mypen = (UBYTE) CI_BM_MappingTable[mypen];
                   else if (CI_BM_SourceColors && obtainpens && ((obtainpens[mypen] >= 0) || (obtainpens[mypen] < -3)))
@@ -747,7 +749,8 @@ IPTR NL_CreateImage(struct NLData *data,Object *imgobj,ULONG flags)
                 /* set the dest dot pen number */
                 bit2 = 0x01;
                 for (cptd = 0; cptd < bmimg->imgbmp.Depth; cptd++)
-                { if (mypen & bit2)
+                {
+                  if (mypen & bit2)
                     bmimg->imgbmp.Planes[cptd][offr+cptb] |= bit1;
                   else
                     bmimg->imgbmp.Planes[cptd][offr+cptb] &= ~bit1;
