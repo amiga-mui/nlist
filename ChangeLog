@@ -5,11 +5,18 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-02-17 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func2.c: try to move around entries only if there is really
+    anything to move.
+  * nlist_mcc/Debug.c: implemented the STARTCLOCK() and STOPCLOCK() functions to
+    be able to measure real execution times.
+
 2011-02-07 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func4.c: readded the pen number check which accidentally got
     removed during the recent code cleanup and caused bodychunk object to be not
-    displayed anymore, because their color depth was calculated as zero. This 
+    displayed anymore, because their color depth was calculated as zero. This
     closes bug #317905.
 
 2011-02-05 Jens Langner <Jens.Langner@light-speed.de>

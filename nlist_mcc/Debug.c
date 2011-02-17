@@ -52,6 +52,9 @@ static int indent_level = 0;
 static BOOL ansi_output = FALSE;
 static ULONG debug_flags = DBF_ALWAYS | DBF_STARTUP; // default debug flags
 static ULONG debug_classes = DBC_ERROR | DBC_DEBUG | DBC_WARNING | DBC_ASSERT | DBC_REPORT; // default debug classes
+#define NUMCLOCKS 8
+static int timer_level = -1;
+static struct { ULONG secs; ULONG micros; } startTimes[NUMCLOCKS];
 
 /****************************************************************************/
 
@@ -408,6 +411,55 @@ void _DPRINTF(unsigned long dclass, unsigned long dflags, const char *file, int 
     }
     else
       kprintf("%s:%ld:%s\n", file, line, buf);
+  }
+}
+
+/****************************************************************************/
+
+void _STARTCLOCK(unsigned long dclass, unsigned long dflags, const char *file, const unsigned long line)
+{
+  if(isFlagSet(debug_classes, dclass) &&
+     isFlagSet(debug_flags, dflags))
+  {
+    if(timer_level + 1 < NUMCLOCKS)
+    {
+      timer_level++;
+      CurrentTime(&startTimes[timer_level].secs, &startTimes[timer_level].micros);
+    }
+    else
+      kprintf("%s:%ld: already %ld clocks in use\n", file, line, NUMCLOCKS);
+  }
+}
+
+/****************************************************************************/
+
+void _STOPCLOCK(unsigned long dclass, unsigned long dflags, const char *file, const unsigned long line, const char *msg)
+{
+  if(isFlagSet(debug_classes, dclass) &&
+     isFlagSet(debug_flags, dflags))
+  {
+    if(timer_level >= 0)
+    {
+      ULONG stopSecs;
+      ULONG stopMicros;
+
+      CurrentTime(&stopSecs, &stopMicros);
+      stopSecs -= startTimes[timer_level].secs;
+      if(stopMicros < startTimes[timer_level].micros)
+      {
+        stopSecs--;
+        stopMicros = 1000000 - startTimes[timer_level].micros + stopMicros;
+      }
+      else
+      {
+      	stopMicros -= startTimes[timer_level].micros;
+      }
+
+      kprintf("%s:%ld: operation '%s' took %ld.%06ld seconds\n", file, line, msg, stopSecs, stopMicros);
+      timer_level--;
+    }
+    else
+      kprintf("%s:%ld: no clocks in use\n", file, line);
   }
 }
 
