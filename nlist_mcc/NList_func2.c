@@ -317,8 +317,6 @@ static ULONG NL_List_SortPart(struct NLData *data,LONG fent,LONG lent)
 
   ENTER();
 
-  SHOWVALUE(DBF_ALWAYS, data);
-
   data->display_ptr = NULL;
   has_changed = FALSE;
 
@@ -606,11 +604,14 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
             if ((maxent - ent) < de)
               de = maxent - ent;
 
-            NL_Move(&data->EntriesArray[ent],&oldentries[ent1],de,ent);
-            //D(bug( "Moving %ld old entries to new array (from %ld to %ld).\n", de, ent1, ent ));
+            if(de != 0)
+            {
+              D(DBF_ALWAYS, "Moving %ld old entries to new array (from %ld to %ld)", de, ent1, ent);
+              NL_Move(&data->EntriesArray[ent], &oldentries[ent1], de, ent);
 
-            ent += de;
-            ent1 += de;
+              ent += de;
+              ent1 += de;
+            }
           }
 
           while ((ent < maxent) && (ent3 < count))
@@ -633,7 +634,7 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
                 newentry->entpos = ent;
                 data->NList_LastInserted = ent;
                 DO_NOTIFY(NTF_Insert);
-                if(!(flags & MUIV_NList_Insert_Flag_Raw))
+                if(isFlagClear(flags, MUIV_NList_Insert_Flag_Raw))
                   NL_SetColsAdd(data,ent,FALSE);
                 ent++;
               }
@@ -666,15 +667,19 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
             if ((maxent - ent) < de)
               de = maxent - ent;
 
-            NL_Move(&data->EntriesArray[ent],&oldentries[ent1],de,ent);
-            //D(bug( "Moving %ld old entries to new array (from %ld to %ld).\n", de, ent1, ent ));
-            ent += de;
+            if(de != 0)
+            {
+              D(DBF_ALWAYS, "Moving %ld old entries to new array (from %ld to %ld)", de, ent1, ent);
+              NL_Move(&data->EntriesArray[ent], &oldentries[ent1], de, ent);
+
+              ent += de;
+            }
           }
 
           //D(bug( "Deleting pointer in entry %ld.\n", ent ));
 
           data->EntriesArray[ent] = NULL;
-          if (oldentries)
+          if(oldentries != NULL)
             FreeVecPooled(data->Pool, oldentries);
 
           if (data->NList_Entries != ent)
@@ -706,7 +711,7 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
               data->do_wwrap = TRUE;
             if (pos == MUIV_NList_Insert_Sorted)
             {
-              int needs_redraw;
+              BOOL needs_redraw;
 
               NL_SetCols(data);
 
@@ -746,8 +751,8 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
         data->NList_Entries += count;
         DO_NOTIFY(NTF_Entries|NTF_MinMax);
 
-        NL_MoveD(&data->EntriesArray[ent+count],&data->EntriesArray[ent],ent-newpos,ent+count);
-        //D(bug( "Moving %ld entries (from %ld to %ld).\n", ent-newpos, ent, ent+count ));
+        D(DBF_ALWAYS, "Moving %ld entries (from %ld to %ld)", ent-newpos, ent, ent+count);
+        NL_MoveD(&data->EntriesArray[ent+count], &data->EntriesArray[ent], ent-newpos, ent+count);
 
         ent = newpos;
         ent3 = ent2 = 0;
@@ -780,7 +785,7 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
               newentry->entpos = ent;
               data->NList_LastInserted = ent;
               DO_NOTIFY(NTF_Insert);
-              if(!(flags & MUIV_NList_Insert_Flag_Raw))
+              if(isFlagClear(flags, MUIV_NList_Insert_Flag_Raw))
                 NL_SetColsAdd(data,ent,FALSE);
               ent++;
             }
@@ -798,7 +803,8 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
               entries = (APTR *)(void*)&string;
             }
             else
-            { ent2++;
+            {
+              ent2++;
               while (!entries[ent2])
                 ent2++;
             }
@@ -810,8 +816,8 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
         count -= count2;
         if (count2)
         {
-          NL_Move(&data->EntriesArray[ent],&data->EntriesArray[ent+count2],data->NList_Entries-ent,ent);
-          //D(bug( "Moving %ld entries (from %ld to %ld).\n", data->NList_Entries-ent, ent+count2, ent ));
+          D(DBF_ALWAYS, "Moving %ld entries (from %ld to %ld)", data->NList_Entries-ent, ent+count2, ent);
+          NL_Move(&data->EntriesArray[ent], &data->EntriesArray[ent+count2], data->NList_Entries-ent, ent);
         }
 
         GetNImage_End(data);
