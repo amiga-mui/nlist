@@ -30,14 +30,16 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include <proto/intuition.h>
-#include <proto/utility.h>
-#include <proto/dos.h>
 #include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/timer.h>
+#include <proto/utility.h>
 
 #include "SDI_compiler.h"
 #include "Debug.h"
 #include "version.h"
+#include "timeval.h"
 
 // special flagging macros
 #define isFlagSet(v,f)      (((v) & (f)) == (f))  // return TRUE if the flag is set
@@ -54,7 +56,7 @@ static ULONG debug_flags = DBF_ALWAYS | DBF_STARTUP; // default debug flags
 static ULONG debug_classes = DBC_ERROR | DBC_DEBUG | DBC_WARNING | DBC_ASSERT | DBC_REPORT; // default debug classes
 #define NUMCLOCKS 8
 static int timer_level = -1;
-static struct { ULONG secs; ULONG micros; } startTimes[NUMCLOCKS];
+static struct TimeVal startTimes[NUMCLOCKS];
 
 /****************************************************************************/
 
@@ -424,7 +426,7 @@ void _STARTCLOCK(unsigned long dclass, unsigned long dflags, const char *file, c
     if(timer_level + 1 < NUMCLOCKS)
     {
       timer_level++;
-      CurrentTime(&startTimes[timer_level].secs, &startTimes[timer_level].micros);
+      GetSysTime(TIMEVAL(&startTimes[timer_level]));
     }
     else
       kprintf("%s:%ld: already %ld clocks in use\n", file, line, NUMCLOCKS);
@@ -440,22 +442,11 @@ void _STOPCLOCK(unsigned long dclass, unsigned long dflags, const char *file, co
   {
     if(timer_level >= 0)
     {
-      ULONG stopSecs;
-      ULONG stopMicros;
+      struct TimeVal stopTime;
 
-      CurrentTime(&stopSecs, &stopMicros);
-      stopSecs -= startTimes[timer_level].secs;
-      if(stopMicros < startTimes[timer_level].micros)
-      {
-        stopSecs--;
-        stopMicros = 1000000 - startTimes[timer_level].micros + stopMicros;
-      }
-      else
-      {
-      	stopMicros -= startTimes[timer_level].micros;
-      }
-
-      kprintf("%s:%ld: operation '%s' took %ld.%06ld seconds\n", file, line, msg, stopSecs, stopMicros);
+      GetSysTime(TIMEVAL(&stopTime));
+      SubTime(TIMEVAL(&stopTime), TIMEVAL(&startTimes[timer_level]));
+      kprintf("%s:%ld: operation '%s' took %ld.%06ld seconds\n", file, line, msg, stopTime.Seconds, stopTime.Microseconds);
       timer_level--;
     }
     else
