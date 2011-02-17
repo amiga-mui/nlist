@@ -116,10 +116,10 @@ static BOOL ClassInit(UNUSED struct Library *base)
     if((DiskfontBase = OpenLibrary("diskfont.library", 39L)) &&
        GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
     {
+      memset(&ioreq, 0, sizeof(ioreq));
       ioreq.io_Message.mn_Length = sizeof(ioreq);
       if(OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L) == 0)
       {
-        memset(&ioreq, 0, sizeof(ioreq));
         ConsoleDevice = (APTR)ioreq.io_Device;
         if(GETINTERFACE(IConsole, struct ConsoleIFace *, ConsoleDevice))
         {
