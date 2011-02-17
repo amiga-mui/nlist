@@ -485,9 +485,12 @@ static ULONG NL_List_SortMore(struct NLData *data,LONG newpos)
 //$$$ARRAY+
 ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG wrapcol,LONG align,ULONG flags)
 {
+  BOOL success = FALSE;
   LONG newpos,count2;
   BOOL is_string = FALSE;
   char *string;
+
+  STARTCLOCK(DBF_ALWAYS);
   wrapcol &= TE_Wrap_TmpMask;
   if (wrapcol)
   {
@@ -633,7 +636,6 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
                 newentry->dnum = 1;
                 newentry->entpos = ent;
                 data->NList_LastInserted = ent;
-                DO_NOTIFY(NTF_Insert);
                 if(isFlagClear(flags, MUIV_NList_Insert_Flag_Raw))
                   NL_SetColsAdd(data,ent,FALSE);
                 ent++;
@@ -676,13 +678,15 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
             }
           }
 
+          DO_NOTIFY(NTF_Insert);
+
           //D(bug( "Deleting pointer in entry %ld.\n", ent ));
 
           data->EntriesArray[ent] = NULL;
           if(oldentries != NULL)
             FreeVecPooled(data->Pool, oldentries);
 
-          if (data->NList_Entries != ent)
+          if(data->NList_Entries != ent)
           {
             DO_NOTIFY(NTF_Entries|NTF_MinMax);
           }
@@ -737,10 +741,9 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
               REDRAW;
             }
 /*            do_notifies(NTF_AllChanges|NTF_MinMax);*/
-            return (TRUE);
+            success = TRUE;
           }
         }
-        return (FALSE);
       }
       else if (data->EntriesArray)
       {
@@ -784,7 +787,6 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
               newentry->dnum = 1;
               newentry->entpos = ent;
               data->NList_LastInserted = ent;
-              DO_NOTIFY(NTF_Insert);
               if(isFlagClear(flags, MUIV_NList_Insert_Flag_Raw))
                 NL_SetColsAdd(data,ent,FALSE);
               ent++;
@@ -819,6 +821,8 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
           D(DBF_ALWAYS, "Moving %ld entries (from %ld to %ld)", data->NList_Entries-ent, ent+count2, ent);
           NL_Move(&data->EntriesArray[ent], &data->EntriesArray[ent+count2], data->NList_Entries-ent, ent);
         }
+
+        DO_NOTIFY(NTF_Insert);
 
         GetNImage_End(data);
         GetNImage_Sizes(data);
@@ -866,13 +870,14 @@ ULONG NL_List_Insert(struct NLData *data,APTR *entries,LONG count,LONG pos,LONG 
             REDRAW;
           }
 /*          do_notifies(NTF_AllChanges|NTF_MinMax);*/
-          return (TRUE);
+          success = TRUE;
         }
       }
-      return (FALSE);
     }
   }
-  return (FALSE);
+STOPCLOCK(DBF_ALWAYS, "insert");
+
+  return success;
 }
 
 
@@ -1004,43 +1009,58 @@ ULONG NL_List_Replace(struct NLData *data,APTR entry,LONG pos,LONG wrapcol,LONG 
 ULONG NL_List_Clear(struct NLData *data)
 {
   LONG ent = data->NList_Entries - 1;
+
+  STARTCLOCK(DBF_ALWAYS);
   DONE_NOTIFY(NTF_Select | NTF_LV_Select);
   data->display_ptr = NULL;
   NL_SetColsRem(data,-2);
 
-  if (data->EntriesArray)
+  STARTCLOCK(DBF_ALWAYS);
+  if(data->EntriesArray)
   {
-    while (ent >= 0)
+    struct TypeEntry **entries = data->EntriesArray;
+    BOOL notifySelect = FALSE;
+
+    while(ent >= 0)
     {
-      if (data->EntriesArray[ent]->Select != TE_Select_None)
-      {
-        DO_NOTIFY(NTF_Select | NTF_LV_Select);
-      }
-      if (!(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-          DoMethod(data->this, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool);
-      FreeTypeEntry(data->EntriesArray[ent]);
+      struct TypeEntry *entry = *entries;
+
+      if(entry->Select != TE_Select_None)
+        notifySelect = TRUE;
+
+      if(isFlagClear(entry->Wrap, TE_Wrap_TmpLine))
+        DoMethod(data->this, MUIM_NList_Destruct, entry->Entry, data->Pool);
+
+      FreeTypeEntry(entry);
       ent--;
+      entries++;
     }
 
     FreeVecPooled(data->Pool, data->EntriesArray);
+
+    if(notifySelect == TRUE)
+    {
+      DO_NOTIFY(NTF_Select | NTF_LV_Select);
+    }
   }
+  STOPCLOCK(DBF_ALWAYS, "destruct");
 
   data->EntriesArray = NULL;
   data->LastEntry = 0;
 
-  if (data->NList_Entries != 0)
+  if(data->NList_Entries != 0)
   {
     DO_NOTIFY(NTF_Entries|NTF_MinMax);
+    data->NList_Entries = 0;
   }
 
-  data->NList_Entries = 0;
-  if (data->NList_First != 0)
+  if(data->NList_First != 0)
   {
     DO_NOTIFY(NTF_First);
+    data->NList_First = 0;
   }
 
   set_Active(MUIV_NList_Active_Off);
-  data->NList_First = 0;
   data->NList_Horiz_First = 0;
   data->NList_Visible = 0;
   data->NList_LastInserted = -1;
@@ -1058,6 +1078,7 @@ ULONG NL_List_Clear(struct NLData *data)
   data->moves = FALSE;
   REDRAW_ALL;
 /*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
+  STOPCLOCK(DBF_ALWAYS, "clear");
 
   return (TRUE);
 }
