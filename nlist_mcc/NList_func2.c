@@ -1066,10 +1066,8 @@ ULONG NL_List_Clear(struct NLData *data)
   data->NList_LastInserted = -1;
   data->Title_PixLen = -1;
   data->NList_DropMark = 0;
-  data->NList_Active = -1;
   data->sorted = FALSE;
 
-  set_Active(MUIV_NList_Active_Off);
   data->lastselected = MUIV_NList_Active_Off;
   data->lastactived = MUIV_NList_Active_Off;
   UnSelectCharSel(data,FALSE);

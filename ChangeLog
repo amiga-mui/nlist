@@ -14,6 +14,8 @@ $URL$
   * nlist_mcc/NList_mcc.c: set the entry pool's threshold size to the same value
     as the puddle size for the non-OS4 builds. This improves freeing items from
     the pool a lot.
+  * nlist_mcc/NList_func2.c: removed a duplicate setActive() call without any
+    effect.
 
 2011-02-07 Thore Böckelmann <tboeckel@gmx.de>
 
