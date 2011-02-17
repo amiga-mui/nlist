@@ -11,6 +11,9 @@ $URL$
     anything to move.
   * nlist_mcc/Debug.c: implemented the STARTCLOCK() and STOPCLOCK() functions to
     be able to measure real execution times.
+  * nlist_mcc/NList_mcc.c: set the entry pool's threshold size to the same value
+    as the puddle size for the non-OS4 builds. This improves freeing items from
+    the pool a lot.
 
 2011-02-07 Thore Böckelmann <tboeckel@gmx.de>
 

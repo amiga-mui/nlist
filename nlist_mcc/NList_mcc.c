@@ -614,7 +614,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
                                                       TAG_DONE);
   #else
   // all other systems use a standard pool with puddle size and threshold set appropriately
-  data->EntryPool = CreatePool(MEMF_ANY, sizeof(struct TypeEntry) * 1024, sizeof(struct TypeEntry));
+  data->EntryPool = CreatePool(MEMF_ANY, sizeof(struct TypeEntry) * 1024, sizeof(struct TypeEntry) * 1024);
   #endif
 
   // are pools available?
