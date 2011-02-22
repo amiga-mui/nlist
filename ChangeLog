@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-02-22 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.c: MUIM_NList_GetEntry tries to avoid a possible NULL
+    pointer access in case no valid pointer to store the entry is given. The
+    entry pointer itself is returned as the methods return value in any case.
+    This matches the behavior of List.mui.
+
 2011-02-17 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func2.c: try to move around entries only if there is really

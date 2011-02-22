@@ -1462,24 +1462,31 @@ ULONG NL_List_TestPosOld(struct NLData *data,LONG x,LONG y,struct MUI_List_TestP
 
 IPTR mNL_List_GetEntry(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntry *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   LONG ent = msg->pos;
-  /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  if (ent == MUIV_NList_GetEntry_Active)
+  APTR entry = NULL;
+
+  if(ent == MUIV_NList_GetEntry_Active)
     ent = data->NList_Active;
-  if ((ent >= 0) && (ent < data->NList_Entries) && (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
+
+  if(ent >= 0 && ent < data->NList_Entries && isFlagSet(data->EntriesArray[ent]->Wrap, TE_Wrap_TmpLine))
     ent -= data->EntriesArray[ent]->dnum;
-  if ((ent >= 0) && (ent < data->NList_Entries))
-    *msg->entry = data->EntriesArray[ent]->Entry;
-  else
-    *msg->entry = NULL;
-  return (TRUE);
+
+  if(ent >= 0 && ent < data->NList_Entries)
+    entry = data->EntriesArray[ent]->Entry;
+
+  // return the entry in the message if we got a valid pointer to store it
+  if(msg->entry != NULL)
+    *msg->entry = entry;
+
+  // return the entry as a normal return value in any case
+  return (IPTR)entry;
 }
 
 
 IPTR mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntryInfo *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   LONG line,ent2,ent = msg->res->pos;
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
 
@@ -1700,7 +1707,7 @@ IPTR mNL_List_Select(struct IClass *cl,Object *obj,struct MUIP_NList_Select *msg
 
 IPTR mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   return (NL_List_TestPos(data,msg->x,msg->y,msg->res));
 }
@@ -1708,7 +1715,7 @@ IPTR mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *m
 
 IPTR mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   return (NL_List_TestPosOld(data,msg->x,msg->y,msg->res));
 }
@@ -1864,7 +1871,7 @@ IPTR mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg
 
 IPTR mNL_List_RedrawEntry(struct IClass *cl,Object *obj,struct MUIP_NList_RedrawEntry *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   LONG ent = 0;
   BOOL dodraw = FALSE;
   if (!msg->entry)
