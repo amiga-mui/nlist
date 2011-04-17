@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.110 RELEASE ###########################################################
+
+2011-04-17 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.110 release preparations
+
 2011-02-22 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func.c: MUIM_NList_GetEntry tries to avoid a possible NULL
