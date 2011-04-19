@@ -79,7 +79,7 @@ DEFAULT_KEYS_ARRAY
   { \
     if (!test) \
     { \
-      LONG ptrd; \
+      IPTR ptrd; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
         obtain_pen(obj, &(var_dest), (struct MUI_PenSpec *)ptrd); \
       else \
@@ -93,11 +93,11 @@ DEFAULT_KEYS_ARRAY
   { \
     if (!test) \
     { \
-      LONG ptrd; \
+      IPTR ptrd; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
         var_dest = ptrd; \
       else \
-        var_dest = (LONG)(defaultval); \
+        var_dest = (IPTR)(defaultval); \
     } \
   }
 
@@ -233,30 +233,29 @@ void obtain_pen(Object *obj, ULONG *pen, struct MUI_PenSpec *ps)
 }
 
 #if !defined(__MORPHOS__)
-#if defined(__AROS__)
-static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
+#ifdef __AROS__
+static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...)
 {
-  IPTR rc;
+    AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
+    retval = (Object *)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1), NULL);
+    AROS_SLOWSTACKTAGS_POST
+}
 #else
 static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
-#endif
   VA_LIST args;
 
   ENTER();
 
   VA_START(args, obj);
-  #if defined(__AROS__)
-  rc = (IPTR)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
-  #else
   rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
-  #endif
   VA_END(args);
 
   RETURN(rc);
   return rc;
 }
+#endif
 #endif // !__MORPHOS__
 
 IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
@@ -1083,19 +1082,19 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   if (data->NList_Font && !data->InUseFont)
   {
     char *fontname = NULL;
-    ULONG fonttmp = data->NList_Font;
+    IPTR fonttmp = data->NList_Font;
 
-    if (data->NList_Font == (ULONG)MUIV_NList_Font)
+    if (data->NList_Font == MUIV_NList_Font)
     {
       fonttmp = MUIV_Font_List;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font, &fontname);
     }
-    else if (data->NList_Font == (ULONG)MUIV_NList_Font_Little)
+    else if (data->NList_Font == MUIV_NList_Font_Little)
     {
       fonttmp = MUIV_Font_Tiny;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Little, &fontname);
     }
-    else if (data->NList_Font == (ULONG)MUIV_NList_Font_Fixed)
+    else if (data->NList_Font == MUIV_NList_Font_Fixed)
     {
       fonttmp = MUIV_Font_Fixed;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Fixed, &fontname);
@@ -1429,7 +1428,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   data->multisel_qualifier = 0;
   { LONG *multisel;
     LONG mult = MUIV_NList_MultiSelect_Shifted;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, (LONG) (&multisel)))
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, &multisel))
       mult = *multisel;
     if (data->NList_MultiSelect == MUIV_NList_MultiSelect_Default)
       data->multiselect = mult & 0x0007;
@@ -1477,7 +1476,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   NL_CreateImages(data);
 
-  data->drawsuper = FALSE;
+  data->drawsuper = NULL;
   data->format_chge = 1;
   data->do_draw_all = data->do_draw_title = data->do_draw = TRUE;
   data->do_parse = data->do_setcols = data->do_updatesb = data->do_wwrap = TRUE;

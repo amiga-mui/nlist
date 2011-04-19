@@ -54,6 +54,9 @@ IPTR MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR mes
     return (CallHookPkt(hook,object,message));
 }
 
+#ifdef __AROS__
+/* AROS uses a macro to handle this */
+#else
 IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
 {
   IPTR ret;
@@ -65,6 +68,7 @@ IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
 
   return ret;
 }
+#endif
 
 LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG bufsize,struct KeyMap *kmap)
 {
@@ -524,18 +528,18 @@ static BOOL CCB_string(struct NLData *data, char **cbstr, char *str, LONG len, c
 }
 
 
-static BOOL CCB_entry(struct NLData *data,char **cbstr,APTR entptr,LONG ent,struct Hook *hook,LONG c1,LONG p1,LONG c2,LONG p2)
+static BOOL CCB_entry(struct NLData *data,char **cbstr,APTR entptr,SIPTR ent,struct Hook *hook,SIPTR c1,SIPTR p1,SIPTR c2,SIPTR p2)
 {
   char **display_array = &data->DisplayArray[2];
   char *str;
-  LONG pos1,pos2,len,prep1,prep2;
+  SIPTR pos1,pos2,len,prep1,prep2;
   char lc;
   BOOL ln = FALSE;
   WORD colwrap,wrap = 0;
 
   if ((ent >= 0) && data->EntriesArray[ent]->Wrap)
   {
-    LONG ent1 = ent;
+    SIPTR ent1 = ent;
 
     if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
       ent1 -= data->EntriesArray[ent]->dnum;
@@ -663,7 +667,7 @@ static BOOL CCB_entry(struct NLData *data,char **cbstr,APTR entptr,LONG ent,stru
           else
             MyCallHookPkt(data->this,TRUE,data->NList_CopyColumnToClipHook,display_array,(APTR) str);
           data->display_ptr = NULL;
-          len = (LONG) display_array[1];
+          len = (SIPTR) display_array[1];
           if (len < 0)
             len = 0;
           if (!CCB_string(data,cbstr,display_array[0],len,lc,FALSE))
@@ -756,7 +760,7 @@ SIPTR NL_CopyTo(struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *
 {
   char *retstr = NULL;
   char *clipstr = NULL;
-  LONG ok = TRUE;
+  SIPTR ok = TRUE;
   LONG ent;
 
   ENTER();
@@ -876,7 +880,7 @@ SIPTR NL_CopyTo(struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *
 
     if((retstr = (char *)AllocVec(len, 0L)) != NULL)
       strlcpy(retstr, clipstr, len);
-    ok = (LONG)retstr;
+    ok = (SIPTR)retstr;
   }
 
   if(clipstr != NULL)
@@ -902,9 +906,9 @@ IPTR mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip *
 IPTR mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  LONG res;
+  SIPTR res;
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   res = NL_CopyTo(data,msg->pos,msg->filename,-1,msg->entries,NULL);
   *msg->result = (APTR) res;
-  return ((IPTR)res);
+  return (IPTR)res;
 }

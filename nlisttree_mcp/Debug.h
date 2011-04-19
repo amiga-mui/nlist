@@ -16,7 +16,7 @@
 
  NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 
- $Id: library.c 386 2010-04-28 08:35:39Z thboeckel $
+ $Id: Debug.h 38259 2011-04-18 10:59:44Z mazze $
 
 ***************************************************************************/
 

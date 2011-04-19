@@ -15,11 +15,12 @@
 
  TextEditor class Support Site:  http://www.sf.net/projects/texteditor-mcc
 
- $Id: NBitmap-Test.c 397 2010-04-30 09:40:29Z thboeckel $
+ $Id: NBitmap-Demo.c 38259 2011-04-18 10:59:44Z mazze $
 
 ***************************************************************************/
 
 #include <libraries/iffparse.h>
+#include <libraries/mui.h>
 
 #include <proto/exec.h>
 #include <proto/dos.h>

@@ -4,8 +4,9 @@ include $(TOP)/config/make.cfg
 #MM contrib-zune-classes-nlistviews-mcp : includes linklibs contrib-zune-classes-nlistviews-mcp-catalogs
 #MM contrib-zune-classes-nlistviews-mcp-test : includes linklibs
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
+USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
 USER_CFLAGS := -DNO_INLINE_STDARG
+USER_CFLAGS += $(PARANOIA_CFLAGS)
 
 FILES := locale NListviews icon Debug
 

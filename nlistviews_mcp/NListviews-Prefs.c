@@ -19,7 +19,7 @@
 
  NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 
- $Id: NListviews.c 213 2007-09-13 10:22:24Z thboeckel $
+ $Id: NListviews-Prefs.c 38261 2011-04-18 11:18:56Z mazze $
 
 ***************************************************************************/
 

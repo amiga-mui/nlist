@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-04-19 Matthias Rustler <mrustler@gmx.de>
+
+  * misc: backport of AROS fixes.
+
 #### v0.110 RELEASE ###########################################################
 
 2011-04-17 Jens Langner <Jens.Langner@light-speed.de>

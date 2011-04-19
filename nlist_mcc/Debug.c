@@ -19,7 +19,7 @@
 
  NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 
- $Id: Debug.c 220 2006-04-13 08:00:00Z damato $
+ $Id: Debug.c 38261 2011-04-18 11:18:56Z mazze $
 
 ***************************************************************************/
 
