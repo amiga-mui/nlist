@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-05-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/libraries/mui.h: removed the AROS-only STACKED keywords which are
+    not needed at all, since AROS has its own header file.
+    
 2011-04-19 Matthias Rustler <mrustler@gmx.de>
 
   * misc: backport of AROS fixes.
