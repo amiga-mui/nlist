@@ -9,7 +9,8 @@ $URL$
 
   * include/libraries/mui.h: removed the AROS-only STACKED keywords which are
     not needed at all, since AROS has its own header file.
-    
+  * include/mui/NList_mcc.h: added definition of SIPTR for non-AROS systems.
+
 2011-04-19 Matthias Rustler <mrustler@gmx.de>
 
   * misc: backport of AROS fixes.
