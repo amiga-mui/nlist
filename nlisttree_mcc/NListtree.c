@@ -10243,16 +10243,16 @@ IPTR _NListtree_CopyToClip(struct IClass *cl, Object *obj, struct MUIP_NListtree
   STRPTR string, str;
   BOOL alloc = FALSE;
 
-  if ( data->CopyToClipHook )
+  if(data->CopyToClipHook != NULL)
   {
-    if ( (SIPTR)( string = (STRPTR)MyCallHook( data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit ) ) == MUIV_NListtree_CopyToClip_Active )
+    if((SIPTR)(string = (STRPTR)MyCallHook( data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit)) == (SIPTR)MUIV_NListtree_CopyToClip_Active)
       string = msg->TreeNode->tn_Name;
   }
   else
   {
     string = msg->TreeNode->tn_Name;
 
-    if((str = AllocVecPooled(data->MemoryPool, strlen(string) + 1)))
+    if((str = AllocVecPooled(data->MemoryPool, strlen(string) + 1)) != NULL)
     {
       STRPTR s = string;
 

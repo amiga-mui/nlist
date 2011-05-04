@@ -1132,13 +1132,13 @@ void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
       }
       else if ((colwidth > cinfo->colwidthbiggest2) && (cinfo->colwidthbiggest2 >= -1))
       { cinfo->colwidthbiggest2 = colwidth;
-        cinfo->colwidthbiggestptr2 = (IPTR) data->display_ptr;
+        cinfo->colwidthbiggestptr2 = (SIPTR) data->display_ptr;
       }
     }
     else
     {
       if (((colwidth > cinfo->colwidthbiggest) && (cinfo->colwidthbiggest >= -1)) ||
-          (cinfo->colwidthbiggestptr == (IPTR) data->display_ptr))
+          (cinfo->colwidthbiggestptr == (SIPTR) data->display_ptr))
       {
         cinfo->colwidthbiggestptr = cinfo->colwidthbiggestptr2;
         cinfo->colwidthbiggest = cinfo->colwidthbiggest2;
@@ -1152,7 +1152,7 @@ void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
           data->do_setcols = TRUE;
         }
       }
-      else if (cinfo->colwidthbiggestptr2 == (IPTR) data->display_ptr)
+      else if ((IPTR)cinfo->colwidthbiggestptr2 == (IPTR) data->display_ptr)
       {
         cinfo->colwidthbiggest2 = -2;
         cinfo->colwidthbiggestptr2 = -2;

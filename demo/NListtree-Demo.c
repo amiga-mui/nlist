@@ -853,7 +853,7 @@ MakeStaticHook(numselhook, numselfunc);
 */
 HOOKPROTONHNP(testfunc, LONG, Object *obj)
 {
-	IPTR id;
+	SIPTR id;
 	ULONG num;
 
 	id = MUIV_NListtree_NextSelected_Start;
@@ -862,7 +862,7 @@ HOOKPROTONHNP(testfunc, LONG, Object *obj)
 	{
 		DoMethod( obj, MUIM_NListtree_NextSelected, &id );
 
-		if((LONG)id == MUIV_NListtree_NextSelected_End )
+		if(id == (SIPTR)MUIV_NListtree_NextSelected_End )
 			break;
 
 		//GetAttr( MUIA_List_Entries, obj, &num );

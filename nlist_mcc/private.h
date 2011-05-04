@@ -108,8 +108,8 @@ struct colinfo
   struct colinfo *c;
 
   char *preparse;
-  IPTR  colwidthbiggestptr;
-  IPTR  colwidthbiggestptr2;
+  SIPTR colwidthbiggestptr;
+  SIPTR colwidthbiggestptr2;
   WORD  colwidthbiggest;
   WORD  colwidthbiggest2;
   WORD  minx;
