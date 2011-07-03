@@ -7,6 +7,9 @@ $URL$
 
 2011-07-03 Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlisttree_mcp/NListtree.c: changed default imagespec settings to use 6:XXX rather
+    than 1:XXX. This should automatically chose the right image per default based on
+    the global settings.
   * nlist_mcc/NList_mcc6.c: we now add "..." to the end of a string if it doesn't
     fit in a column and was stripped accordingly. This should make it more obvious
     for the user that there is more to read if he is going to enlarge the column.

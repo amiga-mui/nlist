@@ -75,12 +75,16 @@ struct SampleArray
 */
 static const struct SampleArray sa[] =
 {
+  { "root1", 0                            },
+
   { "comp", TNF_LIST | TNF_OPEN           },
   {    "sys", TNF_LIST | TNF_OPEN         },
   {       "amiga", TNF_LIST | TNF_OPEN    },
   {         "misc", 0x8000                },
   {       "mac", TNF_LIST                 },
   {         "system", 0x8000              },
+
+  { "root2", 0                            },
 
   { "de", TNF_LIST | TNF_OPEN             },
   {    "comm", TNF_LIST                   },
@@ -127,11 +131,15 @@ static VOID DrawSampleTree( Object *ltobj )
   WORD i = 0;
 
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+
+  tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn2, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
+
+  tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
 
   tn1 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
   tn2 = (struct MUI_NListtree_TreeNode *)DoMethod( ltobj, MUIM_NListtree_Insert, sa[i].name, &sa[i], tn1, MUIV_NListtree_Insert_PrevNode_Tail, sa[i].flags ); i++;
@@ -395,7 +403,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
             Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_CLOSED), msg_closed_key),
             Child, data->PI_ImageClosed     = PopimageObject,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_Image,
               MUIA_ControlChar,               msg_closed_key,
               MUIA_CycleChain,                TRUE,
               MUIA_Draggable,                 TRUE,
@@ -407,7 +415,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
             Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_OPEN), msg_open_key),
             Child, data->PI_ImageOpen       = PopimageObject,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_Image,
               MUIA_ControlChar,               msg_open_key,
               MUIA_CycleChain,                TRUE,
               MUIA_Draggable,                 TRUE,
@@ -418,7 +426,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
             Child, FreeKeyCLabel(tr(MSG_BUTTON_LABEL_SPECIAL), msg_special_key),
             Child, data->PI_ImageSpecial    = PopimageObject,
               MUIA_Imagedisplay_UseDefSize,   TRUE,
-              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_All,
+              MUIA_Imageadjust_Type,          MUIV_Imageadjust_Type_Image,
               MUIA_ControlChar,               msg_special_key,
               MUIA_CycleChain,                TRUE,
               MUIA_Draggable,                 TRUE,
@@ -730,7 +738,7 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   {
     if ( idobj )
     {
-      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, "1:17" );
+      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, "6:30" ); // MUII_TapePlay
 
       get( idobj, MUIA_Imagedisplay_Spec, &is );
       set( data->PI_ImageClosed, MUIA_Imagedisplay_Spec, is );
@@ -750,7 +758,7 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   {
     if ( idobj )
     {
-      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, "1:23" );
+      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, "6:39" ); // MUII_TapeDown
 
       get( idobj, MUIA_Imagedisplay_Spec, &is );
       set( data->PI_ImageOpen, MUIA_Imagedisplay_Spec, is );
@@ -770,7 +778,7 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   {
     if ( idobj )
     {
-      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, "1:9" );
+      DoMethod( idobj, MUIM_Set, MUIA_Imagedisplay_Spec, "6:22" ); // MUII_Drawer
 
       get( idobj, MUIA_Imagedisplay_Spec, &is );
       set( data->PI_ImageSpecial, MUIA_Imagedisplay_Spec, is );
@@ -852,8 +860,8 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   }
   else
   {
-    set( data->CY_Style, MUIA_Cycle_Active, MUICFGV_NListtree_Style_Lines3D );
-    StyleChanged( data, MUICFGV_NListtree_Style_Lines3D );
+    set( data->CY_Style, MUIA_Cycle_Active, MUICFGV_NListtree_Style_Win98 );
+    StyleChanged( data, MUICFGV_NListtree_Style_Win98 );
 
     D(DBF_ALWAYS, "Style: %ld", 0);
   }
