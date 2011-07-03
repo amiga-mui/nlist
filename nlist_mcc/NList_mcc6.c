@@ -1316,10 +1316,31 @@ D(bug( "<====================================\n" ));
               }
             }
           }
-          if (curclen > 0)
+
+          if(curclen > 0)
           {
             Move(data->rp, x2, y);
-            Text(data->rp, ptr1, curclen);
+
+            // before we draw the text we check if it was clipped and if so
+            // we add "..." in the middle of the text in case the PartialCol
+            // feature is turned on
+            if(data->NList_PartialCol && ni+1 > cinfo->ninfo && next_x > cmaxx && curclen >= 5 &&
+               (xbar-1 >= data->mleft) && (xbar-1 <= data->mright))
+            {
+              int maxlen = (curclen+1)*sizeof(char);
+              char *txt = AllocVecPooled(data->Pool, maxlen);
+
+              strlcpy(txt, ptr1, maxlen-3);
+              strlcat(txt, "...", maxlen);
+
+              Text(data->rp, txt, curclen);
+
+              FreeVecPooled(data->Pool, txt);
+            }
+            else
+              Text(data->rp, ptr1, curclen);
+
+            //D(DBF_ALWAYS, "draw text4: %ld %ld %ld %ld %ld - %ld>%ld  '%s'", curclen, x2, next_x, maxx2, cmaxx, ni+1, cinfo->ninfo, ptr1);
 
 /*
 {
@@ -1349,6 +1370,7 @@ D(bug( txt, ptr1 ));
       ni++;
       afinfo = &data->aff_infos[ni];
     }
+
     if (data->NList_PartialCol && (x2 > cmaxx) && (xbar-1 >= data->mleft) && (xbar-1 <= data->mright))
     {
       WORD yb;

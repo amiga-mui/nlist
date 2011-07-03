@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-07-03 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/NList_mcc6.c: we now add "..." to the end of a string if it doesn't
+    fit in a column and was stripped accordingly. This should make it more obvious
+    for the user that there is more to read if he is going to enlarge the column.
+
 2011-05-04 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/libraries/mui.h: removed the AROS-only STACKED keywords which are
