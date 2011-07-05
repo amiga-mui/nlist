@@ -308,11 +308,6 @@ INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WO
       DrawLine( rp, m - 2, t, m - 2, b );
       DrawLine( rp, m, t, m, b );
 
-      /*
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw2] ) );
-      DrawLine( rp, m - 3, t, m - 3, b );
-      DrawLine( rp, m + 1, t, m + 1, b );
-      */
       break;
   }
 
@@ -370,15 +365,6 @@ INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, W
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
       DrawLine( rp, m + 1, t,   m + 1,  b );
       DrawLine( rp, m + 2, h + 2, r,  h + 2 );
-
-      /*
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw2] ) );
-      DrawLine( rp, m - 3, t, m - 3, b );
-      DrawLine( rp, m + 1, t, m + 1, b );
-
-      DrawLine( rp, m + 2, h - 2, r, h - 2 );
-      DrawLine( rp, m + 2, h + 2, r, h + 2 );
-      */
 
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw] ) );
       DrawLine( rp, m - 2, t, m - 2, b );
@@ -449,15 +435,6 @@ INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im,
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
       DrawLine( rp, m + 1, t, m + 1,  h - 2 );
       DrawLine( rp, m - 2, h + 2, r,  h + 2 );
-
-      /*
-      SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw2] ) );
-      DrawLine( rp, m - 3, t, m - 3,  h + 1 );
-      DrawLine( rp, m + 1, h - 2, r, h - 2 );
-
-      DrawLine( rp, m + 1, t, m + 1,  h - 2 );
-      DrawLine( rp, m - 3, h + 2, r, h + 2 );
-      */
 
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Draw] ) );
       DrawLine( rp, m - 2, t, m - 2,  h );
@@ -4573,17 +4550,6 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         }
         break;
 
-      case MUICFG_NListtree_PenSpecDraw2:
-
-        if( data->MRI )
-        {
-          ObtPen( data->MRI, &data->Pen[PEN_Draw2], (struct MUI_PenSpec *)tag->ti_Data );
-          DoRefresh( data );
-
-          D(DBF_GETSET, "SET MUICFG_NListtree_PenSpecDraw2: %s", (STRPTR)tag->ti_Data);
-        }
-        break;
-
       case MUICFG_NListtree_Space:
 
         data->Space = (BYTE)tag->ti_Data;
@@ -5739,16 +5705,6 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
     }
 
 
-    if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_PenSpecDraw2, &d ) )
-      ObtPen( data->MRI, &data->Pen[PEN_Draw2], (struct MUI_PenSpec *)d );
-
-    else if( pdobj )
-    {
-      DoMethod( pdobj, MUIM_Pendisplay_SetMUIPen, DEFAULT_PEN_DRAW );
-      ObtPen( data->MRI, &data->Pen[PEN_Draw2], (struct MUI_PenSpec *)xget( pdobj, MUIA_Pendisplay_Spec ) );
-    }
-
-
     /*
     **  Set values
     */
@@ -5836,12 +5792,9 @@ IPTR _Cleanup(struct IClass *cl, Object *obj, Msg msg)
   for( i = 0; i < 4; i++ )
     DisposeImage( data, i );
 
-
   RelPen( data->MRI, &data->Pen[PEN_Line] );
   RelPen( data->MRI, &data->Pen[PEN_Shadow] );
   RelPen( data->MRI, &data->Pen[PEN_Draw] );
-  RelPen( data->MRI, &data->Pen[PEN_Draw2] );
-
 
   data->MRI = NULL;
 
