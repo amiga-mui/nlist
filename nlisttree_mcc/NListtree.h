@@ -104,7 +104,7 @@ struct NListtree_Data
   /*
   **  Pen specific stuff.
   */
-  LONG              Pen[4];         // ***  Obtained pen for lines/shadow/draw/draw2 drawing.
+  LONG              Pen[3];         // ***  Obtained pen for lines/shadow/draw drawing.
 
 
   /*
@@ -249,7 +249,6 @@ struct NListtree_Data
 #define PEN_Shadow                        0L
 #define PEN_Line                          1L
 #define PEN_Draw                          2L
-#define PEN_Draw2                         3L
 
 /// xget()
 //  Gets an attribute value from a MUI object
