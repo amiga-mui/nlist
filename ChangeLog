@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-07-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/NList-Demo.c, demo/NListtree-Demo.c: added list of used classes.
+
 2011-07-03 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcp/NListtree.c: changed default imagespec settings to use 6:XXX rather
