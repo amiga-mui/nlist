@@ -51,10 +51,6 @@
 #define MUIA_TB         ( CLASS_TAGBASE + 0x0200 )                  // ***  Start of attribute tags. *ic*
 #define MUICFG_TB       ( CLASS_TAGBASE + 0x0000 )                  // ***  Start of config value tags. *ic*
 
-#define DEFAULT_PEN_LINES       MPEN_SHINE  /*i*/
-#define DEFAULT_PEN_SHADOW      MPEN_SHADOW /*i*/
-#define DEFAULT_PEN_DRAW        "rECECECEC,E4E4E4E4,14141414"   /*i*/
-
 /*** Attributes ***/
 
 #define MUIA_NListtree_Active                               ( MUIA_TB | 0x0001 )    // *** [.SGN]
@@ -93,18 +89,37 @@
 
 #define MUICFG_NListtree_ImageSpecClosed                    ( MUICFG_TB | 0x0001 )
 #define MUICFG_NListtree_ImageSpecOpen                      ( MUICFG_TB | 0x0002 )
-#define MUICFG_NListtree_ImageSpecSpecial                   ( MUICFG_TB | 0x0003 )
+#define MUICFG_NListtree_ImageSpecFolder                    ( MUICFG_TB | 0x0003 )
 
 #define MUICFG_NListtree_PenSpecLines                       ( MUICFG_TB | 0x0004 )
 #define MUICFG_NListtree_PenSpecShadow                      ( MUICFG_TB | 0x0005 )
-#define MUICFG_NListtree_PenSpecDraw                        ( MUICFG_TB | 0x0006 )
-#define MUICFG_NListtree_PenSpecDraw2                       ( MUICFG_TB | 0x000b )
+#define MUICFG_NListtree_PenSpecGlow                        ( MUICFG_TB | 0x0006 )
 
 #define MUICFG_NListtree_RememberStatus                     ( MUICFG_TB | 0x0007 )
-#define MUICFG_NListtree_Space                              ( MUICFG_TB | 0x0008 )
-#define MUICFG_NListtree_Style                              ( MUICFG_TB | 0x0009 )
+#define MUICFG_NListtree_IndentWidth                        ( MUICFG_TB | 0x0008 )
 #define MUICFG_NListtree_OpenAutoScroll                     ( MUICFG_TB | 0x000a )
+#define MUICFG_NListtree_LineType                           ( MUICFG_TB | 0x000b )
+#define MUICFG_NListtree_UseFolderImage                     ( MUICFG_TB | 0x000c )
 
+/*i* Private attribute & config values ***/
+
+#define MUICFGV_NListtree_LineType_Disabled                 0
+#define MUICFGV_NListtree_LineType_Normal                   1
+#define MUICFGV_NListtree_LineType_Dashed                   2
+#define MUICFGV_NListtree_LineType_Shadow                   3
+#define MUICFGV_NListtree_LineType_Glow                     4
+
+#define MUICFGV_NListtree_ImageSpecClosed_Default           "6:30" // MUII_TapePlay
+#define MUICFGV_NListtree_ImageSpecOpen_Default             "6:39" // MUII_TapeDown
+#define MUICFGV_NListtree_ImageSpecFolder_Default           "6:22" // MUII_Drawer
+#define MUICFGV_NListtree_PenSpecLines_Default              MPEN_SHINE
+#define MUICFGV_NListtree_PenSpecShadow_Default             MPEN_SHADOW
+#define MUICFGV_NListtree_PenSpecGlow_Default               MPEN_HALFSHADOW
+#define MUICFGV_NListtree_RememberStatus_Default            TRUE
+#define MUICFGV_NListtree_IndentWidth_Default               4
+#define MUICFGV_NListtree_OpenAutoScroll_Default            TRUE
+#define MUICFGV_NListtree_LineType_Default                  MUICFGV_NListtree_LineType_Disabled
+#define MUICFGV_NListtree_UseFolderImage_Default            FALSE
 
 /*** Special attribute values ***/
 
@@ -169,19 +184,6 @@
 
 #define MUIV_NListtree_ShowTree_Toggle                      -1
 
-
-/*i* Private attribute & config values ***/
-
-#define MUICFGV_NListtree_Style_Normal                      0
-#define MUICFGV_NListtree_Style_Inserted                    1
-#define MUICFGV_NListtree_Style_Lines                       2
-#define MUICFGV_NListtree_Style_Win98                       3
-#define MUICFGV_NListtree_Style_Mac                         4
-#define MUICFGV_NListtree_Style_Lines3D                     5
-#define MUICFGV_NListtree_Style_Win98Plus                   6
-#define MUICFGV_NListtree_Style_Glow                        7
-
-#define MUICFGV_NListtree_Space_Default                     4
 
 
 

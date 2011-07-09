@@ -5,6 +5,21 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-07-10 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcc, nlisttree_mcp: completly reworked the preferences setup and got
+    rid of the way NListtree allows to use different "Styles". This was not only
+    partly nonsense, but was also not completely consistently implemented. Now every
+    parameter of the previously allowed style parameters can be configured
+    separately in the MCP. In addition, tree display and how the different parameters
+    are use should be way more consistent. Also drawing the tree should be more 
+    pixel accurate than before and produce the same layout no matter which line
+    type is selected in the preferences. In addition, new sensible default parameters
+    are now in place which should give everyone a nice lookin default tree with
+    the possibility to tune everything on their own will. Some fine tuning might
+    still be required to get everything more smoothly implemented, but the whole
+    tree display and management should be way more consistent and intuitive.
+
 2011-07-06 Thore Böckelmann <tboeckel@gmx.de>
 
   * demo/NList-Demo.c, demo/NListtree-Demo.c: added list of used classes.
