@@ -420,31 +420,31 @@ INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im,
     case MUICFGV_NListtree_LineType_Shadow:
     {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
-      DrawLine( rp, m, t,   m,  h );
-      DrawLine( rp, m, h + 1, r,  h + 1 );
+      DrawLine( rp, m+1, t,   m+1,  h );
+      DrawLine( rp, m+1, h + 1, r,  h + 1 );
 
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLine( rp, m - 1, t, m - 1,  h );
-      DrawLine( rp, m - 1, h, r,    h );
+      DrawLine( rp, m, t, m,  h );
+      DrawLine( rp, m, h, r,    h );
     }
     break;
 
     case MUICFGV_NListtree_LineType_Glow:
     {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
-      DrawLine( rp, m + 1, t, m + 1,  h - 2 );
-      DrawLine( rp, m - 1, h + 2, r,  h + 2 );
+      DrawLine( rp, m + 2, t, m + 2,  h - 2 );
+      DrawLine( rp, m, h + 2, r,  h + 2 );
 
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Glow] ) );
-      DrawLine( rp, m - 2, t, m - 2,  h );
-      DrawLine( rp, m, h - 1, r, h - 1 );
+      DrawLine( rp, m - 1, t, m - 1,  h );
+      DrawLine( rp, m+1, h - 1, r, h - 1 );
 
-      DrawLine( rp, m, t, m,  h );
-      DrawLine( rp, m - 2, h + 1, r, h + 1 );
+      DrawLine( rp, m+1, t, m+1,  h );
+      DrawLine( rp, m - 1, h + 1, r, h + 1 );
 
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLine( rp, m - 1, t, m - 1,  h );
-      DrawLine( rp, m - 1, h, r,    h );
+      DrawLine( rp, m , t, m, h );
+      DrawLine( rp, m, h, r, h );
     }
     break;
   }
