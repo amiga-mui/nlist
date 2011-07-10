@@ -948,12 +948,6 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
   **  Values
   */
 
-  get( data->SL_IndentWidth, MUIA_Slider_Level, &d );
-  snprintf(buf, sizeof(buf), "%d", (int)d);
-  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_IndentWidth );
-
-  D(DBF_ALWAYS, "IndentWidth: %ld", d);
-
 
   get( data->CH_RememberStatus, MUIA_Selected, &d );
   snprintf(buf, sizeof(buf), "%d", (int)d);
@@ -962,11 +956,29 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
   D(DBF_ALWAYS, "RememberStatus: %ld", d);
 
 
+  get( data->SL_IndentWidth, MUIA_Slider_Level, &d );
+  snprintf(buf, sizeof(buf), "%d", (int)d);
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_IndentWidth );
+
+  D(DBF_ALWAYS, "IndentWidth: %ld", d);
+
   get( data->CH_OpenAutoScroll, MUIA_Selected, &d );
   snprintf(buf, sizeof(buf), "%d", (int)d);
   DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_OpenAutoScroll );
 
   D(DBF_ALWAYS, "OpenAutoScroll: %ld", d);
+
+  get( data->CY_LineType, MUIA_Cycle_Active, &d );    
+  snprintf(buf, sizeof(buf), "%d", (int)d);   
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_LineType );    
+               
+  D(DBF_ALWAYS, "LineType: %ld", d);
+
+  get( data->CH_UseFolderImage, MUIA_Selected, &d );
+  snprintf(buf, sizeof(buf), "%d", (int)d);
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_UseFolderImage );
+
+  D(DBF_ALWAYS, "UseFolderImage: %ld", d);
 
   RETURN(0);
   return( 0 );

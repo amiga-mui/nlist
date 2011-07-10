@@ -7,6 +7,8 @@ $URL$
 
 2011-07-10 Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlisttree_mcp: forgot to add the new LineType and UseFolderImage config items
+    to the dataspace. Thus they were never queried by applications using NListtree.mcc.
   * nlisttree_mcc, nlisttree_mcp: completly reworked the preferences setup and got
     rid of the way NListtree allows to use different "Styles". This was not only
     partly nonsense, but was also not completely consistently implemented. Now every
