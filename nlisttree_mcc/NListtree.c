@@ -234,7 +234,7 @@ INLINE VOID DrawLine( struct RastPort *rp, WORD l, WORD t, WORD r, WORD b )
 **  Draw windows line l/t to r/b. All
 **  lines are pure horiz. or vert.!
 */
-INLINE VOID DrawLineDashed( struct RastPort *rp, WORD l, WORD t, WORD r, WORD b )
+INLINE VOID DrawLineDotted( struct RastPort *rp, WORD l, WORD t, WORD r, WORD b )
 {
   if ( l == r )
   {
@@ -279,10 +279,10 @@ INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WO
     }
     break;
 
-    case MUICFGV_NListtree_LineType_Dashed:
+    case MUICFGV_NListtree_LineType_Dotted:
     {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLineDashed( rp, m, t, m, b );
+      DrawLineDotted( rp, m, t, m, b );
     }
     break;
 
@@ -339,11 +339,11 @@ INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, W
     }
     break;
 
-    case MUICFGV_NListtree_LineType_Dashed:
+    case MUICFGV_NListtree_LineType_Dotted:
     {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLineDashed( rp, m, t, m, b );
-      DrawLineDashed( rp, m, h, m + (im->nltdata->MaxImageWidth-1)/2 + im->nltdata->IndentWidth, h );
+      DrawLineDotted( rp, m, t, m, b );
+      DrawLineDotted( rp, m, h, m + (im->nltdata->MaxImageWidth-1)/2 + im->nltdata->IndentWidth, h );
     }
     break;
 
@@ -409,11 +409,11 @@ INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im,
     }
     break;
 
-    case MUICFGV_NListtree_LineType_Dashed:
+    case MUICFGV_NListtree_LineType_Dotted:
     {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLineDashed( rp, m, t, m, h );
-      DrawLineDashed( rp, m, h, m + (im->nltdata->MaxImageWidth-1)/2 + im->nltdata->IndentWidth, h );
+      DrawLineDotted( rp, m, t, m, h );
+      DrawLineDotted( rp, m, h, m + (im->nltdata->MaxImageWidth-1)/2 + im->nltdata->IndentWidth, h );
     }
     break;
 
@@ -476,10 +476,10 @@ INLINE VOID DrawTreeHorBar( struct TreeImage_Data *data, struct MyImage *im, WOR
     }
     break;
 
-    case MUICFGV_NListtree_LineType_Dashed:
+    case MUICFGV_NListtree_LineType_Dotted:
     {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Line] ) );
-      DrawLineDashed( rp, l-1, h, r+1, h );
+      DrawLineDotted( rp, l-1, h, r+1, h );
     }
     break;
  

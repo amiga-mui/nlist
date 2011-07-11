@@ -8,6 +8,8 @@ $URL$
 2011-07-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcp/locale: updated german and english-british translations.
+  * nlisttree_mc[cp]: renamed the "dashed" mode to "dotted", as this is more 
+    appropriate.
 
 2011-07-10 Jens Langner <Jens.Langner@light-speed.de>
 

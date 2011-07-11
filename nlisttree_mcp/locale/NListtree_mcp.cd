@@ -194,8 +194,8 @@ Disabled
 MSG_LINETYPE_NORMAL (57//)
 Normal
 ;
-MSG_LINETYPE_DASHED (58//)
-Dashed
+MSG_LINETYPE_DOTTED (58//)
+Dotted
 ;
 MSG_LINETYPE_SHADOW (59//)
 Shadow

@@ -105,7 +105,7 @@
 
 #define MUICFGV_NListtree_LineType_Disabled                 0
 #define MUICFGV_NListtree_LineType_Normal                   1
-#define MUICFGV_NListtree_LineType_Dashed                   2
+#define MUICFGV_NListtree_LineType_Dotted                   2
 #define MUICFGV_NListtree_LineType_Shadow                   3
 #define MUICFGV_NListtree_LineType_Glow                     4
 

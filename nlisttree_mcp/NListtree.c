@@ -293,7 +293,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
 
   CY_LineTypes_Entries[0] = tr(MSG_LINETYPE_DISABLED);
   CY_LineTypes_Entries[1] = tr(MSG_LINETYPE_NORMAL);
-  CY_LineTypes_Entries[2] = tr(MSG_LINETYPE_DASHED);
+  CY_LineTypes_Entries[2] = tr(MSG_LINETYPE_DOTTED);
   CY_LineTypes_Entries[3] = tr(MSG_LINETYPE_SHADOW);
   CY_LineTypes_Entries[4] = tr(MSG_LINETYPE_GLOW);
   CY_LineTypes_Entries[5] = NULL;

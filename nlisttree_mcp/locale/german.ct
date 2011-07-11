@@ -1,5 +1,5 @@
 ## chunk AUTH Thore Böckelmann, Jens Langner
-## version $VER: NListtree_mcp.catalog 2.3 (11.7.2011)
+## version $VER: NListtree_mcp.catalog 2.4 (11.7.2011)
 ## language deutsch
 ## codeset 0
 ;
@@ -261,16 +261,16 @@ MSG_LINETYPE_NORMAL
 normal
 ; Normal
 ;
-MSG_LINETYPE_DASHED
-gestrichelt
-; Dashed
+MSG_LINETYPE_DOTTED
+gepunktet
+; Dotted
 ;
 MSG_LINETYPE_SHADOW
 schattiert
 ; Shadow
 ;
 MSG_LINETYPE_GLOW
-glühen
+glühend
 ; Glow
 ;
 MSG_HELP_LINETYPES
