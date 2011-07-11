@@ -1,5 +1,5 @@
 ## chunk AUTH Thore Böckelmann, Jens Langner
-## version $VER: NListtree_mcp.catalog 2.2 (11.7.2011)
+## version $VER: NListtree_mcp.catalog 2.3 (11.7.2011)
 ## language deutsch
 ## codeset 0
 ;
@@ -250,7 +250,7 @@ Linienstil
 ; Line type
 ;
 MSG_BUTTON_SHORTCUT_LINETYPES
-l
+n
 ; l
 ;
 MSG_LINETYPE_DISABLED
