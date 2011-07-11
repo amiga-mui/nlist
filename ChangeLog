@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-07-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcp/locale: updated german and english-british translations.
+
 2011-07-10 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcp: forgot to add the new LineType and UseFolderImage config items
@@ -14,7 +18,7 @@ $URL$
     partly nonsense, but was also not completely consistently implemented. Now every
     parameter of the previously allowed style parameters can be configured
     separately in the MCP. In addition, tree display and how the different parameters
-    are use should be way more consistent. Also drawing the tree should be more 
+    are use should be way more consistent. Also drawing the tree should be more
     pixel accurate than before and produce the same layout no matter which line
     type is selected in the preferences. In addition, new sensible default parameters
     are now in place which should give everyone a nice lookin default tree with
