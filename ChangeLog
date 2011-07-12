@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-07-12 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/NList_mcc4.c: now objects defined with \033O and \033I can have a
+    minimal width of 0. Previously NList always enforced a minimum of 2 which
+    caused some pixel alignment problems with e.g. NListtree.
+
 2011-07-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcp/locale: updated german and english-british translations.
