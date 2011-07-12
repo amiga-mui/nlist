@@ -7,6 +7,13 @@ $URL$
 
 2011-07-12 Jens Langner <Jens.Langner@light-speed.de>
 
+  * nlisttree_mcc/nlisttree_mcp: now that NList allows to define zero sized
+    objects we could remove the IndentWidth > 3 enforcement and make NListtree
+    allow IndentWidths down till 0. However, we do have to enforce that the correct
+    NList version is installed or the NListtree layout is screwed up. Furthermore,
+    renamed the "Indent width" to "Additional indent width" as that better
+    describes what this is all about. In addition, the new default for the
+    indent width is zero as that ensures a small NListtree object.
   * nlist_mcc/NList_mcc4.c: now objects defined with \033O and \033I can have a
     minimal width of 0. Previously NList always enforced a minimum of 2 which
     caused some pixel alignment problems with e.g. NListtree.

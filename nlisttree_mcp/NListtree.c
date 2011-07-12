@@ -433,7 +433,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
             Child, KeyLabel(tr(MSG_BUTTON_LABEL_INDENTWIDTH), msg_indentwidth_key),
             Child, data->SL_IndentWidth = SliderObject,
               MUIA_Group_Horiz,     TRUE,
-              MUIA_Slider_Min,      4,
+              MUIA_Slider_Min,      0,
               MUIA_Slider_Max,      16,
               MUIA_Slider_Level,    MUICFGV_NListtree_IndentWidth_Default,
               MUIA_Numeric_Format,  "%ldpx",

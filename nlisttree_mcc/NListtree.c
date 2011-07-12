@@ -262,7 +262,7 @@ INLINE VOID DrawLineDotted( struct RastPort *rp, WORD l, WORD t, WORD r, WORD b 
 INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WORD l, WORD t, UNUSED WORD r, WORD b )
 {
   struct RastPort *rp = (struct RastPort *)_rp( data->obj );
-  UWORD m = l - 1 + ( im->nltdata->MaxImageWidth - 1 ) / 2;
+  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2;
 
   ENTER();
 
@@ -320,7 +320,7 @@ INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WO
 INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, WORD l, WORD t, WORD r, WORD b )
 {
   struct RastPort *rp = (struct RastPort *)_rp( data->obj );
-  UWORD m = l - 1 + ( im->nltdata->MaxImageWidth - 1 ) / 2;
+  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2;
   UWORD h = t + ( b - t ) / 2;
 
   ENTER();
@@ -390,7 +390,7 @@ INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, W
 INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im, WORD l, WORD t, WORD r, WORD b )
 {
   struct RastPort *rp = (struct RastPort *)_rp( data->obj );
-  UWORD m = l - 1 + ( im->nltdata->MaxImageWidth - 1 ) / 2;
+  UWORD m = l + ( im->nltdata->MaxImageWidth - 1 ) / 2;
   UWORD h = t + ( b - t ) / 2;
 
   ENTER();
@@ -535,7 +535,8 @@ IPTR TreeImage_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
     struct MyImage *im;
     WORD l, t, r, b;
 
-    D(DBF_DRAW, "DRAW SPEC: %ld", data->spec);
+    D(DBF_DRAW, "DRAW SPEC: %ld - %ld/%ld/%ld/%ld", data->spec, _defwidth(obj), _defheight(obj), _minwidth(obj), _minheight(obj));
+    D(DBF_DRAW, "%ld/%ld/%ld/%ld", _left(obj), _top(obj), _right(obj), _bottom(obj));
 
     im = (struct MyImage *)xget( obj, MUIA_UserData );
 
@@ -653,10 +654,8 @@ DISPATCHER(NodeImage_Dispatcher)
     w = _defwidth( obj );
     h = _defheight( obj );
 
-    // we have to check for w+2 because MUI seems to have a minimum width
-    // for object == 2 somehow?!?!
-    if ( im->nltdata->MaxImageWidth < (w+2) )
-      im->nltdata->MaxImageWidth = w+2;
+    if ( im->nltdata->MaxImageWidth < w )
+      im->nltdata->MaxImageWidth = w;
 
     if ( im->nltdata->MaxImageHeight < h )
     {
@@ -2832,6 +2831,11 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
         }
         else
         {
+          // ensures proper text alignment with subnodes in
+          // case the user selected an additional indentwidth
+          if(data->IndentWidth > 0)
+            x2 += 2;
+
           snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (int)x2 );
 
           otn->tn_ImagePos += x2;
@@ -2863,7 +2867,8 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
     x1 = SPEC_Hor;
 
     // add some indent width
-    snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (unsigned int)data->IndentWidth);
+    if(data->IndentWidth > 0)
+      snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)x1, (unsigned int)data->IndentWidth);
 
     if(data->UseFolderImage == TRUE)
     {
@@ -4300,12 +4305,6 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       case MUICFG_NListtree_IndentWidth:
       {
         data->IndentWidth = (BYTE)tag->ti_Data;
-
-        // ensure that IndentWidth has always a minimum of 4 pixels as that seems
-        // to be a MUI minimum?!?!
-        if(data->IndentWidth < 4)
-          data->IndentWidth = 4;
-
         DoRefresh( data );
 
         D(DBF_GETSET, "SET MUICFG_NListtree_IndentWidth: %ld", tag->ti_Data);
@@ -5198,7 +5197,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
         else
           taskname = "MUI Application";
 
-        if ( ( ver < 20 ) || ( ( ver == 20 ) && ( rev < 127 ) ) )
+        if ( ( ver < 20 ) || ( ( ver == 20 ) && ( rev < 130 ) ) )
         {
           struct EasyStruct es;
 
@@ -5208,7 +5207,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
           es.es_TextFormat = (STRPTR)"NListtree.mcc has detected that your version of\n"
                                      "NList.mcc which is used by task `%s'\n"
                                      "is outdated (V%ld.%ld). Please update at least to\n"
-                                     "version 20.127, which is available at\n\n"
+                                     "version 20.130, which is available at\n\n"
                                      "http://www.sf.net/projects/nlist-classes\n\n"
                                      "NListtree will terminate now to avoid problems...\n";
           es.es_GadgetFormat = (STRPTR)"Terminate";
@@ -5510,11 +5509,6 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
       data->IndentWidth = atoi( (STRPTR)d );
     else
       data->IndentWidth = MUICFGV_NListtree_IndentWidth_Default;
-
-    // ensure that IndentWidth has always a minimum of 4 pixels as that seems
-    // to be a MUI minimum?!?!
-    if(data->IndentWidth < 4)
-      data->IndentWidth = 4;
 
     if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_RememberStatus, &d ) )
       x = atoi( (STRPTR)d );

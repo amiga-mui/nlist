@@ -116,7 +116,7 @@
 #define MUICFGV_NListtree_PenSpecShadow_Default             MPEN_SHADOW
 #define MUICFGV_NListtree_PenSpecGlow_Default               MPEN_HALFSHADOW
 #define MUICFGV_NListtree_RememberStatus_Default            TRUE
-#define MUICFGV_NListtree_IndentWidth_Default               4
+#define MUICFGV_NListtree_IndentWidth_Default               0
 #define MUICFGV_NListtree_OpenAutoScroll_Default            TRUE
 #define MUICFGV_NListtree_LineType_Default                  MUICFGV_NListtree_LineType_Disabled
 #define MUICFGV_NListtree_UseFolderImage_Default            FALSE

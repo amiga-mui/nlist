@@ -314,7 +314,7 @@ angezeigt werden soll.
 ; subnodes.
 ;
 MSG_BUTTON_LABEL_INDENTWIDTH
-Einzugsbreite
+Zusätzl. Einzugsbreite
 ; Indent width
 ;
 MSG_BUTTON_SHORTCUT_INDENTWIDTH
@@ -322,8 +322,8 @@ E
 ; w
 ;
 MSG_HELP_INDENTWIDTH
-Legt die Einzugsbreite für jeden\n\
-Untereintrag fest
+Legt eine zusätzliche Einzugsbreite\n\
+für jeden Untereintrag fest.
 ; Specify the width of indentation for\n\
 ; every subnode
 ;

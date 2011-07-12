@@ -232,14 +232,14 @@ appear in front of every node containing\n\
 subnodes.
 ;
 MSG_BUTTON_LABEL_INDENTWIDTH (69//)
-Indent width
+Additional indent width
 ;
 MSG_BUTTON_SHORTCUT_INDENTWIDTH (70//)
 w
 ;
 MSG_HELP_INDENTWIDTH (71//)
-Specify the width of indentation for\n\
-every subnode
+Specify an additional indent\n\
+width applied to each subnode.
 ;
 MSG_BUTTON_LABEL_GLOW (72//)
 Glow color
