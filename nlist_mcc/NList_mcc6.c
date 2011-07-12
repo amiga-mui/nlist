@@ -1322,20 +1322,28 @@ D(bug( "<====================================\n" ));
             Move(data->rp, x2, y);
 
             // before we draw the text we check if it was clipped and if so
-            // we add "..." in the middle of the text in case the PartialCol
+            // we add "..." in at the end of the text in case the PartialCol
             // feature is turned on
-            if(data->NList_PartialCol && ni+1 > cinfo->ninfo && next_x > cmaxx && curclen >= 5 &&
+            if(data->NList_PartialCol && ni+1 > cinfo->ninfo && next_x > cmaxx &&
                (xbar-1 >= data->mleft) && (xbar-1 <= data->mright))
             {
-              int maxlen = (curclen+1)*sizeof(char);
-              char *txt = AllocVecPooled(data->Pool, maxlen);
+              if(curclen >= 3)
+              {
+                int maxlen = (curclen+1)*sizeof(char);
+                char *txt = AllocVecPooled(data->Pool, maxlen);
 
-              strlcpy(txt, ptr1, maxlen-3);
-              strlcat(txt, "...", maxlen);
+                // NUL terminate the string
+                txt[0] = '\0'; 
 
-              Text(data->rp, txt, curclen);
+                if(curclen > 3)
+                  strlcpy(txt, ptr1, maxlen-3);
 
-              FreeVecPooled(data->Pool, txt);
+                strlcat(txt, "...", maxlen);
+
+                Text(data->rp, txt, curclen);
+
+                FreeVecPooled(data->Pool, txt);
+              }
             }
             else
               Text(data->rp, ptr1, curclen);
