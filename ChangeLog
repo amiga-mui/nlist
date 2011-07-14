@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-07-14 Mariusz Danilewicz <mandi@interia.pl>
+
+  * nlisttree_mcp/locale/polish.ct: update to the latest changes.
+
 2011-07-12 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcc/nlisttree_mcp: now that NList allows to define zero sized
