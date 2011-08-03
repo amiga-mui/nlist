@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-08-03 Thore Böckelmann <tboeckel@gmx.de>
+
+  * Makefile: added definition of __amigaos3__ for all classes for the OS3
+    build to make OS3 specific stuff easier to implement.
+
 2011-07-14 Mariusz Danilewicz <mandi@interia.pl>
 
   * nlisttree_mcp/locale/polish.ct: update to the latest changes.
