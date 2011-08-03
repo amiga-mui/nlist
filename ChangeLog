@@ -9,6 +9,8 @@ $URL$
 
   * Makefile: added definition of __amigaos3__ for all classes for the OS3
     build to make OS3 specific stuff easier to implement.
+  * nlist_mcc/NList_mcc3.c, nlist_mcc/NList_mcc6.c: fixed offsets when drawing
+    the background image for the upcoming MUI 3.9 of AmigaOS 4.1 update #3.
 
 2011-07-14 Mariusz Danilewicz <mandi@interia.pl>
 

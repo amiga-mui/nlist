@@ -40,6 +40,19 @@
 
 #include "NList_func.h"
 
+void DrawBackground(Object *obj, LONG left, LONG top, LONG width, LONG height, LONG xoff, LONG yoff)
+{
+  // MUI 3.9 of AmigaOS 4.1 update #3 and MUI4 treat the offsets as real offsets relative to the given
+  // coordinates and not as absolute corrdinates.
+  // Since all offsets are relative now these must be adapted for older versions of MUI.
+  if(MUIMasterBase->lib_Version < 20 || (MUIMasterBase->lib_Version == 20 && MUIMasterBase->lib_Revision < 2326))
+  {
+    xoff += left;
+    yoff += top;
+  }
+  DoMethod(obj, MUIM_DrawBackground, left, top, width, height, xoff, yoff, 0);
+}
+
 WORD DrawTitle(struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
 {
   Object *obj = data->this;
@@ -63,9 +76,7 @@ WORD DrawTitle(struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
     return(0);
 
   SetBackGround(data->NList_TitleBackGround)
-  DoMethod(obj,MUIM_DrawBackground,(LONG) minx,(LONG) data->vdtitlepos,
-                                   (LONG) maxx-minx,(LONG) data->vdtitleheight,
-                                   (LONG) minx + hfirst + data->vdx,(LONG) data->vdtitlepos + data->vdy,(LONG) 0);
+  DrawBackground(obj, minx, data->vdtitlepos, maxx-minx, data->vdtitleheight, hfirst + data->vdx, data->vdy);
   if (data->NList_TitleSeparator)
   {
     SetAPen(data->rp,data->pens[MPEN_SHADOW]);
@@ -133,7 +144,7 @@ void DrawOldLine(struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
   if ((ent < 0) || (ent >= data->NList_Entries))
   {
     SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
-    DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert1,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+    DrawBackground(obj, minx, vert1, maxx-minx, vertd, hfirst+data->vdx, vert2-vert1+data->vdy);
   }
   else
   {
@@ -153,7 +164,7 @@ void DrawOldLine(struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
       }
     }
 
-    DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert1,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+    DrawBackground(obj, minx, vert1, maxx-minx, vertd, hfirst+data->vdx, vert2-vert1+data->vdy);
     if (drawtxt)
       DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
   }
@@ -350,7 +361,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
         { vert3 -= data->NList_First_Incr;
         }
       }
-      DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert3,(LONG) maxx-minx,vertd,(LONG) minx + hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+      DrawBackground(obj, minx, vert3, maxx-minx, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
       while (ent < ent3)
       {
 #ifndef DO_CLIPPING
@@ -407,7 +418,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
       if(x1 < x2)
       {
         SetBackGround(data->NList_ListBackGround);
-        DoMethod(obj,MUIM_DrawBackground,(LONG) x1,vert3,(LONG) x2-x1,vertd,(LONG) x1+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+        DrawBackground(obj, x1, vert3, x2-x1, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
       }
       if (x2 < x3)
       {
@@ -420,12 +431,12 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
           SetBackGround(MUII_myListCursor);
         }
 
-        DoMethod(obj,MUIM_DrawBackground,(LONG) x2,vert3,(LONG) x3-x2,vertd,(LONG) x2+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+        DrawBackground(obj, x2, vert3, x3-x2, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
       }
       if (x3 < x4)
       {
         SetBackGround(data->NList_ListBackGround);
-        DoMethod(obj,MUIM_DrawBackground,(LONG) x3,vert3,(LONG) x4-x3,vertd,(LONG) x3+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+        DrawBackground(obj, x3, vert3, x4-x3, vertd, hfirst+data->vdx, vert2-vert3-data->vdy);
       }
 
       // FIXME: This isn't perfect, but it is the fastest 'solution'
@@ -492,7 +503,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
       { vert3 -= data->NList_First_Incr;
       }
     }
-    DoMethod(obj,MUIM_DrawBackground,(LONG) minx,vert3,(LONG) maxx-minx,vertd,(LONG) minx+hfirst+data->vdx,vert2+data->vdy,(LONG) 0);
+    DrawBackground(obj, minx, vert3, maxx-minx, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
 
     { struct colinfo *cinfo;
       WORD column,xbar,xbar2,maxx2;
