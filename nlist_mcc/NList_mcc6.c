@@ -45,7 +45,9 @@ void DrawBackground(Object *obj, LONG left, LONG top, LONG width, LONG height, L
   // MUI 3.9 of AmigaOS 4.1 update #3 and MUI4 treat the offsets as real offsets relative to the given
   // coordinates and not as absolute corrdinates.
   // Since all offsets are relative now these must be adapted for older versions of MUI.
+  #if !defined(__MORPHOS__) && !defined(__AROS__)
   if(MUIMasterBase->lib_Version < 20 || (MUIMasterBase->lib_Version == 20 && MUIMasterBase->lib_Revision < 2326))
+  #endif
   {
     xoff += left;
     yoff += top;
