@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-12-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistree_mcc/NListtree.c: fixed a NULL pointer access when invoking the
+    MUIM_NListtree_CopyToClip method when no tree entry is selected.
+
 2011-12-15 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlist_mcc/NList_mcc6.c: reimplemented the new PartialColumn text substitution

@@ -9971,52 +9971,58 @@ IPTR _NListtree_PrevSelected(struct IClass *cl, Object *obj, struct MUIP_NListtr
 IPTR _NListtree_CopyToClip(struct IClass *cl, Object *obj, struct MUIP_NListtree_CopyToClip *msg)
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
-  STRPTR string, str;
+  STRPTR string = NULL;
   BOOL alloc = FALSE;
 
-  if(data->CopyToClipHook != NULL)
+  if(msg->TreeNode != NULL && msg->TreeNode->tn_Name != NULL)
   {
-    if((SIPTR)(string = (STRPTR)MyCallHook( data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit)) == (SIPTR)MUIV_NListtree_CopyToClip_Active)
-      string = msg->TreeNode->tn_Name;
-  }
-  else
-  {
-    string = msg->TreeNode->tn_Name;
-
-    if((str = AllocVecPooled(data->MemoryPool, strlen(string) + 1)) != NULL)
+    if(data->CopyToClipHook != NULL)
     {
-      STRPTR s = string;
+      if((SIPTR)(string = (STRPTR)MyCallHook(data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit)) == (SIPTR)MUIV_NListtree_CopyToClip_Active)
+        string = msg->TreeNode->tn_Name;
+    }
+    else
+    {
+	  STRPTR str;
 
-      alloc = TRUE;
-      string = str;
-
-      while( *s )
+      string = msg->TreeNode->tn_Name;
+      if((str = AllocVecPooled(data->MemoryPool, strlen(string) + 1)) != NULL)
       {
-        if ( *s == 0x1b )
+        STRPTR s = string;
+
+        alloc = TRUE;
+        string = str;
+
+        // copy the string and remove all escape sequences
+        while(*s != '\0')
         {
-          s += 2;
+          if(*s == 0x1b)
+          {
+            s += 2;
 
-          if ( *s == '[' )
-            while( ++*s != ']' );
+            if(*s == '[')
+              while(++*s != ']');
 
-          s++;
+            s++;
+          }
+
+          *str++ = *s++;
         }
-
-        *str++ = *s++;
       }
     }
   }
 
+  if(string != NULL)
+  {
+    //D(bug( "String: %s, Unit: %ld, pos: %ld\n", string, msg->Unit, msg->Pos ) );
 
-  //D(bug( "String: %s, Unit: %ld, pos: %ld\n", string, msg->Unit, msg->Pos ) );
+    StringToClipboard(msg->Unit, string);
 
+    if(alloc == TRUE)
+      FreeVecPooled(data->MemoryPool, string);
+  }
 
-  StringToClipboard(msg->Unit, string);
-
-  if ( alloc )
-    FreeVecPooled( data->MemoryPool, string );
-
-  return( 0 );
+  return(0);
 }
 
 
