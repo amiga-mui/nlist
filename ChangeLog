@@ -5,6 +5,19 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-12-15 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/NList_mcc6.c: reimplemented the new PartialColumn text substitution
+    feature where "..." is showing in a column rather than showing some dotted line
+    at the end of the column if text doesn't fit. Now the text substitution area can
+    be specified in MUIA_NList_Format via PCS_LEFT/PCS_RIGHT/PCS_CENTER/PCS_DISABLED.
+    So application developers can now specify the text alignment by using these
+    format specs. NList will then replace not fitting text with "..." characters
+    to signal that text was stripped. Please note, however, that this feature is
+    still not being perfect and there might be situation where the "..." text might
+    be added at the wrong position (e.g. if different font styles/objects are using
+    in one column).
+
 2011-08-03 Thore Böckelmann <tboeckel@gmx.de>
 
   * Makefile: added definition of __amigaos3__ for all classes for the OS3

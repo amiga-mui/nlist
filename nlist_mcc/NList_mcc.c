@@ -370,7 +370,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_Quiet = 0;
   data->NList_AffActive = MUIV_NList_Active_Off;
   data->NList_Active = MUIV_NList_Active_Off;
-  data->NList_Smooth = 0;
+  data->NList_Smooth = DEFAULT_SMOOTHSCROLL;
   data->VertPropObject = NULL;
   data->NList_AffFirst = 0;
   data->NList_AffFirst_Incr = 0;
@@ -411,7 +411,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_SortType = MUIV_NList_SortType_None;
   data->NList_SortType2 = MUIV_NList_SortType_None;
   data->NList_ButtonClick = -1;
-  data->NList_SerMouseFix = 0;
+  data->NList_SerMouseFix = DEFAULT_SERMOUSEFIX;
   data->NList_Keys = default_keys;
   data->NList_ShortHelp = ShortHelp; // RHP: Added for Special ShortHelp
   data->Wheel_Keys = NULL;
@@ -502,9 +502,9 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_WordSelectChars = NULL;
   data->NList_EntryValueDependent = FALSE;
   data->NList_DragLines = DEFAULT_DRAGLINES;
-  data->NList_WheelStep = 1;
-  data->NList_WheelFast = 5;
-  data->NList_WheelMMB = FALSE;
+  data->NList_WheelStep = DEFAULT_WHEELSTEP;
+  data->NList_WheelFast = DEFAULT_WHEELFAST;
+  data->NList_WheelMMB = DEFAULT_WHEELMMB;
   data->NList_PrivateData = NULL;
   data->NList_ContextMenu = data->ContextMenu = data->ContextMenuOn = MUIV_NList_ContextMenu_Default;
   data->ListCompatibility = FALSE;
@@ -541,7 +541,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->TitleClick = -1;
   data->TitleClick2 = -1;
   data->NList_ForcePen = MUIV_NList_ForcePen_Default;
-  data->ForcePen = FALSE;
+  data->ForcePen = DEFAULT_FORCEPEN;
   data->UpdatingScrollbars = FALSE;
   data->UpdateScrollersRedrawn = FALSE;
   data->drawall_bits = 0;
@@ -551,8 +551,8 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->VirtGroup2 = NULL;
   data->VirtClass = NULL;
   data->NList_ColWidthDrag = DEFAULT_CWD;
-  data->NList_PartialCol = TRUE;
-  data->NList_PartialChar = FALSE;
+  data->NList_PartialCol = DEFAULT_PARTIALCOL;
+  data->NList_PartialChar = DEFAULT_PARTIALCHAR;
   data->NList_List_Select = MUIV_NList_Select_List;
   data->NList_MinColSortable = 1;
   data->NList_Imports = MUIV_NList_Imports_Active | MUIV_NList_Imports_First | MUIV_NList_Imports_Cols;
@@ -565,6 +565,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->storebutton = TRUE;
   data->SizePointerObj = NULL;
   data->MovePointerObj = NULL;
+  data->NList_SelectPointer = DEFAULT_SELECTPOINTER;
   data->SelectPointerObj = NULL;
   data->activeCustomPointer = PT_NONE;
   data->MOUSE_MOVE = FALSE;
