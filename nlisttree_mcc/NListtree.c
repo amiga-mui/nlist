@@ -9971,11 +9971,14 @@ IPTR _NListtree_PrevSelected(struct IClass *cl, Object *obj, struct MUIP_NListtr
 IPTR _NListtree_CopyToClip(struct IClass *cl, Object *obj, struct MUIP_NListtree_CopyToClip *msg)
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
-  STRPTR string = NULL;
-  BOOL alloc = FALSE;
 
+  // make sure anything is selected at all or calling CopyToClip doesn't make
+  // much sense
   if(msg->TreeNode != NULL && msg->TreeNode->tn_Name != NULL)
   {
+    STRPTR string = NULL;
+    BOOL alloc = FALSE;
+
     if(data->CopyToClipHook != NULL)
     {
       if((SIPTR)(string = (STRPTR)MyCallHook(data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit)) == (SIPTR)MUIV_NListtree_CopyToClip_Active)
@@ -9983,7 +9986,7 @@ IPTR _NListtree_CopyToClip(struct IClass *cl, Object *obj, struct MUIP_NListtree
     }
     else
     {
-	  STRPTR str;
+      STRPTR str;
 
       string = msg->TreeNode->tn_Name;
       if((str = AllocVecPooled(data->MemoryPool, strlen(string) + 1)) != NULL)
@@ -10010,16 +10013,16 @@ IPTR _NListtree_CopyToClip(struct IClass *cl, Object *obj, struct MUIP_NListtree
         }
       }
     }
-  }
 
-  if(string != NULL)
-  {
-    //D(bug( "String: %s, Unit: %ld, pos: %ld\n", string, msg->Unit, msg->Pos ) );
+    if(string != NULL)
+    {
+      //D(bug( "String: %s, Unit: %ld, pos: %ld\n", string, msg->Unit, msg->Pos ) );
 
-    StringToClipboard(msg->Unit, string);
+      StringToClipboard(msg->Unit, string);
 
-    if(alloc == TRUE)
-      FreeVecPooled(data->MemoryPool, string);
+      if(alloc == TRUE)
+        FreeVecPooled(data->MemoryPool, string);
+    }
   }
 
   return(0);
