@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.110 RELEASE ###########################################################
+
+2011-12-17 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.111 release preparations
+
 2011-12-15 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistree_mcc/NListtree.c: fixed a NULL pointer access when invoking the
