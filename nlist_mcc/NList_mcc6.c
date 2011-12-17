@@ -749,7 +749,7 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
   LONG linelen, next_x=0, x2, x2s, x2e, minx2, maxx2, minx3, maxx3, cmaxx;
   WORD xbar,xbar2,ybar,ybar2;
   ULONG pen;
-  STRPTR ptr1;
+  char *ptr1;
   struct TextExtent te;
   WORD column, curclen, dcurclen, ni;
 
