@@ -32,7 +32,7 @@
 
 // for setting all necessary version information
 #define LIB_VERSION    20
-#define LIB_REVISION   131
+#define LIB_REVISION   130
 #define LIB_DATE       "17.12.2011"
 #define LIB_COPYRIGHT  "Copyright (C) 2001-2011 NList Open Source Team"
 
