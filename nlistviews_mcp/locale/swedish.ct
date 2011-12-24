@@ -1,11 +1,9 @@
-## version $VER: NListviews_mcp.ct 2.1 (18.09.2010)
+## version $VER: NListviews_mcp.ct 2.2 (24.12.2011)
 ## language svenska
 ## codeset 0
-;
 ## chunk AUTH Pär Boberg
 ;
-; NListviews_mcp.ct - NList MUI custom prefs catalog translation file
-; $Id: swedish.ct 38259 2011-04-18 10:59:44Z mazze $
+; $Id: swedish.ct 395 2007-09-11 22:32:41Z damato $
 ;
 ;#version 2
 ;#language english
@@ -650,8 +648,8 @@ Händelse
 ; Action
 ;
 MSG_EXAMPLE_TEXT
-Om du har problem, försök öka stackvärdet\ni ikon informationen om du startar programmet\nvia ikonen. Stacken för CLI om du startar det\nfrån CLI Shell och om du startar det från något\nannat verktyg, läs dess dokumentation hur du\nökar stackstorleken.\nEn stack på 12kb, 16kb eller 20kb räcker vanligtvis.\n\nOm du fortfarande har problem, se om de händer\nmed demo programmet, kontakta mig sedan.\n\033C\nSenaste release kan hittas på Aminet (dev/mui).\nAlla releaser finns på\nhttp://www.sourceforge.net/projects/nlist-classes/\n\033C\n\033r\0333(C) 2001-2008 av NList Open Source Team\n\033r\0333(C)1996-1998 av Gilles Masson\n\033r\0333http://www.sourceforge.net/projects/nlist-classes/\n\033C\n\033cDenna nya list/listvy specialklass\n\033chanterar sin egen konfigurerbara bakgrunder,\n\033cpennor, typsnitt, rullister, tangenter och kvalifiserare\n\033C\n\033CTidigare sätt att hantera markör med flerval\n\033cär inte exakt samma som listvyn !\n\033cDra&släpp stöds, båda rullisterna kan\
- konfigureras\n\033catt försvinna automatiskt när de inte behövs\n\033ceftersom allt är synligt. Prova det...\n\033C\n\033cDu kan rulla horisontellt med tangenterna\n\033celler gå till höger och vänster om listen\n\033coch samtidigt välja med musen.\n\033cProva klicka på vänster/höger ramar !\n\033C\n\033cDu kan ändra kolumnernas bredd med att dra\n\033ci den vertikala separatorn mellan kolumntitlarna\n\033c(prova med att använda balanskvalifiseraren också).\n\033C\n\033cDu kan ändra kolumnernas ordning genom att dra i kolumntitlarna.\n\033C\n\033cDet finns inbyggt kopiera till klippbordet\n\033coch klassisk tecken val kapacitet.\n\033C\n\033cProva demo programmet för att testa allt det...\n\n\n\033r\033bGe feedback om det ! :-)\n\033C\n**************************************************************************************************\n
+Om du har problem, försök öka stackvärdet\ni ikon informationen om du startar programmet\nvia ikonen. Stacken för CLI om du startar det\nfrån CLI Shell och om du startar det från något\nannat verktyg, läs dess dokumentation hur du\nökar stackstorleken.\nEn stack på 12kb, 16kb eller 20kb räcker vanligtvis.\n\nOm du fortfarande har problem, se om de händer\nmed demo programmet, kontakta mig sedan.\n\033C\nSenaste release kan hittas på Aminet (dev/mui).\nAlla releaser finns på\nhttp://www.sourceforge.net/projects/nlist-classes/\n\033C\n\033r\0333(C) 2001-2011 av NList Open Source Team\n\033r\0333(C)1996-1998 av Gilles Masson\n\033r\0333http://www.sourceforge.net/projects/nlist-classes/\n\033C\n\033cDenna nya list/listvy specialklass\n\033chanterar sin egen konfigurerbara bakgrunder,\n\033cpennor, typsnitt, rullister, tangenter och kvalificerare\n\033C\n\033cTidigare sätt att hantera markör med flerval\n\033cär inte exakt samma som listvyn !\n\033cDra&släpp stöds, båda rullisterna kan\
+ konfigureras\n\033catt försvinna automatiskt när de inte behövs\n\033ceftersom allt är synligt. Prova det...\n\033C\n\033cDu kan rulla horisontellt med tangenterna\n\033celler gå till höger och vänster om listen\n\033coch samtidigt välja med musen.\n\033cProva klicka på vänster/höger ramar !\n\033C\n\033cDu kan ändra kolumnernas bredd med att dra\n\033ci den vertikala separatorn mellan kolumntitlarna\n\033c(prova med att använda balanskvalificeraren också).\n\033C\n\033cDu kan ändra kolumnernas ordning genom att dra i kolumntitlarna.\n\033C\n\033cDet finns inbyggt kopiera till klippbordet\n\033coch klassisk teckenval kapacitet.\n\033C\n\033cProva demo programmet för att testa allt det...\n\n\n\033r\033bGe feedback om det ! :-)\n\033C\n**************************************************************************************************\n
 ; If you have problems, try to increase the stack value,\n\
 ; in the icon infos if you launch the program from icon,\n\
 ; stack of CLI if you start it from CLI/Shell,\n\

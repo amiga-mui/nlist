@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2011-12-24  Pär Boberg <pbobbenb@spray.se>
+
+  * nlisttree_mcp/locale/swedish.ct, nlistviews_mcp/locale/swedish.ct:
+    updated according to changes.
+
 #### v0.111 RELEASE ###########################################################
 
 2011-12-17 Jens Langner <Jens.Langner@light-speed.de>
