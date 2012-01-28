@@ -508,7 +508,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
     DrawBackground(obj, minx, vert3, maxx-minx, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
 
     { struct colinfo *cinfo;
-      WORD column,xbar,xbar2,maxx2;
+      WORD column,xbar,maxx2;
       xbar = data->hpos-hfirst + data->cols[0].c->minx - 8;
       for (column = 0;column < data->numcols;column++)
       { cinfo = data->cols[column].c;
@@ -516,7 +516,6 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
           maxx2 = data->hpos-hfirst + cinfo->maxx;
         else
           maxx2 = data->mright;
-        xbar2 = xbar;
         xbar = maxx2;
         vert2 = vert3 + vertd - 1;
         if ((column < data->numcols-1) && (cinfo->delta > 0))
@@ -748,7 +747,6 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
   struct affinfo *afinfo;
   LONG linelen, next_x=0, x2, x2s, x2e, minx2, maxx2, minx3, maxx3, cmaxx;
   WORD xbar,xbar2,ybar,ybar2;
-  ULONG pen;
   char *ptr1;
   struct TextExtent te;
   WORD column, curclen, dcurclen, ni;
@@ -1003,7 +1001,6 @@ LONG DrawText(struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,LONG maxx,ULO
       continue;
 
     x2s = x2;
-    pen = mypen;
 
 /*
 {
@@ -1578,7 +1575,6 @@ static LONG DrawEntryTextOnly(struct NLData *data,struct RastPort *rp,LONG ent,L
   struct colinfo *cinfo;
   struct affinfo *afinfo;
   LONG next_x, x2, x2e,column;
-  ULONG pen;
   STRPTR ptr1;
   struct TextExtent te;
   WORD curclen, dcurclen, ni;
@@ -1596,7 +1592,6 @@ static LONG DrawEntryTextOnly(struct NLData *data,struct RastPort *rp,LONG ent,L
     ParseColumn(data,column,mypen);
     WidthColumn(data,column,0);
     x2 = 1;
-    pen = mypen;
 
     ni = 0;
     afinfo = &data->aff_infos[ni];

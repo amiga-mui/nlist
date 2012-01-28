@@ -172,7 +172,7 @@ struct TreeImage_Data
 
 #if !defined(__MORPHOS__)
 #ifdef __AROS__
-static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...)
+static __attribute__ ((noinline)) Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...)
 {
     AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
     retval = (Object *)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1), NULL);
@@ -2001,9 +2001,9 @@ VOID OpenTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *t
 
 VOID OpenTreeNodeExpand( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
 {
-  LONG entries, pos, spos;
+  LONG entries, pos;
 
-  spos = pos = GetVisualPos( data, tn );
+  pos = GetVisualPos( data, tn );
   entries = xget( data->Obj, MUIA_NList_Entries );
 
   pos++;
@@ -6125,7 +6125,6 @@ IPTR _DragNDrop_DropType(struct IClass *cl, Object *obj, struct MUIP_NList_DropT
         ULONG secs;
         ULONG micros;
         ULONG diffSecs;
-        ULONG diffMicros;
 
         // get the current system time
         CurrentTime(&secs, &micros);
@@ -6133,11 +6132,8 @@ IPTR _DragNDrop_DropType(struct IClass *cl, Object *obj, struct MUIP_NList_DropT
         diffSecs = secs - data->OpenDropListSecs;
         if(micros < data->OpenDropListMicros)
         {
-          diffMicros = micros + 1000000L - data->OpenDropListMicros;
           diffSecs--;
         }
-        else
-          diffMicros = micros - data->OpenDropListMicros;
 
         // open the node if the user held the mouse for at least one second
         // over the closed node

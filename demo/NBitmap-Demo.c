@@ -15,7 +15,7 @@
 
  TextEditor class Support Site:  http://www.sf.net/projects/texteditor-mcc
 
- $Id: NBitmap-Demo.c 38259 2011-04-18 10:59:44Z mazze $
+ $Id$
 
 ***************************************************************************/
 

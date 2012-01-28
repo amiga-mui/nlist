@@ -19,7 +19,7 @@
 
  NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 
- $Id: Debug.c 38261 2011-04-18 11:18:56Z mazze $
+ $Id$
 
 ***************************************************************************/
 

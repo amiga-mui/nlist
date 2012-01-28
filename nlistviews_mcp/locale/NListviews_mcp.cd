@@ -1,6 +1,6 @@
 ;
 ; NListviews_mcp.cd - NList MUI custom prefs catalog description file
-; $Id: NListviews_mcp.cd 38259 2011-04-18 10:59:44Z mazze $
+; $Id$
 ;
 #version 2
 #language english
