@@ -3,8 +3,8 @@
     $Id: muiaros.h 43758 2012-01-29 08:51:11Z mazze $
 */
 
-#ifndef LIBRARIES_MUI_H
-#define LIBRARIES_MUI_H
+#ifndef LIBRARIES_MUIAROS_H
+#define LIBRARIES_MUIAROS_H
 
 #ifndef INTUITION_CLASSES_H
 #   include <intuition/classes.h>
@@ -4089,4 +4089,4 @@ struct __dummyAreaData__
 #endif /* _MUI_MACROS_H */
 #endif
 
-#endif /* LIBRARIES_MUI_H */
+#endif /* LIBRARIES_MUIAROS_H */
