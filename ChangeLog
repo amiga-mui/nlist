@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-01-29 Matthias Rustler <mrustler@gmx.de>
+
+  * misc: backport of AROS fixes.
+
 2011-12-24  Pär Boberg <pbobbenb@spray.se>
 
   * nlisttree_mcp/locale/swedish.ct, nlistviews_mcp/locale/swedish.ct:
