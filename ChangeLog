@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-03-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistviews_mcp/locale: fixed a typo in the built in english strings.
+
 2012-01-29 Matthias Rustler <mrustler@gmx.de>
 
   * misc: backport of AROS fixes.
@@ -65,7 +69,7 @@ $URL$
 2011-07-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcp/locale: updated german and english-british translations.
-  * nlisttree_mc[cp]: renamed the "dashed" mode to "dotted", as this is more 
+  * nlisttree_mc[cp]: renamed the "dashed" mode to "dotted", as this is more
     appropriate.
 
 2011-07-10 Jens Langner <Jens.Langner@light-speed.de>

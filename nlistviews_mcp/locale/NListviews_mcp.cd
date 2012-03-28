@@ -244,7 +244,7 @@ for the vertical scrollbar.\n\
 application)
 ;
 MSG_SCROLLCONTROL (67//)
-Scolling Control
+Scrolling Control
 ;
 MSG_SMOOTH_SCROLLING (68//)
 Smooth Scrolling
