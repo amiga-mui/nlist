@@ -1607,6 +1607,7 @@ IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
   release_pen(obj, &data->NList_SelectPen);
   release_pen(obj, &data->NList_CursorPen);
   release_pen(obj, &data->NList_UnselCurPen);
+  release_pen(obj, &data->NList_InactivePen);
 
   retval = DoSuperMethodA(cl,obj,(Msg) msg);
 

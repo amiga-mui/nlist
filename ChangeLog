@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-04-02 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c: added missing release of inactive pen.
+
 2012-03-28 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/locale: fixed a typo in the built in english strings.
