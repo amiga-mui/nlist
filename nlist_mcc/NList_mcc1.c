@@ -23,6 +23,7 @@
 
 ***************************************************************************/
 
+#include <string.h>
 #include <stdlib.h>
 
 #include <clib/alib_protos.h>
@@ -56,7 +57,13 @@ extern const struct Hook NL_DestructHook_String;
   { \
     tag->ti_Tag = TAG_IGNORE; \
     test_init = TRUE; \
-    var_dest = tag->ti_Data; \
+    if((STRPTR)tag->ti_Data != NULL) \
+    { \
+      strlcpy(var_dest##Buffer, (STRPTR)tag->ti_Data, sizeof(var_dest##Buffer)); \
+      var_dest = (IPTR)var_dest##Buffer; \
+    } \
+    else \
+      var_dest = (IPTR)-1; \
     REDRAW_ALL; \
   }
 

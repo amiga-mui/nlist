@@ -284,18 +284,18 @@ struct NLData
   LONG  NList_Input;
   LONG  NList_TypeSelect;
   LONG  NList_SelectChange;
-  ULONG NList_TitlePen;
-  ULONG NList_ListPen;
-  ULONG NList_SelectPen;
-  ULONG NList_CursorPen;
-  ULONG NList_UnselCurPen;
-  ULONG NList_InactivePen;
-  ULONG NList_TitleBackGround;
-  ULONG NList_ListBackGround;
-  ULONG NList_SelectBackground;
-  ULONG NList_CursorBackground;
-  ULONG NList_UnselCurBackground;
-  ULONG NList_InactiveBackground;
+  IPTR NList_TitlePen;
+  IPTR NList_ListPen;
+  IPTR NList_SelectPen;
+  IPTR NList_CursorPen;
+  IPTR NList_UnselCurPen;
+  IPTR NList_InactivePen;
+  IPTR NList_TitleBackGround;
+  IPTR NList_ListBackGround;
+  IPTR NList_SelectBackground;
+  IPTR NList_CursorBackground;
+  IPTR NList_UnselCurBackground;
+  IPTR NList_InactiveBackground;
   LONG  NList_DragType;
   LONG  NList_Dropable;
   LONG  NList_DragColOnly;
@@ -585,6 +585,19 @@ struct NLData
 
   struct InputEvent ievent;
   char rawtext[MAXRAWBUF];
+
+  char NList_TitlePenBuffer[128];
+  char NList_ListPenBuffer[128];
+  char NList_SelectPenBuffer[128];
+  char NList_CursorPenBuffer[128];
+  char NList_UnselCurPenBuffer[128];
+  char NList_InactivePenBuffer[128];
+  char NList_TitleBackGroundBuffer[128];
+  char NList_ListBackGroundBuffer[128];
+  char NList_SelectBackgroundBuffer[128];
+  char NList_CursorBackgroundBuffer[128];
+  char NList_UnselCurBackgroundBuffer[128];
+  char NList_InactiveBackgroundBuffer[128];
 };
 
 

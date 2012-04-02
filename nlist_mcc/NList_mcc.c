@@ -72,7 +72,11 @@ DEFAULT_KEYS_ARRAY
     var_dest = -1; \
     if((tag = FindTagItem(attr, msg->ops_AttrList))) \
     { \
-      var_dest = tag->ti_Data; \
+      if((STRPTR)tag->ti_Data != NULL) \
+      { \
+        strlcpy(var_dest##Buffer, (STRPTR)tag->ti_Data, sizeof(var_dest##Buffer)); \
+        var_dest = (IPTR)var_dest##Buffer; \
+      } \
       test_init = TRUE; \
     } \
     else \
@@ -100,7 +104,10 @@ DEFAULT_KEYS_ARRAY
     { \
       IPTR ptrd; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
-        var_dest = ptrd; \
+      { \
+        strlcpy(var_dest##Buffer, (STRPTR)ptrd, sizeof(var_dest##Buffer)); \
+        var_dest = (IPTR)var_dest##Buffer; \
+      } \
       else \
         var_dest = (IPTR)(defaultval); \
     } \
