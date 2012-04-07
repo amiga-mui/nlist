@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-04-07 Jens Langner <Jens.Langner@light-speed.de>
+
+  * Makefiles: removed -funroll-loops as that is potentially dangerous.
+
 2012-04-02 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc.c: added missing release of inactive pen.
