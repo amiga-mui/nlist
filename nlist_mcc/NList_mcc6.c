@@ -1232,7 +1232,7 @@ D(bug( "<====================================\n" ));
         TextExtent(data->rp, ptr1, curclen, &te);
         if ((ni == 0) && (te.te_Extent.MinX < 0))
           x2 -= te.te_Extent.MinX;
-        
+
         // save the coordinate of the next column start
         next_x = x2 + te.te_Width + afinfo->addinfo;
         D(DBF_DRAW, "next_x: %ld cmaxx: %ld");
@@ -1258,10 +1258,10 @@ D(bug( "<====================================\n" ));
           // not fit into the available regions (maximum x = maxx3). And
           // if so we go and calculate a new curclen
           if((curclen > 0) && (x2e > maxx3))
-          { 
+          {
             curclen = TextFit(data->rp, ptr1, curclen, &te, NULL, 1, maxx3 - x2, 32767);
             if(curclen > 0)
-            { 
+            {
               // find out the new end position of the string (x2e)
               TextExtent(data->rp, ptr1, curclen, &te);
               x2e = x2 + te.te_Width;
