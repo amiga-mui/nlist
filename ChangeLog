@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-04-13 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/NList_func2.c: fixed bug where a sort operation of a single item
+    via drag&drop ended up moving the item to the wrong position if the item was
+    moved down (up worked).
+
 2012-04-07 Jens Langner <Jens.Langner@light-speed.de>
 
   * Makefiles: removed -funroll-loops as that is potentially dangerous.

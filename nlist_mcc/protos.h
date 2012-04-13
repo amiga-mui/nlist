@@ -149,8 +149,6 @@ extern ULONG NL_List_Replace(struct NLData *data,APTR entry,LONG pos,LONG wrapco
 extern ULONG NL_List_Clear(struct NLData *data);
 extern ULONG NL_List_Remove(struct NLData *data,LONG pos);
 extern ULONG NL_List_Exchange(struct NLData *data,LONG pos1,LONG pos2);
-extern ULONG NL_List_Move_Selected(struct NLData *data,LONG to);
-extern ULONG NL_List_Move(struct NLData *data,LONG from,LONG to);
 
 extern IPTR mNL_List_Sort(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort *msg);
 extern IPTR mNL_List_Sort2(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort2 *msg);

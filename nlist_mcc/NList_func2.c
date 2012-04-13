@@ -33,6 +33,8 @@
 
 #include "NList_func.h"
 
+static ULONG NL_List_Move(struct NLData *data,LONG from,LONG to);
+
 LONG NL_GetSelects(struct NLData *data, LONG ent)
 {
   LONG selects = 0L;
@@ -1363,11 +1365,13 @@ ULONG NL_List_Exchange(struct NLData *data,LONG pos1,LONG pos2)
 
 
 //$$$ARRAY+
-ULONG NL_List_Move_Selected(struct NLData *data,LONG to)
+static ULONG NL_List_Move_Selected(struct NLData *data, LONG to)
 {
   LONG num_sel = 0;
   long first,last,ent,ent2,ent3,act,act2,dest;
   struct TypeEntry **EntriesArray;
+
+  ENTER();
 
   first = last = -1;
   if (!data->NList_TypeSelect)
@@ -1433,10 +1437,27 @@ ULONG NL_List_Move_Selected(struct NLData *data,LONG to)
     if ((first >= 0) && (first < data->NList_Entries) && (last >= 0) && (last < data->NList_Entries) && (first <= last))
       num_sel = last - first + 1;
   }
+
   if (num_sel <= 0)
-    return (TRUE);
+  {
+    RETURN(TRUE);
+    return TRUE;
+  }
   else if (num_sel == 1)
-    return NL_List_Move(data,last,to);
+  {
+    ULONG res;
+    
+    // we have to decrease 'to' by one if 'to > last' (user moves item down)
+    // because NL_List_Move() expects the indices to prepared the same
+    // way like List.mui is expecting it.
+    if(to > last)
+     to--;
+
+    res = NL_List_Move(data, last, to);
+
+    RETURN(res);
+    return res;
+  }
   else
   {
     switch (to)
@@ -1466,7 +1487,9 @@ ULONG NL_List_Move_Selected(struct NLData *data,LONG to)
         NL_DoWrapAll(data,FALSE,FALSE);
         REDRAW;
       }
-      return (TRUE);
+        
+      RETURN(TRUE);
+      return TRUE;
     }
     else if((EntriesArray = (struct TypeEntry **)AllocVecPooled(data->Pool, sizeof(struct TypeEntry *)*num_sel)) != NULL)
     {
@@ -1549,7 +1572,9 @@ ULONG NL_List_Move_Selected(struct NLData *data,LONG to)
       data->do_updatesb = TRUE;
       REDRAW;
 /*      do_notifies(NTF_AllChanges|NTF_MinMax);*/
-      return (TRUE);
+
+      RETURN(TRUE);
+      return TRUE;
     }
     else if (data->do_wwrap)
     {
@@ -1557,12 +1582,14 @@ ULONG NL_List_Move_Selected(struct NLData *data,LONG to)
       REDRAW;
     }
   }
-  return (FALSE);
+
+  RETURN(FALSE);
+  return FALSE;
 }
 
 
 //$$$ARRAY+
-ULONG NL_List_Move(struct NLData *data,LONG from,LONG to)
+static ULONG NL_List_Move(struct NLData *data,LONG from,LONG to)
 {
   LONG ent1, ent2;
 
@@ -2037,28 +2064,35 @@ IPTR mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   LONG ent = data->NList_DropMark;
+  IPTR result = 0;
 
-  if (data->NList_Disabled)
-    return (0);
+  ENTER();
 
-  if (data->NList_DragSortable && (msg->obj==obj) && (ent >= 0) && (data->marktype & MUIV_NList_DropType_Mask))
+  if(data->NList_Disabled == FALSE)
   {
-    LONG li,res;
-    if ((data->marktype & MUIV_NList_DropType_Mask) == MUIV_NList_DropType_Below)
-      ent++;
-    li = data->NList_LastInserted;
-    data->NList_LastInserted = -1;
-    res = NL_List_Move_Selected(data,ent);
-    if (data->NList_LastInserted >= 0)
+    if(data->NList_DragSortable && (msg->obj==obj) && (ent >= 0) && (data->marktype & MUIV_NList_DropType_Mask))
     {
-      DO_NOTIFY(NTF_DragSortInsert);
-    }
-    else
-      data->NList_LastInserted = li;
+      LONG li;
+      LONG res;
 
-    return ((ULONG)res);
+      if((data->marktype & MUIV_NList_DropType_Mask) == MUIV_NList_DropType_Below)
+        ent++;
+
+      li = data->NList_LastInserted;
+      data->NList_LastInserted = -1;
+      res = NL_List_Move_Selected(data,ent);
+
+      if(data->NList_LastInserted >= 0)
+        DO_NOTIFY(NTF_DragSortInsert);
+      else
+        data->NList_LastInserted = li;
+
+      result = res;
+    }
   }
-  return(0);
+
+  RETURN(result);
+  return result;
 }
 
 
