@@ -1116,16 +1116,19 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     {
       struct TextAttr myta;
       LONG fsize = 8;
-      int pp=0;
-      char fname[32];
-      while ((fontname[pp] != '/') && (fontname[pp] != '\0'))
-      { if (pp < 42)
-          fname[pp] = fontname[pp];
-        pp++;
+      char fname[64];
+      char *p;
+
+      strlcpy(fname, fontname, sizeof(fname));
+      // strip the font size from the name and extract the number
+      if((p = strchr(fname, '/')) != NULL)
+      {
+        *p++ = '\0';
+        fsize = atol(p);
       }
-      if (fontname[pp] != '\0')
-        fsize = atol(&fontname[pp+1]);
-      fname[pp++]='.'; fname[pp++]='f'; fname[pp++]='o'; fname[pp++]='n'; fname[pp++]='t'; fname[pp++]='\0';
+      // append the ".font" suffix
+      strlcat(fname, ".font", sizeof(fname));
+
       myta.ta_Name = fname;
       myta.ta_YSize = fsize;
       myta.ta_Style = 0;

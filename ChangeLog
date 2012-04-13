@@ -8,6 +8,7 @@ $URL$
 2012-04-13 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/locale/german.ct: fixed a typo.
+  * nlist_mcc/NList_mcc.c: cleaned up font name generation.
 
 2012-04-13 Jens Langner <Jens.Langner@light-speed.de>
 
