@@ -59,8 +59,16 @@ extern const struct Hook NL_DestructHook_String;
     test_init = TRUE; \
     if((STRPTR)tag->ti_Data != NULL) \
     { \
-      strlcpy(var_dest##Buffer, (STRPTR)tag->ti_Data, sizeof(var_dest##Buffer)); \
-      var_dest = (IPTR)var_dest##Buffer; \
+      /* catch possible MUII_#? values, these must be used directly */ \
+      if(tag->ti_Data <= 0x0000100) \
+      { \
+        var_dest = (IPTR)tag->ti_Data; \
+      } \
+      else \
+      { \
+        strlcpy(var_dest##Buffer, (STRPTR)tag->ti_Data, sizeof(var_dest##Buffer)); \
+        var_dest = (IPTR)var_dest##Buffer; \
+      } \
     } \
     else \
       var_dest = (IPTR)-1; \

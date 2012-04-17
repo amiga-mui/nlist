@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-04-17 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c, nlist_mcc/NList_mcc1.c: don't handle background specs
+    like MUII_#? as strings.
+
 2012-04-13 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/locale/german.ct: fixed a typo.
