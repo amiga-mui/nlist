@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-05-02 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_grp.c: the MUIM_AskMinMax method must not overwrite the sizes
+    returned by the superclass but add the own dimensions instead. This fixes the
+    spurious layout issues in conjunction with YAM.
+
 2012-04-17 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc.c, nlist_mcc/NList_mcc1.c: don't handle background specs
