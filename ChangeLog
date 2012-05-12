@@ -5,6 +5,16 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.112 RELEASE ###########################################################
+
+2012-05-12 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.112 release preparations
+  * nlist_mcc/Makefile, nlistview_mcc/Makefile: restored the -DNO_INLINE_STDARG
+    define in CFLAGS as otherwise our AROS cross-compilers won't build for these
+    targets and raise some "untermated macro" errors when building our test
+    applications.
+
 2012-05-02 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_grp.c: the MUIM_AskMinMax method must not overwrite the sizes
