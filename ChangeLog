@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-05-16  Pär Boberg <pbobbenb@spray.se>
+
+  * nlistviews_mcp/locale/swedish.ct: updated according to changes.
+
 2012-05-15 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbalance_mcc/private.h: changed the _isinobject() macro to accept the
