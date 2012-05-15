@@ -56,7 +56,7 @@ struct InstData
 /* macros */
 #define _id(obj) (muiNotifyData(obj)->mnd_ObjectID)
 #define _between(a,x,b) ((x)>=(a) && (x)<=(b))
-#define _isinobject(x,y) (_between(_mleft(obj),(x),_mright(obj)) && _between(_mtop(obj),(y),_mbottom(obj)))
+#define _isinobject(x,y) (_between(_left(obj),(x),_right(obj)) && _between(_top(obj),(y),_bottom(obj)))
 
 /// xget()
 //  Gets an attribute value from a MUI object

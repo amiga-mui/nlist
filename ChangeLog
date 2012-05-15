@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-05-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbalance_mcc/private.h: changed the _isinobject() macro to accept the
+    complete object's area and not just the inner space to match the active area
+    of Balance.mui's quite mode.
+
 2012-05-14 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/Makefile: removed .catalog files in clean target.
