@@ -57,21 +57,16 @@ extern const struct Hook NL_DestructHook_String;
   { \
     tag->ti_Tag = TAG_IGNORE; \
     test_init = TRUE; \
-    if((STRPTR)tag->ti_Data != NULL) \
+    /* catch possible MUII_#? values, these must be used directly */ \
+    if(tag->ti_Data <= 0x00000100) \
     { \
-      /* catch possible MUII_#? values, these must be used directly */ \
-      if(tag->ti_Data <= 0x0000100) \
-      { \
-        var_dest = (IPTR)tag->ti_Data; \
-      } \
-      else \
-      { \
-        strlcpy(var_dest##Buffer, (STRPTR)tag->ti_Data, sizeof(var_dest##Buffer)); \
-        var_dest = (IPTR)var_dest##Buffer; \
-      } \
+      var_dest = (IPTR)tag->ti_Data; \
     } \
     else \
-      var_dest = (IPTR)-1; \
+    { \
+      strlcpy(var_dest##Buffer, (STRPTR)tag->ti_Data, sizeof(var_dest##Buffer)); \
+      var_dest = (IPTR)var_dest##Buffer; \
+    } \
     REDRAW_ALL; \
   }
 

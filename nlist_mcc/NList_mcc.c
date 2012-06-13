@@ -72,18 +72,15 @@ DEFAULT_KEYS_ARRAY
     var_dest = -1; \
     if((tag = FindTagItem(attr, msg->ops_AttrList))) \
     { \
-      if((STRPTR)tag->ti_Data != NULL) \
+      /* catch possible MUII_#? values, these must be used directly */ \
+      if(tag->ti_Data <= 0x00000100) \
       { \
-        /* catch possible MUII_#? values, these must be used directly */ \
-        if(tag->ti_Data <= 0x0000100) \
-        { \
-          var_dest = (IPTR)tag->ti_Data; \
-        } \
-        else \
-        { \
-          strlcpy(var_dest##Buffer, (STRPTR)tag->ti_Data, sizeof(var_dest##Buffer)); \
-          var_dest = (IPTR)var_dest##Buffer; \
-        } \
+        var_dest = (IPTR)tag->ti_Data; \
+      } \
+      else \
+      { \
+        strlcpy(var_dest##Buffer, (STRPTR)tag->ti_Data, sizeof(var_dest##Buffer)); \
+        var_dest = (IPTR)var_dest##Buffer; \
       } \
       test_init = TRUE; \
     } \
@@ -113,8 +110,15 @@ DEFAULT_KEYS_ARRAY
       IPTR ptrd; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
       { \
-        strlcpy(var_dest##Buffer, (STRPTR)ptrd, sizeof(var_dest##Buffer)); \
-        var_dest = (IPTR)var_dest##Buffer; \
+        if(ptrd <= 0x00000100) \
+        { \
+          var_dest = ptrd; \
+        } \
+        else \
+        { \
+          strlcpy(var_dest##Buffer, (STRPTR)ptrd, sizeof(var_dest##Buffer)); \
+          var_dest = (IPTR)var_dest##Buffer; \
+        } \
       } \
       else \
         var_dest = (IPTR)(defaultval); \

@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-06-13 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c, nlist_mcc/NList_mcc1.c: fixed the screwed up display
+    in case MUII_WindowBack was set as background image and the list had a title.
+
 2012-05-16  Pär Boberg <pbobbenb@spray.se>
 
   * nlistviews_mcp/locale/swedish.ct: updated according to changes.
