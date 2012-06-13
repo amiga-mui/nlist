@@ -9,6 +9,7 @@ $URL$
 
   * nlist_mcc/NList_mcc.c, nlist_mcc/NList_mcc1.c: fixed the screwed up display
     in case MUII_WindowBack was set as background image and the list had a title.
+    This closes BZ #7873.
 
 2012-05-16  Pär Boberg <pbobbenb@spray.se>
 
