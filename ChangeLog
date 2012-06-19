@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-06-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: don't allocate locked memory.
+
 2012-06-13 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc.c, nlist_mcc/NList_mcc1.c: fixed the screwed up display

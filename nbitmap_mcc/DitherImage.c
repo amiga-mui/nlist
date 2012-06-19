@@ -80,7 +80,12 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
   if(data != NULL && colorMap != NULL && width > 0 && height > 0)
   {
     // the 8bit chunky data don't need to reside in chip memory
-    if((result = AllocVec(width * height, MEMF_SHARED)) != NULL)
+    #if defined(__amigaos4__)
+    result = AllocVecTags(width * height, AVT_Type, MEMF_SHARED, AVT_Lock, FALSE, TAG_DONE)M
+    #else
+    result = AllocVec(width * height, MEMF_SHARED);
+    #endif
+    if(result != NULL)
     {
       uint8 *mask = NULL;
       uint8 *mPtr = NULL;
@@ -218,7 +223,7 @@ APTR STDARGS VARARGS68K DitherImage(CONST_APTR data, Tag tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE_AS(tag1, APTR)
   retval = DitherImageA(data, AROS_SLOWSTACKTAGS_ARG(tag1));
-  AROS_SLOWSTACKTAGS_POST 
+  AROS_SLOWSTACKTAGS_POST
 }
 #else
 #if !defined(__PPC__)

@@ -68,10 +68,6 @@ struct ServerData
 #define ID_FTXT    MAKE_ID('F','T','X','T')
 #define ID_CHRS    MAKE_ID('C','H','R','S')
 
-#ifndef MEMF_SHARED
-#define MEMF_SHARED       MEMF_ANY
-#endif
-
 /// StringToClipboard
 // copy a string to the clipboard, public callable function
 void StringToClipboard(ULONG unit, STRPTR str)

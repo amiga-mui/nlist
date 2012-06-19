@@ -482,7 +482,7 @@ INLINE VOID DrawTreeHorBar( struct TreeImage_Data *data, struct MyImage *im, WOR
       DrawLineDotted( rp, l-1, h, r+1, h );
     }
     break;
- 
+
     case MUICFGV_NListtree_LineType_Shadow:
     {
       SetAPen( rp, MUIPEN( im->nltdata->Pen[PEN_Shadow] ) );
@@ -5111,6 +5111,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
                                                    ASOPOOL_Puddle, 16384,
                                                    ASOPOOL_Threshold, 8192,
                                                    ASOPOOL_Name, "NListtree.mcc pool",
+                                                   ASOPOOL_LockMem, FALSE,
                                                    TAG_DONE);
   #else
   ld.MemoryPool = CreatePool(MEMF_CLEAR, 16384, 8192);
@@ -5122,6 +5123,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
                                                    ASOPOOL_Puddle, 16384,
                                                    ASOPOOL_Threshold, 4096,
                                                    ASOPOOL_Name, "NListtree.mcc tree pool",
+                                                   ASOPOOL_LockMem, FALSE,
                                                    TAG_DONE);
     #else
     ld.TreePool = CreatePool(MEMF_CLEAR, 16384, 4096);
@@ -5387,7 +5389,7 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
   **  These values are used for drawing the lines.
   */
   data->Image[IMAGE_Tree].nltdata = data;
-  data->Image[IMAGE_Tree].Image = NewObject( data->CL_TreeImage->mcc_Class, NULL, MUIA_FillArea,    FALSE, 
+  data->Image[IMAGE_Tree].Image = NewObject( data->CL_TreeImage->mcc_Class, NULL, MUIA_FillArea,    FALSE,
                                                                                   MUIA_Frame,       MUIV_Frame_None,
                                                                                   MUIA_UserData,    &data->Image[IMAGE_Tree],
                                                                                   MUIA_InnerBottom, 0,
@@ -7753,6 +7755,7 @@ IPTR _NListtree_Clear(struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtr
                                                       ASOPOOL_Puddle, 16384,
                                                       ASOPOOL_Threshold, 4096,
                                                       ASOPOOL_Name, "NListtree.mcc tree pool",
+                                                      ASOPOOL_LockMem, FALSE,
                                                       TAG_DONE);
     #else
     data->TreePool = CreatePool(MEMF_CLEAR, 16384, 4096);

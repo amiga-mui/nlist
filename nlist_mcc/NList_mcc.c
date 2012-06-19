@@ -621,6 +621,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
                                                   ASOPOOL_Puddle, puddleSize,
                                                   ASOPOOL_Threshold, threshold,
                                                   ASOPOOL_Name, "NList.mcc pool",
+                                                  ASOPOOL_LockMem, FALSE,
                                                   TAG_DONE);
     #else
     data->Pool = CreatePool(MEMF_ANY, puddleSize, threshold);
