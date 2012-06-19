@@ -81,7 +81,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
   {
     // the 8bit chunky data don't need to reside in chip memory
     #if defined(__amigaos4__)
-    result = AllocVecTags(width * height, AVT_Type, MEMF_SHARED, AVT_Lock, FALSE, TAG_DONE)M
+    result = AllocVecTags(width * height, AVT_Type, MEMF_SHARED, AVT_Lock, FALSE, TAG_DONE);
     #else
     result = AllocVec(width * height, MEMF_SHARED);
     #endif
