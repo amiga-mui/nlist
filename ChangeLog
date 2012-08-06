@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.113 RELEASE ###########################################################
+
+2012-08-06 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.113 release preparations
+
 2012-06-19 Thore Böckelmann <tboeckel@gmx.de>
 
   * misc: don't allocate locked memory.
