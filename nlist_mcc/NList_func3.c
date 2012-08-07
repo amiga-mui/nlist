@@ -255,13 +255,13 @@ BOOL NL_Read_Format(struct NLData *data,char *strformat,BOOL oldlist)
         pos2++;
       }
       if ((colmax > 0) && (colmax < DISPLAY_ARRAY_MAX) && (tmpcols = AllocVecPooled(data->Pool, (colmax+1)*sizeof(struct colinfo))) != NULL)
-      { 
+      {
         NL_Free_Format(data);
         data->cols = tmpcols;
         data->numcols = data->numcols2 = colmax;
         column = 0;
         while (column < colmax)
-        { 
+        {
           data->cols[column].c = &(data->cols[column]);
           data->cols[column].preparse = NULL;
           data->cols[column].colwidthmax = (WORD) -1;
@@ -878,7 +878,7 @@ SIPTR NL_CopyTo(struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *
   {
     int len = strlen(clipstr) + 1;
 
-    if((retstr = (char *)AllocVec(len, 0L)) != NULL)
+    if((retstr = (char *)AllocVecShared(len, 0L)) != NULL)
       strlcpy(retstr, clipstr, len);
     ok = (SIPTR)retstr;
   }

@@ -82,7 +82,7 @@ static VOID setstr(STRPTR *dest, STRPTR str)
     ULONG len;
 
     len = strlen(str) + 1;
-    if((*dest = AllocVec(len, MEMF_ANY)) != NULL)
+    if((*dest = AllocVecShared(len, MEMF_ANY)) != NULL)
       strlcpy(*dest, str, len);
   }
 

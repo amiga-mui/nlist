@@ -261,7 +261,7 @@ BOOL StartClipboardServer(void)
   #if defined(__amigaos4__)
   serverLock = AllocSysObjectTags(ASOT_SEMAPHORE, TAG_DONE);
   #else
-  serverLock = AllocVec(sizeof(*serverLock), MEMF_CLEAR);
+  serverLock = AllocVecShared(sizeof(*serverLock), MEMF_CLEAR);
   #endif
   if(serverLock != NULL)
   {

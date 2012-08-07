@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-08-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: replaced all AllocVec() calls by AllocVecTags() for the AmigaOS4 build.
+    Also replaced all remaining AllocMem() calls by AllocVec(Tags)().
+
 #### v0.113 RELEASE ###########################################################
 
 2012-08-06 Jens Langner <Jens.Langner@light-speed.de>

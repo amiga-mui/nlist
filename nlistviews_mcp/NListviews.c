@@ -377,11 +377,11 @@ static LONG NL_SaveKeys(struct NListviews_MCP_Data *data)
 {
   LONG pos,ne = 0;
   struct KeyBinding *key;
+
   get(data->mcp_listkeys, MUIA_NList_Entries, &ne);
   ne++;
-  data->nlkeys_size = ne*sizeof(struct KeyBinding);
 
-  if((data->nlkeys = (struct KeyBinding *) AllocMem(data->nlkeys_size+4,0L)))
+  if((data->nlkeys = (struct KeyBinding *)AllocVecShared(ne*sizeof(struct KeyBinding),MEMF_ANY)))
   {
     pos = 0;
 
@@ -415,10 +415,12 @@ static LONG NL_SaveKeys(struct NListviews_MCP_Data *data)
 static void NL_LoadKeys(Object *list,struct KeyBinding *keys)
 {
   int i = 0;
+
   set(list, MUIA_NList_Quiet, TRUE);
   DoMethod(list,MUIM_NList_Clear);
   while (keys[i].kb_KeyTag)
-  { DoMethod(list,MUIM_NList_InsertSingle,&keys[i], MUIV_NList_Insert_Bottom);
+  {
+    DoMethod(list,MUIM_NList_InsertSingle,&keys[i], MUIV_NList_Insert_Bottom);
     i++;
   }
   set(list, MUIA_NList_Quiet, FALSE);
@@ -502,10 +504,12 @@ HOOKPROTONH(TxtFctFunc, VOID, Object *list, long *val)
   Object *txtfct = (Object *) val[0];
   struct KeyBinding *key = NULL;
   LONG i = -1;
+
   get(txtfct,MUIA_UserData,&i);
   DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
-  if (key && (i >= 0))
-  { key->kb_KeyTag = keytags[i];
+  if(key && (i >= 0))
+  {
+    key->kb_KeyTag = keytags[i];
     DoMethod(list,MUIM_NList_Redraw,MUIV_NList_Redraw_Active);
     get(list,MUIA_NList_Active,&i);
     set(list,MUIA_NList_Active,i);
@@ -518,11 +522,13 @@ HOOKPROTONH(AckFunc, VOID, Object *list, long *val)
   Object *stringkey = (Object *) val[0];
   struct KeyBinding *key = NULL;
   char *ackstr = NULL;
+
   get(stringkey,MUIA_String_Contents, &ackstr);
   DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
   if (ackstr && key)
-  { 
+  {
     IX ix;
+
     ix.ix_Version = IX_VERSION;
     ParseIX(ackstr,&ix);
     key->kb_Qualifier = (ix.ix_Qualifier & KBQUAL_MASK) | ((ix.ix_QualSame << 12) & KBSYM_MASK);
@@ -538,17 +544,20 @@ HOOKPROTONH(ActiveFunc, VOID, Object *list, long *val)
 /*  Object *win = NULL;*/
   ULONG active = (ULONG) (val[1]);
   struct KeyBinding *key = NULL;
+
   if((LONG)active >= 0)
   {
     DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
 
     if (key)
-    { LONG i;
-      i = 0;
+    {
+      LONG i = 0;
+
       while ((keytags[i] > 0) && (keytags[i] != key->kb_KeyTag))
         i++;
       if (keytags[i] == key->kb_KeyTag)
-      { nnset(data->mcp_stringkey,MUIA_HotkeyString_Snoop, FALSE);
+      {
+        nnset(data->mcp_stringkey,MUIA_HotkeyString_Snoop, FALSE);
         nnset(data->mcp_stringkey,MUIA_Disabled, FALSE);
         nnset(data->mcp_snoopkey,MUIA_Disabled, FALSE);
         nnset(data->mcp_txtfct,MUIA_UserData,i);
@@ -567,7 +576,8 @@ HOOKPROTONH(ActiveFunc, VOID, Object *list, long *val)
     }
   }
   if (!key)
-  { nnset(data->mcp_txtfct,MUIA_UserData,-1);
+  {
+    nnset(data->mcp_txtfct,MUIA_UserData,-1);
     nnset(data->mcp_txtfct,MUIA_Text_Contents,"");
     nnset(data->mcp_stringkey,MUIA_String_Contents, "");
     nnset(data->mcp_stringkey,MUIA_Disabled, TRUE);
@@ -594,11 +604,14 @@ MakeStaticHook(UpdateHook, UpdateFunc);
 HOOKPROTONHNP(InsertFunc, VOID, Object *list)
 {
   if (list)
-  { struct KeyBinding *key;
+  {
+    struct KeyBinding *key;
     LONG pos = 0;
+
     DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
     if (!key)
-    { empty_key.kb_KeyTag = keytags[0];
+    {
+      empty_key.kb_KeyTag = keytags[0];
       key = &empty_key;
     }
     set(list,MUIA_NList_Quiet,TRUE);
@@ -614,6 +627,7 @@ HOOKPROTONH(DisplayFunc, VOID, Object *obj, struct NList_DisplayMessage *ndm)
 {
   struct KeyBinding *key = (struct KeyBinding *) ndm->entry;
   struct NListviews_MCP_Data *data = NULL;
+
   get(obj,MUIA_UserData,&data);
 
   if (key && data)
@@ -645,9 +659,9 @@ MakeStaticHook(DisplayHook, DisplayFunc);
 HOOKPROTONHNO(ConstructFunc, APTR, struct NList_ConstructMessage *ncm)
 {
   struct KeyBinding *key = (struct KeyBinding *) ncm->entry;
-
-  struct KeyBinding *key2 = (struct KeyBinding *) AllocMem(sizeof(struct KeyBinding),0L);
+  struct KeyBinding *key2 = (struct KeyBinding *) AllocVecShared(sizeof(struct KeyBinding),0L);
   if (key2)
+
     *key2 = *key;
 
   return ((APTR) key2);
@@ -658,7 +672,7 @@ HOOKPROTONHNO(DestructFunc, VOID, struct NList_DestructMessage *ndm)
 {
   struct KeyBinding *key = (struct KeyBinding *) ndm->entry;
 
-  FreeMem((void *) key,sizeof(struct KeyBinding));
+  FreeVec((void *) key,sizeof(struct KeyBinding));
 }
 MakeStaticHook(DestructHook, DestructFunc);
 
@@ -744,7 +758,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   }
 
   // create a duplicate of the translated text
-  if((exampleText = AllocVec((strlen(tr(MSG_EXAMPLE_TEXT))+1)*sizeof(char), MEMF_ANY)) != NULL)
+  if((exampleText = AllocVecShared((strlen(tr(MSG_EXAMPLE_TEXT))+1)*sizeof(char), MEMF_ANY)) != NULL)
   {
     char *p;
     LONG numLines = 0;
@@ -761,7 +775,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
     }
 
     // finally split the text into separate lines
-    if((data->exampleText = AllocVec((numLines+2)*sizeof(char *), MEMF_ANY|MEMF_CLEAR)) != NULL)
+    if((data->exampleText = AllocVecShared((numLines+2)*sizeof(char *), MEMF_ANY|MEMF_CLEAR)) != NULL)
     {
       LONG line;
 
@@ -772,7 +786,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
         q = strchr(p, '\n');
         *q++ = '\0';
-        data->exampleText[line] = AllocVec((strlen(p)+1)*sizeof(char), MEMF_ANY);
+        data->exampleText[line] = AllocVecShared((strlen(p)+1)*sizeof(char), MEMF_ANY);
         strcpy(data->exampleText[line], p);
         p = q;
       }
@@ -1924,8 +1938,9 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   {
     LONG sk = NL_SaveKeys(data);
     if (sk > 0)
-    { DoMethod(msg->configdata, MUIM_Dataspace_Add, data->nlkeys, sk, MUICFG_NList_Keys);
-      FreeMem((void *) data->nlkeys,data->nlkeys_size+4);
+    {
+      DoMethod(msg->configdata, MUIM_Dataspace_Add, data->nlkeys, sk, MUICFG_NList_Keys);
+      FreeVec((void *) data->nlkeys);
       data->nlkeys = NULL;
     }
   }

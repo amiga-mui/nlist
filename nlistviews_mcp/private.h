@@ -95,7 +95,6 @@ struct NListviews_MCP_Data
   Object *mcp_poplistfct;
 
   struct KeyBinding *nlkeys;
-  LONG nlkeys_size;
   char QualifierString[192];
 
   char rawtext[MCPMAXRAWBUF];
@@ -107,5 +106,11 @@ struct NListviews_MCP_Data
 };
 
 #define LIBVER(lib) ((struct Library *)lib)->lib_Version
+
+#if defined(__amigaos4__)
+#define AllocVecShared(size, flags)  AllocVecTags((size), AVT_Type, MEMF_SHARED, AVT_Lock, FALSE, ((flags)&MEMF_CLEAR) ? AVT_ClearWithValue : TAG_IGNORE, 0, TAG_DONE)
+#else
+#define AllocVecShared(size, flags)  AllocVec((size), (flags))
+#endif
 
 #endif /* MUI_NLISTVIEWS_priv_MCP_H */

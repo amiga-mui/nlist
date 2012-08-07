@@ -40,7 +40,7 @@ static char *CopyText(char *textin)
   {
     int len = strlen(textin)+2;
 
-    if((textout = AllocVec(len,MEMF_ANY)))
+    if((textout = AllocVecShared(len,MEMF_ANY)))
       strlcpy(textout, textin, len);
   }
 
@@ -298,7 +298,7 @@ static IPTR mNFT_GetEntry(struct IClass *cl,Object *obj,struct MUIP_NFloattext_G
       { if (data->NFloattext_entry)
           FreeVec(data->NFloattext_entry);
         data->NFloattext_entry_len = gei.charlen+18;
-        data->NFloattext_entry = (char *) AllocVec(gei.charlen+20,MEMF_ANY);
+        data->NFloattext_entry = (char *) AllocVecShared(gei.charlen+20,MEMF_ANY);
       }
       if (data->NFloattext_entry)
       { char *nft_entry = data->NFloattext_entry;

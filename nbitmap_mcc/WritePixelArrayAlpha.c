@@ -43,7 +43,7 @@ ULONG _WPAA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp,
   {
     ULONG *buf;
 
-    if((buf = AllocVec(width * 4, MEMF_ANY)) != NULL)
+    if((buf = AllocVecShared(width * 4, MEMF_ANY)) != NULL)
     {
       ULONG x, y;
 

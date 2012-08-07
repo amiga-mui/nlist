@@ -115,7 +115,7 @@ IPTR mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
   if (((data->NList_SourceArray == 2) || data->VirtGroup) && (data->NList_Entries > 0))
   { struct RastPort *tmprp2 = NULL;
     if ((data->NList_AdjustWidth == -1) && !data->nodraw &&
-             (tmprp2 = (struct RastPort *) AllocVec(sizeof(struct RastPort),0)))
+             (tmprp2 = (struct RastPort *) AllocVecShared(sizeof(struct RastPort),0)))
     { struct RastPort *tmprp = data->rp;
       struct TextFont *tmpfont;
       WORD column,delta;

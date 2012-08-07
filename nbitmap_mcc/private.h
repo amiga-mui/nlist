@@ -158,4 +158,16 @@ ULONG _WPAA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp,
 #define PDTA_AlphaChannel     (DTA_Dummy + 256)
 #endif
 
+#if defined(__amigaos4__)
+#define AllocVecShared(size, flags)  AllocVecTags((size), AVT_Type, MEMF_SHARED, AVT_Lock, FALSE, ((flags)&MEMF_CLEAR) ? AVT_ClearWithValue : TAG_IGNORE, 0, TAG_DONE)
+#else
+#define AllocVecShared(size, flags)  AllocVec((size), (flags))
+#endif
+
+#if defined(__amigaos4__)
+#define AllocVecAligned(size, flags, alignSize, alignOffset)	AllocVecTags((size), AVT_Type, MEMF_SHARED, AVT_Lock, FALSE, AVT_Alignment, (alignSize), ((flags)&MEMF_CLEAR) ? AVT_ClearWithValue : TAG_IGNORE, 0, TAG_DONE)
+#elif defined(__amigaos3__)
+#define AllocVecAligned(size, flags, alignSize, alignOffset)	AllocVec((size),(flags))
+#endif
+
 #endif /* NBITMAP_MCC_PRIV_H */

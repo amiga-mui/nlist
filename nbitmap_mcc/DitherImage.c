@@ -80,12 +80,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
   if(data != NULL && colorMap != NULL && width > 0 && height > 0)
   {
     // the 8bit chunky data don't need to reside in chip memory
-    #if defined(__amigaos4__)
-    result = AllocVecTags(width * height, AVT_Type, MEMF_SHARED, AVT_Lock, FALSE, TAG_DONE);
-    #else
-    result = AllocVec(width * height, MEMF_SHARED);
-    #endif
-    if(result != NULL)
+    if((result = AllocVecShared(width * height, MEMF_ANY)) != NULL)
     {
       uint8 *mask = NULL;
       uint8 *mPtr = NULL;
@@ -98,8 +93,8 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
       // function is interested in a mask at all
       if(format == MUIV_NBitmap_Type_ARGB32 && maskPtr != NULL)
       {
-        // the mask must reside in chip memory
-        mask = AllocVec(RAWIDTH(width) * height, MEMF_SHARED|MEMF_CLEAR|MEMF_CHIP);
+        // the mask MUST reside in chip memory
+        mask = AllocVec(RAWIDTH(width) * height, MEMF_CLEAR|MEMF_CHIP);
         *maskPtr = mask;
         mPtr = mask;
       }
