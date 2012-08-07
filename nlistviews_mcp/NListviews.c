@@ -672,7 +672,7 @@ HOOKPROTONHNO(DestructFunc, VOID, struct NList_DestructMessage *ndm)
 {
   struct KeyBinding *key = (struct KeyBinding *) ndm->entry;
 
-  FreeVec((void *) key,sizeof(struct KeyBinding));
+  FreeVec((void *) key);
 }
 MakeStaticHook(DestructHook, DestructFunc);
 
