@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-08-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcp/NListtree.c, nlistviews_mcp/NListviews.c: adjusted the crawling
+    text to better match the capabilities of Crawling.mcc.
+
 2012-08-07 Thore Böckelmann <tboeckel@gmx.de>
 
   * misc: replaced all AllocVec() calls by AllocVecTags() for the AmigaOS4 build.

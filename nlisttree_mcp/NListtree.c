@@ -257,12 +257,15 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
 {
   struct NListtreeP_Data *data;
   static const char *CY_LineTypes_Entries[6];
-  static const char infotext[] = "\033bNListtree.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
-                                 "Copyright (c) 1999-2001 Carsten Scholling\n"
-                                 LIB_COPYRIGHT "\n\n"
-                                 "Distributed under the terms of the LGPL2.\n\n"
-                                 "For the latest version, check out:\n"
-                                 "http://www.sf.net/projects/nlist-classes/\n\n";
+  static const char infotext1[] = "\033bNListtree.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
+                                  "Copyright (C) 1999-2001 Carsten Scholling\n"
+                                  LIB_COPYRIGHT;
+  static const char infotext2[] = "\n"
+                                  "Distributed under the terms of the LGPL2.\n"
+                                  "\n"
+                                  "For the latest version, check out:\n"
+                                  "http://www.sf.net/projects/nlist-classes/\n"
+                                  "\n";
 
   static unsigned char msg_closed_key;
   static unsigned char msg_open_key;
@@ -514,17 +517,25 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
 
     Child, CrawlingObject,
       TextFrame,
-      MUIA_FixHeightTxt, "\n\n",
+      MUIA_FixHeightTxt, infotext1,
       MUIA_Background,   "m1",
 
       Child, TextObject,
+        MUIA_Text_Copy, FALSE,
         MUIA_Text_PreParse, "\033c",
-        MUIA_Text_Contents, infotext,
+        MUIA_Text_Contents, infotext1,
       End,
 
       Child, TextObject,
+        MUIA_Text_Copy, FALSE,
         MUIA_Text_PreParse, "\033c",
-        MUIA_Text_Contents, infotext,
+        MUIA_Text_Contents, infotext2,
+      End,
+
+      Child, TextObject,
+        MUIA_Text_Copy, FALSE,
+        MUIA_Text_PreParse, "\033c",
+        MUIA_Text_Contents, infotext1,
       End,
     End,
 
@@ -968,10 +979,10 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
 
   D(DBF_ALWAYS, "OpenAutoScroll: %ld", d);
 
-  get( data->CY_LineType, MUIA_Cycle_Active, &d );    
-  snprintf(buf, sizeof(buf), "%d", (int)d);   
-  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_LineType );    
-               
+  get( data->CY_LineType, MUIA_Cycle_Active, &d );
+  snprintf(buf, sizeof(buf), "%d", (int)d);
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_LineType );
+
   D(DBF_ALWAYS, "LineType: %ld", d);
 
   get( data->CH_UseFolderImage, MUIA_Selected, &d );
