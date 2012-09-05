@@ -651,10 +651,11 @@ static LONG DoRefresh(struct NLData *data)
  */
 
 
-LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
+void NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
 {
   if (data->do_draw_all)
-  { if ((dowhat == 0) || (dowhat == 4))
+  {
+    if ((dowhat == 0) || (dowhat == 4))
       dowhat = 2;
     else if (dowhat == 3)
       dowhat = 1;
@@ -893,7 +894,6 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
       break;
 
   }
-  return (0L);
 }
 
 
