@@ -1669,6 +1669,7 @@ LONG DrawDragText(struct NLData *data,BOOL draw)
     rp = data->DragRPort;
   else
     rp = data->rp;
+
   if (rp && data->DragText)
   {
     char *text = data->DragText;
@@ -1684,9 +1685,7 @@ LONG DrawDragText(struct NLData *data,BOOL draw)
       _top(obj) = 0;
       _width(obj) = data->DragWidth;
       _height(obj) = data->DragHeight;
-      DoMethod(obj,MUIM_DrawBackground,(LONG) 0,(LONG) 0,
-                                       (LONG) data->DragWidth,(LONG) data->DragHeight,
-                                       (LONG) 0,(LONG) 0,(LONG) 0);
+      DrawBackground(obj, 0, 0, data->DragWidth, data->DragHeight, 0, 0);
       _rp(obj) = data->rp;
       _left(obj) = data->left;
       _top(obj) = data->top;
@@ -1726,9 +1725,7 @@ LONG DrawDragText(struct NLData *data,BOOL draw)
       _top(obj) = 0;
       _width(obj) = data->DragWidth;
       _height(obj) = data->DragHeight;
-      DoMethod(obj,MUIM_DrawBackground,(LONG) 0,(LONG) 0,
-                                       (LONG) data->DragWidth,(LONG) data->DragHeight,
-                                       (LONG) 0,(LONG) 0,(LONG) 0);
+      DrawBackground(obj, 0, 0, data->DragWidth, data->DragHeight, 0, 0);
       _rp(obj) = data->rp;
       _left(obj) = data->left;
       _top(obj) = data->top;
@@ -1741,7 +1738,8 @@ LONG DrawDragText(struct NLData *data,BOOL draw)
     return (w);
   }
   else
-  { data->DragText = NULL;
+  {
+    data->DragText = NULL;
     data->DragEntry = -1;
   }
   return (4);
