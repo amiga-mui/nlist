@@ -282,8 +282,8 @@ void NL_GetDisplayArray(struct NLData *data, SIPTR ent)
 
 void ParseColumn(struct NLData *data,WORD column,IPTR mypen)
 {
-  register struct colinfo *cinfo = data->cols[column].c;
-  register struct affinfo *afinfo;
+  struct colinfo *cinfo = data->cols[column].c;
+  struct affinfo *afinfo;
   char *ptr1,*ptr2,*ptro,*ptrs;
   char **display_array = &data->DisplayArray[2];
   IPTR pen;
@@ -915,8 +915,8 @@ void AllParseColumns(struct NLData *data)
 
 static WORD AddSpaceInfos(struct NLData *data,WORD column,WORD ni1)
 {
-  register struct colinfo *cinfo = data->cols[column].c;
-  register struct affinfo *afinfo;
+  struct colinfo *cinfo = data->cols[column].c;
+  struct affinfo *afinfo;
   WORD curlen,ni,ni2;
   WORD numinfo = 0;
   char *str;
@@ -966,8 +966,8 @@ static WORD AddSpaceInfos(struct NLData *data,WORD column,WORD ni1)
 
 void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
 {
-  register struct colinfo *cinfo = data->cols[column].c;
-  register struct affinfo *afinfo;
+  struct colinfo *cinfo = data->cols[column].c;
+  struct affinfo *afinfo;
   WORD curlen,ni,ni1;
   WORD numchar = 0;
   WORD numinfo = 0;
@@ -1157,8 +1157,8 @@ void WidthColumn(struct NLData *data,WORD column,WORD updinfo)
 
 void FindCharInColumn(struct NLData *data,LONG ent,WORD column,WORD xoffset,WORD *charxoffset,WORD *charnum)
 {
-  register struct colinfo *cinfo = data->cols[column].c;
-  register struct affinfo *afinfo;
+  struct colinfo *cinfo = data->cols[column].c;
+  struct affinfo *afinfo;
   WORD curx,curx2,ni;
   struct TextExtent te;
 
@@ -1288,8 +1288,8 @@ void FindCharInColumn(struct NLData *data,LONG ent,WORD column,WORD xoffset,WORD
 
 static LONG NL_DoWrapLine(struct NLData *data,LONG ent,BOOL force)
 {
-  register struct colinfo *cinfo;
-  register struct affinfo *afinfo;
+  struct colinfo *cinfo;
+  struct affinfo *afinfo;
   struct TextExtent te;
   LONG ent1 = ent,selects,column,col = 0;
   WORD curlen,endpos,ni,colwidth,style;

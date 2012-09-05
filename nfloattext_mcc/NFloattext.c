@@ -75,7 +75,7 @@ static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 
 static IPTR mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-  register struct NFTData *data;
+  struct NFTData *data;
   struct TagItem *tag;
   LONG Justify = FALSE;
   LONG Align = ALIGN_LEFT;
@@ -177,7 +177,7 @@ static IPTR mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
 static IPTR mNFT_Dispose(struct IClass *cl,Object *obj,Msg msg)
 {
-  register struct NFTData *data;
+  struct NFTData *data;
   data = INST_DATA(cl,obj);
   DoMethod(obj,MUIM_NList_Clear,NULL);
   if (data->NFloattext_Copied && data->NFloattext_Text)
@@ -193,7 +193,7 @@ static IPTR mNFT_Dispose(struct IClass *cl,Object *obj,Msg msg)
 
 static IPTR mNFT_Set(struct IClass *cl,Object *obj,Msg msg)
 {
-  register struct NFTData *data = INST_DATA(cl,obj);
+  struct NFTData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
 
   for (tags=((struct opSet *)msg)->ops_AttrList;(tag=NextTagItem((APTR)&tags));)
@@ -286,7 +286,7 @@ static IPTR mNFT_Get(struct IClass *cl,Object *obj,Msg msg)
 
 static IPTR mNFT_GetEntry(struct IClass *cl,Object *obj,struct MUIP_NFloattext_GetEntry *msg)
 {
-  register struct NFTData *data = INST_DATA(cl,obj);
+  struct NFTData *data = INST_DATA(cl,obj);
   struct MUI_NList_GetEntryInfo gei;
   gei.pos = msg->pos;
   gei.line = 0;

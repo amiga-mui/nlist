@@ -87,7 +87,7 @@ struct NLIData
 
 IPTR mNLI_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-  register struct NLIData *data = INST_DATA(cl,obj);
+  struct NLIData *data = INST_DATA(cl,obj);
   DoSuperMethodA(cl,obj,(Msg) msg);
   if ((msg->flags & MADF_DRAWOBJECT) || (msg->flags & MADF_DRAWUPDATE))
   { WORD x1,x2,x3,x4,x5,y1,y2,y3,y4,y5;
@@ -183,7 +183,7 @@ IPTR mNLI_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 IPTR mNLI_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-  register struct NLIData *data;
+  struct NLIData *data;
   if (!(obj = (Object *)DoSuperMethodA(cl,obj,(Msg) msg)))
     return(0);
   data = INST_DATA(cl,obj);
@@ -207,7 +207,7 @@ IPTR mNLI_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 
 IPTR mNLI_Set(struct IClass *cl,Object *obj,Msg msg)
 {
-  register struct NLIData *data = INST_DATA(cl,obj);
+  struct NLIData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
 
   for(tags=((struct opSet *)msg)->ops_AttrList; (tag=(struct TagItem *)NextTagItem((APTR)&tags)); )

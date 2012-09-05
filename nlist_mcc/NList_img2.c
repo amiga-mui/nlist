@@ -37,7 +37,7 @@ struct MUI_CustomClass *NLI2_Class = NULL;
 
 static ULONG mNLI2_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-  register struct NLIData *data = INST_DATA(cl,obj);
+  struct NLIData *data = INST_DATA(cl,obj);
   if (data->DoDraw)
     DoSuperMethodA(cl,obj,(Msg) msg);
 
@@ -47,7 +47,7 @@ static ULONG mNLI2_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 static ULONG mNLI2_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-  register struct NLIData *data;
+  struct NLIData *data;
 
   if (!(obj = (Object *)DoSuperMethodA(cl,obj,(Msg) msg)))
     return(0);
@@ -61,7 +61,7 @@ static ULONG mNLI2_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
 static ULONG mNLI2_Set(struct IClass *cl,Object *obj,Msg msg)
 {
-  register struct NLIData *data = INST_DATA(cl,obj);
+  struct NLIData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
 
   for (tags=((struct opSet *)msg)->ops_AttrList;(tag=(struct TagItem *) NextTagItem(&tags));)

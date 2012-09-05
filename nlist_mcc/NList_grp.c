@@ -35,7 +35,7 @@ struct MUI_CustomClass *NGR_Class = NULL;
 
 static IPTR mNGR_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-  register struct NGRData *data;
+  struct NGRData *data;
 
   if (!(obj = (Object *)DoSuperMethodA(cl,obj,(Msg) msg)))
     return(0);
