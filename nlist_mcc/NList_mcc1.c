@@ -344,9 +344,9 @@ IPTR mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
       return (0);
 
     case MUIA_List_Prop_Entries :
-    case MUIA_List_Pro
-    p_Visible :
+    case MUIA_List_Prop_Visible :
       return (0);
+
     case MUIA_NList_First :
       WANT_NOTIFY(NTF_First);
       break;
