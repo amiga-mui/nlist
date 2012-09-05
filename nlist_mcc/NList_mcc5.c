@@ -854,28 +854,7 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
 
       break;
 
-    case 8 :  /* SetBackGroundForce */
-
-      {
-        ULONG mad_Flags = muiAreaData(data->this)->mad_Flags;
-
-        OCLASS(data->this) = data->ncl;
-        if (bg == data->actbackground)
-        {
-          data->nodraw++;
-          nnset(data->this,MUIA_Background,(IPTR)"0:128");
-          data->nodraw--;
-        }
-        data->actbackground = bg;
-        data->nodraw++;
-        nnset(data->this,MUIA_Background,bg);
-        OCLASS(data->this) = data->ocl;
-        data->nodraw--;
-        muiAreaData(data->this)->mad_Flags = mad_Flags;
-      }
-      break;
-
-    case 9 :  /* Make_Active_Visible */
+    case 8 :  /* Make_Active_Visible */
 
       if ((data->NList_AutoVisible) && (data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
       {
@@ -894,7 +873,7 @@ LONG NL_DrawQuietBG(struct NLData *data,LONG dowhat,LONG bg)
       }
       break;
 
-    case 10 :  /* ForceMinMax */
+    case 9 :  /* ForceMinMax */
 
       DONE_NOTIFY(NTF_MinMax);
       if (!WANTED_NOTIFY(NTF_MinMax) && data->SHOW && data->DRAW && data->NL_Group && data->VirtGroup && data->NList_AdjustHeight)

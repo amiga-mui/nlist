@@ -85,11 +85,10 @@
 #define LESSQUIET                 NL_DrawQuietBG(data,6,0)
 
 #define SetBackGround(bg)         if((bg) != (ULONG)data->actbackground) NL_DrawQuietBG(data, 7, (bg));
-#define SetBackGroundForce(bg)    NL_DrawQuietBG(data,8,(bg))
 
-#define Make_Active_Visible       NL_DrawQuietBG(data,9,0)
+#define Make_Active_Visible       NL_DrawQuietBG(data,8,0)
 
-#define ForceMinMax               NL_DrawQuietBG(data,10,0)
+#define ForceMinMax               NL_DrawQuietBG(data,9,0)
 
 #define do_notifies(which)        NL_DoNotifies(data,(which))
 
