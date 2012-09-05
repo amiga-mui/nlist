@@ -38,7 +38,7 @@ static char *CopyText(char *textin)
 
   if (textin)
   {
-    int len = strlen(textin)+2;
+    int len = strlen(textin)+1;
 
     if((textout = AllocVecShared(len,MEMF_ANY)))
       strlcpy(textout, textin, len);
