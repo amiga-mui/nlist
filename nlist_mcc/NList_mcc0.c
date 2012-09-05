@@ -41,7 +41,7 @@
 static IPTR mNL_Show(struct IClass *cl,Object *obj,Msg msg)
 {
   IPTR retval;
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
 
   ENTER();
 
@@ -86,10 +86,8 @@ static IPTR mNL_Show(struct IClass *cl,Object *obj,Msg msg)
   }
 
   if (data->VertPropObject)
-  { if (data->NList_Smooth)
-      set(data->VertPropObject,MUIA_Prop_DoSmooth, TRUE);
-    else
-      set(data->VertPropObject,MUIA_Prop_DoSmooth, FALSE);
+  {
+    set(data->VertPropObject,MUIA_Prop_DoSmooth, data->NList_Smooth);
   }
 
   GetNImage_Sizes(data);
@@ -102,7 +100,7 @@ static IPTR mNL_Show(struct IClass *cl,Object *obj,Msg msg)
 
 static IPTR mNL_Hide(struct IClass *cl,Object *obj,Msg msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   IPTR retval;
 
   ENTER();

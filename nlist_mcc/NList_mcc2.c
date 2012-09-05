@@ -2043,7 +2043,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
 IPTR mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   IPTR retval;
   if (data->DragRPort)
   { _rp(obj) = data->DragRPort;
@@ -2068,7 +2068,7 @@ IPTR mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragIma
 
 IPTR mNL_DeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   IPTR retval = DoSuperMethodA(cl,obj,(Msg) msg);
 
   if (data->DragRPort)
@@ -2144,7 +2144,7 @@ BOOL NL_Prop_First_Adjust(struct NLData *data)
 
 IPTR mNL_Trigger(struct IClass *cl, UNUSED Object *obj, UNUSED Msg msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   /* attention, can be called with msg = NULL */
   if (data->SHOW && data->DRAW && !data->do_draw_all)
   {

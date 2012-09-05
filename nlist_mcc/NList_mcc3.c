@@ -615,7 +615,7 @@ static ULONG DrawRefresh(struct NLData *data)
 
 IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
 
   if (data->drawsuper)
   {

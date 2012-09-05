@@ -1446,7 +1446,7 @@ static ULONG NL_List_Move_Selected(struct NLData *data, LONG to)
   else if (num_sel == 1)
   {
     ULONG res;
-    
+
     // we have to decrease 'to' by one if 'to > last' (user moves item down)
     // because NL_List_Move() expects the indices to prepared the same
     // way like List.mui is expecting it.
@@ -1487,7 +1487,7 @@ static ULONG NL_List_Move_Selected(struct NLData *data, LONG to)
         NL_DoWrapAll(data,FALSE,FALSE);
         REDRAW;
       }
-        
+
       RETURN(TRUE);
       return TRUE;
     }
@@ -1864,7 +1864,7 @@ IPTR mNL_List_Remove(struct IClass *cl,Object *obj,struct MUIP_NList_Remove *msg
 
 IPTR mNL_DragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   if (data->NList_Disabled)
   {
 /*D(bug("%lx| 1 DragQuery_Refuse\n",obj));*/
@@ -1882,7 +1882,7 @@ IPTR mNL_DragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 
 IPTR mNL_DragBegin(struct IClass *cl,Object *obj,struct MUIP_DragBegin *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   data->NList_DropMark = DROPMARK_START;
   if (data->NList_Disabled)
     return (0);
@@ -1894,7 +1894,7 @@ IPTR mNL_DragBegin(struct IClass *cl,Object *obj,struct MUIP_DragBegin *msg)
 
 IPTR mNL_DragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   LONG mdy,type,lyl = DROPMARK_NONE;
 
   if (data->NList_Disabled)
@@ -2037,7 +2037,7 @@ IPTR mNL_DragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
 
 IPTR mNL_DragFinish(struct IClass *cl,Object *obj,struct MUIP_DragFinish *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   if (data->NList_DropMark == DROPMARK_START)
     data->NList_DropMark = DROPMARK_NONE;
   if (data->NList_Disabled)
@@ -2098,12 +2098,12 @@ IPTR mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 
 IPTR mNL_DropType(UNUSED struct IClass *cl, UNUSED Object *obj, UNUSED struct MUIP_NList_DropType *msg)
 {
-  /*register struct NLData *data = INST_DATA(cl,obj);*/
+  /*struct NLData *data = INST_DATA(cl,obj);*/
   return(0);
 }
 
 IPTR mNL_DropEntryDrawErase(UNUSED struct IClass *cl, UNUSED Object *obj, UNUSED struct MUIP_NList_DropEntryDrawErase *msg)
 {
-  /*register struct NLData *data = INST_DATA(cl,obj);*/
+  /*struct NLData *data = INST_DATA(cl,obj);*/
   return(MUIM_NList_DropEntryDrawErase);
 }

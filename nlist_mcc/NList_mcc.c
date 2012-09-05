@@ -1024,7 +1024,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
 IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
 {
-  register struct NLData *data;
+  struct NLData *data;
   data = INST_DATA(cl,obj);
 
 /*D(bug("%lx|mNL_Dispose() 1 \n",obj));*/
@@ -1382,10 +1382,8 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
       data->NList_Smooth = DEFAULT_SMOOTHSCROLL;
 
     if (data->VertPropObject)
-    { if (data->NList_Smooth)
-        set(data->VertPropObject,MUIA_Prop_DoSmooth, TRUE);
-      else
-        set(data->VertPropObject,MUIA_Prop_DoSmooth, FALSE);
+    {
+      set(data->VertPropObject,MUIA_Prop_DoSmooth, data->NList_Smooth);
     }
   }
 
@@ -1588,7 +1586,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
 IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl,obj);
   IPTR retval;
 
 /*D(bug("%lx|mNL_Cleanup() 1 \n",obj));*/
