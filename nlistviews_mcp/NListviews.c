@@ -141,7 +141,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
   { \
     LONG ptrd=0; \
     get(obj, attr, &ptrd); \
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &ptrd, 8, cfg_attr); \
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &ptrd, sizeof(ptrd), cfg_attr); \
   }
 
 #define LOAD_DATASPEC(obj,attr,cfg_attr,defaultval) \
@@ -158,7 +158,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
     LONG ptrd=0; \
     get(obj, attr, &ptrd); \
     if (ptrd) \
-      DoMethod(msg->configdata, MUIM_Dataspace_Add, ptrd, sizeof(struct MUI_PenSpec), cfg_attr); \
+      DoMethod(msg->configdata, MUIM_Dataspace_Add, ptrd, strlen((char *)ptrd)+1, cfg_attr); \
   }
 
 #define SAVE_DATASPEC2(obj,attr,cfg_attr) \
@@ -166,7 +166,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
     LONG ptrd=0; \
     get(obj, attr, &ptrd); \
     if (ptrd) \
-      DoMethod(msg->configdata, MUIM_Dataspace_Add, ptrd, sizeof(struct MUI_ImageSpec), cfg_attr); \
+      DoMethod(msg->configdata, MUIM_Dataspace_Add, ptrd, strlen((char *)ptrd)+1, cfg_attr); \
   }
 
 #define LOAD_DATAFONT(obj,cfg_attr) \
@@ -1841,14 +1841,14 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
       num = MUIV_NList_DragType_Borders;
     else
       num = MUIV_NList_DragType_Immediate;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_DragType);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NList_DragType);
   }
 
   {
     LONG ptrd=0,num;
     get(data->mcp_ColWidthDrag, MUIA_Radio_Active, &ptrd);
     num = ptrd;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_ColWidthDrag);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NList_ColWidthDrag);
   }
 
   {
@@ -1863,20 +1863,20 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
       num |= MUIV_NList_MultiSelect_MMB_On;
     else
       num |= MUIV_NList_MultiSelect_MMB_Off;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_MultiSelect);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NList_MultiSelect);
   }
 
   {
     LONG ptrd=0,num;
     get(data->mcp_R_HSB, MUIA_Radio_Active, &ptrd);
     num = ptrd+1;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NListview_HSB);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NListview_HSB);
   }
   {
     LONG ptrd=0,num;
     get(data->mcp_R_VSB, MUIA_Radio_Active, &ptrd);
     num = ptrd+1;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NListview_VSB);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NListview_VSB);
   }
 
   {
@@ -1886,7 +1886,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
       num = TRUE;
     else
       num = FALSE;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_ForcePen);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NList_ForcePen);
   }
 
   SAVE_DATALONG(data->mcp_DragLines,    MUIA_Numeric_Value,     MUICFG_NList_DragLines);
@@ -1903,7 +1903,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
       num = TRUE;
     else
       num = FALSE;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_SerMouseFix);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NList_SerMouseFix);
   }
 
   {
@@ -1913,7 +1913,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
       num = TRUE;
     else
       num = FALSE;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_List_Select);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NList_List_Select);
   }
 
   {
@@ -1923,7 +1923,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
       num = TRUE;
     else
       num = FALSE;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_PartialCol);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NList_PartialCol);
   }
 
   {
@@ -1933,7 +1933,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
       num = TRUE;
     else
       num = FALSE;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_PartialChar);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NList_PartialChar);
   }
 
   {
@@ -1943,7 +1943,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
       num = MUIV_NList_ContextMenu_TopOnly;
     else if (ptrd == 2)
       num = MUIV_NList_ContextMenu_Never;
-    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_Menu);
+    DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, sizeof(num), MUICFG_NList_Menu);
   }
 
   {
