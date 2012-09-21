@@ -913,21 +913,21 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
   */
   get( data->PI_ImageClosed,  MUIA_Imagedisplay_Spec,  &d );
   if( d != 0)
-    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_ImageSpec ), MUICFG_NListtree_ImageSpecClosed );
+    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, strlen((char *)d)+1, MUICFG_NListtree_ImageSpecClosed );
 
   D(DBF_ALWAYS, "Image closed: '%s'", (STRPTR)d);
 
 
   get( data->PI_ImageOpen,  MUIA_Imagedisplay_Spec,  &d );
   if(d != 0)
-    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_ImageSpec ), MUICFG_NListtree_ImageSpecOpen );
+    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, strlen((char *)d)+1, MUICFG_NListtree_ImageSpecOpen );
 
   D(DBF_ALWAYS, "Image open: '%s'", (STRPTR)d);
 
 
   get( data->PI_ImageFolder,  MUIA_Imagedisplay_Spec,  &d );
   if(d != 0)
-    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_ImageSpec ), MUICFG_NListtree_ImageSpecFolder );
+    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, strlen((char *)d)+1, MUICFG_NListtree_ImageSpecFolder );
 
   D(DBF_ALWAYS, "Image folder: '%s'", (STRPTR)d);
 
@@ -937,21 +937,21 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
   */
   get( data->PP_LinePen, MUIA_Pendisplay_Spec, &d );
   if(d != 0)
-    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecLines );
+    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, strlen((char *)d)+1, MUICFG_NListtree_PenSpecLines );
 
   D(DBF_ALWAYS, "Line color: '%s'", (STRPTR)d);
 
 
   get( data->PP_ShadowPen, MUIA_Pendisplay_Spec, &d );
   if(d != 0)
-    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecShadow );
+    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, strlen((char *)d)+1, MUICFG_NListtree_PenSpecShadow );
 
   D(DBF_ALWAYS, "Shadow color: '%s'", (STRPTR)d);
 
 
   get( data->PP_GlowPen, MUIA_Pendisplay_Spec, &d );
   if(d != 0)
-    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, sizeof( struct MUI_PenSpec ), MUICFG_NListtree_PenSpecGlow );
+    DoMethod( msg->configdata, MUIM_Dataspace_Add, d, strlen((char *)d)+1, MUICFG_NListtree_PenSpecGlow );
 
   D(DBF_ALWAYS, "Glow color: '%s'", (STRPTR)d);
 
@@ -962,32 +962,32 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
 
   get( data->CH_RememberStatus, MUIA_Selected, &d );
   snprintf(buf, sizeof(buf), "%d", (int)d);
-  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_RememberStatus );
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, strlen(buf)+1, MUICFG_NListtree_RememberStatus );
 
   D(DBF_ALWAYS, "RememberStatus: %ld", d);
 
 
   get( data->SL_IndentWidth, MUIA_Slider_Level, &d );
   snprintf(buf, sizeof(buf), "%d", (int)d);
-  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_IndentWidth );
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, strlen(buf)+1, MUICFG_NListtree_IndentWidth );
 
   D(DBF_ALWAYS, "IndentWidth: %ld", d);
 
   get( data->CH_OpenAutoScroll, MUIA_Selected, &d );
   snprintf(buf, sizeof(buf), "%d", (int)d);
-  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_OpenAutoScroll );
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, strlen(buf)+1, MUICFG_NListtree_OpenAutoScroll );
 
   D(DBF_ALWAYS, "OpenAutoScroll: %ld", d);
 
   get( data->CY_LineType, MUIA_Cycle_Active, &d );
   snprintf(buf, sizeof(buf), "%d", (int)d);
-  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_LineType );
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, strlen(buf)+1, MUICFG_NListtree_LineType );
 
   D(DBF_ALWAYS, "LineType: %ld", d);
 
   get( data->CH_UseFolderImage, MUIA_Selected, &d );
   snprintf(buf, sizeof(buf), "%d", (int)d);
-  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, 5, MUICFG_NListtree_UseFolderImage );
+  DoMethod( msg->configdata, MUIM_Dataspace_Add, buf, strlen(buf)+1, MUICFG_NListtree_UseFolderImage );
 
   D(DBF_ALWAYS, "UseFolderImage: %ld", d);
 
