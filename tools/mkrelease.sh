@@ -89,7 +89,7 @@ for language in czech english-british french german polish swedish turkish; do
 	cp -a nlisttree_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListtree_mcp.catalog"
 done
 make -C nlistviews_mcp catalogs
-for language in czech french german swedish polish turkish; do
+for language in czech french german italian polish swedish turkish; do
 	mkdir -p "release/MCC_NList/Locale/Catalogs/$language"
 	cp -a nlistviews_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListviews_mcp.catalog"
 done

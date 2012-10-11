@@ -189,6 +189,7 @@ CATALOGS = \
   $(LOCALE)/english-british.catalog \
   $(LOCALE)/german.catalog \
   $(LOCALE)/french.catalog \
+  $(LOCALE)/italian.catalog \
   $(LOCALE)/polish.catalog \
   $(LOCALE)/swedish.catalog \
   $(LOCALE)/turkish.catalog \

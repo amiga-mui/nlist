@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-10-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistviews_mcp/locale/italian.ct, nlisttree_mcp/locale/italian.ct: added
+    italian translation kindly provided by Samir Hawamdeh.
+
 2012-09-21 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/NListviews.c: fixed the brain dead approach to save 32bit
