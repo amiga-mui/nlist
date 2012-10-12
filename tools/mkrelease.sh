@@ -114,3 +114,4 @@ find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
 cd release
 lha -ao5q ../MCC_NList-0.$1.lha *
 cp MCC_NList/ReadMe ../MCC_NList-0.$1.readme
+cd ..
