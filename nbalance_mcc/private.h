@@ -70,6 +70,13 @@ IPTR xget(Object *obj, const IPTR attr);
 #endif
 ///
 
+// structure to export/import the balancing weights
+struct MUIS_Weights
+{
+  ULONG prevWeight;
+  ULONG nextWeight;
+};
+
 /* prototypes */
 IPTR mNew(struct IClass *cl, Object *obj, struct opSet *set);
 IPTR mSet(struct IClass *cl, Object *obj, Msg msg);
@@ -78,5 +85,7 @@ IPTR mSetup(struct IClass *cl, Object *obj, struct MUI_RenderInfo *rinfo);
 IPTR mCleanup(struct IClass *cl, Object *obj, Msg msg);
 IPTR mHide(struct IClass *cl, Object *obj, Msg msg);
 IPTR mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg);
+IPTR mExport(struct IClass *cl, Object *obj, struct MUIP_Export *msg);
+IPTR mImport(struct IClass *cl, Object *obj, struct MUIP_Import *msg);
 
 #endif /* PRIVATE_H */

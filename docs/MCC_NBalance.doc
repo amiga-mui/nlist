@@ -23,6 +23,9 @@ NBalance.mcc/MUIA_NBalance_Pointer
     the very latest version and information regarding NBalance
     *******************************************************************
 
+NBalance.mcc is able to save the balancing weights permanently. Just set a
+unique MUIA_ObjectID and use MUIM_Application_Load/Save to permanently load
+or save the current balancing weights.
 NBalance.mcc/MUIA_NBalance_Pointer
 
     NAME

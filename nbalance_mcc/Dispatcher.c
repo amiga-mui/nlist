@@ -72,6 +72,14 @@ DISPATCHER(_Dispatcher)
       result = mHandleEvent(cl, obj, (struct MUIP_HandleEvent *)msg);
     break;
 
+    case MUIM_Export:
+      result = mExport(cl, obj, (struct MUIP_Export *)msg);
+    break;
+
+    case MUIM_Import:
+      result = mImport(cl, obj, (struct MUIP_Import *)msg);
+    break;
+
     default:
       result = DoSuperMethodA(cl, obj, msg);
     break;

@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2012-11-12 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbalance_mcc/Dispatcher.c, nbalance_mcc/NBalance.c: implemented MUIM_Export
+    and MUIM_Import to save/load the surrounding group's balancing weights.
+
 2012-10-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/locale/italian.ct, nlisttree_mcp/locale/italian.ct: added
