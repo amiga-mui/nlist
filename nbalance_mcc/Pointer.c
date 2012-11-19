@@ -444,8 +444,8 @@ void SetupCustomPointers(struct InstData *data)
   #if defined(__amigaos4__)
   if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 37))
   {
-    data->horizSizePointerObj = (APTR)POINTERTYPE_NORTHSOUTHRESIZE;
-    data->vertSizePointerObj = (APTR)POINTERTYPE_EASTWESTRESIZE;
+    data->horizSizePointerObj = (APTR)POINTERTYPE_EASTWESTRESIZE;
+    data->vertSizePointerObj = (APTR)POINTERTYPE_NORTHSOUTHRESIZE;
   }
   #elif defined(__MORPHOS__)
   if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 51, 0))
