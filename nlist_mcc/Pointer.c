@@ -116,6 +116,18 @@ static const ULONG selectPointer[] =
 #ifndef POINTERA_Height
 #define POINTERA_Height    (POINTERA_Dummy + 0x09) // <= 64
 #endif
+#ifndef WA_PointerType
+#define WA_PointerType     (WA_Dummy + 0x50)
+#endif
+#ifndef POINTERTYPE_EASTWESTRESIZE
+#define POINTERTYPE_EASTWESTRESIZE   10
+#endif
+#ifndef POINTERTYPE_SCROLLALL
+#define POINTERTYPE_SCROLLALL        26
+#endif
+#ifndef POINTERTYPE_TEXT
+#define POINTERTYPE_TEXT             30
+#endif
 
 #else // __amigaos4__
 
@@ -517,8 +529,15 @@ void SetupCustomPointers(struct NLData *data)
 {
   ENTER();
 
-  #if defined(__MORPHOS__)
-  if(((struct Library *)IntuitionBase)->lib_Version >= 51)  // Check for V51 Intuition and use built-in pointers
+  #if defined(__amigaos4__)
+  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 37))
+  {
+    data->SizePointerObj = (APTR)POINTERTYPE_EASTWESTRESIZE;
+    data->MovePointerObj = (APTR)POINTERTYPE_SCROLLALL;
+    data->SelectPointerObj = (APTR)POINTERTYPE_TEXT;
+  }
+  #elif defined(__MORPHOS__)
+  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 51, 0))  // Check for V51 Intuition and use built-in pointers
   {
     data->SizePointerObj = (APTR)POINTERTYPE_HORIZONTALRESIZE;
     data->MovePointerObj = (APTR)POINTERTYPE_MOVE;
@@ -611,8 +630,15 @@ void CleanupCustomPointers(struct NLData *data)
 {
   ENTER();
 
-  #if defined(__MORPHOS__)
-  if(((struct Library *)IntuitionBase)->lib_Version >= 51)
+  #if defined(__amigaos4__)
+  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 37))
+  {
+    data->SizePointerObj = NULL;
+    data->MovePointerObj = NULL;
+    data->SelectPointerObj = NULL;
+  }
+  #elif defined(__MORPHOS__)
+  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 51, 0))  // Check for V51 Intuition and use built-in pointers
   {
     data->SizePointerObj = NULL;
     data->MovePointerObj = NULL;
@@ -686,10 +712,12 @@ void ShowCustomPointer(struct NLData *data, enum PointerType type)
       // of the current screen colormap
       IdentifyPointerColors(obj);
 
-      #if !defined(__MORPHOS__)
-      SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
+      #if defined(__amigaos4__)
+      SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 37) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
+      #if defined(__MORPHOS__)
+      SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 51, 0) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #else
-      SetWindowPointer(_window(obj), ((struct Library *)IntuitionBase)->lib_Version >= 51 ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
+      SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
       #endif
 
       data->activeCustomPointer = type;

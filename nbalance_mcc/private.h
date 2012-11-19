@@ -53,6 +53,14 @@ struct InstData
   struct MUI_EventHandlerNode ehnode;
 };
 
+#define VERSION_IS_AT_LEAST(ver, rev, minver, minrev) (((ver) > (minver)) || ((ver) == (minver) && (rev) == (minrev)) || ((ver) == (minver) && (rev) > (minrev)))
+#define LIB_VERSION_IS_AT_LEAST(lib, minver, minrev)  VERSION_IS_AT_LEAST(((struct Library *)(lib))->lib_Version, ((struct Library *)(lib))->lib_Revision, minver, minrev)
+
+#if defined(__MORPHOS__)
+#include <proto/exec.h>
+#define IS_MORPHOS2 LIB_VERSION_IS_AT_LEAST(SysBase, 51, 0)
+#endif
+
 /* macros */
 #define _id(obj) (muiNotifyData(obj)->mnd_ObjectID)
 #define _between(a,x,b) ((x)>=(a) && (x)<=(b))
