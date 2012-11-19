@@ -714,7 +714,7 @@ void ShowCustomPointer(struct NLData *data, enum PointerType type)
 
       #if defined(__amigaos4__)
       SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 37) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
-      #if defined(__MORPHOS__)
+      #elif defined(__MORPHOS__)
       SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 51, 0) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #else
       SetWindowPointer(_window(obj), WA_Pointer, ptrObject, TAG_DONE);
