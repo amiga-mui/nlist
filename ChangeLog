@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.114 RELEASE ###########################################################
+
+2012-12-20 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.114 release preparations
+
 2012-11-19 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbalance_mcc/Pointer.c, nlist_mcc/Pointer.c: make use of the standard mouse
