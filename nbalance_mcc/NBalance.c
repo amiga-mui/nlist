@@ -378,7 +378,12 @@ IPTR mExport(UNUSED struct IClass *cl, Object *obj, struct MUIP_Export *msg)
       // get the weights of our neighbour objects and add them to the Dataspace object
       weights.prevWeight = xget(prev, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight);
       weights.nextWeight = xget(next, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight);
+      D(DBF_GUI, "weights: prev %ld, next %ld", weights.prevWeight, weights.nextWeight);
       DoMethod(msg->dataspace, MUIM_Dataspace_Add, &weights, sizeof(weights), id);
+    }
+    else
+    {
+      W(DBF_GUI, "failed to find neighbour objects for object ID %08lx", id);
     }
   }
 
@@ -406,9 +411,18 @@ IPTR mImport(UNUSED struct IClass *cl, Object *obj, struct MUIP_Import *msg)
       // get the saved weights from the Dataspace object and set them for our neighbour objects
       if((weights = (struct MUIS_Weights *)DoMethod(msg->dataspace, MUIM_Dataspace_Find, id)) != NULL)
       {
+        D(DBF_GUI, "weights: prev %ld, next %ld", weights->prevWeight, weights->nextWeight);
         set(prev, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight, weights->prevWeight);
         set(next, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight, weights->nextWeight);
       }
+      else
+      {
+        W(DBF_GUI, "no saved weights found for object ID %08lx", id);
+      }
+    }
+    else
+    {
+      W(DBF_GUI, "failed to find neighbour objects for object ID %08lx", id);
     }
   }
 
