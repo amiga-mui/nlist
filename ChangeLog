@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.115 RELEASE ###########################################################
+
+2012-12-22 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.115 release preparations
+
 2012-12-22 Thore Böckelmann <tboeckel@gmx.de>
 
   * tools/mkrelease: add italian catalog to the release archive.
