@@ -379,7 +379,11 @@ IPTR mExport(UNUSED struct IClass *cl, Object *obj, struct MUIP_Export *msg)
       weights.prevWeight = xget(prev, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight);
       weights.nextWeight = xget(next, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight);
       D(DBF_GUI, "weights: prev %ld, next %ld", weights.prevWeight, weights.nextWeight);
-      DoMethod(msg->dataspace, MUIM_Dataspace_Add, &weights, sizeof(weights), id);
+      // add non-zero weights only
+      if(weights.prevWeight > 0 || weights.nextWeight > 0)
+      {
+        DoMethod(msg->dataspace, MUIM_Dataspace_Add, &weights, sizeof(weights), id);
+      }
     }
     else
     {
@@ -412,8 +416,11 @@ IPTR mImport(UNUSED struct IClass *cl, Object *obj, struct MUIP_Import *msg)
       if((weights = (struct MUIS_Weights *)DoMethod(msg->dataspace, MUIM_Dataspace_Find, id)) != NULL)
       {
         D(DBF_GUI, "weights: prev %ld, next %ld", weights->prevWeight, weights->nextWeight);
-        set(prev, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight, weights->prevWeight);
-        set(next, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight, weights->nextWeight);
+        // set the weights only if they are non-zero
+        if(weights->prevWeight > 0)
+          set(prev, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight, weights->prevWeight);
+        if(weights->nextWeight > 0)
+          set(next, xget(parent, MUIA_Group_Horiz) ? MUIA_HorizWeight : MUIA_VertWeight, weights->nextWeight);
       }
       else
       {
