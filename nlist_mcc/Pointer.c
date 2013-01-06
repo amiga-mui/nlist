@@ -530,7 +530,7 @@ void SetupCustomPointers(struct NLData *data)
   ENTER();
 
   #if defined(__amigaos4__)
-  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 40))
+  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 41))
   {
     data->SizePointerObj = (APTR)POINTERTYPE_EASTWESTRESIZE;
     data->MovePointerObj = (APTR)POINTERTYPE_SCROLLALL;
@@ -631,7 +631,7 @@ void CleanupCustomPointers(struct NLData *data)
   ENTER();
 
   #if defined(__amigaos4__)
-  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 40))
+  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 41))
   {
     data->SizePointerObj = NULL;
     data->MovePointerObj = NULL;
@@ -713,7 +713,7 @@ void ShowCustomPointer(struct NLData *data, enum PointerType type)
       IdentifyPointerColors(obj);
 
       #if defined(__amigaos4__)
-      SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 40) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
+      SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 41) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #elif defined(__MORPHOS__)
       SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 51, 0) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #else
