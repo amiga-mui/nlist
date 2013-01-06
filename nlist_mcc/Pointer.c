@@ -119,8 +119,8 @@ static const ULONG selectPointer[] =
 #ifndef WA_PointerType
 #define WA_PointerType     (WA_Dummy + 0x50)
 #endif
-#ifndef POINTERTYPE_EASTWESTRESIZE
-#define POINTERTYPE_EASTWESTRESIZE   10
+#ifndef POINTERTYPE_COLUMNRESIZE
+#define POINTERTYPE_COLUMNRESIZE     4
 #endif
 #ifndef POINTERTYPE_SCROLLALL
 #define POINTERTYPE_SCROLLALL        26

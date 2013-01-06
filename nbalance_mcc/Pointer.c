@@ -100,11 +100,11 @@ static const ULONG vertSizePointer[] =
 #ifndef WA_PointerType
 #define WA_PointerType     (WA_Dummy + 0x50)
 #endif
-#ifndef POINTERTYPE_EASTWESTRESIZE
-#define POINTERTYPE_EASTWESTRESIZE   10
+#ifndef POINTERTYPE_COLUMNRESIZE
+#define POINTERTYPE_COLUMNRESIZE   4
 #endif
-#ifndef POINTERTYPE_NORTHSOUTHRESIZE
-#define POINTERTYPE_NORTHSOUTHRESIZE 20
+#ifndef POINTERTYPE_ROWRESIZE
+#define POINTERTYPE_ROWSIZE        25
 #endif
 
 #else // __amigaos4__
@@ -442,10 +442,10 @@ void SetupCustomPointers(struct InstData *data)
   ENTER();
 
   #if defined(__amigaos4__)
-  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 40))
+  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 41))
   {
-    data->horizSizePointerObj = (APTR)POINTERTYPE_EASTWESTRESIZE;
-    data->vertSizePointerObj = (APTR)POINTERTYPE_NORTHSOUTHRESIZE;
+    data->horizSizePointerObj = (APTR)POINTERTYPE_COLUMNRESIZE;
+    data->vertSizePointerObj = (APTR)POINTERTYPE_ROWRESIZE;
   }
   #elif defined(__MORPHOS__)
   if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 51, 0))
@@ -515,7 +515,7 @@ void CleanupCustomPointers(struct InstData *data)
   ENTER();
 
   #if defined(__amigaos4__)
-  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 40))
+  if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 41))
   {
     data->horizSizePointerObj = NULL;
     data->vertSizePointerObj = NULL;
@@ -584,7 +584,7 @@ void ShowCustomPointer(Object *obj, struct InstData *data)
       IdentifyPointerColors(obj);
 
       #if defined(__amigaos4__)
-      SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 40) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
+      SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 41) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #elif defined(__MORPHOS__)
       SetWindowPointer(_window(obj), LIB_VERSION_IS_AT_LEAST(IntuitionBase, 51, 0) ? WA_PointerType : WA_Pointer, ptrObject, TAG_DONE);
       #else

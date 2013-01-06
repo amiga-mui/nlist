@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-01-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbalance_mcc/Pointer.c, nlist_mcc/Pointer.c: use the column and row resize
+    pointer types instead of simple arrow images and bumped minimum version of
+    intuition.library to 53.41 (AmigaOS4 only).
+
 #### v0.115 RELEASE ###########################################################
 
 2012-12-22 Jens Langner <Jens.Langner@light-speed.de>
