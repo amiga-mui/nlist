@@ -243,8 +243,32 @@ static void RemoveHorizontalScroller(Object *obj, struct NLVData *data)
 static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG horiz)
 {
   LONG scrollers = 0;
+  BOOL safeNotifies;
 
   ENTER();
+
+  #if defined(__amigaos3__) || defined(__amigaos4__)
+  if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 5824))
+  {
+    // MUI4 for AmigaOS is safe for V20.5824+
+    safeNotifies = TRUE;
+  }
+  else if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 2346) && LIBREV(MUIMasterBase) < 5000)
+  {
+    // MUI3.9 for AmigaOS is safe for V20.2346+
+    safeNotifies = TRUE;
+  }
+  else
+  {
+    // MUI 3.8 and older version of MUI 3.9 or MUI4 are definitely unsafe
+    safeNotifies = FALSE;
+  }
+  #else
+  // MorphOS and AROS must be considered unsafe unless someone from the
+  // MorphOS/AROS team confirms that removing notifies in nested OM_SET
+  // calls is safe.
+  safeNotifies = FALSE;
+  #endif
 
   if(vert & 0x0F)
   {
@@ -261,6 +285,10 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
     }
     else
       data->VertSB = data->Vert_ScrollBar;
+
+    // switch to always visible scrollbars if removing notifies is unsafe
+    if(safeNotifies == FALSE)
+      data->VertSB = MUIV_NListview_VSB_Always;
 
     switch(data->VertSB)
     {
@@ -301,6 +329,10 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
     }
     else
       data->HorizSB = data->Horiz_ScrollBar;
+
+    // switch to always visible scrollbars if removing notifies is unsafe
+    if(safeNotifies == FALSE)
+      data->HorizSB = MUIV_NListview_VSB_Always;
 
     switch (data->HorizSB)
     {

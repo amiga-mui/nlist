@@ -681,6 +681,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   struct NListviews_MCP_Data *data;
   APTR group1, group2, group3, group4, group5;
   char *exampleText;
+  BOOL safeNotifies;
 
   static const char infotext1[] = "\033bNListviews.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
                                   "Copyright (C) 1996-2001 Gilles Masson\n"
@@ -1005,6 +1006,29 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   RS_HSB[3] = tr(MSG_HSB_NONE);
   RS_HSB[4] = NULL;
 
+  #if defined(__amigaos3__) || defined(__amigaos4__)
+  if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 5824))
+  {
+    // MUI4 for AmigaOS is safe for V20.5824+
+    safeNotifies = TRUE;
+  }
+  else if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 2346) && LIBREV(MUIMasterBase) < 5000)
+  {
+    // MUI3.9 for AmigaOS is safe for V20.2346+
+    safeNotifies = TRUE;
+  }
+  else
+  {
+    // MUI 3.8 and older version of MUI 3.9 or MUI4 are definitely unsafe
+    safeNotifies = FALSE;
+  }
+  #else
+  // MorphOS and AROS must be considered unsafe unless someone from the
+  // MorphOS/AROS team confirms that removing notifies in nested OM_SET
+  // calls is safe.
+  safeNotifies = FALSE;
+  #endif
+
   group3 =  VGroup,
 
               Child, HGroup,
@@ -1015,6 +1039,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
                     Child, VSpace(0),
                     Child, data->mcp_R_HSB = RadioObject,
                       MUIA_Radio_Entries, RS_HSB,
+                      MUIA_Disabled, !safeNotifies,
                     End,
                     MUIA_ShortHelp, tr(MSG_SB_HORIZONTAL_HELP),
                     Child, VSpace(0),
@@ -1029,6 +1054,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
                     Child, VSpace(0),
                     Child, data->mcp_R_VSB = RadioObject,
                       MUIA_Radio_Entries,RS_VSB,
+                      MUIA_Disabled, !safeNotifies,
                     End,
                     MUIA_ShortHelp, tr(MSG_SB_VERTICAL_HELP),
                     Child, VSpace(0),

@@ -5,6 +5,20 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-01-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c, nlistviews_mcp/NListviews.c: enabling "on demand"
+    scrollbars is from now on forbidden in case an unsafe MUI version is found.
+    This affects MUI 3.8 in general and older versions of MUI 3.9 and MUI4. The
+    reason is that adding or removing the scrollbars on demand involves adding or
+    removing of notifies which is broken in older MUI versions if this happens
+    in nested OM_SET method calls. Since NList cannot know the global situation
+    in which it is instructed to add/remove its scrollbars and since this issue
+    can only be fixed in MUI itself we decided to disable this feature for the
+    affected MUI version to avoid nasty things like double freed memory (my MUI!)
+    to happen. MUI 3.9 and MUI4 for AmigaOS4 have been fixed in the meantime and
+    the MorphOS team has been informed how to fix this issue.
+
 2013-01-06 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbalance_mcc/Pointer.c, nlist_mcc/Pointer.c: use the column and row resize
