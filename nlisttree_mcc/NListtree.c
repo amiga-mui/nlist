@@ -1358,9 +1358,11 @@ BOOL GetEntryPos( struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNo
  Return the visual position (i.e. the position within the plain list)
  of the given TreeNode
 **************************************************************************/
-static int GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
+static LONG GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
 {
   LONG pos = -1;
+
+  ENTER();
 
   if(tn != CTN((APTR)&data->RootList) && tn != NULL)
   {
@@ -1380,7 +1382,8 @@ static int GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeN
     }
   }
 
-  return (int)pos;
+  RETURN(pos);
+  return pos;
 }
 
 /*************************************************************************
@@ -1388,14 +1391,16 @@ static int GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeN
  node itself). A invisible has also 0 entries. Returns also 0 if the
  entry is no list.
 **************************************************************************/
-static int GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn)
+static LONG GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn)
 {
-  /* Easy case */
-  if (tn == CTN((APTR)&data->RootList))
-    return xget(data->Obj, MUIA_NList_Entries);
+  LONG entries = 0;
 
-  if ((tn->tn_Flags & TNF_LIST) && (tn->tn_Flags & TNF_OPEN) &&
-      (tn->tn_IFlags & TNIF_VISIBLE))
+  ENTER();
+
+  /* Easy case */
+  if(tn == CTN((APTR)&data->RootList))
+    entries = xget(data->Obj, MUIA_NList_Entries);
+  else if((tn->tn_Flags & TNF_LIST) && (tn->tn_Flags & TNF_OPEN) && (tn->tn_IFlags & TNIF_VISIBLE))
   {
     struct MUI_NListtree_TreeNode *tn2;
 
@@ -1411,7 +1416,7 @@ static int GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_T
        */
 
       struct Table *tb = &CLN( tn )->ln_Table;
-      int i, entries;
+      int i;
 
       entries = tb->tb_Entries;
 
@@ -1419,19 +1424,23 @@ static int GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_T
       {
         entries += GetVisualEntries(data, tb->tb_Table[i]);
       }
-      return entries;
     }
   }
 
-  return 0;
+  RETURN(entries);
+  return entries;
 }
 
 /*
 **  Count the number of visual entries in a tree node until a maximum of max.
 */
-BOOL GetVisualEntriesMax( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG pos, LONG *ent, LONG max )
+static BOOL GetVisualEntriesMax( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG pos, LONG *ent, LONG max )
 {
-  if ( tn->tn_Flags & TNF_OPEN )
+  BOOL success = FALSE;
+
+  ENTER();
+
+  if(tn->tn_Flags & TNF_OPEN)
   {
     struct Table *tb = &CLN( tn )->ln_Table;
     LONG i;
@@ -1440,12 +1449,16 @@ BOOL GetVisualEntriesMax( struct NListtree_Data *data, struct MUI_NListtree_Tree
 
     for( i = 0; ( i < tb->tb_Entries ) && ( *ent <= max ); i++ )
     {
-      if ( GetVisualEntriesMax( data, tb->tb_Table[i], pos, ent, max ) )
-        return( TRUE );
+      if(GetVisualEntriesMax(data, tb->tb_Table[i], pos, ent, max))
+      {
+        success = TRUE;
+        break;
+      }
     }
   }
 
-  return( FALSE );
+  RETURN(success);
+  return success;
 }
 
 
@@ -1453,9 +1466,11 @@ BOOL GetVisualEntriesMax( struct NListtree_Data *data, struct MUI_NListtree_Tree
  Determine the visual position a node would have, if inserted after
  prevtn inside ln
 **************************************************************************/
-static int GetVisualInsertPos( struct NListtree_Data *data, struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNode *prevtn )
+static LONG GetVisualInsertPos( struct NListtree_Data *data, struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNode *prevtn )
 {
-  int ent;
+  LONG ent;
+
+  ENTER();
 
   if ((SIPTR)prevtn == INSERT_POS_HEAD)
     ent = GetVisualPos(data, CTN(ln)) + 1;
@@ -1464,6 +1479,7 @@ static int GetVisualInsertPos( struct NListtree_Data *data, struct MUI_NListtree
   else
     ent = GetVisualPos(data, CTN(prevtn)) + GetVisualEntries(data,CTN(prevtn)) + 1;
 
+  RETURN(ent);
   return ent;
 }
 
