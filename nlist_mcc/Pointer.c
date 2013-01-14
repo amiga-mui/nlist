@@ -532,7 +532,7 @@ void SetupCustomPointers(struct NLData *data)
   #if defined(__amigaos4__)
   if(LIB_VERSION_IS_AT_LEAST(IntuitionBase, 53, 41))
   {
-    data->SizePointerObj = (APTR)POINTERTYPE_EASTWESTRESIZE;
+    data->SizePointerObj = (APTR)POINTERTYPE_COLUMNRESIZE;
     data->MovePointerObj = (APTR)POINTERTYPE_SCROLLALL;
     data->SelectPointerObj = (APTR)POINTERTYPE_TEXT;
   }
