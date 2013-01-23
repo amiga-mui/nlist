@@ -104,7 +104,7 @@ static const ULONG vertSizePointer[] =
 #define POINTERTYPE_COLUMNRESIZE   4
 #endif
 #ifndef POINTERTYPE_ROWRESIZE
-#define POINTERTYPE_ROWSIZE        25
+#define POINTERTYPE_ROWRESIZE      25
 #endif
 
 #else // __amigaos4__
