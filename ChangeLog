@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-01-26 Samir Hawamdeh <s.hawamdeh@tin.it>
+
+  * nlistviews_mcp/locale/italian.ct, nlisttree_mcp/locale/italian.ct:
+    update italian translation.
+
 2013-01-11 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistview_mcc/NListview.c, nlistviews_mcp/NListviews.c: enabling "on demand"

@@ -1,11 +1,11 @@
-## chunk AUTH Translated by Samir Hawamdeh (http://www.betatesting.it/backforthefuture)
-## version $VER: NListviews_mcp.ct 2.1 (11.10.2012)
+## version $VER: NListviews_mcp.ct 2.1 (24.01.2013)
 ## language italiano
 ## codeset 0
+## chunk AUTH Translated by Samir Hawamdeh (http://www.betatesting.it/backforthefuture)
 ;
-; NListtree_mcp.cd - Catalogo italiano delle preferenze NListviews MUI
-; NListtree_mcp.cd - NListviews MUI custom prefs catalog description file
-; Compiled with FlexCat 2.10 PPC (AmigaOS4)
+; NListviews_mcp.cd - Catalogo italiano delle preferenze NListviews MUI
+; NListviews_mcp.cd - NListviews MUI custom prefs catalog description file
+; Compiled with FlexCat 2.11 PPC (AmigaOS4)
 ; $Id$
 ;
 ; #version 2
@@ -91,7 +91,7 @@ MSG_PBG_TITLE
 ; \ecTitle
 ;
 MSG_TITLE_BG_WIN
-Titolo sfondo
+Sfondo titolo
 ; Title Background
 ;
 MSG_TITLE_BG_HELP
@@ -113,7 +113,7 @@ MSG_PBG_LIST
 ; \ecList
 ;
 MSG_LIST_BG_WIN
-Lista sfondo
+Sfondo lista
 ; List Background
 ;
 MSG_LIST_BG_HELP
@@ -717,60 +717,61 @@ Azione
 ; Action
 ;
 MSG_EXAMPLE_TEXT
-Nel caso si riscontrassero problemi prova ad incrementare il valore\n\
-dello stack dell'icona tramite le informazioni disponibili su di essa, o\n\
-usa la CLI nel caso l'applicazione sia stata avviata da Shell.\n\
-Infine consulta la documentazione nel caso la classe MUI sia stata\n\
-avviata attraverso l'uso di applicazioni esterne.\n\
-In generale uno stack impostato su 12Kb, 16Kb o 20Kb è sufficiente\n\
-per un qualsiasi uso di tipo comune.\n\
+\033c\033bBenvenuto,\n\
 \n\
-Nel caso si continuasse ad avere problemi è possibile verificarne il\n\
-corretto funzionamento testando le varie demo incluse nell'archivio\n\
-oppure contattateci segnalando il vostro problema!\n\
-\033C\n\
-L'ultima versione è scaricabile da Aminet (dev/mui) oppure OS4Depot\n\
-Il sito ufficiale della classe NList è disponibile al seguente indirizzo:\n\
+\033cNel caso si riscontrassero problemi prova ad incrementare il valore\n\
+\033cdello stack dell'icona tramite le informazioni disponibili su di essa, oppure\n\
+\033cusa la CLI nel caso l'applicazione sia stata avviata da Shell.\n\
+\033cInfine consulta la documentazione nel caso la classe MUI sia stata\n\
+\033cavviata attraverso il lancio di applicazioni esterne.\n\
+\033cIn generale uno stack impostato su 12Kb, 16Kb o 20Kb è più che sufficiente\n\
+\033cper un qualsiasi tipo di utilizzo.\n\
 \n\
-http://www.sourceforge.net/projects/nlist-classes/\n\
+\033cNel caso si continuasse ad avere problemi è possibile verificarne il\n\
+\033ccorretto funzionamento testando le varie demo incluse nell'archivio\n\
+\033coppure contattaci segnalando il tuo problema!\n\
 \033C\n\
-\033r\0333(C) 2001-2012 un progetto a cura del team della NList\n\
-\033r\0333(C) 1996-1998 di Gilles Masson\n\
-\033r\0333http://www.sourceforge.net/projects/nlist-classes/\n\
+\033cL'ultima versione di NList è scaricabile da Aminet (dev/mui) oppure da OS4Depot\n\
+\033cIl sito ufficiale della classe NList è disponibile al seguente indirizzo:\n\
+\n\
+\033c\033bhttp://www.sourceforge.net/projects/nlist-classes/\n\
+\033C\n\
+\033c\033b(C) 1996-1998 di Gilles Masson\n\
+\033c\033b(C) 2001-2013 un progetto a cura del team della NList\n\
+\033c\033bhttp://www.sourceforge.net/projects/nlist-classes/\n\
 \033C\n\
 \033cQuesta nuova classe MUI list/listview è in grado\n\
-\033cdi gestire sfondi configurabili, le penne, i font,\n\
+\033cdi gestire e configurare gli sfondi, le penne, i font,\n\
 \033cle barre di scorrimento, i tasti, i qualificatori e tanto altro.\n\
 \033C\n\
 \033cIl metodo utilizzato per gestire i cursori o le selezioni multiple\n\
-\033cnon è esattamente come quello disponibile sulla listview!\n\
-\033cIl Drag&Drop è perfettamente supportato e persino le barre di\n\
+\033cnon è esattamente come quello disponibile sulla listview, è molto più potente!\n\
+\033cAnche il Drag&Drop è perfettamente supportato e persino le barre di\n\
 \033cscorrimento possono essere modificate a proprio piacimento,\n\
 \033cad esempio rendendele invisibili quando non necessarie.\n\
 \033cProvale...\n\
 \033C\n\
 \033cE' possibile usufruire dello scrolling orizzontale usando i tasti cursore,\n\
 \033coppure spostarsi a destra o sinistra all'interno di una lista durante\n\
-\033cle selezioni con il mouse.\n\
-\033cProva cliccando alla destra o alla sinistra di un bordo !\n\
+\033cle classiche selezioni con il mouse.\n\
+\033cProva cliccando alla destra o alla sinistra di un bordo!\n\
 \033C\n\
 \033cE' possibile modificare la larghezza delle colonne semplicemente\n\
-\033cmuovendo il separatore verticale tra le colonne dei titoli\n\
-\033c(prova questa funzionalità anche usando l'opzione di allineamento delle colonne).\n\
+\033cmuovendo il suo separatore verticale all'interno delle colonne dei titoli\n\
+\033c(prova questa funzionalità usando la funzionalità di allineamento delle colonne).\n\
 \033C\n\
 \033cE' possibile modificare l'ordine delle colonne semplicemente spostando\n\
 \033ci titoli delle colonne stesse.\n\
 \033C\n\
-\033cOvviamente è disponibile anche un'integrata modalità di copia nella clipboard\n\
-\033cnonchè le classiche funzionalità di selezione dei caratteri..\n\
+\033cOvviamente è disponibile anche una modalità integrata per il copia e incolla nella\n\
+\033cclipboard, nonchè tutte le classiche funzionalità di selezione dei caratteri..\n\
 \033C\n\
 \033cPer scoprire ciò che questa classe MUI può offire dai un'occhiata ai\n\
-\033cprogrammi dimostrativi disponibili all'interno dell'archivio NList..\n\
+\033cprogrammi dimostrativi disponibili all'interno dell'archivio della NList..\n\
 \n\
-\n\
-\033r\033bProvala e dacci il tuo parere ! :-)\n\
+\033cProvala e dacci il tuo parere ! :-)\n\
 \033C\n\
-**************************************************************************************************\n
+\033c********************************************************************************************\n
 ; If you have problems, try to increase the stack value,\n\
 ; in the icon infos if you launch the program from icon,\n\
 ; stack of CLI if you start it from CLI/Shell,\n\

@@ -1,11 +1,11 @@
-## chunk AUTH Translated by Samir Hawamdeh (http://www.betatesting.it/backforthefuture)
-## version $VER: NListtree_mcp.ct 2.1 (11.10.2012)
+## version $VER: NListtree_mcp.ct 2.1 (24.01.2013)
 ## language italiano
 ## codeset 0
+## chunk AUTH Translated by Samir Hawamdeh (http://www.betatesting.it/backforthefuture)
 ;
 ; NListtree_mcp.cd - Catalogo italiano delle preferenze NListtree MUI
 ; NListtree_mcp.cd - NListtree MUI custom prefs catalog description file
-; Compiled with FlexCat 2.10 PPC (AmigaOS4)
+; Compiled with FlexCat 2.11 PPC (AmigaOS4)
 ; $Id$
 ;
 ; #version 2
