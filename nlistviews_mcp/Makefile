@@ -188,7 +188,7 @@ TESTTARGET= $(BINDIR)/NListviews-Prefs
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
 OPTFLAGS = -O3 -fomit-frame-pointer
-DEBUG    = -DDEBUG -O0
+DEBUG    = -DDEBUG -fno-omit-frame-pointer -O0
 DEBUGSYM = -g -gstabs
 CFLAGS   = -I. -I../nlistviews_mcp -I../include $(CPU) $(WARN) \
            $(OPTFLAGS) $(DEBUG) $(DEBUGSYM) $(USER_CFLAGS) -c
