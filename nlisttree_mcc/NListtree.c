@@ -5253,8 +5253,6 @@ IPTR _Dispose(struct IClass *cl, Object *obj, Msg msg)
 
   ENTER();
 
-  DeactivateNotify( data );
-
   /*
   **  Clear complete list without setting a new active entry.
   */
@@ -5556,7 +5554,6 @@ IPTR _Show(struct IClass *cl, Object *obj, Msg msg)
   data->EHNode.ehn_Class    = cl;
   data->EHNode.ehn_Events   = IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY;
   DoMethod( _win( obj ), MUIM_Window_AddEventHandler, &data->EHNode );
-  //ActivateNotify( data );
 
   return 1;
 }
@@ -5567,7 +5564,7 @@ IPTR _Hide(struct IClass *cl, Object *obj, Msg msg)
   struct NListtree_Data *data = INST_DATA(cl, obj);
 
   DoMethod( _win( obj ), MUIM_Window_RemEventHandler, &data->EHNode );
-  //DeactivateNotify( data );
+
   return DoSuperMethodA(cl, obj, msg);
 }
 
