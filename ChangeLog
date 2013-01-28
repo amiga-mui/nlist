@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-01-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: replaced all handcrafted flag checks and flag
+    modifications our typical flag macros.
+
 2013-01-26 Samir Hawamdeh <s.hawamdeh@tin.it>
 
   * nlistviews_mcp/locale/italian.ct, nlisttree_mcp/locale/italian.ct:

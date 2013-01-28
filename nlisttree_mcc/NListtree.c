@@ -530,7 +530,7 @@ IPTR TreeImage_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 
   DoSuperMethodA( cl, obj, (Msg)msg);
 
-  if ( ( msg->flags & MADF_DRAWOBJECT ) || ( msg->flags & MADF_DRAWUPDATE ) )
+  if(isFlagSet(msg->flags, MADF_DRAWOBJECT) || isFlagSet(msg->flags, MADF_DRAWUPDATE))
   {
     struct MyImage *im;
     WORD l, t, r, b;
@@ -905,7 +905,7 @@ VOID SetupImage( struct NListtree_Data *data, struct MUI_ImageSpec *is, ULONG nr
 INLINE VOID ActivateNotify( struct NListtree_Data *data )
 {
   D(DBF_NOTIFY, "Activenotify: %lx",data);
-  if ( !( data->Flags & NLTF_ACTIVENOTIFY ) )
+  if(isFlagClear(data->Flags, NLTF_ACTIVENOTIFY))
   {
     DoMethod( data->Obj, MUIM_Notify, MUIA_NList_Active, MUIV_EveryTime,
       data->Obj, 2, MUIM_NListtree_GetListActive, 0 );
@@ -913,7 +913,7 @@ INLINE VOID ActivateNotify( struct NListtree_Data *data )
     DoMethod( data->Obj, MUIM_Notify, MUIA_NList_DoubleClick, MUIV_EveryTime,
       data->Obj, 2, MUIM_NListtree_GetDoubleClick, MUIV_TriggerValue );
 
-    data->Flags |= NLTF_ACTIVENOTIFY;
+    SET_FLAG(data->Flags, NLTF_ACTIVENOTIFY);
   }
 }
 
@@ -924,17 +924,17 @@ INLINE VOID ActivateNotify( struct NListtree_Data *data )
 INLINE VOID DeactivateNotify( struct NListtree_Data *data )
 {
   D(DBF_NOTIFY, "Deactivenotify: %lx",data);
-  if ( data->Flags & NLTF_ACTIVENOTIFY )
+  if(isFlagSet(data->Flags, NLTF_ACTIVENOTIFY))
   {
     /*
     DoMethod( data->Obj, MUIM_KillNotify, MUIA_NList_Active );
     DoMethod( data->Obj, MUIM_KillNotify, MUIA_NList_DoubleClick );
-    data->Flags &= ~NLTF_ACTIVENOTIFY;
+    CLEAR_FLAG(data->Flags, NLTF_ACTIVENOTIFY);
     */
 
     DoMethod( data->Obj, MUIM_KillNotifyObj, MUIA_NList_DoubleClick, data->Obj );
     DoMethod( data->Obj, MUIM_KillNotifyObj, MUIA_NList_Active, data->Obj );
-    data->Flags &= ~NLTF_ACTIVENOTIFY;
+    CLEAR_FLAG(data->Flags, NLTF_ACTIVENOTIFY);
   }
 }
 
@@ -948,7 +948,7 @@ INLINE VOID DeactivateNotify( struct NListtree_Data *data )
 
 INLINE VOID MakeNotify( struct NListtree_Data *data, ULONG tag, APTR val )
 {
-  if ( !( data->Flags & NLTF_QUIET ) )
+  if(isFlagClear(data->Flags, NLTF_QUIET))
   {
     SetAttrs( data->Obj, MUIA_Group_Forward, FALSE, MUIA_NListtree_OnlyTrigger, TRUE, tag, val, TAG_DONE );
   }
@@ -956,13 +956,13 @@ INLINE VOID MakeNotify( struct NListtree_Data *data, ULONG tag, APTR val )
 
 INLINE VOID MakeSet( struct NListtree_Data *data, ULONG tag, APTR val )
 {
-  if ( !( data->Flags & NLTF_QUIET ) )
+  if(isFlagClear(data->Flags, NLTF_QUIET))
   {
     set( data->Obj, tag, val );
   }
   else
   {
-    data->Flags |= NLTF_SETACTIVE;
+    SET_FLAG(data->Flags, NLTF_SETACTIVE);
   }
 }
 
@@ -1120,9 +1120,9 @@ VOID NLRemoveFromTable( struct NListtree_Data *data, struct Table *table, struct
 */
 INLINE VOID DoRefresh( struct NListtree_Data *data )
 {
-  if ( data->Flags & NLTF_QUIET )
+  if(isFlagSet(data->Flags, NLTF_QUIET))
   {
-    data->Flags |= NLTF_REFRESH;
+    SET_FLAG(data->Flags, NLTF_REFRESH);
   }
   else
   {
@@ -1138,7 +1138,7 @@ INLINE ULONG DoQuiet( struct NListtree_Data *data, BOOL quiet )
 {
   if ( quiet )
   {
-    data->Flags |= NLTF_QUIET;
+    SET_FLAG(data->Flags, NLTF_QUIET);
 
     if ( ++data->QuietCounter == 1 )
       nnset( data->Obj, MUIA_NList_Quiet, TRUE );
@@ -1148,12 +1148,12 @@ INLINE ULONG DoQuiet( struct NListtree_Data *data, BOOL quiet )
     if ( --data->QuietCounter == 0 )
     {
       nnset( data->Obj, MUIA_NList_Quiet, FALSE );
-      data->Flags &= ~NLTF_QUIET;
+      CLEAR_FLAG(data->Flags, NLTF_QUIET);
 
-      if ( data->Flags & NLTF_SETACTIVE )
+      if(isFlagSet(data->Flags, NLTF_SETACTIVE))
       {
         set( data->Obj, MUIA_NListtree_Active, data->ActiveNode );
-        data->Flags &= ~NLTF_SETACTIVE;
+        CLEAR_FLAG(data->Flags, NLTF_SETACTIVE);
       }
     }
   }
@@ -1268,9 +1268,9 @@ INLINE VOID InsertNListEntry( struct NListtree_Data *data, struct MUI_NListtree_
 
   DoMethod( data->Obj, MUIM_NList_InsertSingle, tn, pos );
 
-  if ( data->Flags & NLTF_NLIST_DIRECT_ENTRY_SUPPORT )
+  if(isFlagSet(data->Flags, NLTF_NLIST_DIRECT_ENTRY_SUPPORT))
   {
-    ei.pos  = -3; ei.line = -2;
+    ei.pos = -3; ei.line = -2;
     DoMethod( data->Obj, MUIM_NList_GetEntryInfo, &ei );
     tn->tn_NListEntry = (struct NListEntry *)ei.entry;
 
@@ -1284,9 +1284,9 @@ INLINE VOID ReplaceNListEntry( struct NListtree_Data *data, struct MUI_NListtree
 
   DoMethod(data->Obj, MUIM_NList_ReplaceSingle, tn, pos, NOWRAP, ALIGN_LEFT);
 
-  if ( data->Flags & NLTF_NLIST_DIRECT_ENTRY_SUPPORT )
+  if(isFlagSet(data->Flags, NLTF_NLIST_DIRECT_ENTRY_SUPPORT))
   {
-    ei.pos  = -3; ei.line = -2;
+    ei.pos = -3; ei.line = -2;
     DoMethod( data->Obj, MUIM_NList_GetEntryInfo, &ei );
     tn->tn_NListEntry = (struct NListEntry *)ei.entry;
 
@@ -1302,9 +1302,9 @@ struct MUI_NListtree_TreeNode *GetEntryByTotalPos( struct MUI_NListtree_ListNode
 {
   struct MUI_NListtree_TreeNode *tn = CTN( (APTR)&ln->ln_List );
 
-  if ( ln->ln_Flags & TNF_LIST )
+  if(isFlagSet(ln->ln_Flags, TNF_LIST))
   {
-    if ( !( flags & MUIV_NListtree_GetEntry_Flag_Visible ) || ( ln->ln_Flags & TNF_OPEN ) )
+    if(isFlagClear(flags, MUIV_NListtree_GetEntry_Flag_Visible) || isFlagSet(ln->ln_Flags, TNF_OPEN))
     {
       while((tn = CTN(GetSucc((struct Node *)tn))))
       {
@@ -1313,10 +1313,10 @@ struct MUI_NListtree_TreeNode *GetEntryByTotalPos( struct MUI_NListtree_ListNode
         if ( *cpos == pos )
           return( tn );
 
-        if ( !( flags & MUIV_NListtree_GetEntry_Flag_Visible ) || ( tn->tn_IFlags & TNIF_VISIBLE ) )
+        if(isFlagClear(flags, MUIV_NListtree_GetEntry_Flag_Visible) || isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
           *cpos += 1;
 
-        if ( !( flags & MUIV_NListtree_GetEntry_Flag_SameLevel ) )
+        if(isFlagClear(flags, MUIV_NListtree_GetEntry_Flag_SameLevel))
         {
           if((rettn = GetEntryByTotalPos(CLN(tn), pos, cpos, flags)))
             return( rettn );
@@ -1343,7 +1343,7 @@ BOOL GetEntryPos( struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNo
 
     *pos += 1;
 
-    if ( tn->tn_Flags & TNF_LIST )
+    if(isFlagSet(tn->tn_Flags, TNF_LIST))
     {
       if ( GetEntryPos( CLN( tn ), stn, pos ) )
         return( TRUE );
@@ -1358,7 +1358,7 @@ BOOL GetEntryPos( struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNo
  Return the visual position (i.e. the position within the plain list)
  of the given TreeNode
 **************************************************************************/
-static LONG GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
+static LONG GetVisualPos(struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn)
 {
   LONG pos = -1;
 
@@ -1366,15 +1366,15 @@ static LONG GetVisualPos( struct NListtree_Data *data, struct MUI_NListtree_Tree
 
   if(tn != CTN((APTR)&data->RootList) && tn != NULL)
   {
-    if(data->Flags & NLTF_NLIST_DIRECT_ENTRY_SUPPORT)
+    if(isFlagSet(data->Flags, NLTF_NLIST_DIRECT_ENTRY_SUPPORT))
     {
       // respect visible nodes only
-      if((tn->tn_IFlags & TNIF_VISIBLE) && tn->tn_NListEntry != NULL)
+      if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE) && tn->tn_NListEntry != NULL)
         pos = (int)tn->tn_NListEntry->entpos;
     }
 
     // respect visible nodes only
-    if(pos == -1 && tn->tn_IFlags & TNIF_VISIBLE)
+    if(pos == -1 && isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
     {
       // result will be MUIV_NList_GetPos_End (-1) if not found.
       pos = MUIV_NList_GetPos_Start;
@@ -1400,12 +1400,12 @@ static LONG GetVisualEntries( struct NListtree_Data *data, struct MUI_NListtree_
   /* Easy case */
   if(tn == CTN((APTR)&data->RootList))
     entries = xget(data->Obj, MUIA_NList_Entries);
-  else if((tn->tn_Flags & TNF_LIST) && (tn->tn_Flags & TNF_OPEN) && (tn->tn_IFlags & TNIF_VISIBLE))
+  else if(isFlagSet(tn->tn_Flags, TNF_LIST) && isFlagSet(tn->tn_Flags, TNF_OPEN) && isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
   {
     struct MUI_NListtree_TreeNode *tn2;
 
     tn2 = CTN(GetSucc((struct Node *)tn));
-    if (tn2 && (tn2->tn_IFlags & TNIF_VISIBLE))
+    if(tn2 != NULL && isFlagSet(tn2->tn_IFlags, TNIF_VISIBLE))
     {
       return GetVisualPos(data,tn2) - GetVisualPos(data,tn) - 1;
     }
@@ -1440,7 +1440,7 @@ static BOOL GetVisualEntriesMax( struct NListtree_Data *data, struct MUI_NListtr
 
   ENTER();
 
-  if(tn->tn_Flags & TNF_OPEN)
+  if(isFlagSet(tn->tn_Flags, TNF_OPEN))
   {
     struct Table *tb = &CLN( tn )->ln_Table;
     LONG i;
@@ -1511,7 +1511,7 @@ LONG TreeNodeSelectOne( struct NListtree_Data *data, struct MUI_NListtree_TreeNo
 
   if ( seltype == MUIV_NListtree_Select_Toggle )
   {
-    if ( tn->tn_Flags & TNF_SELECTED )
+    if(isFlagSet(tn->tn_Flags, TNF_SELECTED))
       st = MUIV_NListtree_Select_Off;
     else
       st = MUIV_NListtree_Select_On;
@@ -1519,19 +1519,19 @@ LONG TreeNodeSelectOne( struct NListtree_Data *data, struct MUI_NListtree_TreeNo
   else
     st = seltype;
 
-  if ( !( selflags & MUIV_NListtree_Select_Flag_Force ) )
+  if(isFlagClear(selflags, MUIV_NListtree_Select_Flag_Force))
   {
     doselect = MultiTestFunc( data, tn, st, selflags );
   }
 
   if ( doselect )
   {
-    if ( tn->tn_IFlags & TNIF_VISIBLE )
+    if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
     {
-      if ( ( st == MUIV_NListtree_Select_On ) && !( wassel & TNF_SELECTED ) )
+      if( st == MUIV_NListtree_Select_On && isFlagClear(wassel, TNF_SELECTED))
         DoMethod( data->Obj, MUIM_NList_Select, GetVisualPos( data, tn ), MUIV_NList_Select_On, NULL );
 
-      else if ( ( st == MUIV_NListtree_Select_Off ) && ( wassel & TNF_SELECTED ) )
+      else if(st == MUIV_NListtree_Select_Off && isFlagSet(wassel, TNF_SELECTED))
         DoMethod( data->Obj, MUIM_NList_Select, GetVisualPos( data, tn ), MUIV_NList_Select_Off, NULL );
     }
     else
@@ -1539,11 +1539,11 @@ LONG TreeNodeSelectOne( struct NListtree_Data *data, struct MUI_NListtree_TreeNo
       switch ( st )
       {
         case MUIV_NListtree_Select_On:
-          tn->tn_Flags |= TNF_SELECTED;
+          SET_FLAG(tn->tn_Flags, TNF_SELECTED);
           break;
 
         case MUIV_NListtree_Select_Off:
-          tn->tn_Flags &= ~TNF_SELECTED;
+          CLEAR_FLAG(tn->tn_Flags, TNF_SELECTED);
           break;
       }
     }
@@ -1568,7 +1568,7 @@ VOID TreeNodeSelectAll( struct NListtree_Data *data, struct MUI_NListtree_ListNo
   {
     TreeNodeSelectOne( data, tb->tb_Table[i], seltype, selflags, state );
 
-    if ( tb->tb_Table[i]->tn_Flags & TNF_LIST )
+    if(isFlagSet(tb->tb_Table[i]->tn_Flags, TNF_LIST))
     {
       TreeNodeSelectAll( data, CLN( tb->tb_Table[i] ), seltype, selflags, state );
     }
@@ -1587,11 +1587,11 @@ VOID TreeNodeSelectVisible( struct NListtree_Data *data, struct MUI_NListtree_Li
 
   for( i = 0; i < tb->tb_Entries; i++ )
   {
-    if ( tb->tb_Table[i]->tn_IFlags & TNIF_VISIBLE )
+    if(isFlagSet(tb->tb_Table[i]->tn_IFlags, TNIF_VISIBLE))
     {
       TreeNodeSelectOne( data, tb->tb_Table[i], seltype, selflags, state );
 
-      if ( tb->tb_Table[i]->tn_Flags & TNF_LIST )
+      if(isFlagSet(tb->tb_Table[i]->tn_Flags, TNF_LIST))
       {
         TreeNodeSelectAll( data, CLN( tb->tb_Table[i] ), seltype, selflags, state );
       }
@@ -1606,7 +1606,7 @@ VOID TreeNodeSelectVisible( struct NListtree_Data *data, struct MUI_NListtree_Li
 */
 LONG TreeNodeSelect( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG seltype, LONG selflags, LONG *state )
 {
-  if ( data->Flags & NLTF_AUTOSELECT_CHILDS )
+  if(isFlagSet(data->Flags, NLTF_AUTOSELECT_CHILDS))
   {
     TreeNodeSelectAll( data, CLN( tn ), seltype, selflags, state );
   }
@@ -1650,29 +1650,29 @@ struct MUI_NListtree_TreeNode *GetInsertNodeSorted( struct NListtree_Data *data,
 
 VOID RemoveTreeVisible( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG pos )
 {
-  if ( ( tn->tn_Flags & TNF_LIST ) && ( tn = CTN( GetHead( (struct List *)&(CLN( tn ))->ln_List ) ) ) )
+  if(isFlagSet(tn->tn_Flags, TNF_LIST) && ( tn = CTN( GetHead( (struct List *)&(CLN( tn ))->ln_List ) ) ) )
   {
     do
     {
-      if ( tn->tn_IFlags & TNIF_VISIBLE )
+      if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
       {
-        D(DBF_LISTTREE, "Visible removing node \"%s\" at pos %ld ( %s | %s )", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
+        D(DBF_LISTTREE, "Visible removing node \"%s\" at pos %ld ( %s | %s )", tn->tn_Name, pos, isFlagSet(tn->tn_Flags, TNF_SELECTED) ? "SEL" : "", isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT) ? "LSHIFT" : "");
 
-        if ( tn->tn_Flags & TNF_SELECTED )
+        if(isFlagSet(tn->tn_Flags, TNF_SELECTED))
         {
-          D(DBF_LISTTREE, "Unselecting node \"%s\" at pos %ld ( %s )", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
+          D(DBF_LISTTREE, "Unselecting node \"%s\" at pos %ld ( %s )", tn->tn_Name, pos, isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT) ? "LSHIFT" : "");
 
           DoMethod( data->Obj, MUIM_NList_Select, pos, MUIV_NList_Select_Off, NULL );
 
-          if ( data->Flags & NLTF_QUALIFIER_LSHIFT )
-            tn->tn_Flags |= TNF_SELECTED;
+          if(isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT))
+            SET_FLAG(tn->tn_Flags, TNF_SELECTED);
         }
 
-        tn->tn_IFlags &= ~TNIF_VISIBLE;
+        CLEAR_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
         RemoveNListEntry( data, tn, pos );
       }
 
-      if ( tn->tn_Flags & TNF_OPEN )
+      if(isFlagSet(tn->tn_Flags, TNF_OPEN))
       {
         RemoveTreeVisible( data, tn, pos );
       }
@@ -1682,47 +1682,13 @@ VOID RemoveTreeVisible( struct NListtree_Data *data, struct MUI_NListtree_TreeNo
 }
 
 
-/*
-VOID RemoveTreeVisibleSort( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG pos )
-{
-  if ( ( tn->tn_Flags & TNF_LIST ) && ( tn = CTN( GetHead( (struct List *)&(CLN( tn ))->ln_List ) ) ) )
-  {
-    do
-    {
-      if ( tn->tn_IFlags & TNIF_VISIBLE )
-      {
-        //D(bug( "Visible removing node \"%s\" at pos %ld ( %s | %s )\n", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
-
-        if ( tn->tn_Flags & TNF_SELECTED )
-        {
-          //D(bug( "Unselecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
-
-          DoMethod( data->Obj, MUIM_NList_Select, pos, MUIV_NList_Select_Off, NULL );
-
-          if ( data->Flags & NLTF_QUALIFIER_LSHIFT )
-            tn->tn_Flags |= TNF_SELECTED;
-        }
-
-        RemoveNListEntry( data, tn, pos );
-      }
-
-      if ( tn->tn_Flags & TNF_OPEN )
-      {
-        RemoveTreeVisibleSort( data, tn, pos );
-      }
-    }
-    while ( tn = CTN( GetSucc( (struct Node *)tn ) ) );
-  }
-}
-*/
-
 VOID ReplaceTreeVisibleSort(struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG *pos)
 {
   /*
   **  Determine that the node holds a list
   **  and the node is not open.
   */
-  if((tn->tn_Flags & TNF_LIST) && (tn->tn_Flags & TNF_OPEN))
+  if(isFlagSet(tn->tn_Flags, TNF_LIST) && isFlagSet(tn->tn_Flags, TNF_OPEN))
   {
     if((tn = CTN(GetHead((struct List *)&(CLN(tn))->ln_List))))
     {
@@ -1730,14 +1696,14 @@ VOID ReplaceTreeVisibleSort(struct NListtree_Data *data, struct MUI_NListtree_Tr
       {
         ReplaceNListEntry(data, tn, *pos);
 
-        if(tn->tn_Flags & TNF_SELECTED)
+        if(isFlagSet(tn->tn_Flags, TNF_SELECTED))
         {
           DoMethod(data->Obj, MUIM_NList_Select, *pos, MUIV_NList_Select_On, NULL);
         }
 
         if(*pos >= 0) *pos += 1;
 
-        if(tn->tn_Flags & TNF_OPEN)
+        if(isFlagSet(tn->tn_Flags, TNF_OPEN))
         {
           ReplaceTreeVisibleSort(data, tn, pos);
         }
@@ -1752,29 +1718,29 @@ VOID RemoveTreeNodeVisible( struct NListtree_Data *data, struct MUI_NListtree_Tr
 {
   LONG pos;
 
-  if ( tn->tn_IFlags & TNIF_VISIBLE )
+  if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
   {
     pos = GetVisualPos( data, tn );
 
-    D(DBF_LISTTREE, "Visible removing node \"%s\" at pos %ld ( %s | %s )", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
+    D(DBF_LISTTREE, "Visible removing node \"%s\" at pos %ld ( %s | %s )", tn->tn_Name, pos, isFlagSet(tn->tn_Flags, TNF_SELECTED) ? "SEL" : "", isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT) ? "LSHIFT" : "");
 
-    if ( tn->tn_Flags & TNF_SELECTED )
+    if(isFlagSet(tn->tn_Flags, TNF_SELECTED))
     {
-      D(DBF_LISTTREE, "Unselecting node \"%s\" at pos %ld ( %s )", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
+      D(DBF_LISTTREE, "Unselecting node \"%s\" at pos %ld ( %s )", tn->tn_Name, pos, isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT) ? "LSHIFT" : "");
 
       DoMethod( data->Obj, MUIM_NList_Select, pos, MUIV_NList_Select_Off, NULL );
 
-      if ( data->Flags & NLTF_QUALIFIER_LSHIFT )
-        tn->tn_Flags |= TNF_SELECTED;
+      if(isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT))
+        SET_FLAG(tn->tn_Flags, TNF_SELECTED);
     }
 
-    tn->tn_IFlags &= ~TNIF_VISIBLE;
+    CLEAR_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
     RemoveNListEntry( data, tn, pos );
 
     if ( xpos )
       *xpos = pos;
 
-    if ( tn->tn_Flags & TNF_OPEN )
+    if(isFlagSet(tn->tn_Flags, TNF_OPEN))
     {
       RemoveTreeVisible( data, tn, pos );
     }
@@ -1790,22 +1756,22 @@ VOID InsertTreeVisible( struct NListtree_Data *data, struct MUI_NListtree_TreeNo
   **  Determine that the node holds a list
   **  and the node is not open.
   */
-  if(tn->tn_Flags & TNF_LIST)
+  if(isFlagSet(tn->tn_Flags, TNF_LIST))
   {
     if((tn = CTN(GetHead((struct List *)&(CLN(tn))->ln_List))))
     {
       do
       {
-        if ( !( tn->tn_IFlags & TNIF_VISIBLE ) )
+        if(isFlagClear(tn->tn_IFlags, TNIF_VISIBLE))
         {
-          D(DBF_LISTTREE, "Visible inserting  node \"%s\" at pos %ld ( %s | %s )", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
+          D(DBF_LISTTREE, "Visible inserting  node \"%s\" at pos %ld ( %s | %s )", tn->tn_Name, pos, isFlagSet(tn->tn_Flags, TNF_SELECTED) ? "SEL" : "", isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT) ? "LSHIFT" : "");
 
-          tn->tn_IFlags |= TNIF_VISIBLE;
+          SET_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
           InsertNListEntry( data, tn, *pos );
 
-          if ( tn->tn_Flags & TNF_SELECTED )
+          if(isFlagSet(tn->tn_Flags, TNF_SELECTED))
           {
-            D(DBF_LISTTREE, "  Selecting node \"%s\" at pos %ld ( %s )", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
+            D(DBF_LISTTREE, "  Selecting node \"%s\" at pos %ld ( %s )", tn->tn_Name, pos, isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT) ? "LSHIFT" : "");
 
             DoMethod( data->Obj, MUIM_NList_Select, *pos, MUIV_NList_Select_On, NULL );
           }
@@ -1813,7 +1779,7 @@ VOID InsertTreeVisible( struct NListtree_Data *data, struct MUI_NListtree_TreeNo
 
         if ( *pos >= 0 ) *pos += 1;
 
-        if ( tn->tn_Flags & TNF_OPEN )
+        if(isFlagSet(tn->tn_Flags, TNF_OPEN))
         {
           InsertTreeVisible( data, tn, pos );
         }
@@ -1823,70 +1789,39 @@ VOID InsertTreeVisible( struct NListtree_Data *data, struct MUI_NListtree_TreeNo
   }
 }
 
-/*
-VOID InsertTreeVisibleSort( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG *pos )
-{
-  if ((tn->tn_Flags & TNF_LIST) && (tn->tn_Flags & TNF_OPEN))
-  {
-    if ( tn = CTN( GetHead( (struct List *)&(CLN( tn ))->ln_List ) ) )
-    {
-      do
-      {
-        //D(bug( "Visible inserting node \"%s\" at pos %ld ( %s | %s )\n", tn->tn_Name, pos, ( tn->tn_Flags & TNF_SELECTED ) ? "SEL" : "", ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
-
-        InsertNListEntry( data, tn, *pos );
-
-        if ( tn->tn_Flags & TNF_SELECTED )
-        {
-          //D(bug( "T Selecting node \"%s\" at pos %ld ( %s )\n", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "" ) );
-
-          DoMethod( data->Obj, MUIM_NList_Select, *pos, MUIV_NList_Select_On, NULL );
-        }
-
-        if ( *pos >= 0 ) *pos += 1;
-
-        if ( tn->tn_Flags & TNF_OPEN )
-        {
-          InsertTreeVisibleSort( data, tn, pos );
-        }
-      }
-      while ( tn = CTN( GetSucc( (struct Node *)tn ) ) );
-    }
-  }
-}
-*/
 
 LONG InsertTreeNodeVisible( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, struct MUI_NListtree_ListNode *ln, struct MUI_NListtree_TreeNode *prevtn )
 {
   LONG pos = 0, temppos;
 
-  if ( ( ln->ln_Flags & TNF_OPEN ) && ( ( pos = GetVisualInsertPos( data, ln, prevtn ) ) != -1 ) )
+  if (isFlagSet(ln->ln_Flags, TNF_OPEN) && ((pos = GetVisualInsertPos( data, ln, prevtn)) != -1))
   {
-    tn->tn_IFlags |= TNIF_VISIBLE;
+    SET_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
 
     D(DBF_LISTTREE, "Visible inserting node 0x%lx into list 0x%lx after 0x%lx at pos %ld", tn, ln, prevtn, pos);
 
     InsertNListEntry( data, tn, pos );
 
-    if ( tn->tn_Flags & TNF_SELECTED )
+    if(isFlagSet(tn->tn_Flags, TNF_SELECTED))
     {
-      D(DBF_LISTTREE, "  Selecting node \"%s\" at pos %ld ( %s )", tn->tn_Name, pos, ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ? "LSHIFT" : "");
+      D(DBF_LISTTREE, "  Selecting node \"%s\" at pos %ld ( %s )", tn->tn_Name, pos, isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT) ? "LSHIFT" : "");
 
       DoMethod( data->Obj, MUIM_NList_Select, pos, MUIV_NList_Select_On, NULL );
     }
 
     temppos = pos + 1;
 
-    if ( tn->tn_Flags & TNF_OPEN )
+    if(isFlagSet(tn->tn_Flags, TNF_OPEN))
     {
       InsertTreeVisible( data, tn, &temppos );
     }
 
-    if ( pos > 0 )  DoMethod( data->Obj, MUIM_NList_Redraw, pos - 1 );
+    if ( pos > 0 )
+      DoMethod( data->Obj, MUIM_NList_Redraw, pos - 1 );
   }
   else
   {
-    tn->tn_IFlags &= ~TNIF_VISIBLE;
+    CLEAR_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
   }
 
   return( pos );
@@ -1933,7 +1868,7 @@ VOID ExpandTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn 
   /*
   **  Determine that the node holds a list
   */
-  if ( tn->tn_Flags & TNF_LIST )
+  if(isFlagSet(tn->tn_Flags, TNF_LIST))
   {
     LONG i;
 
@@ -1941,7 +1876,7 @@ VOID ExpandTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn 
 
     for( i = 0; i < tb->tb_Entries; i++ )
     {
-      if ( ( tb->tb_Table[i]->tn_Flags & TNF_LIST ) && !( tb->tb_Table[i]->tn_Flags & TNF_OPEN ) )
+      if(isFlagSet(tb->tb_Table[i]->tn_Flags, TNF_LIST) && isFlagClear(tb->tb_Table[i]->tn_Flags, TNF_OPEN))
       {
         if ( data->OpenHook )
         {
@@ -1950,10 +1885,10 @@ VOID ExpandTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn 
 
         D(DBF_LISTTREE, "Expanding node \"%s\"", tb->tb_Table[i]->tn_Name);
 
-        tb->tb_Table[i]->tn_Flags |= TNF_OPEN;
+        SET_FLAG(tb->tb_Table[i]->tn_Flags, TNF_OPEN);
       }
 
-      tb->tb_Table[i]->tn_IFlags &= ~TNIF_VISIBLE;
+      CLEAR_FLAG(tb->tb_Table[i]->tn_IFlags, TNIF_VISIBLE);
 
       ExpandTree( data, tb->tb_Table[i] );
     }
@@ -1965,16 +1900,16 @@ VOID OpenTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *t
 {
   LONG entries, pos, spos=0;
 
-  if ( !( tn->tn_Flags & TNF_OPEN ) )
+  if(isFlagClear(tn->tn_Flags, TNF_OPEN))
   {
-    tn->tn_Flags |= TNF_OPEN;
+    SET_FLAG(tn->tn_Flags, TNF_OPEN);
 
     if ( data->OpenHook )
     {
       MyCallHook( data->OpenHook, data, MUIA_NListtree_OpenHook, tn );
     }
 
-    if ( tn->tn_IFlags & TNIF_VISIBLE )
+    if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
     {
       spos = pos = GetVisualPos( data, tn );
       entries = xget( data->Obj, MUIA_NList_Entries );
@@ -1995,7 +1930,7 @@ VOID OpenTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *t
 
         DoMethod( data->Obj, MUIM_NList_Clear, 0 );
 
-        tn->tn_IFlags &= ~TNIF_VISIBLE;
+        CLEAR_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
         InsertTreeVisible( data, CTN( &data->RootList ), &i );
       }
       else
@@ -2029,7 +1964,7 @@ VOID OpenTreeNodeExpand( struct NListtree_Data *data, struct MUI_NListtree_TreeN
     pos = MUIV_NList_Insert_Bottom;
   }
 
-  if ( !( tn->tn_Flags & TNF_OPEN ) )
+  if(isFlagClear(tn->tn_Flags, TNF_OPEN))
   {
     if ( data->OpenHook )
     {
@@ -2038,7 +1973,7 @@ VOID OpenTreeNodeExpand( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 
     D(DBF_LISTTREE, "Expanding node \"%s\"", tn->tn_Name);
 
-    tn->tn_Flags |= TNF_OPEN;
+    SET_FLAG(tn->tn_Flags, TNF_OPEN);
 
     ExpandTree( data, tn );
     InsertTreeVisible( data, tn, &pos );
@@ -2095,7 +2030,7 @@ VOID CollapseTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *t
   /*
   **  Determine that the node holds a list
   */
-  if ( tn->tn_Flags & TNF_LIST )
+  if(isFlagSet(tn->tn_Flags, TNF_LIST))
   {
     LONG i;
 
@@ -2103,7 +2038,7 @@ VOID CollapseTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *t
 
     for( i = 0; i < tb->tb_Entries; i++ )
     {
-      if ( tb->tb_Table[i]->tn_Flags & TNF_OPEN )
+      if(isFlagSet(tb->tb_Table[i]->tn_Flags, TNF_OPEN))
       {
         if ( data->CloseHook )
         {
@@ -2112,11 +2047,11 @@ VOID CollapseTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *t
 
         D(DBF_LISTTREE, "Collapsing node \"%s\"", tb->tb_Table[i]->tn_Name);
 
-        tb->tb_Table[i]->tn_Flags &= ~TNF_OPEN;
+        CLEAR_FLAG(tb->tb_Table[i]->tn_Flags, TNF_OPEN);
       }
 
       if ( clearvisible )
-        tb->tb_Table[i]->tn_IFlags &= ~TNIF_VISIBLE;
+        CLEAR_FLAG(tb->tb_Table[i]->tn_IFlags, TNIF_VISIBLE);
 
       CollapseTree( data, tb->tb_Table[i], clearvisible );
     }
@@ -2130,7 +2065,7 @@ VOID CloseTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *
 {
   LONG pos;
 
-  if ( tn->tn_Flags & TNF_OPEN )
+  if(isFlagSet(tn->tn_Flags, TNF_OPEN))
   {
     pos = GetVisualPos( data, tn ) + 1;
 
@@ -2139,7 +2074,7 @@ VOID CloseTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *
       MyCallHook( data->CloseHook, data, MUIA_NListtree_CloseHook, tn );
     }
 
-    tn->tn_Flags &= ~TNF_OPEN;
+    CLEAR_FLAG(tn->tn_Flags, TNF_OPEN);
 
     DeactivateNotify( data );
 
@@ -2150,7 +2085,7 @@ VOID CloseTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *
 
       DoMethod( data->Obj, MUIM_NList_Clear, 0 );
 
-      tn->tn_IFlags &= ~TNIF_VISIBLE;
+      CLEAR_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
       InsertTreeVisible( data, CTN( &data->RootList ), &i );
     }
     else
@@ -2175,7 +2110,7 @@ VOID CloseTreeNodeCollapse( struct NListtree_Data *data, struct MUI_NListtree_Tr
 
   pos = GetVisualPos( data, tn ) + 1;
 
-  if ( tn->tn_Flags & TNF_OPEN )
+  if(isFlagSet(tn->tn_Flags, TNF_OPEN))
   {
     if ( data->CloseHook )
     {
@@ -2184,7 +2119,7 @@ VOID CloseTreeNodeCollapse( struct NListtree_Data *data, struct MUI_NListtree_Tr
 
     D(DBF_LISTTREE, "Collapsing node \"%s\"", tn->tn_Name);
 
-    tn->tn_Flags &= ~TNF_OPEN;
+    CLEAR_FLAG(tn->tn_Flags, TNF_OPEN);
   }
 
   RemoveTreeVisible( data, tn, pos );
@@ -2319,9 +2254,9 @@ VOID RemoveNode1( struct NListtree_Data *data, UNUSED struct MUI_NListtree_ListN
   **  Prevent calculating positions with practical
   **  deleted entries.
   */
-  if ( tn->tn_IFlags & TNIF_VISIBLE )
+  if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
   {
-    tn->tn_IFlags &= ~TNIF_VISIBLE;
+    CLEAR_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
 
     RemoveNListEntry( data, tn, pos );
   }
@@ -2329,7 +2264,7 @@ VOID RemoveNode1( struct NListtree_Data *data, UNUSED struct MUI_NListtree_ListN
   /*
   **  Remove the node from the selected list.
   */
-  if ( tn->tn_Flags & TNF_SELECTED )
+  if(isFlagSet(tn->tn_Flags, TNF_SELECTED))
   {
     TreeNodeSelectRemove( data, tn );
   }
@@ -2348,13 +2283,13 @@ VOID RemoveNode2( struct NListtree_Data *data, struct MUI_NListtree_ListNode *li
   /*
   **  Free all allocated memory.
   */
-  if ( tn->tn_IFlags & TNIF_ALLOCATED )
+  if(isFlagSet(tn->tn_IFlags, TNIF_ALLOCATED))
   {
     if ( tn->tn_Name )
       FreeVecPooled( data->TreePool, tn->tn_Name );
   }
 
-  if ( tn->tn_Flags & TNF_LIST )
+  if(isFlagSet(tn->tn_Flags, TNF_LIST))
   {
     if ( ( (struct MUI_NListtree_ListNode *)tn )->ln_Table.tb_Table )
       FreeVecPooled( data->TreePool, ( (struct MUI_NListtree_ListNode *)tn )->ln_Table.tb_Table );
@@ -2376,7 +2311,7 @@ VOID RemoveChildNodes( struct NListtree_Data *data, struct MUI_NListtree_TreeNod
 {
   struct MUI_NListtree_ListNode *ln = CLN( tn );
 
-  if ( tn->tn_Flags & TNF_LIST )
+  if(isFlagSet(tn->tn_Flags, TNF_LIST))
   {
     while((tn = CTN(GetHead((struct List *)&ln->ln_List))))
     {
@@ -2406,14 +2341,14 @@ VOID QuickRemoveNodes( struct NListtree_Data *data, struct MUI_NListtree_ListNod
 {
   struct MUI_NListtree_ListNode *ln = li;
 
-  if ( li->ln_Flags & TNF_LIST )
+  if(isFlagSet(li->ln_Flags, TNF_LIST))
   {
     while((li = CLN(RemHead((struct List *)&ln->ln_List))))
     {
-      if ( li->ln_Flags & TNF_LIST )
+      if(isFlagSet(li->ln_Flags, TNF_LIST))
         QuickRemoveNodes( data, li );
 
-      if ( li->ln_Flags & TNF_SELECTED )
+      if(isFlagSet(li->ln_Flags, TNF_SELECTED))
       {
         TreeNodeSelectRemove( data, CTN( li ) );
       }
@@ -2431,7 +2366,7 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByName( struct NListtree_Data *data, 
 {
   struct MUI_NListtree_TreeNode *tn2, *tn;
 
-  if ( flags & MUIV_NListtree_FindName_Flag_StartNode )
+  if(isFlagSet(flags, MUIV_NListtree_FindName_Flag_StartNode))
     tn = CTN( ln );
   else
     tn = CTN( GetHead( (struct List *)&ln->ln_List ) );
@@ -2441,9 +2376,9 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByName( struct NListtree_Data *data, 
   {
     do
     {
-      if ( ( tn->tn_IFlags & TNIF_VISIBLE ) || !( flags & MUIV_NListtree_FindName_Flag_Visible ) )
+      if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE) || isFlagClear(flags, MUIV_NListtree_FindName_Flag_Visible))
       {
-        if ( ( tn->tn_Flags & TNF_SELECTED ) || !( flags & MUIV_NListtree_FindName_Flag_Selected ) )
+        if(isFlagSet(tn->tn_Flags, TNF_SELECTED) || isFlagClear(flags, MUIV_NListtree_FindName_Flag_Selected))
         {
           if ( !( (LONG)MyCallHook( data->FindNameHook, data, MUIA_NListtree_FindNameHook, name, tn->tn_Name, tn->tn_User, flags ) ) )
           {
@@ -2452,7 +2387,7 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByName( struct NListtree_Data *data, 
         }
       }
 
-      if ( ( tn->tn_Flags & TNF_LIST ) && !( flags & MUIV_NListtree_FindName_Flag_SameLevel ) )
+      if(isFlagSet(tn->tn_Flags, TNF_LIST) && isFlagClear(flags, MUIV_NListtree_FindName_Flag_SameLevel))
       {
         if((tn2 = FindTreeNodeByName(data, CLN(tn), name, (flags & ~MUIV_NListtree_FindName_Flag_StartNode))))
         {
@@ -2474,7 +2409,7 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByNameRev( struct NListtree_Data *dat
 
   do
   {
-    if ( flags & MUIV_NListtree_FindName_Flag_StartNode )
+    if(isFlagSet(flags, MUIV_NListtree_FindName_Flag_StartNode))
       tn = CTN( ln );
     else
       tn = CTN( GetTail( (struct List *)&ln->ln_List ) );
@@ -2483,9 +2418,9 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByNameRev( struct NListtree_Data *dat
     {
       do
       {
-        if ( ( tn->tn_IFlags & TNIF_VISIBLE ) || !( flags & MUIV_NListtree_FindName_Flag_Visible ) )
+        if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE) || isFlagClear(flags, MUIV_NListtree_FindName_Flag_Visible))
         {
-          if ( ( tn->tn_Flags & TNF_SELECTED ) || !( flags & MUIV_NListtree_FindName_Flag_Selected ) )
+          if(isFlagSet(tn->tn_Flags, TNF_SELECTED) || isFlagClear(flags, MUIV_NListtree_FindName_Flag_Selected))
           {
             if ( !( (LONG)MyCallHook( data->FindNameHook, data, MUIA_NListtree_FindNameHook, name, tn->tn_Name, tn->tn_User, flags ) ) )
             {
@@ -2496,10 +2431,10 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByNameRev( struct NListtree_Data *dat
       }
       while((tn = CTN(GetPred((struct Node *)&tn->tn_Node))));
 
-      if ( !( flags & MUIV_NListtree_FindName_Flag_SameLevel ) )
+      if(isFlagClear(flags, MUIV_NListtree_FindName_Flag_SameLevel))
       {
         ln = CLN( GetParent( CTN( ln ) ) );
-        flags |= MUIV_NListtree_FindName_Flag_StartNode;
+        SET_FLAG(flags, MUIV_NListtree_FindName_Flag_StartNode);
       }
       else
         ln = NULL;
@@ -2516,7 +2451,7 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByUserData( struct NListtree_Data *da
 {
   struct MUI_NListtree_TreeNode *tn2, *tn;
 
-  if ( flags & MUIV_NListtree_FindUserData_Flag_StartNode )
+  if(isFlagSet(flags, MUIV_NListtree_FindUserData_Flag_StartNode))
     tn = CTN( ln );
   else
     tn = CTN( GetHead( (struct List *)&ln->ln_List ) );
@@ -2526,9 +2461,9 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByUserData( struct NListtree_Data *da
   {
     do
     {
-      if ( ( tn->tn_IFlags & TNIF_VISIBLE ) || !( flags & MUIV_NListtree_FindUserData_Flag_Visible ) )
+      if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE) || isFlagClear(flags, MUIV_NListtree_FindUserData_Flag_Visible))
       {
-        if ( ( tn->tn_Flags & TNF_SELECTED ) || !( flags & MUIV_NListtree_FindUserData_Flag_Selected ) )
+        if(isFlagSet(tn->tn_Flags, TNF_SELECTED) || isFlagClear(flags, MUIV_NListtree_FindUserData_Flag_Selected))
         {
           if ( !( (LONG)MyCallHook( data->FindUserDataHook, data, MUIA_NListtree_FindUserDataHook, userdata, tn->tn_User, tn->tn_Name, flags ) ) )
           {
@@ -2537,7 +2472,7 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByUserData( struct NListtree_Data *da
         }
       }
 
-      if ( ( tn->tn_Flags & TNF_LIST ) && !( flags & MUIV_NListtree_FindUserData_Flag_SameLevel ) )
+      if(isFlagSet(tn->tn_Flags, TNF_LIST) && isFlagClear(flags, MUIV_NListtree_FindUserData_Flag_SameLevel))
       {
         if((tn2 = FindTreeNodeByUserData(data, CLN(tn), userdata, (flags & ~MUIV_NListtree_FindUserData_Flag_StartNode))))
         {
@@ -2559,7 +2494,7 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByUserDataRev( struct NListtree_Data 
 
   do
   {
-    if ( flags & MUIV_NListtree_FindUserData_Flag_StartNode )
+    if(isFlagSet(flags, MUIV_NListtree_FindUserData_Flag_StartNode))
       tn = CTN( ln );
     else
       tn = CTN( GetTail( (struct List *)&ln->ln_List ) );
@@ -2568,9 +2503,9 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByUserDataRev( struct NListtree_Data 
     {
       do
       {
-        if ( ( tn->tn_IFlags & TNIF_VISIBLE ) || !( flags & MUIV_NListtree_FindUserData_Flag_Visible ) )
+        if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE) || isFlagClear(flags, MUIV_NListtree_FindUserData_Flag_Visible))
         {
-          if ( ( tn->tn_Flags & TNF_SELECTED ) || !( flags & MUIV_NListtree_FindUserData_Flag_Selected ) )
+          if(isFlagSet(tn->tn_Flags, TNF_SELECTED) || isFlagClear(flags, MUIV_NListtree_FindUserData_Flag_Selected))
           {
             if ( !( (LONG)MyCallHook( data->FindUserDataHook, data, MUIA_NListtree_FindUserDataHook, userdata, tn->tn_User, tn->tn_Name, flags ) ) )
             {
@@ -2581,10 +2516,10 @@ struct MUI_NListtree_TreeNode *FindTreeNodeByUserDataRev( struct NListtree_Data 
       }
       while((tn = CTN(GetPred((struct Node *)&tn->tn_Node))));
 
-      if ( !( flags & MUIV_NListtree_FindUserData_Flag_SameLevel ) )
+      if(isFlagClear(flags, MUIV_NListtree_FindUserData_Flag_SameLevel))
       {
         ln = CLN( GetParent( CTN( ln ) ) );
-        flags |= MUIV_NListtree_FindUserData_Flag_StartNode;
+        SET_FLAG(flags, MUIV_NListtree_FindUserData_Flag_StartNode);
       }
       else
         ln = NULL;
@@ -2631,21 +2566,21 @@ struct MUI_NListtree_TreeNode *DuplicateNode( struct NListtree_Data *data, struc
   struct MUI_NListtree_ListNode *new;
   APTR user = NULL;
 
-  if((new = CLN(AllocVecPooled( data->TreePool, (nodetodup->tn_Flags & TNF_LIST) ? sizeof(struct MUI_NListtree_ListNode ) : sizeof(struct MUI_NListtree_TreeNode)))))
+  if((new = CLN(AllocVecPooled( data->TreePool, isFlagSet(nodetodup->tn_Flags, TNF_LIST) ? sizeof(struct MUI_NListtree_ListNode ) : sizeof(struct MUI_NListtree_TreeNode)))))
   {
-    if ( nodetodup->tn_Flags & TNF_LIST )
+    if(isFlagSet(nodetodup->tn_Flags, TNF_LIST))
       NewList( (struct List *)&new->ln_List );
 
     /*
     **  Should we duplicate the supplied node name?
     */
-    if ( data->Flags & NLTF_DUPNODENAMES )
+    if(isFlagSet(data->Flags, NLTF_DUPNODENAMES))
     {
       int len = strlen( nodetodup->tn_Name ) + 1;
 
       new->ln_Name = (STRPTR)AllocVecPooled( data->TreePool, len );
       strlcpy( new->ln_Name, nodetodup->tn_Name, len );
-      new->ln_IFlags |= TNIF_ALLOCATED;
+      SET_FLAG(new->ln_IFlags, TNIF_ALLOCATED);
     }
     else
       new->ln_Name = nodetodup->tn_Name;
@@ -2661,7 +2596,7 @@ struct MUI_NListtree_TreeNode *DuplicateNode( struct NListtree_Data *data, struc
       **  Free all previously allocated memory if
       **  something failed before.
       */
-      if ( new->ln_Name && ( new->ln_IFlags & TNIF_ALLOCATED ) )
+      if(new->ln_Name != NULL && isFlagSet(new->ln_IFlags, TNIF_ALLOCATED))
         FreeVecPooled( data->TreePool, new->ln_Name );
 
       DoMethod(data->Obj, MUIM_NListtree_Destruct, new->ln_Name, new->ln_User, data->TreePool, 0);
@@ -2720,7 +2655,10 @@ struct MUI_NListtree_TreeNode *CreateParentStructure( struct NListtree_Data *dat
       */
       InsertTreeNode( data, *destlist, CTN(newlist), *destentry );
       *destentry = CTN( INSERT_POS_TAIL );
-      newlist->ln_IFlags |= ( nodetodup->tn_IFlags & TNIF_VISIBLE );
+      if(isFlagSet(nodetodup->tn_IFlags, TNIF_VISIBLE))
+        SET_FLAG(newlist->ln_IFlags, TNIF_VISIBLE);
+      else
+        CLEAR_FLAG(newlist->ln_IFlags, TNIF_VISIBLE);
     }
   }
 
@@ -2745,7 +2683,7 @@ struct MUI_NListtree_TreeNode *CreateChildStructure( struct NListtree_Data *data
     */
     InsertTreeNode( data, listnode, CTN(new), CTN( INSERT_POS_TAIL ) );
 
-    if ( orignode->ln_Flags & TNF_LIST )
+    if(isFlagSet(orignode->ln_Flags, TNF_LIST))
     {
       if ( !IsListEmpty( (struct List *)&orignode->ln_List ) )
       {
@@ -2794,7 +2732,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
     {
       if(cnt == 0)
       {
-        if ( !( tn->tn_Flags & TNF_LIST ) )
+        if(isFlagClear(tn->tn_Flags, TNF_LIST))
         {
           x1 = SPEC_VertT;
         }
@@ -2808,7 +2746,7 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
     {
       if(cnt == 0)
       {
-        if ( !( tn->tn_Flags & TNF_LIST ) )
+        if(isFlagClear(tn->tn_Flags, TNF_LIST))
         {
           x1 = SPEC_VertEnd;
         }
@@ -2839,11 +2777,11 @@ static void InsertTreeImages( struct NListtree_Data *data, struct MUI_NListtree_
         /*
         **  Should we draw the root tree? No? Just use space.
         */
-        if ( ( data->Flags & NLTF_NO_ROOT_TREE ) && !gp->tn_Parent )
+        if(isFlagSet(data->Flags, NLTF_NO_ROOT_TREE) && gp->tn_Parent == NULL)
         {
-            snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)x2 );
+          snprintf(data->buf, DATA_BUF_SIZE, "%s\033O[%lx;%x;%d,%d]", data->buf, (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (int)SPEC_Space, (int)x2 );
 
-            otn->tn_ImagePos += x2;
+          otn->tn_ImagePos += x2;
         }
         else
         {
@@ -2867,9 +2805,9 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
 
   InsertTreeImages( data, otn, otn, 0 );
 
-  if ( ( ( otn->tn_Flags & TNF_LIST ) && !( otn->tn_Flags & TNF_NOSIGN ) ) && ( !IsListEmpty( (struct List *)&(CLN( otn ))->ln_List ) || !( data->Flags & NLTF_EMPTYNODES ) ) )
+  if((isFlagSet(otn->tn_Flags, TNF_LIST) && isFlagClear(otn->tn_Flags, TNF_NOSIGN)) && ( !IsListEmpty( (struct List *)&(CLN( otn ))->ln_List ) || isFlagClear(data->Flags, NLTF_EMPTYNODES)))
   {
-    if ( otn->tn_Flags & TNF_OPEN )
+    if(isFlagSet(otn->tn_Flags, TNF_OPEN))
     {
       x1 = IMAGE_Open;
     }
@@ -2920,13 +2858,13 @@ static void DrawImages( struct MUI_NListtree_TreeNode *otn, struct MUI_NListtree
 
 ULONG MultiTestFunc( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG seltype, LONG selflags )
 {
-  LONG currtype = ( tn->tn_Flags & TNF_SELECTED ) ? MUIV_NListtree_Select_On : MUIV_NListtree_Select_Off;
+  LONG currtype = isFlagSet(tn->tn_Flags, TNF_SELECTED) ? MUIV_NListtree_Select_On : MUIV_NListtree_Select_Off;
   BOOL doselect = TRUE;
 
-  if ( data->Flags & NLTF_DRAGDROP )
+  if(isFlagSet(data->Flags, NLTF_DRAGDROP))
     return( FALSE );
 
-  if ( data->Flags & NLTF_NLIST_NO_SCM_SUPPORT )
+  if(isFlagSet(data->Flags, NLTF_NLIST_NO_SCM_SUPPORT))
     return( FALSE );
 
   if ( currtype != seltype )
@@ -2958,14 +2896,14 @@ HOOKPROTONH(NList_MultiTestFunc, ULONG, Object *obj, struct MUI_NListtree_TreeNo
 
   data = (struct NListtree_Data *)xget( obj, MUIA_UserData );
 
-  if ( data->Flags & NLTF_SELECT_METHOD )
+  if(isFlagSet(data->Flags, NLTF_SELECT_METHOD))
     return( TRUE );
 
   if ( data->MultiSelect != MUIV_NListtree_MultiSelect_None )
   {
     if ( ( data->MultiSelect == MUIV_NListtree_MultiSelect_Default ) ||
       ( data->MultiSelect == MUIV_NListtree_MultiSelect_Always ) ||
-      ( ( data->MultiSelect == MUIV_NListtree_MultiSelect_Shifted ) && ( data->Flags & NLTF_QUALIFIER_LSHIFT ) ) )
+      ( ( data->MultiSelect == MUIV_NListtree_MultiSelect_Shifted ) && isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT)))
     {
       ret = MultiTestFunc( data, tn, MUIV_NListtree_Select_On, 0 );
     }
@@ -3037,15 +2975,15 @@ MakeStaticHook(_CompareHook_Tail, _CompareFunc_Tail);
 
 HOOKPROTONHNO(_CompareFunc_LeavesTop, LONG, struct MUIP_NListtree_CompareMessage *msg)
 {
-  if ( ( msg->TreeNode1->tn_Flags & TNF_LIST ) && ( msg->TreeNode2->tn_Flags & TNF_LIST ) )
+  if(isFlagSet(msg->TreeNode1->tn_Flags, TNF_LIST) && isFlagSet(msg->TreeNode2->tn_Flags, TNF_LIST))
   {
     return( Stricmp( msg->TreeNode1->tn_Name, msg->TreeNode2->tn_Name ) );
   }
-  else if ( msg->TreeNode1->tn_Flags & TNF_LIST )
+  else if(isFlagSet(msg->TreeNode1->tn_Flags, TNF_LIST))
   {
     return( 1 );
   }
-  else if ( msg->TreeNode2->tn_Flags & TNF_LIST )
+  else if(isFlagSet(msg->TreeNode2->tn_Flags, TNF_LIST))
   {
     return( -1 );
   }
@@ -3058,15 +2996,15 @@ MakeStaticHook(_CompareHook_LeavesTop, _CompareFunc_LeavesTop);
 
 HOOKPROTONHNO(_CompareFunc_LeavesBottom, LONG, struct MUIP_NListtree_CompareMessage *msg)
 {
-  if ( ( msg->TreeNode1->tn_Flags & TNF_LIST ) && ( msg->TreeNode2->tn_Flags & TNF_LIST ) )
+  if(isFlagSet(msg->TreeNode1->tn_Flags, TNF_LIST) && isFlagSet(msg->TreeNode2->tn_Flags, TNF_LIST))
   {
     return( Stricmp( msg->TreeNode1->tn_Name, msg->TreeNode2->tn_Name ) );
   }
-  else if ( msg->TreeNode1->tn_Flags & TNF_LIST )
+  else if(isFlagSet(msg->TreeNode1->tn_Flags, TNF_LIST))
   {
     return( -1 );
   }
-  else if ( msg->TreeNode2->tn_Flags & TNF_LIST )
+  else if(isFlagSet(msg->TreeNode2->tn_Flags, TNF_LIST))
   {
     return( 1 );
   }
@@ -3107,21 +3045,21 @@ VOID SortList( struct MUI_NListtree_ListNode *ln, struct NListtree_Data *data )
 
 struct MUI_NListtree_ListNode *ListNode_Sort( struct MUI_NListtree_ListNode *ln, struct NListtree_Data *data, ULONG flags )
 {
-  if ( ( flags & MUIV_NListtree_Sort_Flag_RecursiveAll ) || ( flags & MUIV_NListtree_Sort_Flag_RecursiveOpen ) )
+  if(isFlagSet(flags, MUIV_NListtree_Sort_Flag_RecursiveAll) || isFlagSet(flags, MUIV_NListtree_Sort_Flag_RecursiveOpen))
   {
     struct MUI_NListtree_ListNode *ln2 = CLN( &ln->ln_List );
 
     while((ln2 = CLN(GetSucc((struct Node *)ln2))))
     {
-      if ( ln->ln_Flags & TNF_LIST )
+      if(isFlagSet(ln->ln_Flags, TNF_LIST))
       {
-        if ( ( ln->ln_Flags & TNF_OPEN ) || ( flags & MUIV_NListtree_Sort_Flag_RecursiveAll ) )
+        if(isFlagSet(ln->ln_Flags, TNF_OPEN) || isFlagSet(flags, MUIV_NListtree_Sort_Flag_RecursiveAll))
           ListNode_Sort( ln2, data, flags );
       }
     }
   }
 
-  if ( ln->ln_Flags & TNF_LIST )
+  if(isFlagSet(ln->ln_Flags, TNF_LIST))
     SortList( ln, data );
 
   return( ln );
@@ -4249,7 +4187,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       **  Configuration part.
       */
       case MUIA_NListtree_IsMCP:
-        data->Flags |= NLTF_ISMCP;
+        SET_FLAG(data->Flags, NLTF_ISMCP);
       break;
 
       case MUICFG_NListtree_ImageSpecClosed:
@@ -4348,9 +4286,9 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       case MUICFG_NListtree_OpenAutoScroll:
       {
         if ( (BOOL)tag->ti_Data )
-          data->Flags |= NLTF_OPENAUTOSCROLL;
+          SET_FLAG(data->Flags, NLTF_OPENAUTOSCROLL);
         else
-          data->Flags &= ~NLTF_OPENAUTOSCROLL;
+          CLEAR_FLAG(data->Flags, NLTF_OPENAUTOSCROLL);
 
         D(DBF_GETSET, "SET MUICFG_NListtree_OpenAutoScroll: %ld", tag->ti_Data);
       }
@@ -4368,7 +4306,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
       case MUIA_NList_Active:
       {
-        D(DBF_GETSET, "SET MUIA_NList_Active  %ld%s",tag->ti_Data,(data->Flags & NLTF_ACTIVENOTIFY)?" notify activation set":"no notify set");
+        D(DBF_GETSET, "SET MUIA_NList_Active  %ld%s",tag->ti_Data,isFlagSet(data->Flags, NLTF_ACTIVENOTIFY)?" notify activation set":"no notify set");
       }
       break;
 
@@ -4442,7 +4380,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         /*
         **  With actnode and actlist we avoid ActiveNode ping-pong...
         */
-        if ( !initial && ( ( actnode != data->ActiveNode ) || ( data->Flags & NLTF_SETACTIVE ) ) )
+        if(!initial && (actnode != data->ActiveNode || isFlagSet(data->Flags, NLTF_SETACTIVE)))
         {
           data->ActiveNode  = actnode;
           data->ActiveNodeNum = xget( data->Obj, MUIA_NList_Active );
@@ -4551,11 +4489,12 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         if(intfunc)
         {
           /* The flags is quiet sensless because nobody asks for it expect in OM_NEW (which should be rewritten anywhy) */
-          data->Flags |= NLTF_INT_COMPAREHOOK;
+          SET_FLAG(data->Flags, NLTF_INT_COMPAREHOOK);
           InitHook(&data->IntCompareHook, *orgHook, data);
           data->CompareHook = &data->IntCompareHook;
         }
-        else data->Flags &= ~NLTF_INT_COMPAREHOOK;
+        else
+          CLEAR_FLAG(data->Flags, NLTF_INT_COMPAREHOOK);
       }
       break;
 
@@ -4580,7 +4519,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
           if((data->ConstructHook = AllocVecPooled(data->MemoryPool, sizeof(struct Hook))))
           {
-            data->Flags |= NLTF_INT_CONSTRDESTRHOOK;
+            SET_FLAG(data->Flags, NLTF_INT_CONSTRDESTRHOOK);
 
             InitHook(data->ConstructHook, _ConstructHook, data);
           }
@@ -4616,7 +4555,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
           if((data->DestructHook = AllocVecPooled(data->MemoryPool, sizeof(struct Hook))))
           {
-            data->Flags |= NLTF_INT_CONSTRDESTRHOOK;
+            SET_FLAG(data->Flags, NLTF_INT_CONSTRDESTRHOOK);
 
             InitHook(data->DestructHook, _DestructHook, data);
           }
@@ -4674,9 +4613,9 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       case MUIA_NListtree_DragDropSort:
       {
         if ( (BOOL)tag->ti_Data )
-          data->Flags |= NLTF_DRAGDROPSORT;
+          SET_FLAG(data->Flags, NLTF_DRAGDROPSORT);
         else
-          data->Flags &= ~NLTF_DRAGDROPSORT;
+          CLEAR_FLAG(data->Flags, NLTF_DRAGDROPSORT);
 
         D(DBF_GETSET, "SET MUIA_NListtree_DragDropSort: %ld", tag->ti_Data);
       }
@@ -4685,9 +4624,9 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       case MUIA_NListtree_DupNodeName:
       {
         if ( (BOOL)tag->ti_Data )
-          data->Flags |= NLTF_DUPNODENAMES;
+          SET_FLAG(data->Flags, NLTF_DUPNODENAMES);
         else
-          data->Flags &= ~NLTF_DUPNODENAMES;
+          CLEAR_FLAG(data->Flags, NLTF_DUPNODENAMES);
 
         D(DBF_GETSET, "SET MUIA_NListtree_DupNodeName: %ld", tag->ti_Data);
       }
@@ -4696,9 +4635,9 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       case MUIA_NListtree_EmptyNodes:
       {
         if ( (BOOL)tag->ti_Data )
-          data->Flags |= NLTF_EMPTYNODES;
+          SET_FLAG(data->Flags, NLTF_EMPTYNODES);
         else
-          data->Flags &= ~NLTF_EMPTYNODES;
+          CLEAR_FLAG(data->Flags, NLTF_EMPTYNODES);
 
         if ( !initial )
           DoRefresh( data );
@@ -4881,7 +4820,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
         /*
         if ( tag->ti_Data & MUIV_NListtree_MultiSelect_Flag_AutoSelectChilds )
-          data->Flags |= NLTF_AUTOSELECT_CHILDS;
+          SET_FLAG(data->Flags, NLTF_AUTOSELECT_CHILDS);
         */
 
         D(DBF_GETSET, "SET MUIA_NListtree_MultiSelect: 0x%08lx", tag->ti_Data);
@@ -4908,12 +4847,12 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       {
         if ( !DoQuiet( data, (BOOL)tag->ti_Data ) )
         {
-          if ( data->Flags & NLTF_REFRESH )
+          if(isFlagSet(data->Flags, NLTF_REFRESH))
           {
-            if ( data->Flags & NLTF_ISMCP )
+            if(isFlagSet(data->Flags, NLTF_ISMCP))
               DoRefresh( data );
 
-            data->Flags &= ~NLTF_REFRESH;
+            CLEAR_FLAG(data->Flags, NLTF_REFRESH);
           }
         }
 
@@ -4924,9 +4863,9 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       case MUICFG_NListtree_RememberStatus:
       {
         if ( (BOOL)tag->ti_Data )
-          data->Flags |= NLTF_REMEMBER_STATUS;
+          SET_FLAG(data->Flags, NLTF_REMEMBER_STATUS);
         else
-          data->Flags &= ~NLTF_REMEMBER_STATUS;
+          CLEAR_FLAG(data->Flags, NLTF_REMEMBER_STATUS);
 
         D(DBF_GETSET, "SET MUICFG_NListtree_RememberStatus: %ld", tag->ti_Data);
       }
@@ -4935,9 +4874,9 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       case MUIA_NListtree_Title:
       {
         if ( tag->ti_Data )
-          data->Flags |= NLTF_TITLE;
+          SET_FLAG(data->Flags, NLTF_TITLE);
         else
-          data->Flags &= ~NLTF_TITLE;
+          CLEAR_FLAG(data->Flags, NLTF_TITLE);
 
         if ( !initial )
           nnset( data->Obj, MUIA_NList_Title, tag->ti_Data );
@@ -4961,15 +4900,15 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
       {
         if(tag->ti_Data == (ULONG)MUIV_NListtree_ShowTree_Toggle)
         {
-          if ( data->Flags & NLTF_NO_TREE )
-            data->Flags &= ~NLTF_NO_TREE;
+          if(isFlagSet(data->Flags, NLTF_NO_TREE))
+            CLEAR_FLAG(data->Flags, NLTF_NO_TREE);
           else
-            data->Flags |= NLTF_NO_TREE;
+            SET_FLAG(data->Flags, NLTF_NO_TREE);
         }
         else if ( !tag->ti_Data )
-          data->Flags |= NLTF_NO_TREE;
+          SET_FLAG(data->Flags, NLTF_NO_TREE);
         else
-          data->Flags &= ~NLTF_NO_TREE;
+          CLEAR_FLAG(data->Flags, NLTF_NO_TREE);
 
         if ( !initial )
           DoRefresh( data );
@@ -4986,7 +4925,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
         */
         if ( tag->ti_Data && !data->MRI )
         {
-          data->Flags |= NLTF_NO_ROOT_TREE;
+          SET_FLAG(data->Flags, NLTF_NO_ROOT_TREE);
         }
       }
       break;
@@ -5044,7 +4983,7 @@ static BOOL GetAttributes( struct NListtree_Data *data, Msg msg)
 
     case MUIA_NListtree_ShowTree:
 
-      *store = (IPTR)!( data->Flags & NLTF_NO_TREE );
+      *store = (IPTR)isFlagClear(data->Flags, NLTF_NO_TREE);
       D(DBF_GETSET, "GET MUIA_NListtree_ShowTree: 0x%08lx", *store);
       return( TRUE );
 
@@ -5154,13 +5093,15 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
       /*
       **  Default values!!!
       */
-      ld.Flags |= NLTF_DUPNODENAMES | NLTF_OPENAUTOSCROLL | NLTF_DRAGDROPSORT;
+      SET_FLAG(ld.Flags, NLTF_DUPNODENAMES);
+      SET_FLAG(ld.Flags, NLTF_OPENAUTOSCROLL);
+      SET_FLAG(ld.Flags, NLTF_DRAGDROPSORT);
       ld.AutoVisible  = MUIV_NListtree_AutoVisible_Normal;
 
       /* data will be set below because we don't have the correct address yet...somebody really should rewrite this */
       InitHook(&ld.IntCompareHook, _CompareHook_LeavesBottom, NULL);
 
-      ld.Flags |= NLTF_INT_COMPAREHOOK;
+      SET_FLAG(ld.Flags, NLTF_INT_COMPAREHOOK);
 
       SetAttributes( &ld, msg, TRUE );
 
@@ -5178,12 +5119,12 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
         MUIA_NList_MultiSelect,     ld.MultiSelect,
         ( ld.MultiSelect != 0 )     ? MUIA_NList_MultiTestHook : TAG_IGNORE,  &NList_MultiTestHook,
         //$$$ MUIA_Listview_DragType
-        MUIA_NList_DragType,        ( ld.Flags & NLTF_DRAGDROPSORT ) ? MUIV_NList_DragType_Default : MUIV_NList_DragType_None,
-        MUIA_NList_DragSortable,    ( ld.Flags & NLTF_DRAGDROPSORT ) ? TRUE : FALSE,
-        MUIA_NList_ShowDropMarks,   ( ld.Flags & NLTF_DRAGDROPSORT ) ? TRUE : FALSE,
+        MUIA_NList_DragType,        isFlagSet(ld.Flags, NLTF_DRAGDROPSORT) ? MUIV_NList_DragType_Default : MUIV_NList_DragType_None,
+        MUIA_NList_DragSortable,    isFlagSet(ld.Flags, NLTF_DRAGDROPSORT) ? TRUE : FALSE,
+        MUIA_NList_ShowDropMarks,   isFlagSet(ld.Flags, NLTF_DRAGDROPSORT) ? TRUE : FALSE,
         //$$$ Remove
         MUIA_NList_EntryValueDependent, TRUE,
-        ( ld.Flags & NLTF_TITLE )   ? MUIA_NList_Title  : TAG_IGNORE, TRUE,
+        isFlagSet(ld.Flags, NLTF_TITLE) ? MUIA_NList_Title  : TAG_IGNORE, TRUE,
         ld.Format           ? MUIA_NList_Format : TAG_IGNORE, ld.Format,
         //$$$ Not implemented
         MUIA_ContextMenu,       MUIV_NList_ContextMenu_Always,
@@ -5200,7 +5141,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
 
         data->IntCompareHook.h_Data = data; /* now we have the correct address of data */
 
-        if(data->Flags & NLTF_INT_COMPAREHOOK)
+        if(isFlagSet(data->Flags, NLTF_INT_COMPAREHOOK))
           data->CompareHook = &data->IntCompareHook; /* and now we also have the correct address of the hook */
 
         DoSuperMethod(cl, obj, OM_GET, MUIA_Version, &ver);
@@ -5236,7 +5177,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
           return( 0 );
         }
 
-        data->Flags |= NLTF_NLIST_DIRECT_ENTRY_SUPPORT;
+        SET_FLAG(data->Flags, NLTF_NLIST_DIRECT_ENTRY_SUPPORT);
 
         /*
         **  Save instance data in private NList data field.
@@ -5271,8 +5212,10 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
         NewList( (struct List *)&data->RootList.ln_List );
 
         data->RootList.ln_Parent  = NULL;
-        data->RootList.ln_Flags   |= TNF_LIST | TNF_OPEN;
-        data->RootList.ln_IFlags  |= TNIF_VISIBLE | TNIF_ROOT;
+        SET_FLAG(data->RootList.ln_Flags, TNF_LIST);
+        SET_FLAG(data->RootList.ln_Flags, TNF_OPEN);
+        SET_FLAG(data->RootList.ln_IFlags, TNIF_VISIBLE);
+        SET_FLAG(data->RootList.ln_IFlags, TNIF_ROOT);
 
         /*
         **  Initialize Selected-Table.
@@ -5425,7 +5368,7 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
   /*
   **  Get and set image config.
   */
-  if ( !( data->Flags & NLTF_ISMCP ) )
+  if(isFlagClear(data->Flags, NLTF_ISMCP))
   {
     /*
     **  Set up temporary objects.
@@ -5534,9 +5477,9 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
       x = MUICFGV_NListtree_RememberStatus_Default;
 
     if ( x )
-      data->Flags |= NLTF_REMEMBER_STATUS;
+      SET_FLAG(data->Flags, NLTF_REMEMBER_STATUS);
     else
-      data->Flags &= ~NLTF_REMEMBER_STATUS;
+      CLEAR_FLAG(data->Flags, NLTF_REMEMBER_STATUS);
 
 
     if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_OpenAutoScroll, &d ) )
@@ -5545,9 +5488,9 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
       x = MUICFGV_NListtree_OpenAutoScroll_Default;
 
     if ( x )
-      data->Flags |= NLTF_OPENAUTOSCROLL;
+      SET_FLAG(data->Flags, NLTF_OPENAUTOSCROLL);
     else
-      data->Flags &= ~NLTF_OPENAUTOSCROLL;
+      CLEAR_FLAG(data->Flags, NLTF_OPENAUTOSCROLL);
 
     if ( DoMethod( obj, MUIM_GetConfigItem, MUICFG_NListtree_UseFolderImage, &d ) )
       data->UseFolderImage = atoi( (STRPTR)d );
@@ -5671,7 +5614,7 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 
         if ( data->ActiveNode )
         {
-          if ( ( data->ActiveNode->tn_Flags & TNF_LIST ) && ( data->ActiveNode->tn_Flags & TNF_OPEN ) )
+          if(isFlagSet(data->ActiveNode->tn_Flags, TNF_LIST) && isFlagSet(data->ActiveNode->tn_Flags, TNF_OPEN))
           {
             DoMethod( obj, MUIM_NListtree_Close, MUIV_NListtree_Close_ListNode_Active, MUIV_NListtree_Close_TreeNode_Active, 0 );
             changed = TRUE;
@@ -5699,9 +5642,9 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 
         if ( data->ActiveNode )
         {
-          if ( data->ActiveNode->tn_Flags & TNF_LIST )
+          if(isFlagSet(data->ActiveNode->tn_Flags, TNF_LIST))
           {
-            if ( !( data->ActiveNode->tn_Flags & TNF_OPEN ) )
+            if(isFlagClear(data->ActiveNode->tn_Flags, TNF_OPEN))
             {
               DoMethod( obj, MUIM_NListtree_Open, MUIV_NListtree_Open_ListNode_Active, MUIV_NListtree_Open_TreeNode_Active, 0 );
               changed = TRUE;
@@ -5747,22 +5690,22 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
     **  We make this here, because the first act
     **  in the list tree may be selection.
     */
-    if ( msg->imsg->Qualifier & IEQUALIFIER_LSHIFT )
+    if(isFlagSet(msg->imsg->Qualifier, IEQUALIFIER_LSHIFT))
     {
-      data->Flags |= NLTF_QUALIFIER_LSHIFT;
+      SET_FLAG(data->Flags, NLTF_QUALIFIER_LSHIFT);
     }
     else
     {
-      data->Flags &= ~NLTF_QUALIFIER_LSHIFT;
+      CLEAR_FLAG(data->Flags, NLTF_QUALIFIER_LSHIFT);
     }
 
-    if ( msg->imsg->Qualifier & IEQUALIFIER_CONTROL )
+    if(isFlagSet(msg->imsg->Qualifier, IEQUALIFIER_CONTROL))
     {
-      data->Flags |= NLTF_QUALIFIER_CONTROL;
+      SET_FLAG(data->Flags, NLTF_QUALIFIER_CONTROL);
     }
     else
     {
-      data->Flags &= ~NLTF_QUALIFIER_CONTROL;
+      CLEAR_FLAG(data->Flags, NLTF_QUALIFIER_CONTROL);
     }
 
     mx = msg->imsg->MouseX;
@@ -5805,7 +5748,7 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
                 /*
                 **  Only react if node is not frozen.
                 */
-                if ( !( tn->tn_Flags & TNF_FROZEN ) )
+                if(isFlagClear(tn->tn_Flags, TNF_FROZEN))
                 {
                   STATIC UWORD lastclickentry = 0;
 
@@ -5814,13 +5757,15 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
                   **  by simple click on the image depending on the
                   **  current state.
                   */
-                  if  ( ( tn->tn_Flags & TNF_LIST ) && ( tpres.column == data->TreeColumn ) &&
-                    ( ( tpres.xoffset >= tn->tn_ImagePos ) && ( tpres.xoffset <= ( tn->tn_ImagePos + data->MaxImageWidth ) ) ) )
+                  if(isFlagSet(tn->tn_Flags, TNF_LIST) &&
+                     tpres.column == data->TreeColumn &&
+                     tpres.xoffset >= tn->tn_ImagePos &&
+                     tpres.xoffset <= tn->tn_ImagePos + data->MaxImageWidth)
                   {
                     /*
                     **  Do not start dragging if user clicked on arrow-image.
                     */
-                    //data->Flags |= NLTF_OVER_ARROW;
+                    //SET_FLAG(data->Flags, NLTF_OVER_ARROW);
                     //D(bug( "SETTING OVER_ARROW FLAG\n" ) );
 
                     data->OpenCloseEntry = tn;
@@ -5829,7 +5774,7 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
                     **  NList should do nothing in case of arrow-click
                     **  with LSHIFT qualifier..
                     */
-                    if ( data->Flags & NLTF_QUALIFIER_LSHIFT )
+                    if(isFlagSet(data->Flags, NLTF_QUALIFIER_LSHIFT))
                       ret = MUI_EventHandlerRC_Eat;
                   }
 
@@ -5843,7 +5788,7 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
                     /*
                     **  Do not start dragging if user double clicked on an entry.
                     */
-                    //data->Flags |= NLTF_OVER_ARROW;
+                    //SET_FLAG(data->Flags, NLTF_OVER_ARROW);
                     //D(bug( "SETTING OVER_ARROW FLAG\n" ) );
 
                     /*
@@ -5909,7 +5854,7 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 
                 if ( data->OpenCloseEntry )
                 {
-                  if ( data->OpenCloseEntry->tn_Flags & TNF_OPEN )
+                  if(isFlagSet(data->OpenCloseEntry->tn_Flags, TNF_OPEN))
                     DoMethod( obj, MUIM_NListtree_Close, GetParent( data->OpenCloseEntry ), data->OpenCloseEntry, 0 );
                   else
                     DoMethod( obj, MUIM_NListtree_Open, GetParent( data->OpenCloseEntry ), data->OpenCloseEntry, 0 );
@@ -5921,7 +5866,7 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
               /*
               **  Delete over arrow flag when releasing mouse button.
               */
-              //data->Flags &= ~NLTF_OVER_ARROW;
+              //CLEAR_FLAG(data->Flags, NLTF_OVER_ARROW);
               //D(bug( "RESETTING OVER_ARROW FLAG\n" ) );
               break;
 
@@ -6039,7 +5984,7 @@ IPTR _DragNDrop_DragBegin(struct IClass *cl, Object *obj, Msg msg)
   }
   */
 
-  data->Flags |= NLTF_DRAGDROP;
+  SET_FLAG(data->Flags, NLTF_DRAGDROP);
   data->OldDropTarget = NULL;
 
   result = DoSuperMethodA(cl, obj, msg);
@@ -6274,7 +6219,7 @@ IPTR _DragNDrop_DragFinish(struct IClass *cl, Object *obj, Msg msg)
 
   ENTER();
 
-  data->Flags &= ~NLTF_DRAGDROP;
+  CLEAR_FLAG(data->Flags, NLTF_DRAGDROP);
 
   result = DoSuperMethodA(cl, obj, msg);
 
@@ -6336,7 +6281,7 @@ IPTR _DragNDrop_DragDrop(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
             if ( !nexttn )
             {
-              if ( ( dtn->tn_Flags & TNF_LIST ) && ( dtn->tn_Flags & TNF_OPEN ) )
+              if(isFlagSet(dtn->tn_Flags, TNF_LIST) && isFlagSet(dtn->tn_Flags, TNF_OPEN))
               {
                 ln    = CLN( dtn );
                 tn2   = MUIV_NListtree_Move_NewTreeNode_Head;
@@ -6361,7 +6306,7 @@ IPTR _DragNDrop_DragDrop(struct IClass *cl, Object *obj, UNUSED Msg msg)
           case MUIV_NListtree_DropType_Sorted:
             D(DBF_DRAGDROP, "Inserting entry 0x%08lx onto L: 0x%lx, N: 0x%lx", tn, dtn->tn_Parent, dtn);
 
-            if ( dtn->tn_Flags & TNF_LIST )
+            if(isFlagSet(dtn->tn_Flags, TNF_LIST))
               ln = CLN( dtn );
             else
               ln = CLN( GetParent( dtn ) );
@@ -6369,7 +6314,7 @@ IPTR _DragNDrop_DragDrop(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
             if ( data->SelectedTable.tb_Entries == 1 )
             {
-              if ( !( dtn->tn_Flags & TNF_LIST ) && !( tn->tn_Flags & TNF_LIST ) )
+              if(isFlagClear(dtn->tn_Flags, TNF_LIST) && isFlagClear(tn->tn_Flags, TNF_LIST))
               {
                 tn2 = dtn;
 
@@ -6378,7 +6323,7 @@ IPTR _DragNDrop_DragDrop(struct IClass *cl, Object *obj, UNUSED Msg msg)
               }
             }
 
-            if ( dtn->tn_Flags & TNF_LIST )
+            if(isFlagSet(dtn->tn_Flags, TNF_LIST))
             {
               tn2 = CTN(MUIV_NListtree_Move_NewTreeNode_Sorted);
 
@@ -6413,7 +6358,7 @@ IPTR _DragNDrop_DragDrop(struct IClass *cl, Object *obj, UNUSED Msg msg)
   }
   */
 
-  data->Flags &= ~NLTF_DRAGDROP;
+  CLEAR_FLAG(data->Flags, NLTF_DRAGDROP);
 
   return( 0 );
 }
@@ -6434,7 +6379,7 @@ IPTR _NList_Display(struct IClass *cl, Object *obj, struct MUIP_NList_Display *m
 
   if(tn != NULL)
   {
-    D(DBF_DRAW, "render flags=%lx %s %s",tn->tn_Flags,(tn->tn_Flags & TNF_LIST)?" list":"",msg->strings[1]);
+    D(DBF_DRAW, "render flags=%lx %s %s",tn->tn_Flags,isFlagSet(tn->tn_Flags, TNF_LIST)?" list":"",msg->strings[1]);
 
     if(msg->strings[data->TreeColumn] == NULL)
     {
@@ -6448,7 +6393,7 @@ IPTR _NList_Display(struct IClass *cl, Object *obj, struct MUIP_NList_Display *m
 
     // NUL terminate the string
     data->buf[0] = '\0';
-    if(!( data->Flags & NLTF_NO_TREE))
+    if(isFlagClear(data->Flags, NLTF_NO_TREE))
       DrawImages(tn, tn, data, 0);
 
     if(msg->preparses[data->TreeColumn] != NULL)
@@ -6456,7 +6401,7 @@ IPTR _NList_Display(struct IClass *cl, Object *obj, struct MUIP_NList_Display *m
 
     strlcat(data->buf, msg->strings[data->TreeColumn], DATA_BUF_SIZE);
 
-    D(DBF_DRAW, "%s - %s", (data->Flags & NLTF_QUIET) ? "QUIET" : "RUN", data->buf);
+    D(DBF_DRAW, "%s - %s", isFlagSet(data->Flags, NLTF_QUIET) ? "QUIET" : "RUN", data->buf);
 
     msg->strings[data->TreeColumn] = data->buf;
   }
@@ -6719,12 +6664,12 @@ IPTR _NListtree_Open(struct IClass *cl, Object *obj, struct MUIP_NListtree_Open 
   */
   if ( ln && tn )
   {
-    if ( !( tn->tn_Flags & TNF_LIST ) )
+    if(isFlagClear(tn->tn_Flags, TNF_LIST))
       tn = GetParentNotRoot( tn );
 
     if ( tn )
     {
-      if ( ( ( tn->tn_Flags & TNF_LIST ) && !( tn->tn_Flags & TNF_OPEN ) ) || openall )
+      if((isFlagSet(tn->tn_Flags, TNF_LIST) && isFlagClear(tn->tn_Flags, TNF_OPEN)) || openall)
       {
         DeactivateNotify( data );
         DoQuiet( data, TRUE );
@@ -6748,7 +6693,7 @@ IPTR _NListtree_Open(struct IClass *cl, Object *obj, struct MUIP_NListtree_Open 
           }
         }
 
-        if ( ( data->Flags & NLTF_OPENAUTOSCROLL ) && !openall )
+        if(isFlagSet(data->Flags, NLTF_OPENAUTOSCROLL) && !openall )
           ShowTree( data, tn );
 
         DoQuiet( data, FALSE );
@@ -6905,7 +6850,7 @@ IPTR _NListtree_Close(struct IClass *cl, Object *obj, struct MUIP_NListtree_Clos
   */
   if ( ln && tn )
   {
-    if ( ( ( tn->tn_Flags & TNF_LIST ) && ( tn->tn_Flags & TNF_OPEN ) ) || closeall )
+    if((isFlagSet(tn->tn_Flags, TNF_LIST) && isFlagSet(tn->tn_Flags, TNF_OPEN)) || closeall )
     {
       struct MUI_NListtree_TreeNode *temp = data->ActiveNode;
 
@@ -6922,12 +6867,10 @@ IPTR _NListtree_Close(struct IClass *cl, Object *obj, struct MUIP_NListtree_Clos
       }
       else
       {
-        if ( data->Flags & NLTF_REMEMBER_STATUS )
+        if(isFlagSet(data->Flags, NLTF_REMEMBER_STATUS))
           CloseTreeNode( data, tn );
         else
-        {
           CloseTreeNodeCollapse( data, tn );
-        }
       }
 
       DoQuiet( data, FALSE );
@@ -6935,7 +6878,7 @@ IPTR _NListtree_Close(struct IClass *cl, Object *obj, struct MUIP_NListtree_Clos
 
       if ( temp )
       {
-        if ( temp->tn_IFlags & TNIF_VISIBLE )
+        if(isFlagSet(temp->tn_IFlags, TNIF_VISIBLE))
           set( obj, MUIA_NListtree_Active, temp );
         else
           set( obj, MUIA_NListtree_Active, tn );
@@ -7071,7 +7014,7 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
   **  Allocate memory for the new entry and, if
   **  list, initialize list structure for use.
   */
-  if ( msg->Flags & TNF_LIST )
+  if(isFlagSet(msg->Flags, TNF_LIST))
   {
     if((ln = CLN(AllocVecPooled(data->TreePool, sizeof(struct MUI_NListtree_ListNode)))))
     {
@@ -7099,12 +7042,12 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
     /*
     **  Should we duplicate the supplied node name?
     */
-    if ( data->Flags & NLTF_DUPNODENAMES )
+    if(isFlagSet(data->Flags, NLTF_DUPNODENAMES))
     {
       int len = strlen( msg->Name ) + 1;
       tn->tn_Name = (STRPTR)AllocVecPooled( data->TreePool, len );
       strlcpy( tn->tn_Name, msg->Name, len );
-      tn->tn_IFlags |= TNIF_ALLOCATED;
+      SET_FLAG(tn->tn_IFlags, TNIF_ALLOCATED);
     }
     else
       tn->tn_Name = msg->Name;
@@ -7150,7 +7093,7 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
         **  If given list node is not a list, get parent
         **  of the given node to avoid trouble.
         */
-        if ( !( li->ln_Flags & TNF_LIST ) )
+        if(isFlagClear(li->ln_Flags, TNF_LIST))
           li = CLN( GetParent( CTN( li ) ) );
 
         data->LastInsertedList = li;
@@ -7246,9 +7189,9 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
         **  Make sure, that the inserted node is visible by opening
         **  all parents (if it should be set active).
         */
-        if ( msg->Flags & MUIV_NListtree_Insert_Flag_Active )
+        if(isFlagSet(msg->Flags, MUIV_NListtree_Insert_Flag_Active))
         {
-          if ( !( tn->tn_IFlags & TNIF_VISIBLE ) )
+          if(isFlagClear(tn->tn_IFlags, TNIF_VISIBLE))
             DoMethod( obj, MUIM_NListtree_Open, MUIV_NListtree_Open_ListNode_Parent, tn, 0 );
 
           set( obj, MUIA_NListtree_Active, tn );
@@ -7261,7 +7204,7 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
         data->NumEntries++;
 
 
-        if ( tn->tn_IFlags & TNIF_VISIBLE )
+        if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
           DoRefresh( data );
 
         //ActivateNotify( data );
@@ -7420,7 +7363,7 @@ IPTR _NListtree_InsertStruct(struct IClass *cl, Object *obj, struct MUIP_NListtr
     {
       p = mystrtok( p, token, len, msg->Delimiter );
 
-      if  ( ( !*p && ( msg->Flags & MUIV_NListtree_InsertStruct_Flag_AllowDuplicates ) ) ||
+      if  ( ( !*p && isFlagSet(msg->Flags, MUIV_NListtree_InsertStruct_Flag_AllowDuplicates) ) ||
         !( temp = CTN( DoMethod( obj, MUIM_NListtree_FindName, lasttn, token, MUIV_NListtree_FindName_Flag_SameLevel ) ) ) )
       {
         lasttn = CTN( DoMethod( obj, MUIM_NListtree_Insert, token, msg->User,
@@ -7618,7 +7561,7 @@ IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rem
 
       D(DBF_LISTTREE, "Node: 0x%08lx - Name: %s - pos: %ld", tn, tn->tn_Name, pos);
 
-      if ( tn->tn_IFlags & TNIF_VISIBLE )
+      if(isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
         dorefresh = TRUE;
 
       RemoveNodes( data, li, tn, pos );
@@ -7640,7 +7583,7 @@ IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rem
   }
 
 /*
-  if ( !( msg->Flags & MUIV_NListtree_Remove_Flag_NoActive ) )
+  if(isFlagClear(msg->Flags, MUIV_NListtree_Remove_Flag_NoActive))
   {
     if ( data->TempActiveNode == tn )
       data->TempActiveNode = NULL;
@@ -8290,7 +8233,7 @@ IPTR _NListtree_Move(struct IClass *cl, Object *obj, struct MUIP_NListtree_Move 
     /*
     **  Create structure identical to source.
     */
-    if ( msg->Flags & MUIV_NListtree_Move_Flag_KeepStructure )
+    if(isFlagSet(msg->Flags, MUIV_NListtree_Move_Flag_KeepStructure))
     {
       tn1 = CTN( CreateParentStructure( data, msg->MethodID, &ln2, &tn2, tn1, 0 ) );
     }
@@ -8519,7 +8462,7 @@ IPTR _NListtree_Copy(struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy 
     /*
     **  Create structure identical to source.
     */
-    if ( msg->Flags & MUIV_NListtree_Copy_Flag_KeepStructure )
+    if(isFlagSet(msg->Flags, MUIV_NListtree_Copy_Flag_KeepStructure))
     {
       tn1 = CTN( CreateParentStructure( data, msg->MethodID, &ln2, &tn2, tn1, 0 ) );
     }
@@ -8627,7 +8570,7 @@ IPTR _NListtree_Rename(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ren
   /*
   **  User wants to rename the user field instead of name field.
   */
-  if ( msg->Flags & MUIV_NListtree_Rename_Flag_User )
+  if(isFlagSet(msg->Flags, MUIV_NListtree_Rename_Flag_User))
   {
     //D(bug( "Node: 0x%08lx - %s - Renaming user field\n", tn, tn->tn_Name ) );
 
@@ -8645,7 +8588,7 @@ IPTR _NListtree_Rename(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ren
     /*
     **  Should we duplicate the supplied node name?
     */
-    if ( data->Flags & NLTF_DUPNODENAMES )
+    if(isFlagSet(data->Flags, NLTF_DUPNODENAMES))
     {
       int len = strlen( msg->NewName ) + 1;
 
@@ -8653,13 +8596,13 @@ IPTR _NListtree_Rename(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ren
 
       tn->tn_Name = (STRPTR)AllocVecPooled( data->TreePool, len );
       strlcpy( tn->tn_Name, msg->NewName, len );
-      tn->tn_IFlags |= TNIF_ALLOCATED;
+      SET_FLAG(tn->tn_IFlags, TNIF_ALLOCATED);
     }
     else
       tn->tn_Name = msg->NewName;
   }
 
-  if ( !( msg->Flags & MUIV_NListtree_Rename_Flag_NoRefresh ) && ( tn->tn_IFlags & TNIF_VISIBLE ) )
+  if(isFlagClear(msg->Flags, MUIV_NListtree_Rename_Flag_NoRefresh) && isFlagSet(tn->tn_IFlags, TNIF_VISIBLE))
     DoMethod( obj, MUIM_NList_Redraw, GetVisualPos( data, tn ) );
 
   return( (IPTR)tn );
@@ -8782,16 +8725,16 @@ IPTR _NListtree_FindName(struct IClass *cl, Object *obj, struct MUIP_NListtree_F
 
   //D(bug( "StartNode: 0x%08lx - %s - Searching for \"%s\"\n", ln, ln->ln_Name, msg->Name ) );
 
-  if ( msg->Flags & MUIV_NListtree_FindName_Flag_Reverse )
+  if(isFlagSet(msg->Flags, MUIV_NListtree_FindName_Flag_Reverse))
   {
     if((tn = FindTreeNodeByNameRev(data, ln, msg->Name, msg->Flags)))
-      if ( msg->Flags & MUIV_NListtree_FindName_Flag_Activate )
+      if(isFlagSet(msg->Flags, MUIV_NListtree_FindName_Flag_Activate))
         nnset( obj, MUIA_NListtree_Active, tn );
   }
   else
   {
     if((tn = FindTreeNodeByName(data, ln, msg->Name, msg->Flags)))
-      if ( msg->Flags & MUIV_NListtree_FindName_Flag_Activate )
+      if(isFlagSet(msg->Flags, MUIV_NListtree_FindName_Flag_Activate))
         nnset( obj, MUIA_NListtree_Active, tn );
   }
 
@@ -8919,16 +8862,16 @@ IPTR _NListtree_FindUserData(struct IClass *cl, Object *obj, struct MUIP_NListtr
 
   //D(bug( "StartNode: 0x%08lx - %s - Searching for \"%s\"\n", ln, ln->ln_Name, (STRPTR)msg->User ) );
 
-  if ( msg->Flags & MUIV_NListtree_FindUserData_Flag_Reverse )
+  if(isFlagSet(msg->Flags, MUIV_NListtree_FindUserData_Flag_Reverse))
   {
     if((tn = FindTreeNodeByUserDataRev(data, ln, msg->User, msg->Flags)))
-      if ( msg->Flags & MUIV_NListtree_FindUserData_Flag_Activate )
+      if(isFlagSet(msg->Flags, MUIV_NListtree_FindUserData_Flag_Activate))
         nnset( obj, MUIA_NListtree_Active, tn );
   }
   else
   {
     if((tn = FindTreeNodeByUserData(data, ln, msg->User, msg->Flags)))
-      if ( msg->Flags & MUIV_NListtree_FindUserData_Flag_Activate )
+      if(isFlagSet(msg->Flags, MUIV_NListtree_FindUserData_Flag_Activate))
         nnset( obj, MUIA_NListtree_Active, tn );
   }
 
@@ -9065,13 +9008,13 @@ IPTR _NListtree_GetEntry(struct IClass *cl, Object *obj, struct MUIP_NListtree_G
   {
     case MUIV_NListtree_GetEntry_Position_Head:
 
-      if ( ln->ln_Flags & TNF_LIST )
+      if(isFlagSet(ln->ln_Flags, TNF_LIST))
         tn = CTN( GetHead( (struct List *)&ln->ln_List ) );
       break;
 
     case MUIV_NListtree_GetEntry_Position_Tail:
 
-      if ( ln->ln_Flags & TNF_LIST )
+      if(isFlagSet(ln->ln_Flags, TNF_LIST))
         tn = CTN( GetTail( (struct List *)&ln->ln_List ) );
       break;
 
@@ -9209,29 +9152,29 @@ IPTR _NListtree_GetNr(struct IClass *cl, Object *obj, struct MUIP_NListtree_GetN
 
   ln = CLN( GetParent( tn ) );
 
-  if ( msg->Flags & MUIV_NListtree_GetNr_Flag_ListEmpty )
+  if(isFlagSet(msg->Flags, MUIV_NListtree_GetNr_Flag_ListEmpty))
   {
-    if ( tn->tn_Flags & TNF_LIST )
+    if(isFlagSet(tn->tn_Flags, TNF_LIST))
       ret = IsListEmpty( ((struct List *)&CLN(tn)->ln_List) );
   }
 
-  else if ( msg->Flags & MUIV_NListtree_GetNr_Flag_CountList )
+  else if(isFlagSet(msg->Flags, MUIV_NListtree_GetNr_Flag_CountList))
   {
-    if ( tn->tn_Flags & TNF_LIST )
+    if(isFlagSet(tn->tn_Flags, TNF_LIST))
       ret = CLN(tn)->ln_Table.tb_Entries;
   }
 
-  else if ( ln && (msg->Flags & MUIV_NListtree_GetNr_Flag_CountLevel) )
+  else if(ln && isFlagSet(msg->Flags, MUIV_NListtree_GetNr_Flag_CountLevel))
   {
     ret = ln->ln_Table.tb_Entries;
   }
 
-  else if ( msg->Flags & MUIV_NListtree_GetNr_Flag_CountAll )
+  else if(isFlagSet(msg->Flags, MUIV_NListtree_GetNr_Flag_CountAll))
   {
     ret = data->NumEntries;
   }
 
-  else if ( msg->Flags & MUIV_NListtree_GetNr_Flag_Visible )
+  else if(isFlagSet(msg->Flags, MUIV_NListtree_GetNr_Flag_Visible))
   {
     ret = (IPTR)GetVisualPos( data, tn );
   }
@@ -9336,7 +9279,7 @@ IPTR _NListtree_Sort(struct IClass *cl, Object *obj, struct MUIP_NListtree_Sort 
 
       if ( data->ActiveNode )
       {
-        if ( data->ActiveNode->tn_Flags & TNF_LIST )
+        if(isFlagSet(data->ActiveNode->tn_Flags, TNF_LIST))
           ln = CLN( data->ActiveNode );
       }
       break;
@@ -9539,20 +9482,21 @@ IPTR _NListtree_Redraw(struct IClass *cl, Object *obj, struct MUIP_NListtree_Red
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
 
-  //D(bug( "TreeNode: 0x%08lx (pos: %ld), Flags: 0x%08lx (%s)\n", msg->TreeNode, GetVisualPos( data, msg->TreeNode ), msg->Flags, ( msg->Flags & MUIV_NListtree_Redraw_Flag_Nr ) ? "NR" : "" ) );
+  D(DBF_DRAW, "redraw treenode %08lx flags %08lx", msg->TreeNode, msg->Flags);
 
-  if(((IPTR)msg->TreeNode != (IPTR)MUIV_NListtree_Redraw_Active) && ((IPTR)msg->TreeNode != (IPTR)MUIV_NListtree_Redraw_All) && !(msg->Flags & MUIV_NListtree_Redraw_Flag_Nr))
+  if(((IPTR)msg->TreeNode != (IPTR)MUIV_NListtree_Redraw_Active) && ((IPTR)msg->TreeNode != (IPTR)MUIV_NListtree_Redraw_All) && isFlagClear(msg->Flags, MUIV_NListtree_Redraw_Flag_Nr))
   {
-    LONG pos;
+    LONG pos = GetVisualPos(data, msg->TreeNode);
 
+    D(DBF_DRAW, "treenode %08lx has visual position %ld", msg->TreeNode, pos);
     // redraw the given node only if it is visible
-    if((pos = GetVisualPos(data, msg->TreeNode)) != -1)
+    if(pos != -1)
       DoMethod(obj, MUIM_NList_Redraw, pos);
   }
   else
   {
     D(DBF_DRAW, "EXTERNAL REDRAW REQUESTED!");
-    DoMethod( obj, MUIM_NList_Redraw, (IPTR)msg->TreeNode );
+    DoMethod(obj, MUIM_NList_Redraw, (IPTR)msg->TreeNode);
   }
 
   return(0);
@@ -9656,7 +9600,7 @@ IPTR _NListtree_Select(struct IClass *cl, Object *obj, struct MUIP_NListtree_Sel
 
   ENTER();
 
-  data->Flags |= NLTF_SELECT_METHOD;
+  SET_FLAG(data->Flags, NLTF_SELECT_METHOD);
 
   /*
   **  Handle special events.
@@ -9703,7 +9647,7 @@ IPTR _NListtree_Select(struct IClass *cl, Object *obj, struct MUIP_NListtree_Sel
     *msg->State = state;
   }
 
-  data->Flags &= ~NLTF_SELECT_METHOD;
+  CLEAR_FLAG(data->Flags, NLTF_SELECT_METHOD);
 
   RETURN(state);
   return( (IPTR)state );
@@ -10429,7 +10373,7 @@ IPTR _NListtree_SelectChange(struct IClass *cl, Object *obj, struct MUIP_NList_S
   struct MUI_NListtree_TreeNode *tn;
 
   D(DBF_LISTTREE, "NList selection change: Entry %ld changed to %ld%s", msg->pos, msg->state,
-    ( msg->flags & MUIV_NList_SelectChange_Flag_Multi ) ? " while holding down mouse button" : "");
+    isFlagSet(msg->flags, MUIV_NList_SelectChange_Flag_Multi) ? " while holding down mouse button" : "");
 
   if (data->IgnoreSelectionChange)
   {
@@ -10468,7 +10412,7 @@ IPTR _NListtree_SelectChange(struct IClass *cl, Object *obj, struct MUIP_NList_S
     if ( NLFindInTable( &data->SelectedTable, tn ) == -1 )
     {
       TreeNodeSelectAdd( data, tn );
-      tn->tn_Flags |= TNF_SELECTED;
+      SET_FLAG(tn->tn_Flags, TNF_SELECTED);
 
       MakeNotify( data, MUIA_NListtree_SelectChange, (APTR)TRUE );
     }
@@ -10479,7 +10423,7 @@ IPTR _NListtree_SelectChange(struct IClass *cl, Object *obj, struct MUIP_NList_S
     if ( NLFindInTable( &data->SelectedTable, tn ) != -1 )
     {
       TreeNodeSelectRemove( data, tn );
-      tn->tn_Flags &= ~TNF_SELECTED;
+      CLEAR_FLAG(tn->tn_Flags, TNF_SELECTED);
 
       MakeNotify( data, MUIA_NListtree_SelectChange, (APTR)TRUE );
     }
