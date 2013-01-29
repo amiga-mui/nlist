@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-01-29 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: pay attention to the possibly unsafe killing of
+    MUI notifies by doing an artificial OM_SET right after the kill to ensure
+    that Notify.mui has removed the killed notifies before another nested OM_SET
+    might happen.
+
 2013-01-28 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: replaced all handcrafted flag checks and flag

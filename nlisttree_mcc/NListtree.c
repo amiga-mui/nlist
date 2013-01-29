@@ -149,7 +149,6 @@ LONG __stack = 16384;
 **  Small helpful macros...
 */
 #define DIFF(a,b)       (MAX((a),(b))-MIN((a),(b)))
-#define LIBVER(lib)     ((struct Library *)(lib))->lib_Version
 #define CLN(x)          ((struct MUI_NListtree_ListNode *)(x))
 #define CTN(x)          ((struct MUI_NListtree_TreeNode *)(x))
 
@@ -907,11 +906,11 @@ INLINE VOID ActivateNotify( struct NListtree_Data *data )
   D(DBF_NOTIFY, "Activenotify: %lx",data);
   if(isFlagClear(data->Flags, NLTF_ACTIVENOTIFY))
   {
-    DoMethod( data->Obj, MUIM_Notify, MUIA_NList_Active, MUIV_EveryTime,
-      data->Obj, 2, MUIM_NListtree_GetListActive, 0 );
+    DoMethod(data->Obj, MUIM_Notify, MUIA_NList_Active, MUIV_EveryTime,
+      data->Obj, 2, MUIM_NListtree_GetListActive, 0);
 
-    DoMethod( data->Obj, MUIM_Notify, MUIA_NList_DoubleClick, MUIV_EveryTime,
-      data->Obj, 2, MUIM_NListtree_GetDoubleClick, MUIV_TriggerValue );
+    DoMethod(data->Obj, MUIM_Notify, MUIA_NList_DoubleClick, MUIV_EveryTime,
+      data->Obj, 2, MUIM_NListtree_GetDoubleClick, MUIV_TriggerValue);
 
     SET_FLAG(data->Flags, NLTF_ACTIVENOTIFY);
   }
@@ -926,14 +925,21 @@ INLINE VOID DeactivateNotify( struct NListtree_Data *data )
   D(DBF_NOTIFY, "Deactivenotify: %lx",data);
   if(isFlagSet(data->Flags, NLTF_ACTIVENOTIFY))
   {
-    /*
-    DoMethod( data->Obj, MUIM_KillNotify, MUIA_NList_Active );
-    DoMethod( data->Obj, MUIM_KillNotify, MUIA_NList_DoubleClick );
-    CLEAR_FLAG(data->Flags, NLTF_ACTIVENOTIFY);
-    */
+    DoMethod(data->Obj, MUIM_KillNotifyObj, MUIA_NList_DoubleClick, data->Obj);
+    DoMethod(data->Obj, MUIM_KillNotifyObj, MUIA_NList_Active, data->Obj);
 
-    DoMethod( data->Obj, MUIM_KillNotifyObj, MUIA_NList_DoubleClick, data->Obj );
-    DoMethod( data->Obj, MUIM_KillNotifyObj, MUIA_NList_Active, data->Obj );
+    if(isFlagClear(data->Flags, NLTF_SAFE_NOTIFIES))
+    {
+	  // removing MUI notifies must be considered unsafe
+	  // The solution is to trigger an artifical notification to let
+	  // the object's superclass Notify.mui finally remove the killed
+	  // notifies from above before
+	  // NOTE: MUIA_NList_ListCompatibility is considered obsolete and
+	  // currently obeyed during OM_NEW only. Hence it is safe to use
+	  // this attribute for the trigger.
+	  set(data->Obj, MUIA_NList_ListCompatibility, 0);
+	}
+
     CLEAR_FLAG(data->Flags, NLTF_ACTIVENOTIFY);
   }
 }
@@ -5217,14 +5223,34 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
         SET_FLAG(data->RootList.ln_IFlags, TNIF_VISIBLE);
         SET_FLAG(data->RootList.ln_IFlags, TNIF_ROOT);
 
-        /*
-        **  Initialize Selected-Table.
-        */
+        // Initialize Selected-Table.
         data->SelectedTable.tb_Current = -2;
 
-        /*
-        **  Setup spacial image class and tree image.
-        */
+        // check if removing MUI notifies is safe
+        #if defined(__amigaos3__) || defined(__amigaos4__)
+        if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 5824))
+        {
+          // MUI4 for AmigaOS is safe for V20.5824+
+          SET_FLAG(data->Flags, NLTF_SAFE_NOTIFIES);
+        }
+        else if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 2346) && LIBREV(MUIMasterBase) < 5000)
+        {
+          // MUI3.9 for AmigaOS is safe for V20.2346+
+          SET_FLAG(data->Flags, NLTF_SAFE_NOTIFIES);
+        }
+        else
+        {
+          // MUI 3.8 and older version of MUI 3.9 or MUI4 are definitely unsafe
+          CLEAR_FLAG(data->Flags, NLTF_SAFE_NOTIFIES);
+        }
+        #else
+        // MorphOS and AROS must be considered unsafe unless someone from the
+        // MorphOS/AROS team confirms that removing notifies in nested OM_SET
+        // calls is safe.
+        CLEAR_FLAG(data->Flags, NLTF_SAFE_NOTIFIES);
+        #endif
+
+        // Setup spacial image class and tree image.
         if((data->CL_TreeImage = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Area, NULL, sizeof(struct TreeImage_Data ), ENTRY(TreeImage_Dispatcher))))
         {
           if((data->CL_NodeImage = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Image, NULL, sizeof(struct TreeImage_Data), ENTRY(NodeImage_Dispatcher))))

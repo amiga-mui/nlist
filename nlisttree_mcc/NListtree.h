@@ -225,6 +225,7 @@ struct NListtree_Data
 #define NLTF_NO_ROOT_TREE                 (1UL<<20)   // ***  Do not display root tree gfx.
 #define NLTF_SETACTIVE                    (1UL<<21)   // ***  Set the active entry.
 #define NLTF_AUTOSELECT_CHILDS            (1UL<<22)   // ***  Automatically select childs if their parents selected.
+#define NLTF_SAFE_NOTIFIES                (1UL<<23)   // ***  Is removing MUI notifies safe?
 
 #define NLTF_QUALIFIER_LCOMMAND           (1UL<<28)   // ***  Rawkey qualifier information.
 #define NLTF_QUALIFIER_LALT               (1UL<<29)
