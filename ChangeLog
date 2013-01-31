@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-01-31 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.c: made the return value of MUIM_NList_GetPos consistent
+    by be TRUE if and only if the given entry could be found in the list. For all
+    other cases the position will be set to MUIV_NList_GetPos_End and FALSE will
+    be returned.
+
 2013-01-29 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: pay attention to the possibly unsafe killing of

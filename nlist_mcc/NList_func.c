@@ -2142,41 +2142,38 @@ static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos)
 
   ENTER();
 
-  if(entry == NULL)
+  if(entry != NULL)
   {
-    *pos = MUIV_NList_GetPos_End;
-    result = FALSE;
-  }
-  else if((IPTR)entry == (IPTR)-2)
-  {
-    if(data->NList_LastInserted == -1)
-      *pos = (data->NList_Entries - 1);
-    else
-      *pos = data->NList_LastInserted;
-
-    result = TRUE;
-  }
-  else
-  {
-    LONG ent = *pos + 1;
-
-    while(ent < data->NList_Entries)
+    if((IPTR)entry == (IPTR)-2)
     {
-      if(data->EntriesArray[ent]->Entry == entry)
-      {
-        *pos = ent;
+      if(data->NList_LastInserted == -1)
+        *pos = (data->NList_Entries - 1);
+      else
+        *pos = data->NList_LastInserted;
 
-        result = TRUE;
-        break;
-      }
-      ent++;
-    }
-
-    if(result == FALSE)
-    {
-      *pos = MUIV_NList_GetPos_End;
       result = TRUE;
     }
+    else
+    {
+      LONG ent = *pos + 1;
+
+      while(ent < data->NList_Entries)
+      {
+        if(data->EntriesArray[ent]->Entry == entry)
+        {
+          *pos = ent;
+
+          result = TRUE;
+          break;
+        }
+        ent++;
+      }
+    }
+  }
+
+  if(result == FALSE)
+  {
+    *pos = MUIV_NList_GetPos_End;
   }
 
   RETURN(result);
