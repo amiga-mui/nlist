@@ -5,7 +5,7 @@
                                             and 0x9d510101 to 0x9d51013F)
 
  Copyright (C) 1996-2001 by Gilles Masson
- Copyright (C) 2001-2007 by NList Open Source Team
+ Copyright (C) 2001-2013 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -241,7 +241,7 @@ static const char *MainTextArray[] =
   "All releases are available on",
   "http://www.sourceforge.net/projects/nlist-classes/",
   "\033C",
-  "\033r\0333(C) 2001-2007 by NList Open Source Team",
+  "\033r\0333(C) 2001-2013 by NList Open Source Team",
   "\033r\0333(C) 1996-1998 by Gilles Masson",
   "\033r\0333http://www.sourceforge.net/projects/nlist-classes/",
   "\033C",
