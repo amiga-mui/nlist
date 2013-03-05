@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-03-05 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func2.c: fixed MUIM_NList_SetActive when used with a flags
+    value of MUIV_NList_SetActive_Entry. Before the search for the given entry
+    was always failing.
+
 2013-01-31 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func.c: made the return value of MUIM_NList_GetPos consistent

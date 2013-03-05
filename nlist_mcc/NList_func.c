@@ -1681,7 +1681,10 @@ IPTR mNL_List_SetActive(struct IClass *cl, Object *obj, struct MUIP_NList_SetAct
   // check if the user used msg->pos for specifying the entry position (integer)
   // or by using the entry address
   if(isFlagSet(msg->flags, MUIV_NList_SetActive_Entry))
+  {
+    pos = MUIV_NList_GetPos_Start;
     NL_List_GetPos(data, (APTR)msg->pos, &pos);
+  }
 
   result = NL_List_Active(data, pos, NULL, data->NList_List_Select, FALSE, msg->flags);
   if(result == TRUE)
