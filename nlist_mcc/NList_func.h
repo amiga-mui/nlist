@@ -93,11 +93,6 @@
 #define do_notifies(which)        NL_DoNotifies(data,(which))
 
 
-#define notify_Active             NL_DoNotifies(data,NTF_Active)
-#define notify_Select             NL_DoNotifies(data,(NTF_Select | NTF_LV_Select))
-#define do_notify_Select          NL_DoNotifies(data,(NTF_Select | NTF_LV_Select))
-
-
 #define SELECT(ent,sel)           NL_Select(data,0,(ent),(sel))
 #define SELECT2(ent,sel)          NL_Select(data,1,(ent),(sel))
 #define SELECT_CHGE(ent,sel)      NL_Select(data,2,(ent),(sel))
