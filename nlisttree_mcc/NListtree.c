@@ -679,7 +679,7 @@ DISPATCHER(NodeImage_Dispatcher)
 \*****************************************************************************/
 
 /* MorphOS, OS4 and AROS support Alloc/FreeVecPooled internally */
-#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__) /* MorphOS and OS4 support Alloc/FreeVecPooled internally */
+#if defined(__amigaos3__)
 
 #ifdef MYDEBUG
 ULONG totalmem = 0;
@@ -5947,8 +5947,8 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
     }
   }
 
-  #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
-  // with MUI 3.8 the superclass get this method, hence we must forward it ourself.
+  #if defined(__amigaos3__)
+  // with MUI 3.8 the superclass does not get this method, hence we must forward it ourself.
   if(ret != MUI_EventHandlerRC_Eat && MUIMasterBase != NULL && MUIMasterBase->lib_Version <= 19)
     ret = DoSuperMethodA(cl, obj, (Msg)msg);
   #endif
