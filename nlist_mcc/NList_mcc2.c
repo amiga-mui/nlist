@@ -437,7 +437,6 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           }
         }
         mNL_Trigger(cl,obj,NULL);
-        return (MUI_EventHandlerRC_Eat);
       break;
 
       case IDCMP_RAWKEY:

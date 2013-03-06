@@ -12,6 +12,9 @@ $URL$
   * nlist_mcc/NList_mcc0.c: abort any actions caused by a pressed left mouse
     button whenever the object receives the MUIM_GoInactive method. This fixes
     the issue described in YAM ticket #391: http://yam.ch/ticket/391
+  * nlist_mcc/NList_mcc2.c: don't "eat" IDCMP_(IN)ACTIVEWINDOW messages as other
+    objects might be interested in these as well. Having multiple NList objects
+    in one window should allow each of these to react on these IDCMP messages.
 
 2013-03-05 Thore Böckelmann <tboeckel@gmx.de>
 
