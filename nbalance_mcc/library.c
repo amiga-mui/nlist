@@ -24,12 +24,24 @@
 #include <proto/intuition.h>
 #include <proto/layers.h>
 
-/* local includes */
+/******************************************************************************/
+/*                                                                            */
+/* MCC/MCP name and version                                                   */
+/*                                                                            */
+/* ATTENTION:  The FIRST LETTER of NAME MUST be UPPERCASE                     */
+/*                                                                            */
+/******************************************************************************/
+
 #include "Debug.h"
 #include "private.h"
 #include "version.h"
 
-/* mcc initialisation */
+/******************************************************************************/
+/* include the minimal startup code to be able to start the class from a      */
+/* shell without crashing the system                                          */
+/******************************************************************************/
+#include "shellstart.c"
+
 #define VERSION       LIB_VERSION
 #define REVISION      LIB_REVISION
 

@@ -1,7 +1,7 @@
 /*******************************************************************************
 
         Name:           mccinit.c
-        Versionstring:  $VER: mccinit.c 1.25 (20.12.2010)
+        Versionstring:  $VER: mccinit.c 1.24 (05.10.2010)
         Author:         Jens Langner <Jens.Langner@light-speed.de>
         Distribution:   PD (public domain)
         Description:    library init file for easy generation of a MUI
@@ -67,7 +67,6 @@
                      to be in A6. We work around this by using an additional
                      function which gets called from LibClose() and LibExpunge()
                      with the correct base pointer.
-  1.25  20.12.2010 : minimum required system version is now OS3.0 (V39).
 
  About:
 
@@ -190,6 +189,7 @@
 
 #ifdef __AROS__
 #include <aros/libcall.h>
+#include <utility/utility.h>
 #endif
 
 #include "SDI_compiler.h"
@@ -227,6 +227,8 @@ struct IntuitionBase  *IntuitionBase = NULL;
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/******************************************************************************/
 
 // we place a stack cookie in the binary so that
 // newer OS version can directly take the specified
@@ -366,36 +368,8 @@ STATIC IPTR                   LIBFUNC MCC_Query  (REG(d0, LONG which));
 #endif
 
 /******************************************************************************/
-/* Dummy entry point and LibNull() function all in one                        */
+/* Dummy LibNull() function                                                   */
 /******************************************************************************/
-
-/*
- * The system (and compiler) rely on a symbol named _start which marks
- * the beginning of execution of an ELF file. To prevent others from
- * executing this library, and to keep the compiler/linker happy, we
- * define an empty _start symbol here.
- *
- * On the classic system (pre-AmigaOS4) this was usually done by
- * moveq #0,d0
- * rts
- *
- */
-
-#if defined(__amigaos4__) && !defined(__AROS__) && !defined(__MORPHOS__)
-#if !defined(__mc68000__)
-int32 _start(void)
-{
-  return RETURN_FAIL;
-}
-#else
-asm(".text                    \n\
-     .even                    \n\
-     .globl _start            \n\
-   _start:                    \n\
-     moveq #0,d0              \n\
-     rts");
-#endif
-#endif
 
 #if !defined(__amigaos4__)
 STATIC LONG LIBFUNC LibNull(VOID)
@@ -599,29 +573,7 @@ const USED_VAR ULONG __abox__ = 1;
 
 /* generic StackSwap() function which calls function() surrounded by
    StackSwap() calls */
-#if defined(__AROS__)
-ULONG stackswap_call(struct StackSwapStruct *stack,
-                             ULONG (*function)(struct LibraryHeader *),
-                             struct LibraryHeader *arg)
-{
-   struct StackSwapArgs swapargs;
-
-   swapargs.Args[0] = (IPTR)arg;
-
-   return NewStackSwap(stack, function, &swapargs);
-}
-#elif defined(__MORPHOS__)
-ULONG stackswap_call(struct StackSwapStruct *stack,
-                     ULONG (*function)(struct LibraryHeader *),
-                     struct LibraryHeader *arg)
-{
-   struct PPCStackSwapArgs swapargs;
-
-   swapargs.Args[0] = (ULONG)arg;
-
-   return NewPPCStackSwap(stack, function, &swapargs);
-}
-#elif defined(__mc68000__)
+#if (defined(__mc68000__) && !defined(__AROS__))
 ULONG stackswap_call(struct StackSwapStruct *stack,
                      ULONG (*function)(struct LibraryHeader *),
                      struct LibraryHeader *arg);
@@ -647,6 +599,28 @@ asm(".text                    \n\
       movel d2,d0             \n\
       moveml sp@+,#0x440c     \n\
       rts");
+#elif defined(__MORPHOS__)
+ULONG stackswap_call(struct StackSwapStruct *stack,
+                     ULONG (*function)(struct LibraryHeader *),
+                     struct LibraryHeader *arg)
+{
+   struct PPCStackSwapArgs swapargs;
+
+   swapargs.Args[0] = (ULONG)arg;
+
+   return NewPPCStackSwap(stack, function, &swapargs);
+}
+#elif defined(__AROS__)
+ULONG stackswap_call(struct StackSwapStruct *stack,
+                             ULONG (*function)(struct LibraryHeader *),
+                             struct LibraryHeader *arg)
+{
+   struct StackSwapArgs swapargs;
+
+   swapargs.Args[0] = (IPTR)arg;
+
+   return NewStackSwap(stack, function, &swapargs);
+}
 #else
 #error Bogus operating system
 #endif
@@ -716,19 +690,19 @@ STATIC ULONG mccLibInit(struct LibraryHeader *base)
   // now that this library/class is going to be initialized for the first time
   // we go and open all necessary libraries on our own
   #if defined(__amigaos4__)
-  if((DOSBase = OpenLibrary("dos.library", 39)) &&
+  if((DOSBase = OpenLibrary("dos.library", 36)) &&
      GETINTERFACE(IDOS, struct DOSIFace *, DOSBase))
-  if((GfxBase = OpenLibrary("graphics.library", 39)) &&
+  if((GfxBase = OpenLibrary("graphics.library", 36)) &&
      GETINTERFACE(IGraphics, struct GraphicsIFace *, GfxBase))
-  if((IntuitionBase = OpenLibrary("intuition.library", 39)) &&
+  if((IntuitionBase = OpenLibrary("intuition.library", 36)) &&
      GETINTERFACE(IIntuition, struct IntuitionIFace *, IntuitionBase))
-  if((UtilityBase = OpenLibrary("utility.library", 39)) &&
+  if((UtilityBase = OpenLibrary("utility.library", 36)) &&
      GETINTERFACE(IUtility, struct UtilityIFace *, UtilityBase))
   #else
-  if((DOSBase = (struct DosLibrary*)OpenLibrary("dos.library", 39)) &&
-     (GfxBase = (struct GfxBase*)OpenLibrary("graphics.library", 39)) &&
-     (IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 39)) &&
-     (UtilityBase = (APTR)OpenLibrary("utility.library", 39)))
+  if((DOSBase = (struct DosLibrary*)OpenLibrary("dos.library", 36)) &&
+     (GfxBase = (struct GfxBase*)OpenLibrary("graphics.library", 36)) &&
+     (IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 36)) &&
+     (UtilityBase = (APTR)OpenLibrary("utility.library", 36)))
   #endif
   {
     // we have to please the internal utilitybase

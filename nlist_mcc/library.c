@@ -44,6 +44,12 @@
 #include "version.h"
 #include "NList_grp.h"
 
+/******************************************************************************/
+/* include the minimal startup code to be able to start the class from a      */
+/* shell without crashing the system                                          */
+/******************************************************************************/
+#include "shellstart.c"
+
 #define VERSION             LIB_VERSION
 #define REVISION            LIB_REVISION
 
