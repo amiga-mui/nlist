@@ -1884,19 +1884,10 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                 }
               }
             }
-            #if 0
-            // Is this call really required???
-            // It causes YAM/NList to misbehave when clicking a window's close button and that button
-            // is currently located above the NList object and the window has been opened with a double
-            // in the NList before (i.e. open YAM's folder settings with a double click). In this case
-            // NList will change the active entry because it thinks that the mouse was moved with a
-            // pressed left button.
-            // Well's have to see if commenting out this line causes any new misbehaviour.
             if (msg->imsg->Class == IDCMP_INTUITICKS)
             {
               NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
-            #endif
             if (data->drag_type != MUIV_NList_DragType_None)
             {
               if (DragQual)
