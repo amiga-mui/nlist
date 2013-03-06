@@ -760,6 +760,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               (MultQual || (data->multiselect == MUIV_NList_MultiSelect_Always)))
             multi = 1;
           data->selectskiped = FALSE;
+
           // Using _isinobject2() here would also recognize clicks on the list's border
           // as clicks inside the list. But clicking on the border above the list's title
           // being interpreted like a click the first entry is not very intuitive. Thus

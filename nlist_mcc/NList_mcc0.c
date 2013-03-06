@@ -574,6 +574,9 @@ static IPTR mNL_GoInactive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NL
   ENTER();
 
   data->isActiveObject = FALSE;
+  // inactive list will no longer handle any actions
+  // caused by a pressed mouse button
+  data->moves = FALSE;
 
   if(data->NList_ActiveObjectOnClick == TRUE)
     DoMethod(obj, MUIM_NList_Redraw, MUIV_NList_Redraw_Selected);

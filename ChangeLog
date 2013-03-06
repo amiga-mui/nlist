@@ -9,6 +9,9 @@ $URL$
 
   * include/mccinit.c, include/shellstart.c: rearranged the code to ensure that
     trying to start the final class from a shell does not crash.
+  * nlist_mcc/NList_mcc0.c: abort any actions caused by a pressed left mouse
+    button whenever the object receives the MUIM_GoInactive method. This fixes
+    the issue described in YAM ticket #391: http://yam.ch/ticket/391
 
 2013-03-05 Thore Böckelmann <tboeckel@gmx.de>
 
