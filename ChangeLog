@@ -9,6 +9,11 @@ $URL$
 
   * include/mccinit.c, include/shellstart.c: rearranged the code to ensure that
     trying to start the final class from a shell does not crash.
+  * nlist_mcc/NList_mcc2.c: commented out an obscure IDCMP signal request for
+    IDCMP_MOUSEMOVE which causes NList to handle mouse movements right after the
+    window becomes active again and hence changing the active entry without a
+    click by the user. For example YAM suffers from this problem. Refer to ticket
+    #391 in YAM's bug tracker for details: https://yam.ch/ticket/391
 
 2013-03-05 Thore Böckelmann <tboeckel@gmx.de>
 
