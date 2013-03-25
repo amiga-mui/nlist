@@ -8,6 +8,8 @@ $URL$
 2013-03-25 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc6.c: added a missing NULL pointer check for an allocation.
+  * nlist_mcc/NList_mcc6.c: fixed two possible buffer underruns in case even the
+    replacement sequence "..." was too long.
 
 2013-03-06 Thore Böckelmann <tboeckel@gmx.de>
 

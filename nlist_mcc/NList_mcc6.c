@@ -1403,7 +1403,7 @@ D(bug( "<====================================\n" ));
               if(clen >= te.te_Width)
               {
                 char *txt;
-                int cstart = 0;
+                int cstart;
 
                 D(DBF_DRAW, "c1: %ld, c2: %ld x2: %ld x2e: %ld cmaxx: %ld minx3: %ld x2diff: %ld | %ld'%s'", cinfo->maxx-cinfo->minx, cmaxx-(x2-x2diff), x2, x2e, cmaxx, minx3, x2diff, next_x, afinfo->strptr);
 
@@ -1417,24 +1417,27 @@ D(bug( "<====================================\n" ));
                 {
                   if(cinfo->partcolsubst == PCS_LEFT)
                   {
-                    snprintf(txt, afinfo->len+3+1, "...%s", afinfo->strptr);
+                    snprintf(txt, txtlen+3+1, "...%s", afinfo->strptr);
+                    cstart = 0;
                   }
                   else if(cinfo->partcolsubst == PCS_RIGHT)
                   {
-                    snprintf(txt, afinfo->len+3+1, "%s...", afinfo->strptr);
+                    strlcpy(txt, afinfo->strptr, txtlen+1);
+                    strlcat(txt, "...", txtlen+3+1);
+                    cstart = txtlen;
                   }
                   else if(cinfo->partcolsubst == PCS_CENTER)
                   {
                     strlcpy(txt, afinfo->strptr, txtlen/2);
                     strlcat(txt, "...", txtlen/2+3);
                     strlcat(txt, &afinfo->strptr[txtlen/2], txtlen+3+1);
-
-                    cstart = txtlen/2-1;
+                    cstart = txtlen/2;
                   }
                   else
                   {
                     // make sure we have a NUL terminated string in any case
-                    txt[0] = '\0'; 
+                    txt[0] = '\0';
+                    cstart = 0;
                   }
 
                   // get the new string length
@@ -1458,7 +1461,9 @@ D(bug( "<====================================\n" ));
                     {
                       // move the "..." text one char to the left
                       txt[txtlen-1] = '\0';
-                      txt[txtlen-4] = '.';
+                      // make sure we don't cause a buffer underrun
+                      if(txtlen > 4)
+                        txt[txtlen-4] = '.';
                     }
                     else if(cinfo->partcolsubst == PCS_CENTER)
                     {
@@ -1468,9 +1473,13 @@ D(bug( "<====================================\n" ));
                       if(txtlen % 2 == 0)
                       {
                         // move all text starting AT "..." one char to the left
-                        D(DBF_DRAW, "cstart: '%s'", &txt[cstart]);
-                        memmove(&txt[cstart-1], &txt[cstart], strlen(&txt[cstart])+1);
-                        cstart--;
+                        // make sure we don't cause a buffer underrun
+                        if(cstart > 0)
+                        {
+                          D(DBF_DRAW, "cstart: '%s'", &txt[cstart]);
+                          memmove(&txt[cstart-1], &txt[cstart], strlen(&txt[cstart])+1);
+                          cstart--;
+                        }
                       }
                       else
                       {
