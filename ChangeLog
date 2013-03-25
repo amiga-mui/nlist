@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-03-25 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc6.c: added a missing NULL pointer check for an allocation.
+
 2013-03-06 Thore Böckelmann <tboeckel@gmx.de>
 
   * include/mccinit.c, include/shellstart.c: rearranged the code to ensure that
