@@ -10,6 +10,10 @@ $URL$
   * nlist_mcc/NList_mcc6.c: added a missing NULL pointer check for an allocation.
   * nlist_mcc/NList_mcc6.c: fixed two possible buffer underruns in case even the
     replacement sequence "..." was too long.
+  * nlistview_mcc/NListview.c: remove all added notifications when removing one
+    of the scrollbars. Otherwise the notification list will constantly grow upon
+    each readding and removing of a scrollbar object and therefore will make
+    notifications slower and slower.
 
 2013-03-06 Thore Böckelmann <tboeckel@gmx.de>
 

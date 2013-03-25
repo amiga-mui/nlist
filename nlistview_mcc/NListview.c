@@ -165,16 +165,12 @@ static void RemoveVerticalScroller(Object *obj, struct NLVData *data)
   {
     D(DBF_STARTUP, "removing vertical scrollbar");
 
-/*
     // remove notifications
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_Entries,    data->PR_Vert);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_Visible,    data->PR_Vert);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Prop_First,      data->PR_Vert);
-*/
     DoMethod(data->PR_Vert,  MUIM_KillNotifyObj, MUIA_Prop_First,            data->LI_NList);
-/*
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_VertDeltaFactor, data->PR_Vert);
-*/
 
     DoMethod(obj, OM_REMMEMBER, data->PR_Vert);
 
@@ -219,16 +215,12 @@ static void RemoveHorizontalScroller(Object *obj, struct NLVData *data)
   {
     D(DBF_STARTUP, "removing horizontal scrollbar");
 
-/*
     // remove notifications
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_Entries,    data->PR_Horiz);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_Visible,    data->PR_Horiz);
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_Horiz_First,      data->PR_Horiz);
-*/
     DoMethod(data->PR_Horiz, MUIM_KillNotifyObj, MUIA_Prop_First,             data->LI_NList);
-/*
     DoMethod(data->LI_NList, MUIM_KillNotifyObj, MUIA_NList_HorizDeltaFactor, data->PR_Horiz);
-*/
 
     DoMethod(obj, OM_REMMEMBER, data->PR_Horiz);
 
