@@ -1424,14 +1424,14 @@ D(bug( "<====================================\n" ));
                   {
                     strlcpy(txt, afinfo->strptr, txtlen+1);
                     strlcat(txt, "...", txtlen+3+1);
-                    cstart = txtlen;
+                    cstart = txtlen-1;
                   }
                   else if(cinfo->partcolsubst == PCS_CENTER)
                   {
                     strlcpy(txt, afinfo->strptr, txtlen/2);
                     strlcat(txt, "...", txtlen/2+3);
                     strlcat(txt, &afinfo->strptr[txtlen/2], txtlen+3+1);
-                    cstart = txtlen/2;
+                    cstart = txtlen/2-1;
                   }
                   else
                   {
