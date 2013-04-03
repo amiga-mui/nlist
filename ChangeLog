@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-04-03 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: (re)adding the vertical scrollbar will trigger
+    the just installed notifications immediately. This solves the problem that
+    the scrollbar would have the wrong dimension in case the list's number of
+    total and visible entries has changed in the meantime (i.e. when switching
+    folders in YAM).
+
 2013-03-25 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc6.c: added a missing NULL pointer check for an allocation.

@@ -138,6 +138,11 @@ static void AddVerticalScroller(Object *obj, struct NLVData *data)
 
   if(data->Vert_Attached == FALSE)
   {
+    ULONG entries;
+    ULONG visible;
+    ULONG first;
+    ULONG deltaFactor;
+
     D(DBF_STARTUP, "adding vertical scrollbar");
 
     DoMethod(obj, OM_ADDMEMBER, data->PR_Vert);
@@ -148,6 +153,21 @@ static void AddVerticalScroller(Object *obj, struct NLVData *data)
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_Prop_First,      MUIV_EveryTime,  data->PR_Vert,  3, MUIM_NoNotifySet, MUIA_Prop_First, MUIV_TriggerValue);
     DoMethod(data->PR_Vert,  MUIM_Notify, MUIA_Prop_First,            MUIV_EveryTime,  data->LI_NList, 3, MUIM_NoNotifySet, MUIA_NList_Prop_First, MUIV_TriggerValue);
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NList_VertDeltaFactor, MUIV_EveryTime,  data->PR_Vert,  3, MUIM_NoNotifySet, MUIA_Prop_DeltaFactor, MUIV_TriggerValue);
+
+	// Get and set the attributes we just have installed the notifications for to
+	// immediately trigger them. Otherwise hiding and showing again the scrollbar
+	// while the number of entries changed in the meantime will result in wrong
+	// scrollbar dimensions (i.e. when switching folders in YAM).
+	entries     = xget(data->LI_NList, MUIA_NList_Prop_Entries);
+	visible     = xget(data->LI_NList, MUIA_NList_Prop_Visible);
+	first       = xget(data->LI_NList, MUIA_NList_Prop_First);
+	deltaFactor = xget(data->LI_NList, MUIA_NList_VertDeltaFactor);
+    SetAttrs(data->LI_NList,
+      MUIA_NList_Prop_Entries,    entries,
+      MUIA_NList_Prop_Visible,    visible,
+      MUIA_NList_Prop_First,      first,
+      MUIA_NList_VertDeltaFactor, deltaFactor,
+      TAG_DONE);
 
     data->Vert_Attached = TRUE;
 
