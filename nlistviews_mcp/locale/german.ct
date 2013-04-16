@@ -1,5 +1,5 @@
 ## chunk AUTH Thore Böckelmann
-## version $VER: NListviews_mcp.catalog 2.2 (13.4.2012)
+## version $VER: NListviews_mcp.catalog 2.3 (16.4.2013)
 ## language deutsch
 ## codeset 0
 ;
@@ -471,7 +471,7 @@ Cursor anstatt dem inaktiven bewegt.
 ; rather than the unselected one.
 ;
 MSG_GROUP_MISC
-Verschiedenens
+Verschiedenes
 ; Miscellaneous
 ;
 MSG_GROUP_EXAMPLE
