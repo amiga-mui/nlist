@@ -1335,11 +1335,11 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
                 MUIA_VertWeight, 10,
 
                 Child, VSpace(0),
+
                 Child, HGroup,
-
                   Child, HSpace(0),
-                  Child, VGroup,
 
+                  Child, VGroup,
                     Child, HGroup,
                       Child, data->mcp_SelectPointer = ImageObject,
                         ImageButtonFrame,
@@ -1356,10 +1356,12 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
                   End,
 
+                  Child, HSpace(0),
+
                   Child, HGroup,
                     Child, VGroup,
                       Child, VSpace(0),
-                        Child, RectangleObject,
+                      Child, RectangleObject,
                         MUIA_VertWeight,         0,
                         MUIA_Rectangle_HBar,     TRUE,
                         MUIA_Rectangle_BarTitle, tr(MSG_BAR_CONTEXTMENU),
@@ -1374,6 +1376,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
                   Child, HSpace(0),
                 End,
+
                 Child, VSpace(0),
               End,
 
