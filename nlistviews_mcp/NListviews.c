@@ -681,6 +681,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   struct NListviews_MCP_Data *data;
   APTR group1, group2, group3, group4, group5;
   char *exampleText;
+  BOOL mui39;
   BOOL safeNotifies;
 
   static const char infotext1[] = "\033bNListviews.mcp " LIB_REV_STRING "\033n (" LIB_DATE ")\n"
@@ -799,6 +800,8 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
     FreeVec(exampleText);
   }
 
+  mui39 = LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 0);
+
   group1 = GroupObject,
 
           Child, VGroup,
@@ -824,7 +827,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
             Child, Label(tr(MSG_NORMAL_FONT)),
             Child, data->mcp_Font = PopaslObject,
               MUIA_Popstring_String,  String2(0,80),
-              MUIA_Popstring_Button,  PopButton(MUII_PopUp),
+              MUIA_Popstring_Button,  PopButton(mui39 == TRUE ? MUII_PopFont : MUII_PopUp),
               MUIA_Popasl_Type,       ASL_FontRequest,
               MUIA_ShortHelp,         tr(MSG_NORMAL_FONT_HELP),
               ASLFO_TitleText,        tr(MSG_NORMAL_FONT_ASL),
@@ -833,7 +836,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
             Child, Label(tr(MSG_SMALL_FONT)),
             Child, data->mcp_Font_Little = PopaslObject,
               MUIA_Popstring_String,  String2(0,80),
-              MUIA_Popstring_Button,  PopButton(MUII_PopUp),
+              MUIA_Popstring_Button,  PopButton(mui39 == TRUE ? MUII_PopFont : MUII_PopUp),
               MUIA_Popasl_Type,       ASL_FontRequest,
               MUIA_ShortHelp,         tr(MSG_SMALL_FONT_HELP),
               ASLFO_TitleText,        tr(MSG_SMALL_FONT_ASL),
@@ -842,7 +845,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
             Child, Label(tr(MSG_FIXED_FONT)),
             Child, data->mcp_Font_Fixed = PopaslObject,
               MUIA_Popstring_String,  String2(0,80),
-              MUIA_Popstring_Button,  PopButton(MUII_PopUp),
+              MUIA_Popstring_Button,  PopButton(mui39 == TRUE ? MUII_PopFont : MUII_PopUp),
               MUIA_Popasl_Type,       ASL_FontRequest,
               MUIA_ShortHelp,         tr(MSG_FIXED_FONT_HELP),
               ASLFO_TitleText,        tr(MSG_FIXED_FONT_ASL),

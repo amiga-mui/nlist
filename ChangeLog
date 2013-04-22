@@ -5,6 +5,10 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-04-22 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistviews_mcp/NListviews.c: use the font popup button image for MUI 3.9+.
+
 2013-04-16 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/locale/german.ct: fixed a typo.
