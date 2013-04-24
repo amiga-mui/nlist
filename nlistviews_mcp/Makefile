@@ -215,6 +215,7 @@ TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
 CATALOGS = $(LOCALE)/czech.catalog \
            $(LOCALE)/french.catalog \
            $(LOCALE)/german.catalog \
+           $(LOCALE)/greek.catalog \
            $(LOCALE)/italian.catalog \
            $(LOCALE)/polish.catalog \
            $(LOCALE)/swedish.catalog \

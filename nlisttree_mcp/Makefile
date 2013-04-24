@@ -184,16 +184,16 @@ COBJS = locale.o \
 TOBJS = NListtree-Prefs.o
 
 # available catalog translations
-CATALOGS = \
-  $(LOCALE)/czech.catalog \
-  $(LOCALE)/english-british.catalog \
-  $(LOCALE)/german.catalog \
-  $(LOCALE)/french.catalog \
-  $(LOCALE)/italian.catalog \
-  $(LOCALE)/polish.catalog \
-  $(LOCALE)/swedish.catalog \
-  $(LOCALE)/turkish.catalog \
-  # $(LOCALE)/russian.catalog
+CATALOGS = $(LOCALE)/czech.catalog \
+           $(LOCALE)/english-british.catalog \
+           $(LOCALE)/german.catalog \
+           $(LOCALE)/greek.catalog \
+           $(LOCALE)/french.catalog \
+           $(LOCALE)/italian.catalog \
+           $(LOCALE)/polish.catalog \
+           $(LOCALE)/swedish.catalog \
+           $(LOCALE)/turkish.catalog \
+         # $(LOCALE)/russian.catalog
 
 MCCOBJS  = $(addprefix $(OBJDIR)/,$(LOBJS)) $(addprefix $(OBJDIR)/,$(COBJS))
 TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
