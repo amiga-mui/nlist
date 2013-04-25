@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.116 RELEASE ###########################################################
+
+2013-04-25 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.116 release preparations
+  * include/muiextra.h: added definition of MUII_PopFont as some MUI SDK might
+    not have them yet.
+
 2013-04-24 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcp/locale/greek.ct, nlistviews_mcp/locale/greek.ct: updated greek
