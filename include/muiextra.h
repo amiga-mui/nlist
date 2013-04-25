@@ -79,6 +79,9 @@
 #ifndef MUIA_Group_Forward
 #define MUIA_Group_Forward            0x80421422UL
 #endif
+#ifndef MUII_PopFont
+#define MUII_PopFont           42
+#endif
 
 struct MUI_ImageSpec
 {
