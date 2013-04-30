@@ -3,6 +3,7 @@
 ## codeset 0
 ## chunk AUTH Anthony Iliakis (amiga.phantom@yahoo.gr)
 ;
+; Greek translation by Anthony Iliakis (phantom@amigafuture.de)
 ;
 ; NListviews_mcp.cd - NList MUI custom prefs catalog description file
 ; $Id$
@@ -20,7 +21,7 @@ MSG_NORMAL_FONT
 ; Normal Font:
 ;
 MSG_NORMAL_FONT_HELP
-Επιλέξτε μια κανονική NList γραμματοσειρά.
+Επιλέξτε μια κανονική γραμματοσειρά NList.
 ; Choose the normal NList font.
 ;
 MSG_NORMAL_FONT_ASL
@@ -32,7 +33,7 @@ MSG_SMALL_FONT
 ; Small Font:
 ;
 MSG_SMALL_FONT_HELP
-Επιλέξτε μια μικρή NList γραμματοσειρά.
+Επιλέξτε μια μικρή γραμματοσειρά NList.
 ; Choose the small NList font.
 ;
 MSG_SMALL_FONT_ASL
@@ -44,7 +45,7 @@ MSG_FIXED_FONT
 ; Fixed Font:
 ;
 MSG_FIXED_FONT_HELP
-Επιλέξτε μια σταθερή NList γραμματοσειρά.
+Επιλέξτε μια σταθερή γραμματοσειρά NList.
 ; Choose the fixed NList font.
 ;
 MSG_FIXED_FONT_ASL
@@ -82,8 +83,8 @@ MSG_TITLE_PEN_WIN
 ; Title Pen
 ;
 MSG_TITLE_PEN_HELP
-Για την προσαρμογή του χρώματος\n\
-πένας για έναν τίτλο.
+Για τη προσαρμογή του χρώματος\n\
+πένας για ένα τίτλο.
 ; For adjusting the pen color of\n\
 ; a title.
 ;
@@ -92,21 +93,21 @@ MSG_PBG_TITLE
 ; \ecTitle
 ;
 MSG_TITLE_BG_WIN
-Φόντο Τίτλου
+Φόντο τίτλου
 ; Title Background
 ;
 MSG_TITLE_BG_HELP
-Για την προσαρμογή του χρώματος\n\
-φόντου για έναν τίτλο.
+Για τη προσαρμογή του χρώματος\n\
+φόντου για ένα τίτλο.
 ; For adjusting the background color\n\
 ; of a title.
 ;
 MSG_LIST_PEN_WIN
-Πένα Λίστας
+Πένα λίστας
 ; List Pen
 ;
 MSG_LIST_PEN_HELP
-Για την προσαρμογή του χρώματος\n\
+Για τη προσαρμογή του χρώματος\n\
 πένας για μια λίστα.
 ; For adjusting the pen color of\n\
 ; a list.
@@ -116,21 +117,21 @@ MSG_PBG_LIST
 ; \ecList
 ;
 MSG_LIST_BG_WIN
-Φόντο Λίστας
+Φόντο λίστας
 ; List Background
 ;
 MSG_LIST_BG_HELP
-Για την προσαρμογή του χρώματος\n\
+Για τη προσαρμογή του χρώματος\n\
 φόντου για μια λίστα.
 ; For adjusting the background color\n\
 ; of a list.
 ;
 MSG_SELECT_PEN_WIN
-Επιλεγμένη Καταχώρηση
+Επιλεγμένη καταχώρηση
 ; Selected Entry
 ;
 MSG_SELECT_PEN_HELP
-Για την προσαρμογή του χρώματος\n\
+Για τη προσαρμογή του χρώματος\n\
 πένας για τις επιλεγμένες καταχωρήσεις.
 ; For adjusting the pen color of\n\
 ; selected entries.
@@ -140,21 +141,21 @@ MSG_PBG_SELECT
 ; \ecSelected
 ;
 MSG_SELECT_BG_WIN
-Επιλεγμένη Καταχώρηση
+Επιλεγμένη καταχώρηση
 ; Selected Entry
 ;
 MSG_SELECT_BG_HELP
-Για την προσαρμογή του χρώματος\n\
+Για τη προσαρμογή του χρώματος\n\
 φόντου για τις επιλεγμένες καταχωρήσεις.
 ; For adjusting the background color\n\
 ; of selected entries.
 ;
 MSG_CURSOR_PEN_WIN
-Επιλεγμένος Κέρσορας
+Επιλεγμένος κέρσορας
 ; Selected Cursor
 ;
 MSG_CURSOR_PEN_HELP
-Για την προσαρμογή του χρώματος\n\
+Για τη προσαρμογή του χρώματος\n\
 πένας για έναν επιλεγμένο κέρσορα.
 ; For adjusting the pen color of\n\
 ; a selected cursor.
@@ -164,45 +165,45 @@ MSG_PBG_CURSOR
 ; \ecCursor
 ;
 MSG_CURSOR_BG_WIN
-Επιλεγμένος Κέρσορας
+Επιλεγμένος κέρσορας
 ; Selected Cursor
 ;
 MSG_CURSOR_BG_HELP
-Για την προσαρμογή του χρώματος\n\
+Για τη προσαρμογή του χρώματος\n\
 φόντου για έναν επιλεγμένο κέρσορα.
 ; For adjusting the background color\n\
 ; of a selected cursor.
 ;
 MSG_UNSEL_PEN_WIN
-Καταργημένος Κέρσορας
+Μη-επιλεγμένος κέρσορας
 ; Unselected Cursor
 ;
 MSG_UNSEL_PEN_HELP
-Για την προσαρμογή του χρώματος\n\
-πένας για έναν καταργημένο κέρσορα.
+Για τη προσαρμογή του χρώματος\n\
+πένας για ένα μη-επιλεγμένο κέρσορα.
 ; For adjusting the pen color of\n\
 ; an unselected cursor.
 ;
 MSG_PBG_UNSEL
-\ecΚαταργημένος
+\ecΜη-επιλεγμένος
 ; \ecUnselected
 ;
 MSG_UNSEL_BG_WIN
-Καταργημένος Κέρσορας
+Μη-επιλεγμένος κέρσορας
 ; Unselected Cursor
 ;
 MSG_UNSEL_BG_HELP
-Για την προσαρμογή του χρώματος\n\
-φόντου για έναν καταργημένο κέρσορα.
+Για τη προσαρμογή του χρώματος\n\
+φόντου για ένα μη-επιλεγμένο κέρσορα.
 ; For adjusting the background color\n\
 ; of an unselected cursor.
 ;
 MSG_INACT_PEN_WIN
-Ανενεργός Κέρσορας
+Ανενεργός κέρσορας
 ; Inactive Cursor
 ;
 MSG_INACT_PEN_HELP
-Για την προσαρμογή του χρώματος\n\
+Για τη προσαρμογή του χρώματος\n\
 πένας για έναν ανενεργό κέρσορα.
 ; For adjusting the pen color of\n\
 ; an inactive cursor.
@@ -212,17 +213,17 @@ MSG_PBG_INACT
 ; \ecInactive
 ;
 MSG_INACT_BG_WIN
-Ανενεργός Κέρσορας
+Ανενεργός κέρσορας
 ; Inactive Cursor
 ;
 MSG_INACT_BG_HELP
-Για την προσαρμογή του χρώματος\n\
+Για τη προσαρμογή του χρώματος\n\
 φόντου για έναν ανενεργό κέρσορα.
 ; For adjusting the background color\n\
 ; of an inactive cursor.
 ;
 MSG_MULTISELECT
-Πολλαπλή Επιλογή
+Πολλαπλή επιλογή
 ; MultiSelection
 ;
 MSG_MULTISELECT_QUAL
@@ -235,12 +236,12 @@ MSG_MULTISELECT_ALWAYS
 ;
 MSG_MULTISELECT_HELP
 Επιτρέπει να καθορίσετε την προκαθορισμένη\n\
-κατάσταση πολλαπλής επιλογής.
+λειτουργία πολλαπλής επιλογής.
 ; Allows to specify the default\n\
 ; multiselection mode.
 ;
 MSG_MMB_MULTISEL
-Πολλαπλή επιλογή MMB
+Πολλαπλή επιλογή ΜΚΠ
 ; MMB multiselection
 ;
 MSG_MMB_MULTISEL_HELP
@@ -260,7 +261,7 @@ MSG_DRAGTYPE_IMMEDIATE
 ; Immediate
 ;
 MSG_DRAGTYPE_BORDERS
-Στα περιγράμματα
+Στα πλαίσια
 ; at Borders
 ;
 MSG_DRAGTYPE_QUALIFIER
@@ -268,14 +269,14 @@ MSG_DRAGTYPE_QUALIFIER
 ; via Qualifier
 ;
 MSG_DRAGTYPE_HELP
-Ορίστε την κατάσταση μεταφοράς. Η 'Άμεση' θα ξεκινήσει\n\
-την μεταφορά & απόθεση μόλις μεταφέρετε ένα αντικείμενο.\n\
-'Στα περιγράμματα' εμφανίζοντας μια λειτουργία μεταφοράς\n\
-μόλις περάσετε τα δεξιά/αριστερά περιγράμματα και 'Μέσω\n\
-προσδιοριστικού' για να επιτρέψετε την μεταφορά & απόθεση\n\
+Ορίστε τη λειτουργία μεταφοράς. Η 'Άμεση' θα ξεκινήσει\n\
+τη μεταφορά & απόθεση μόλις μεταφέρετε ένα αντικείμενο.\n\
+'Στα πλαίσια' εμφανίζοντας μια λειτουργία μεταφοράς\n\
+μόλις περάσετε τα δεξιά/αριστερά πλαίσια και 'Μέσω\n\
+προσδιοριστικού' για να επιτρέψετε τη μεταφορά & απόθεση\n\
 μόνο μέσω ενός προσδιοριστικού πλήκτρου (βλ. 'Πλήκτρα').\n\
 \n\
-Η 'Άμεση' χρησιμοποιείται μόνο όταν υπάρχει κατάσταση\n\
+Η 'Άμεση' χρησιμοποιείται μόνο όταν υπάρχει λειτουργία\n\
 μη πολλαπλής επιλογής.
 ; Set the drag mode. 'Immediate' will start\n\
 ; drag&drop as soon as you drag an object.\n\
@@ -293,7 +294,7 @@ MSG_DRAG_LINES
 ;
 MSG_DRAG_LINES_HELP
 Εισάγετε τον μέγιστο αριθμό γραμμών\n\
-που θα εμφανίζονται κατά την διάρκεια\n\
+που θα εμφανίζονται κατά τη διάρκεια\n\
 μεταφοράς & απόθεσης. Αν έχουν επιλεχτεί\n\
 περισσότερες γραμμές, θα λάβετε ένα μήνυμα\n\
 σαν κι αυτό: 'Μεταφορά xx αντικειμένων...'.
@@ -320,15 +321,15 @@ MSG_PAGE_SCROLLING
 ; Scrolling
 ;
 MSG_PAGE_KEYBINDINGS
-Συντομεύσεις Πληκτρολογίου
+Συντομεύσεις
 ; Keybindings
 ;
 MSG_SB_HORIZONTAL
-Οριζόντια Μπάρα Κύλισης
+Οριζόντια μπάρα κύλισης
 ; Horizontal Scrollbar
 ;
 MSG_SB_HORIZONTAL_HELP
-Ορίστε την προκαθορισμένη κατάσταση\n\
+Ορίστε τη προκαθορισμένη λειτουργία\n\
 για την οριζόντια μπάρα κύλισης.\n\
 (μπορεί να αντικατασταθεί από άλλο\n\
 πρόγραμμα)
@@ -338,12 +339,12 @@ MSG_SB_HORIZONTAL_HELP
 ; application)
 ;
 MSG_SB_VERTICAL
-Κάθετη Μπάρα Κύλισης
+Κάθετη μπάρα κύλισης
 ; Vertical Scrollbar
 ;
 MSG_SB_VERTICAL_HELP
-Ορίστε την προκαθορισμένη κατάσταση\n\
-για την κάθετη μπάρα κύλισης.\n\
+Ορίστε τη προκαθορισμένη λειτουργία\n\
+για τη κάθετη μπάρα κύλισης.\n\
 (μπορεί να αντικατασταθεί από άλλο\n\
 πρόγραμμα)
 ; Set the default mode\n\
@@ -352,7 +353,7 @@ MSG_SB_VERTICAL_HELP
 ; application)
 ;
 MSG_SCROLLCONTROL
-Έλεγχος Κύλισης
+Έλεγχος κύλισης
 ; Scrolling Control
 ;
 MSG_SMOOTH_SCROLLING
@@ -363,8 +364,8 @@ MSG_SMOOTH_SCROLLING_HELP
 Αν ενεργοποιηθεί, θα χρησιμοποιηθεί η\n\
 ομαλή κύλιση για τα αντικείμενα NList.\n\
 Επιπλέον, χρησιμοποιώντας την 'ομαλή'\n\
-oλίσθηση στην κανονική σελίδα διαμόρφωσης\n\
-MUI 'Listview', μπορεί να ελεγχεί η\n\
+oλίσθηση στη κανονική σελίδα διαμόρφωσης\n\
+MUI 'Listview', μπορεί να ελεχθεί η\n\
 ταχύτητα ομαλής κύλισης.
 ; If enabled, smoothing scrolling\n\
 ; will be used for NList objects.\n\
@@ -374,7 +375,7 @@ MUI 'Listview', μπορεί να ελεγχεί η\n\
 ; the smooth scrolling can be controled.
 ;
 MSG_MMB_FASTWHEEL
-Γρήγορη ροδέλα MMB
+Γρήγορη ροδέλα ΜΚΠ
 ; MMB Fast Wheel
 ;
 MSG_MMB_FASTWHEEL_HELP
@@ -382,8 +383,8 @@ MSG_MMB_FASTWHEEL_HELP
 μπορεί να χρησιμοποιηθεί ως ένα προσδιοριστικό\n\
 για την εκτέλεση μιας ενέργειας γρήγορης κύλισης\n\
 ροδέλας.\n\
-(Δείτε τις 'Συντομεύσεις Πληκτρολογίου' για\n\
-περισσότερες πληροφορίες προσδιοριστικών)
+(Δείτε τις 'Συντομεύσεις' για περισσότερες\n\
+πληροφορίες προσδιοριστικών)
 ; If enabled, the middle mouse button\n\
 ; can be used as a qualifier to perform\n\
 ; a fast scroll wheel action.\n\
@@ -395,8 +396,8 @@ MSG_WHEEL_STEP
 ; Mouse Wheel Step
 ;
 MSG_WHEEL_STEP_HELP
-Επιτρέπει να καθορίσετε την ποσότητα των γραμμών\n\
-που θα κυλιθούν όταν χρησιμοποιείτε την ροδέλα\n\
+Επιτρέπει να καθορίσετε τη ποσότητα των γραμμών\n\
+που θα κυλιθούν όταν χρησιμοποιείτε τη ροδέλα\n\
 του ποντικιού.
 ; Allows to specify the amount of lines\n\
 ; that should be scrolled when using a\n\
@@ -407,8 +408,8 @@ MSG_WHEEL_FAST
 ; Mouse Wheel Fast Step
 ;
 MSG_WHEEL_FAST_HELP
-Επιτρέπει να καθορίσετε την ποσότητα των γραμμών\n\
-που θα κυλιθούν όταν χρησιμοποιείτε την ροδέλα\n\
+Επιτρέπει να καθορίσετε τη ποσότητα των γραμμών\n\
+που θα κυλιθούν όταν χρησιμοποιείτε τη ροδέλα\n\
 του ποντικιού και όταν το προσδιοριστικό της\n\
 γρήγορης ροδέλας έχει πατηθεί.
 ; Allows to specify the amount of lines\n\
@@ -426,20 +427,20 @@ MSG_PARTIAL_COL_MARK
 ;
 MSG_PARTIAL_COL_MARK_HELP
 Αν ενεργοποιηθεί, θα σχεδιαστεί ένα ειδικό μαρκάρισμα\n\
-στην αριστερή μεριά της στήλης σε περίπτωση που το\n\
-κείμενο δεν προσαρμόζεται τελείως σε αυτή.
+στο αριστερό μέρος της στήλης σε περίπτωση που το\n\
+κείμενο δεν προσαρμόζεται τελείως σε αυτό.
 ; If enabled, a special mark will be drawn\n\
 ; at the right side of a column in case the\n\
 ; text didn't completly fit into it.
 ;
 MSG_PARTIAL_CHARS_DRAWN
-Μερικώς σχεδιασμός χαρακτήρων
+Μερική σχεδίαση χαρακτήρων
 ; Partial chars drawn
 ;
 MSG_PARTIAL_CHARS_DRAWN_HELP
 Αν ενεργοποιηθεί, οι χαρακτήρες που δεν είναι τελείως\n\
-ορατοί στην δεξιά και αριστερή γωνία ενός αντικειμένου\n\
-NList, δεν θα σχεδιαστούν σε τμήματα.
+ορατοί στη δεξιά και αριστερή γωνία ενός αντικειμένου\n\
+NList, δε θα σχεδιαστούν σε τμήματα.
 ; If enabled, characters that are not fully\n\
 ; visible at the left and right corner of\n\
 ; an NList object will not be drawn partially.
@@ -455,14 +456,14 @@ MSG_VERT_CENTERED_HELP
 ; vertically in a NList object.
 ;
 MSG_BALANCING_COLS
-Ισορροπία Στηλών
+Ισορροπία στηλών
 ; Balancing Columns
 ;
 MSG_BALANCING_COLS_HELP
 H NList επιτρέπει να αλλάξετε το μήκος στήλης\n\
-μέσω της μεταφοράς ποντικιού στον διαχωριστή στήλης\n\
+μέσω της μεταφοράς ποντικιού στο διαχωριστή στήλης\n\
 στην μπάρα τίτλου. Η μπάρα αυτή μπορεί να είναι ορατή\n\
-μόνο στον τίτλο, σε όλες τις γραμμές ή οι αλλαγές του\n\
+μόνο στο τίτλο, σε όλες τις γραμμές ή οι αλλαγές του\n\
 μήκους στήλης μπορούν να γίνουν αμέσως.
 ; NList permits to change the column width\n\
 ; via mouse dragging the column separator in\n\
@@ -493,7 +494,7 @@ MSG_FORCE_SELECT_PEN
 ;
 MSG_FORCE_SELECT_PEN_HELP
 Αν ενεργοποιηθεί, η NList θα βεβαιωθεί ότι τα χρώματα\n\
-στις επιλογές 'Επιλεγμένη', 'Κέρσορας' και 'Καταργημένος'\n\
+στις επιλογές 'Επιλεγμένη', 'Κέρσορας' και 'Μη-επιλεγμένος'\n\
 θα χρησιμοποιηθούν.
 ; If enabled, NList will make sure that\n\
 ; the 'Selected', 'Cursor' and 'Unselected'\n\
@@ -506,7 +507,7 @@ MSG_MULTISEL_MOVEACTIVE
 MSG_MULTISEL_MOVEACTIVE_HELP
 Αν ενεργοποιηθεί, μια χρήση του πληκτρολογίου σε\n\
 ένα αντικείμενο NList θα μεταφέρει τον ενεργό\n\
-κέρσορα αντί τον μη επιλεγμένο.
+κέρσορα αντί του μη επιλεγμένου.
 ; If enabled, a keyboard use in an NList\n\
 ; object will move the active cursor\n\
 ; rather than the unselected one.
@@ -526,7 +527,7 @@ MSG_SERMOUSE_FIX
 MSG_SERMOUSE_FIX_HELP
 Αν ενεργοποιηθεί, η NList θα προσπαθήσει να\n\
 επιδιορθώσει συχνά προβλήματα μεταφοράς &\n\
-απόθεσης που συσχετίζονται με την χρήση ενός\n\
+απόθεσης που συσχετίζονται με τη χρήση ενός\n\
 σειριακού ποντικιού.
 ; If enabled, NList tries to fix common\n\
 ; drag&drop issues that are related to using\n\
@@ -539,7 +540,7 @@ MSG_SELECT_POINTER
 MSG_SELECT_POINTER_HELP
 Αν ενεργοποιηθεί, και ένα αντικείμενο NList είναι σε\n\
 φάση επιλογής χαρακτήρα, θα εμφανιστεί ένας τροποποιημένος\n\
-δείκτης αντί για την απεικόνιση του προκαθορισμένου δείκτη\n\
+δείκτης αντί για την εικόνα του προκαθορισμένου δείκτη\n\
 ποντικιού του Workbench.
 ; If enabled, and an NList object is in\n\
 ; charwise selection mode a custom select\n\
@@ -547,7 +548,7 @@ MSG_SELECT_POINTER_HELP
 ; default workbench mouse pointer image.
 ;
 MSG_BAR_CONTEXTMENU
-Mενού Περιβάλλοντος Επιλογών
+Mενού περιβάλλοντος επιλογών
 ; Context Menu
 ;
 MSG_DEFAULT_CONTEXT_MENU_HELP
@@ -635,11 +636,11 @@ MSG_FUNC_DEFALLORDERCOL
 ; Default order all columns
 ;
 MSG_FUNC_SELECTTOP
-Επιλογή για μετακίνηση στην κορυφή
+Επιλογή για μετακίνηση στο πάνω μέρος
 ; Select to top
 ;
 MSG_FUNC_SELECTBOTTOM
-Επιλογή για μετακίνηση στο τέρμα
+Επιλογή για μετακίνηση στο κάτω μέρος
 ; Select to bottom
 ;
 MSG_FUNC_SELECTPAGEUP
@@ -671,7 +672,7 @@ MSG_FUNC_HORIZWHEELQUAL
 ; Horiz MouseWheel Qualifier
 ;
 MSG_FUNC_TITLECLICKQUAL
-Προσδιοριστικό κλίκ τίτλου
+Προσδιοριστικό κλικ τίτλου
 ; Title Click Qualifier
 ;
 MSG_VSB_ALWAYS
@@ -707,7 +708,7 @@ MSG_CMENU_ALWAYS
 ; Always
 ;
 MSG_CMENU_TOPONLY
-Μόνο κορυφή
+Μόνο πάνω μέρος
 ; TopOnly
 ;
 MSG_CMENU_NEVER
@@ -723,8 +724,8 @@ MSG_HOTKEYS_ACTION
 ; Action
 ;
 MSG_EXAMPLE_TEXT
-Αν έχετε πρόβλημα, προσπαθήστε να αυξήσετε την τιμή της στοίβας, στις\n\
-πληροφορίες των εικονιδίων αν τρέχετε το πρόγραμμα μέσω αυτού ή στην\n\
+Αν έχετε πρόβλημα, προσπαθήστε να αυξήσετε τη τιμή της στοίβας στις\n\
+πληροφορίες των εικονιδίων αν τρέχετε το πρόγραμμα μέσω αυτού ή στη\n\
 στοίβα του CLI αν το τρέχετε από το CLI/Shell.\n\
 Άμα το τρέχετε μέσω κάποιου προγράμματος, διαβάστε τις οδηγίες για να\n\
 δείτε πώς θα την αυξήσετε.\n\
@@ -741,27 +742,27 @@ http://www.sourceforge.net/projects/nlist-classes/\n\
 \033r\0333(C) 1996-1998 από τον Gilles Masson\n\
 \033r\0333http://www.sourceforge.net/projects/nlist-classes/\n\
 \033C\n\
-\033cΑυτή η νέα list/listview custom class\n\
+\033cΑυτή η νέα custom class προβολής λίστας\n\
 \033cμεταχειρίζεται τις δικές της επιλογές φόντου, πένας,\n\
-\033cγραμματοσειρών, μπάρας κύλισης, πλήκτρων και προσδιοριστικών.\n\
+\033cγραμματοσειράς, μπάρας κύλισης, πλήκτρων και προσδιοριστικών.\n\
 \033c\n\
-\033cΟ τρόπος που γίνεται αυτή η μεταχείρηση με την πολλαπλή\n\
-\033cεπιλογή δεν είναι ακριβώς όπως αυτός της παλαιάς listview!\n\
+\033cΟ τρόπος που γίνεται αυτή η μεταχείρηση με τη πολλαπλή\n\
+\033cεπιλογή δεν είναι ακριβώς όπως αυτός της παλαιάς προβολής λίστας!\n\
 \033cΥποστηρίζεται η μέθοδος μεταφοράς & απόθεσης, και οι δυο\n\
 \033cμπάρες κύλισης μπορούν να διαμορφωθούν ώστε να εξαφανίζονται\n\
-\033cαυτόματα όταν δεν χρειάζονται επειδή όλα είναι ορατά.\n\
+\033cαυτόματα όταν δε χρειάζονται επειδή όλα είναι ορατά.\n\
 \033cΔοκιμάστε το...\n\
 \033C\n\
 \033cΜπορείτε να κάνετε οριζόντια κύλιση με τα πλήκτρα του κέρσορα,\n\
-\033cή πηγαίνοντας στην αριστερή ή δεξιά μεριά της λίστας, ενώ την\n\
+\033cή πηγαίνοντας στο αριστερό ή δεξί μέρος της λίστας, ενώ την\n\
 \033cεπιλέγετε με το ποντίκι.\n\
-\033cΔοκιμάστε να κάνετε κλίκ στα δεξιά/αριστερά περιγράμματα!\n\
+\033cΔοκιμάστε να κάνετε κλικ στα δεξιά/αριστερά πλαίσια!\n\
 \033C\n\
-\033cΜπορείτε να αλλάξετε το μήκος των στηλών μεταφέροντας τον\n\
+\033cΜπορείτε να αλλάξετε το μήκος των στηλών μεταφέροντας το\n\
 \033cκάθετο διαχωριστή μεταξύ των τίτλων στηλών\n\
-\033c(δοκιμάστε το επίσης χρησιμοποιώντας τον προσδιοριστή ισορροπίας).\n\
+\033c(δοκιμάστε το επίσης χρησιμοποιώντας το προσδιοριστή ισορροπίας).\n\
 \033C\n\
-\033cΜπορείτε να αλλάξετε την διάταξη των στηλών μεταφέροντας\n\
+\033cΜπορείτε να αλλάξετε τη διάταξη των στηλών μεταφέροντας\n\
 \033cτους τίτλους των στηλών.\n\
 \033C\n\
 \033cΠροσπαθήστε με το πρόγραμμα επίδειξης για να τα δοκιμάσετε όλα αυτά...\n\
@@ -769,7 +770,7 @@ http://www.sourceforge.net/projects/nlist-classes/\n\
 \n\
 \033r\033bΣτείτε την αξιολόγισή σας για αυτό το πρόγραμμα!\n\
 \033C\n\
-\033cΕλληνική μετάφραση: Αντώνης Ηλιάκης (amiga.phantom@yahoo.gr)\n
+\033cΕλληνική μετάφραση: Αντώνης Ηλιάκης (phantom@amigafuture.de)\n
 ; If you have problems, try to increase the stack value,\n\
 ; in the icon infos if you launch the program from icon,\n\
 ; stack of CLI if you start it from CLI/Shell,\n\

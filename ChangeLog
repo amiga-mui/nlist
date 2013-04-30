@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-04-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcp/locale/greek.ct, nlistviews_mcp/locale/greek.ct: updated greek
+    translation kindly provided by Antonis Iliakis.
+
 #### v0.116 RELEASE ###########################################################
 
 2013-04-25 Jens Langner <Jens.Langner@light-speed.de>
