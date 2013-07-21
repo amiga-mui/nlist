@@ -904,7 +904,7 @@ struct MUIP_NListtree_MultiTestMessage
 // ClipboardServer.c
 BOOL StartClipboardServer(void);
 void ShutdownClipboardServer(void);
-void StringToClipboard(ULONG unit, STRPTR str);
+LONG StringToClipboard(ULONG unit, STRPTR str);
 
 #include "default-align.h"
 

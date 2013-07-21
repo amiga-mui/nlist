@@ -78,15 +78,15 @@ LONG StringToClipboard(ULONG unit, STRPTR str)
   // lock out other tasks
   if(AttemptSemaphore(serverLock))
   {
-    struct ServerData sd;
-
-    // set up the data packet
-    sd.sd_Command = SERVER_WRITE;
-    sd.sd_Unit = unit;
-    sd.sd_String = str;
-
-    if(strlen(str) > 0)
+    if(str != NULL && strlen(str) > 0)
     {
+      struct ServerData sd;
+
+      // set up the data packet
+      sd.sd_Command = SERVER_WRITE;
+      sd.sd_Unit = unit;
+      sd.sd_String = str;
+
       // set up the message, send it and wait for a reply
       msg.mn_Node.ln_Name = (STRPTR)&sd;
       replyPort.mp_SigTask = FindTask(NULL);

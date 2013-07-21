@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-07-21 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc/ClipboardServer.c, nlisttree_mcc/ClipboardServer.c: fixed a bug
+    where a NULL pointer (str) in the StringToClipboard() function caused a
+    crash.
+
 2013-04-30 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcp/locale/greek.ct, nlistviews_mcp/locale/greek.ct: updated greek
