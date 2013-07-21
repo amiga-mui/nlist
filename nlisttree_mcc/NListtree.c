@@ -3027,7 +3027,7 @@ HOOKPROTONHNO(_CompareFunc_LeavesMixed, LONG, struct MUIP_NListtree_CompareMessa
 }
 MakeStaticHook(_CompareHook_LeavesMixed, _CompareFunc_LeavesMixed);
 
-VOID SortList( struct MUI_NListtree_ListNode *ln, struct NListtree_Data *data )
+static void SortList( struct MUI_NListtree_ListNode *ln, struct NListtree_Data *data )
 {
   if ( ln->ln_Table.tb_Entries > 1 )
   {
@@ -3048,7 +3048,6 @@ VOID SortList( struct MUI_NListtree_ListNode *ln, struct NListtree_Data *data )
   }
 }
 
-
 struct MUI_NListtree_ListNode *ListNode_Sort( struct MUI_NListtree_ListNode *ln, struct NListtree_Data *data, ULONG flags )
 {
   if(isFlagSet(flags, MUIV_NListtree_Sort_Flag_RecursiveAll) || isFlagSet(flags, MUIV_NListtree_Sort_Flag_RecursiveOpen))
@@ -3057,10 +3056,12 @@ struct MUI_NListtree_ListNode *ListNode_Sort( struct MUI_NListtree_ListNode *ln,
 
     while((ln2 = CLN(GetSucc((struct Node *)ln2))))
     {
-      if(isFlagSet(ln->ln_Flags, TNF_LIST))
+      if(isFlagSet(ln2->ln_Flags, TNF_LIST))
       {
-        if(isFlagSet(ln->ln_Flags, TNF_OPEN) || isFlagSet(flags, MUIV_NListtree_Sort_Flag_RecursiveAll))
+        if(isFlagSet(ln2->ln_Flags, TNF_OPEN) || isFlagSet(flags, MUIV_NListtree_Sort_Flag_RecursiveAll))
+        {
           ListNode_Sort( ln2, data, flags );
+        }
       }
     }
   }
