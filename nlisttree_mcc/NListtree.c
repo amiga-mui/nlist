@@ -2238,6 +2238,8 @@ VOID ActivateTreeNode(struct NListtree_Data *data, struct MUI_NListtree_TreeNode
 
 VOID RemoveNode1( struct NListtree_Data *data, UNUSED struct MUI_NListtree_ListNode *li, struct MUI_NListtree_TreeNode *tn, LONG pos )
 {
+  ENTER();
+
   /*
   **  If deleted entry is active, then activate the next/previous node.
   */
@@ -2274,10 +2276,14 @@ VOID RemoveNode1( struct NListtree_Data *data, UNUSED struct MUI_NListtree_ListN
   {
     TreeNodeSelectRemove( data, tn );
   }
+
+  LEAVE();
 }
 
 VOID RemoveNode2( struct NListtree_Data *data, struct MUI_NListtree_ListNode *li, struct MUI_NListtree_TreeNode *tn )
 {
+  ENTER();
+
   Remove( (struct Node *)&tn->tn_Node );
   NLRemoveFromTable( data, &li->ln_Table, tn );
 
@@ -2309,6 +2315,8 @@ VOID RemoveNode2( struct NListtree_Data *data, struct MUI_NListtree_ListNode *li
   **  Subtract one from the global number of entries.
   */
   data->NumEntries--;
+
+  LEAVE();
 }
 
 
@@ -2316,6 +2324,8 @@ VOID RemoveNode2( struct NListtree_Data *data, struct MUI_NListtree_ListNode *li
 VOID RemoveChildNodes( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn, LONG pos )
 {
   struct MUI_NListtree_ListNode *ln = CLN( tn );
+
+  ENTER();
 
   if(isFlagSet(tn->tn_Flags, TNF_LIST))
   {
@@ -2328,17 +2338,23 @@ VOID RemoveChildNodes( struct NListtree_Data *data, struct MUI_NListtree_TreeNod
       RemoveNode2( data, CLN( GetParent( tn ) ), tn );
     }
   }
+
+  LEAVE();
 }
 
 
 
 VOID RemoveNodes( struct NListtree_Data *data, struct MUI_NListtree_ListNode *li, struct MUI_NListtree_TreeNode *tn, LONG pos )
 {
+  ENTER();
+
   RemoveChildNodes( data, tn, pos + 1 );
   RemoveNode1( data, li, tn, pos );
   RemoveNode2( data, li, tn );
 
   if ( pos > 0 )  DoMethod( data->Obj, MUIM_NList_Redraw, pos - 1 );
+
+  LEAVE();
 }
 
 
@@ -7494,6 +7510,8 @@ IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rem
   struct MUI_NListtree_TreeNode *tn;
   LONG pos;
 
+  ENTER();
+
   D(DBF_LISTTREE, "NList Remove listnode: 0x%lx  treenode: 0x%lx",msg->ListNode,msg->TreeNode);
 
   DeactivateNotify( data );
@@ -7564,7 +7582,7 @@ IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rem
 
           pos = GetVisualPos( data, tn );
 
-          //D(bug( "Node: 0x%08lx - %s - pos: %ld", tn, tn->tn_Name, pos ) );
+          D(DBF_LISTTREE, "Node: 0x%08lx - Name: %s - pos: %ld", tn, tn->tn_Name, pos);
 
           RemoveNodes( data, CLN( tn->tn_Parent ), tn, pos );
         }
@@ -7632,6 +7650,8 @@ IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rem
 
   /* sba: the active note could be changed, but the notify calling was disabled */
   DoMethod(data->Obj, MUIM_NListtree_GetListActive, 0);
+
+  RETURN(0);
   return( 0 );
 }
 
