@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-07-22 Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlisttree_mcc/NListtree.c: fixed a bug in the MUIM_NListtree_Remove function
+    when using the MUIV_NListtree_Remove_TreeNode_Selected flag. This caused
+    a whole list to be removed because NListtree didn't take care of the
+    changing selection change. Now it should take care correctly.
+
 2013-07-21 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcc/NListtree.c: fixed a bug in the ListNode_Sort() routines which

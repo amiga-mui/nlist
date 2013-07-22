@@ -1499,7 +1499,7 @@ struct MUI_NListtree_TreeNode *TreeNodeSelectAdd( struct NListtree_Data *data, s
 }
 
 
-VOID TreeNodeSelectRemove( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
+static void TreeNodeSelectRemove( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
 {
   NLRemoveFromTable( data, &data->SelectedTable, tn );
 
@@ -2273,9 +2273,7 @@ VOID RemoveNode1( struct NListtree_Data *data, UNUSED struct MUI_NListtree_ListN
   **  Remove the node from the selected list.
   */
   if(isFlagSet(tn->tn_Flags, TNF_SELECTED))
-  {
     TreeNodeSelectRemove( data, tn );
-  }
 
   LEAVE();
 }
@@ -2352,7 +2350,8 @@ VOID RemoveNodes( struct NListtree_Data *data, struct MUI_NListtree_ListNode *li
   RemoveNode1( data, li, tn, pos );
   RemoveNode2( data, li, tn );
 
-  if ( pos > 0 )  DoMethod( data->Obj, MUIM_NList_Redraw, pos - 1 );
+  if(pos > 0)
+    DoMethod(data->Obj, MUIM_NList_Redraw, pos - 1);
 
   LEAVE();
 }
@@ -7561,34 +7560,60 @@ IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rem
         break;
 
       case MUIV_NListtree_Remove_TreeNode_All:
-
+      {
         pos = GetVisualPos( data, CTN( GetHead( (struct List *)&li->ln_List ) ) );
 
-        while((tn = CTN( GetHead((struct List *)&li->ln_List))))
-        {
-          //D(bug( "Node: 0x%08lx - %s - pos: %ld", tn, tn->tn_Name, pos ) );
+        // make sure we are quiet, and the selection change
+        // is not propagated
+        DoQuiet( data, TRUE );
+        data->IgnoreSelectionChange = 1;
 
+        while((tn = CTN( GetHead((struct List *)&li->ln_List))))
           RemoveNodes( data, li, tn, pos );
-        }
+
+        // reactive selection list
+        data->IgnoreSelectionChange = 0;
+        DoQuiet(data, FALSE);
 
         tn = NULL;
-        break;
+      }
+      break;
 
       case MUIV_NListtree_Remove_TreeNode_Selected:
-
-        while( data->SelectedTable.tb_Entries )
+      {
+        if(data->SelectedTable.tb_Entries > 0)
         {
-          tn = data->SelectedTable.tb_Table[0];
+          // make sure we are quiet, and the selection change
+          // is not propagated
+          DoQuiet( data, TRUE );
+          data->IgnoreSelectionChange = 1;
 
-          pos = GetVisualPos( data, tn );
+          do
+          {
+            tn = data->SelectedTable.tb_Table[0];
+            pos = GetVisualPos( data, tn );
+            RemoveNodes( data, CLN( tn->tn_Parent ), tn, pos );
+          }
+          while(data->SelectedTable.tb_Entries > 0);
 
-          D(DBF_LISTTREE, "Node: 0x%08lx - Name: %s - pos: %ld", tn, tn->tn_Name, pos);
+          // reactive selection list
+          data->IgnoreSelectionChange = 0;
 
-          RemoveNodes( data, CLN( tn->tn_Parent ), tn, pos );
+          if(data->TempActiveNode != NULL &&
+             NLFindInTable(&data->SelectedTable, data->TempActiveNode) == -1)
+          {
+            TreeNodeSelectAdd(data, data->TempActiveNode);
+            SET_FLAG(data->TempActiveNode->tn_Flags, TNF_SELECTED);
+
+            MakeNotify(data, MUIA_NListtree_SelectChange, (APTR)TRUE);
+          }
+  
+          DoQuiet( data, FALSE );
         }
 
         tn = NULL;
-        break;
+      }
+      break;
 
       default:
         tn = msg->TreeNode;
