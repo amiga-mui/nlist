@@ -9,6 +9,8 @@ $URL$
 
   * nlisttree_mcc/NListtree.c: call the destructor for the earlier constructed
     item in case inserting the tree node fails for any reason.
+  * nlisttree_mcc/NListtree.c: fixed a memory leak, a missing destructor call
+    and a possible "use after free" access in the DuplicateNode method.
 
 2013-07-22 Jens Langner <Jens.Langner@light-speed.de>
 

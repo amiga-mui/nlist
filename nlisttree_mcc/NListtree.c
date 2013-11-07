@@ -2587,21 +2587,23 @@ struct MUI_NListtree_TreeNode *DuplicateNode( struct NListtree_Data *data, struc
   struct MUI_NListtree_ListNode *new;
   APTR user = NULL;
 
-  if((new = CLN(AllocVecPooled( data->TreePool, isFlagSet(nodetodup->tn_Flags, TNF_LIST) ? sizeof(struct MUI_NListtree_ListNode ) : sizeof(struct MUI_NListtree_TreeNode)))))
+  if((new = CLN(AllocVecPooled(data->TreePool, isFlagSet(nodetodup->tn_Flags, TNF_LIST) ? sizeof(struct MUI_NListtree_ListNode) : sizeof(struct MUI_NListtree_TreeNode)))) != NULL)
   {
     if(isFlagSet(nodetodup->tn_Flags, TNF_LIST))
-      NewList( (struct List *)&new->ln_List );
+      NewList((struct List *)&new->ln_List);
 
     /*
     **  Should we duplicate the supplied node name?
     */
     if(isFlagSet(data->Flags, NLTF_DUPNODENAMES))
     {
-      int len = strlen( nodetodup->tn_Name ) + 1;
+      int len = strlen(nodetodup->tn_Name) + 1;
 
-      new->ln_Name = (STRPTR)AllocVecPooled( data->TreePool, len );
-      strlcpy( new->ln_Name, nodetodup->tn_Name, len );
-      SET_FLAG(new->ln_IFlags, TNIF_ALLOCATED);
+      if((new->ln_Name = (STRPTR)AllocVecPooled(data->TreePool, len)) != NULL)
+      {
+        strlcpy(new->ln_Name, nodetodup->tn_Name, len);
+        SET_FLAG(new->ln_IFlags, TNIF_ALLOCATED);
+      }
     }
     else
       new->ln_Name = nodetodup->tn_Name;
@@ -2609,31 +2611,39 @@ struct MUI_NListtree_TreeNode *DuplicateNode( struct NListtree_Data *data, struc
     /*
     **  Create new user dats
     */
-    user = (APTR)DoMethod(data->Obj, MUIM_NListtree_Construct, nodetodup->tn_Name, nodetodup->tn_User, data->TreePool, MUIV_NListtree_ConstructHook_Flag_AutoCreate);
-
-    if ( !new->ln_Name || !user )
+    if(new->ln_Name != NULL)
     {
-      /*
-      **  Free all previously allocated memory if
-      **  something failed before.
-      */
-      if(new->ln_Name != NULL && isFlagSet(new->ln_IFlags, TNIF_ALLOCATED))
-        FreeVecPooled( data->TreePool, new->ln_Name );
+      user = (APTR)DoMethod(data->Obj, MUIM_NListtree_Construct, nodetodup->tn_Name, nodetodup->tn_User, data->TreePool, MUIV_NListtree_ConstructHook_Flag_AutoCreate);
 
-      DoMethod(data->Obj, MUIM_NListtree_Destruct, new->ln_Name, new->ln_User, data->TreePool, 0);
+      if(user == NULL)
+      {
+        /*
+        **  Free all previously allocated memory if
+        **  something failed before.
+        */
+        if(isFlagSet(new->ln_IFlags, TNIF_ALLOCATED))
+          FreeVecPooled(data->TreePool, new->ln_Name);
 
-      FreeVecPooled( data->TreePool, new );
-      new = NULL;
+        DoMethod(data->Obj, MUIM_NListtree_Destruct, nodetodup->tn_Name, nodetodup->tn_User, data->TreePool, 0);
+
+        FreeVecPooled(data->TreePool, new);
+        new = NULL;
+      }
+      else
+      {
+        new->ln_User  = user;
+        new->ln_Flags = ( nodetodup->tn_Flags & ~TNF_SELECTED );
+
+        /*
+        **  Add one to the global number of entries
+        */
+        data->NumEntries++;
+      }
     }
     else
     {
-      new->ln_User  = user;
-      new->ln_Flags = ( nodetodup->tn_Flags & ~TNF_SELECTED );
-
-      /*
-      **  Add one to the global number of entries
-      */
-      data->NumEntries++;
+      FreeVecPooled(data->TreePool, new);
+      new = NULL;
     }
   }
 
