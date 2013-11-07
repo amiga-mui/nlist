@@ -7262,6 +7262,8 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
     }
   }
 
+  DoMethod(obj, MUIM_NListtree_Destruct, msg->Name, user, data->TreePool, 0);
+
   return(0);
 }
 
@@ -7607,7 +7609,7 @@ IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rem
 
             MakeNotify(data, MUIA_NListtree_SelectChange, (APTR)TRUE);
           }
-  
+
           DoQuiet( data, FALSE );
         }
 

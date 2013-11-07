@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-11-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: call the destructor for the earlier constructed
+    item in case inserting the tree node fails for any reason.
+
 2013-07-22 Jens Langner <Jens.Langner@light-speed.de>
 
   * nlisttree_mcc/NListtree.c: fixed a bug in the MUIM_NListtree_Remove function
