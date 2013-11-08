@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-11-08 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist/NList_mcc5.c: update the scrollbars by passing all changed attributes
+    with a single SetAttrs() call instead of setting each attribute with a
+    single call.
+
 2013-11-07 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcc/NListtree.c: call the destructor for the earlier constructed
