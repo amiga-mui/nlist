@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-11-25 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: trigger all affected attributes for the
+    horizontal scrollbar just like for the vertical scrollbar whenever it is
+    made visibile (again).
+
 2013-11-08 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist/NList_mcc5.c: update the scrollbars by passing all changed attributes
