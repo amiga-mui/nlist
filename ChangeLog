@@ -10,6 +10,14 @@ $URL$
   * nlistview_mcc/NListview.c: trigger all affected attributes for the
     horizontal scrollbar just like for the vertical scrollbar whenever it is
     made visibile (again).
+  * nlistview_mcc/NListview.c: adding or removing the scrollbars is no longer
+    done immediately, but pushed to the application's method stack to be done
+    when the application is idle again. The reason is that the OM_SET method
+    call which does the actual removing can be done from within an OM_SET method
+    of the NListview's group object. Removing any scrollbar in this situation
+    will cause an access to the just removed object (or better its Exec node
+    structure) which has become invalid due to the removal. This should fix YAM
+    ticket #455.
 
 2013-11-08 Thore Böckelmann <tboeckel@gmx.de>
 

@@ -54,7 +54,10 @@
 #define MUIV_Listview_ScrollerPos_Right   2
 #define MUIV_Listview_ScrollerPos_None    3
 
-#define MUIM_NListview_QueryBeginning     MUIM_NList_QueryBeginning /* obsolete */
+#define MUIM_NListview_QueryBeginning       MUIM_NList_QueryBeginning /* obsolete */
+#define MUIM_NListview_SetScrollers         0x9d5100A8UL /* private */
+
+struct MUIP_NListview_SetScrollers          { STACKED ULONG MethodID; STACKED ULONG scrollers; };
 
 #define MUIV_NListview_VSB_Always      1
 #define MUIV_NListview_VSB_Auto        2

@@ -407,52 +407,16 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
     scrollers &= ~MUIV_NListview_HSB_On;
   }
 
-  if(scrollers & MUIV_NListview_VSB_On)
-  {
-    if(data->SETUP == FALSE || DoMethod(obj, MUIM_Group_InitChange))
-    {
-      if((scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_On)
-      {
-        AddVerticalScroller(obj, data);
-        if(data->VertSB == MUIV_NListview_VSB_Left)
-          DoMethod(obj, MUIM_Group_Sort, data->PR_Vert, data->Group, NULL);
-      }
-      else
-      {
-        RemoveVerticalScroller(obj, data);
-      }
-
-      if(scrollers & MUIV_NListview_HSB_On)
-      {
-        if(data->SETUP == FALSE || DoMethod(data->Group, MUIM_Group_InitChange))
-        {
-          if((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)
-            AddHorizontalScroller(data->Group, data);
-          else
-            RemoveHorizontalScroller(data->Group, data);
-
-          if(data->SETUP == TRUE)
-            DoMethod(data->Group, MUIM_Group_ExitChange);
-        }
-      }
-
-      if(data->SETUP == TRUE)
-        DoMethod(obj, MUIM_Group_ExitChange);
-    }
-  }
-  else if(scrollers & MUIV_NListview_HSB_On)
-  {
-    if(data->SETUP == FALSE || DoMethod(data->Group, MUIM_Group_InitChange))
-    {
-      if((scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)
-        AddHorizontalScroller(data->Group, data);
-      else
-        RemoveHorizontalScroller(data->Group, data);
-
-      if(data->SETUP == TRUE)
-        DoMethod(data->Group, MUIM_Group_ExitChange);
-    }
-  }
+  // Don't do the dirty work of adding/removing the scrollbars here directly,
+  // but delay this until the application is idle again. This is necessary,
+  // because the OM_SET method calling this function can be called from within
+  // an OM_SET method of our group object. Removing any scrollbar in this
+  // situation will cause an access to the just removed object (or better its
+  // Exec node structure) which has become invalid due to the removal.
+  // The AmigaOS4 debug kernel shows this very good, because an access to the
+  // address 0xcccccccc happens which definitely proves the invalid access.
+  if(scrollers & (MUIV_NListview_VSB_On|MUIV_NListview_HSB_On))
+    DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 2, MUIM_NListview_SetScrollers, scrollers);
 
   LEAVE();
 }
@@ -922,6 +886,60 @@ static IPTR mNLV_GoInactive(struct IClass *cl, Object *obj, Msg msg)
   return DoSuperMethodA(cl, obj, msg);
 }
 
+static IPTR mNLV_SetScrollers(struct IClass *cl, Object *obj, struct MUIP_NListview_SetScrollers *msg)
+{
+  struct NLVData *data = INST_DATA(cl, obj);
+
+  if(msg->scrollers & MUIV_NListview_VSB_On)
+  {
+    if(data->SETUP == FALSE || DoMethod(obj, MUIM_Group_InitChange))
+    {
+      if((msg->scrollers & MUIV_NListview_VSB_On) == MUIV_NListview_VSB_On)
+      {
+        AddVerticalScroller(obj, data);
+        if(data->VertSB == MUIV_NListview_VSB_Left)
+          DoMethod(obj, MUIM_Group_Sort, data->PR_Vert, data->Group, NULL);
+      }
+      else
+      {
+        RemoveVerticalScroller(obj, data);
+      }
+
+      if(msg->scrollers & MUIV_NListview_HSB_On)
+      {
+        if(data->SETUP == FALSE || DoMethod(data->Group, MUIM_Group_InitChange))
+        {
+          if((msg->scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)
+            AddHorizontalScroller(data->Group, data);
+          else
+            RemoveHorizontalScroller(data->Group, data);
+
+          if(data->SETUP == TRUE)
+            DoMethod(data->Group, MUIM_Group_ExitChange);
+        }
+      }
+
+      if(data->SETUP == TRUE)
+        DoMethod(obj, MUIM_Group_ExitChange);
+    }
+  }
+  else if(msg->scrollers & MUIV_NListview_HSB_On)
+  {
+    if(data->SETUP == FALSE || DoMethod(data->Group, MUIM_Group_InitChange))
+    {
+      if((msg->scrollers & MUIV_NListview_HSB_On) == MUIV_NListview_HSB_On)
+        AddHorizontalScroller(data->Group, data);
+      else
+        RemoveHorizontalScroller(data->Group, data);
+
+      if(data->SETUP == TRUE)
+        DoMethod(data->Group, MUIM_Group_ExitChange);
+    }
+  }
+
+  return 0;
+}
+
 DISPATCHER(_Dispatcher)
 {
   switch(msg->MethodID)
@@ -1002,6 +1020,8 @@ DISPATCHER(_Dispatcher)
       else
         return 0;
     }
+
+    case MUIM_NListview_SetScrollers: return mNLV_SetScrollers(cl, obj, (APTR)msg);
 
     default: return DoSuperMethodA(cl, obj, msg);
   }

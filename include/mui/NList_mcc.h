@@ -542,6 +542,7 @@ struct MUI_NList_GetSelectInfo
 #define MUIM_NList_SetActive          0x9d5100A7UL /* GM */
 
 /*
+for future extensions, skip 0x9d5100A8 as method ID, this one is already used by NListview
 for future extensions, skip 0x9d5100AF as method ID, this one is already used by NFloattext
 */
 
