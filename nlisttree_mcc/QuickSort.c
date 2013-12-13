@@ -27,7 +27,7 @@
 ** changed and optimized to use a hook instead of a generic
 ** compare function
 **
-** Jens Langner <jens.langner@light-speed.de>, 2003
+** Jens Maus <mail@jens-maus.de>, 2003
 */
 
 #include <clib/alib_protos.h>

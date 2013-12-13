@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.117 RELEASE ###########################################################
+
+2013-12-13 Jens Maus <mail@jens-maus.de>
+
+  * misc: final v0.117 release preparations
+
 2013-11-25 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistview_mcc/NListview.c: trigger all affected attributes for the
