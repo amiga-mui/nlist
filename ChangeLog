@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-12-22 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: make the active entry visible again upon adding
+    the horizontal scrollbar, but only if it is the last entry, because this
+    entry will be hidden by the scrollbar otherwise.
+
 #### v0.117 RELEASE ###########################################################
 
 2013-12-13 Jens Maus <mail@jens-maus.de>

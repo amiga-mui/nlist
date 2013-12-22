@@ -202,12 +202,14 @@ static void RemoveVerticalScroller(Object *obj, struct NLVData *data)
   LEAVE();
 }
 
+void kprintf(const char *,...);
 static void AddHorizontalScroller(Object *obj, struct NLVData *data)
 {
   ENTER();
 
   if(data->Horiz_Attached == FALSE)
   {
+    ULONG active;
     ULONG entries;
     ULONG visible;
     ULONG first;
@@ -228,6 +230,7 @@ static void AddHorizontalScroller(Object *obj, struct NLVData *data)
     // immediately trigger them. Otherwise hiding and showing again the scrollbar
     // while the number of entries changed in the meantime will result in wrong
     // scrollbar dimensions (i.e. when switching folders in YAM).
+    active      = xget(data->LI_NList, MUIA_NList_Active);
     entries     = xget(data->LI_NList, MUIA_NList_Horiz_Entries);
     visible     = xget(data->LI_NList, MUIA_NList_Horiz_Visible);
     first       = xget(data->LI_NList, MUIA_NList_Horiz_First);
@@ -238,6 +241,19 @@ static void AddHorizontalScroller(Object *obj, struct NLVData *data)
       MUIA_NList_Horiz_First,      first,
       MUIA_NList_HorizDeltaFactor, deltaFactor,
       TAG_DONE);
+
+    // make sure the active entry is still visible after adding the scrollbar
+    // since the scrollbar is added at the bottom we only have to check for the
+    // last visible item
+    entries = xget(data->LI_NList, MUIA_NList_Entries);
+    visible = xget(data->LI_NList, MUIA_NList_Visible);
+    first   = xget(data->LI_NList, MUIA_NList_First);
+    if(active == first+visible-1)
+    {
+      // the method must be pushed because we are currently inside a InitChange/ExitChange pair
+      // and the final height of the list cannot yet be determined correctly
+      DoMethod(_app(obj), MUIM_Application_PushMethod, data->LI_NList, 2, MUIM_NList_Jump, active);
+    }
 
     data->Horiz_Attached = TRUE;
 
