@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2013-12-29 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: added some checks for a valid application object
+    pointer before trying to push a method.
+
 2013-12-22 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistview_mcc/NListview.c: make the active entry visible again upon adding

@@ -252,7 +252,9 @@ static void AddHorizontalScroller(Object *obj, struct NLVData *data)
     {
       // the method must be pushed because we are currently inside a InitChange/ExitChange pair
       // and the final height of the list cannot yet be determined correctly
-      DoMethod(_app(obj), MUIM_Application_PushMethod, data->LI_NList, 2, MUIM_NList_Jump, active);
+      // Additionally we must have completed the MUIM_Setup method to have a valid application pointer
+      if(data->SETUP == TRUE)
+        DoMethod(_app(obj), MUIM_Application_PushMethod, data->LI_NList, 2, MUIM_NList_Jump, active);
     }
 
     data->Horiz_Attached = TRUE;
@@ -432,7 +434,11 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
   // The AmigaOS4 debug kernel shows this very good, because an access to the
   // address 0xcccccccc happens which definitely proves the invalid access.
   if(scrollers & (MUIV_NListview_VSB_On|MUIV_NListview_HSB_On))
-    DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 2, MUIM_NListview_SetScrollers, scrollers);
+  {
+    // we must have completed the MUIM_Setup method to have a valid application pointer
+    if(data->SETUP == TRUE)
+      DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 2, MUIM_NListview_SetScrollers, scrollers);
+  }
 
   LEAVE();
 }
