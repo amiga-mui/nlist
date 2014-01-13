@@ -213,6 +213,7 @@ TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
 
 # available catalog translations
 CATALOGS = $(LOCALE)/czech.catalog \
+           $(LOCALE)/danish.catalog \
            $(LOCALE)/french.catalog \
            $(LOCALE)/german.catalog \
            $(LOCALE)/greek.catalog \

@@ -185,6 +185,7 @@ TOBJS = NListtree-Prefs.o
 
 # available catalog translations
 CATALOGS = $(LOCALE)/czech.catalog \
+           $(LOCALE)/danish.catalog \
            $(LOCALE)/english-british.catalog \
            $(LOCALE)/german.catalog \
            $(LOCALE)/greek.catalog \

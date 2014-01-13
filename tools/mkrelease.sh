@@ -85,12 +85,12 @@ for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
 done
 
 make -C nlisttree_mcp catalogs
-for language in czech english-british french german greek italian polish swedish turkish; do
+for language in czech danish english-british french german greek italian polish swedish turkish; do
 	mkdir -p "release/MCC_NList/Locale/Catalogs/$language"
 	cp -a nlisttree_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListtree_mcp.catalog"
 done
 make -C nlistviews_mcp catalogs
-for language in czech french german greek italian polish swedish turkish; do
+for language in czech danish french german greek italian polish swedish turkish; do
 	mkdir -p "release/MCC_NList/Locale/Catalogs/$language"
 	cp -a nlistviews_mcp/locale/$language.catalog "release/MCC_NList/Locale/Catalogs/$language/NListviews_mcp.catalog"
 done
