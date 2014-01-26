@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.118 RELEASE ###########################################################
+
+2014-01-26 Jens Maus <mail@jens-maus.de>
+
+  * misc: final v0.118 release preparations
+
 2014-01-13 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree_mcp/locale/danish.ct, nlistviews_mcp/locale/danish.ct: updated
