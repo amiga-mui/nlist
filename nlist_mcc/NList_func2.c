@@ -1064,7 +1064,12 @@ ULONG NL_List_Clear(struct NLData *data)
 
   set_Active(MUIV_NList_Active_Off);
   data->NList_Horiz_First = 0;
-  data->NList_Visible = 0;
+  // Reset the amount of visible lines only if the list is not "quiet".
+  // It will be recalculated as soon as the "quiet" state ends.
+  // This makes it possible to perform a centered jump to a certain
+  // entry while the "quiet" state is active.
+  if(data->NList_Quiet == 0)
+    data->NList_Visible = 0;
   data->NList_LastInserted = -1;
   data->Title_PixLen = -1;
   data->NList_DropMark = 0;

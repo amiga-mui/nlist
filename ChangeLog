@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2014-02-05 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func2.c: MUIM_NList_Clear will reset the amount of visible
+    lines is reset only if the object is not in the "quiet" state, because
+    leaving this state will recalculate that value immediately again. This makes
+    it possible to perform a centered jump to a certain entry while the "quiet"
+    state is active.
+
 #### v0.118 RELEASE ###########################################################
 
 2014-01-26 Jens Maus <mail@jens-maus.de>
