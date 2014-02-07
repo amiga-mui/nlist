@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2014-02-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: propagate the nlist's current disabled state to
+    the readded scrollbars. These might have been removed before while the list
+    was disabled and would become visible with the wrong state in case the list
+    was enabled again in the meantime.
+
 2014-02-05 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_func2.c: MUIM_NList_Clear will reset the amount of visible

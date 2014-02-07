@@ -145,6 +145,10 @@ static void AddVerticalScroller(Object *obj, struct NLVData *data)
 
     D(DBF_STARTUP, "adding vertical scrollbar");
 
+    // restore the list's current disabled state, because the scrollbar might
+    // have been removed in disabled state and the list has been reactivated
+    // in the meantime
+    set(data->PR_Vert, MUIA_Disabled, xget(data->LI_NList, MUIA_Disabled));
     DoMethod(obj, OM_ADDMEMBER, data->PR_Vert);
 
     // add notifications
@@ -217,6 +221,10 @@ static void AddHorizontalScroller(Object *obj, struct NLVData *data)
 
     D(DBF_STARTUP, "adding horizontal scrollbar");
 
+    // restore the list's current disabled state, because the scrollbar might
+    // have been removed in disabled state and the list has been reactivated
+    // in the meantime
+    set(data->PR_Horiz, MUIA_Disabled, xget(data->LI_NList, MUIA_Disabled));
     DoMethod(obj, OM_ADDMEMBER, data->PR_Horiz);
 
     // add notifications
