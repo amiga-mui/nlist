@@ -206,7 +206,6 @@ static void RemoveVerticalScroller(Object *obj, struct NLVData *data)
   LEAVE();
 }
 
-void kprintf(const char *,...);
 static void AddHorizontalScroller(Object *obj, struct NLVData *data)
 {
   ENTER();
