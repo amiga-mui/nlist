@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2014-02-23 Jens Maus <mail@jens-maus.de>
+
+  * mcp/locale: all catalog translations have now been moved to use the free
+    services of transifex (http://www.transifex.com/projects/p/nlist-classes/)
+
 2014-02-07 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistview_mcc/NListview.c: propagate the nlist's current disabled state to
