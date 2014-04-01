@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2014-04-01 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale: added a new header line to the .po files to specify a correct
+    name for the generated .catalog file.
+
 2014-02-23 Jens Maus <mail@jens-maus.de>
 
   * mcp/locale: all catalog translations have now been moved to use the free
