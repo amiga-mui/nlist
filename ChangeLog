@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.119 RELEASE ###########################################################
+
+2014-04-05 Jens Maus <mail@jens-maus.de>
+
+  * misc: final v0.119 release preparations
+  * include/SDI*.h: updated SDI headers to latest version available.
+
 2014-04-01 Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale: added a new header line to the .po files to specify a correct

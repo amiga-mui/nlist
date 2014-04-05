@@ -26,6 +26,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#if defined(__amigaos4__)
+#include <hardware/blit.h>
+#endif
+
 #include <graphics/gfxmacros.h>
 #undef GetOutlinePen
 

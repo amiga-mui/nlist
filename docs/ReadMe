@@ -1,9 +1,9 @@
-Short:        NList custom classes for MUI, V0.118
+Short:        NList custom classes for MUI, V0.119
 Author:       NList Open Source Team
 Uploader:     Jens Maus <mail@jens-maus.de>
 Type:         dev/mui
-Version:      0.118
-Replaces:     dev/mui/MCC_NList-0.117.lha
+Version:      0.119
+Replaces:     dev/mui/MCC_NList-0.118.lha
 Requires:     AmigaOS V37+, MorphOS or AROS, MUI 3.8+, HotkeyString.mcc
 Architecture: ppc-amigaos >= 4.0.0; m68k-amigaos >= 3.0; ppc-morphos >= 1.4.2; i386-aros; ppc-aros; x86_64-aros
 
@@ -27,14 +27,14 @@ enabling copy to clipboard and key moving.
 
 This package includes:
 
-NList.mcc         20.137    26.01.2014
-NListview.mcc     19.92     26.01.2014
-NFloattext.mcc    19.73     26.01.2014
-NListviews.mcp    19.88     26.01.2014
-NListtree.mcc     18.44     26.01.2014
-NListtree.mcp     18.32     26.01.2014
-NBitmap.mcc       15.22     26.01.2014
-NBalance.mcc      15.18     26.01.2014
+NList.mcc         20.138    05.04.2014
+NListview.mcc     19.93     05.04.2014
+NFloattext.mcc    19.74     05.04.2014
+NListviews.mcp    19.89     05.04.2014
+NListtree.mcc     18.45     05.04.2014
+NListtree.mcp     18.33     05.04.2014
+NBitmap.mcc       15.23     05.04.2014
+NBalance.mcc      15.19     05.04.2014
 
 
 INSTALLATION
@@ -72,7 +72,7 @@ Copyright (C) 2001-2014 NList Open Source Team.
 The complete NList package is distributed under the GNU Lesser General
 Public License (LGPL) and the development is hosted at SourceForge.net:
 
-         http://www.sourceforge.net/projects/nlist-classes/
+         http://sf.net/p/nlist-classes/
 
 Please consult the included "COPYING" file for more detailed information
 about the licensing of the classes and their source code.
