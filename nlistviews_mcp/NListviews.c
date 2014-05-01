@@ -161,14 +161,6 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
       DoMethod(msg->configdata, MUIM_Dataspace_Add, ptrd, strlen((char *)ptrd)+1, cfg_attr); \
   }
 
-#define SAVE_DATASPEC2(obj,attr,cfg_attr) \
-  { \
-    LONG ptrd=0; \
-    get(obj, attr, &ptrd); \
-    if (ptrd) \
-      DoMethod(msg->configdata, MUIM_Dataspace_Add, ptrd, strlen((char *)ptrd)+1, cfg_attr); \
-  }
-
 #define LOAD_DATAFONT(obj,cfg_attr) \
   { \
     LONG ptrd; \
@@ -1849,12 +1841,12 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   SAVE_DATASPEC(data->mcp_PenUnselCur,MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_UnselCur);
   SAVE_DATASPEC(data->mcp_PenInactive,MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Inactive);
 
-  SAVE_DATASPEC2(data->mcp_BG_Title,   MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Title);
-  SAVE_DATASPEC2(data->mcp_BG_List,    MUIA_Imagedisplay_Spec,MUICFG_NList_BG_List);
-  SAVE_DATASPEC2(data->mcp_BG_Select,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Select);
-  SAVE_DATASPEC2(data->mcp_BG_Cursor,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Cursor);
-  SAVE_DATASPEC2(data->mcp_BG_UnselCur,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_UnselCur);
-  SAVE_DATASPEC2(data->mcp_BG_Inactive,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Inactive);
+  SAVE_DATASPEC(data->mcp_BG_Title,   MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Title);
+  SAVE_DATASPEC(data->mcp_BG_List,    MUIA_Imagedisplay_Spec,MUICFG_NList_BG_List);
+  SAVE_DATASPEC(data->mcp_BG_Select,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Select);
+  SAVE_DATASPEC(data->mcp_BG_Cursor,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Cursor);
+  SAVE_DATASPEC(data->mcp_BG_UnselCur,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_UnselCur);
+  SAVE_DATASPEC(data->mcp_BG_Inactive,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Inactive);
 
   SAVE_DATALONG(data->mcp_SL_VertInc, MUIA_Numeric_Value,     MUICFG_NList_VertInc);
 
