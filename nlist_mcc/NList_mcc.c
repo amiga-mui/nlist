@@ -1107,9 +1107,9 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   data->display_ptr = NULL;
   if (data->NList_Font && !data->InUseFont)
   {
-    char *fontname = NULL;
-    IPTR fonttmp = data->NList_Font;
+    IPTR fonttmp;
     BOOL fixed;
+    char *fontname;
 
     if (data->NList_Font == MUIV_NList_Font)
     {
@@ -1129,6 +1129,13 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
       fixed = TRUE;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Fixed, &fontname);
     }
+    else
+    {
+      fonttmp = data->NList_Font;
+      fixed = FALSE;
+      fontname = NULL;
+    }
+
     if (fontname && *fontname)
     {
       struct TextAttr myta;
