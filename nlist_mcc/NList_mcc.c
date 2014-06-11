@@ -1109,20 +1109,24 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   {
     char *fontname = NULL;
     IPTR fonttmp = data->NList_Font;
+    BOOL fixed;
 
     if (data->NList_Font == MUIV_NList_Font)
     {
       fonttmp = MUIV_Font_List;
+      fixed = FALSE;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font, &fontname);
     }
     else if (data->NList_Font == MUIV_NList_Font_Little)
     {
       fonttmp = MUIV_Font_Tiny;
+      fixed = FALSE;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Little, &fontname);
     }
     else if (data->NList_Font == MUIV_NList_Font_Fixed)
     {
       fonttmp = MUIV_Font_Fixed;
+      fixed = TRUE;
       DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Fixed, &fontname);
     }
     if (fontname && *fontname)
@@ -1147,6 +1151,14 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
       myta.ta_Style = 0;
       myta.ta_Flags = 0;
       data->InUseFont = OpenDiskFont(&myta);
+
+      // check if we require a monospaced font but got a non-monospaced one
+      if(fixed == TRUE && data->InUseFont != NULL && isFlagSet(data->InUseFont->tf_Flags, FPF_PROPORTIONAL))
+      {
+        CloseFont(data->InUseFont);
+        data->InUseFont = NULL;
+        // we now fall back to MUI's internal fixed font
+      }
     }
     if (data->InUseFont)
     {
