@@ -36,6 +36,7 @@
 
 #if defined(__amigaos4__)
 #include <hardware/blit.h>
+#include <graphics/minterm.h>
 #else
 #include <proto/cybergraphics.h>
 #include <cybergraphx/cybergraphics.h>
@@ -1065,7 +1066,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
                             BLITA_Height, h,
                             BLITA_SrcType, BLITT_CHUNKY,
                             BLITA_DestType, BLITT_RASTPORT,
-                            BLITA_SrcBytesPerRow, data->width,
+                            BLITA_SrcBytesPerRow, PADWIDTH(data->width),
                             BLITA_MaskPlane, data->ditheredMask[item],
                             BLITA_Minterm, (ABC|ABNC|ANBC),
                             TAG_DONE);
@@ -1083,7 +1084,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
                             BLITA_Height, h,
                             BLITA_SrcType, BLITT_CHUNKY,
                             BLITA_DestType, BLITT_RASTPORT,
-                            BLITA_SrcBytesPerRow, data->width,
+                            BLITA_SrcBytesPerRow, PADWIDTH(data->width),
                             BLITA_Minterm, (ABC|ABNC),
                             TAG_DONE);
             }

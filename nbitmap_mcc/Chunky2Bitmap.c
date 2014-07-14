@@ -64,7 +64,7 @@ struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth
     {
       struct BitMap *tempBM;
 
-      if((tempBM = AllocBitMap(width, 1, min(8, depth), BMF_CLEAR, NULL)) != NULL)
+      if((tempBM = AllocBitMap(PADWIDTH(width), 1, min(8, depth), BMF_CLEAR, NULL)) != NULL)
       {
         struct RastPort remapRP;
         struct RastPort tempRP;

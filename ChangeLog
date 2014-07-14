@@ -5,6 +5,13 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2014-07-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c, nbitmap_mcc/DitherBitmap.c: fixed the broken display
+    of dithered images on colormapped screens with AmigaOS4.
+
+2014-06-11 Thore Böckelmann <tboeckel@gmx.de>
+
   * nlist_mcc/NList_mcc.c: ensure that a custom fixed font is really a
     monospaced font. Otherwise the class will fall back to MUI's internal fixed
     font settings.

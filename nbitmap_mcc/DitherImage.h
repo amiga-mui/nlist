@@ -49,4 +49,7 @@ void FreeDitheredImage(APTR image, APTR mask);
 #define DITHERA_PenMap                 (TAG_USER+6)
 #define DITHERA_MaskPlane              (TAG_USER+7)
 
+#define PADWIDTH(w) (((((UWORD)(w))+15)>>4) << 4)
+#define RAWWIDTH(w) ((((UWORD)(w))+15)>>3 & 0xFFFE)
+
 #endif /* DITHERIMAGE_H */

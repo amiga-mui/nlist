@@ -32,8 +32,6 @@
   #define MEMF_SHARED MEMF_ANY
 #endif
 
-#define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
-
 APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
 {
   struct TagItem *tag;
@@ -80,7 +78,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
   if(data != NULL && colorMap != NULL && width > 0 && height > 0)
   {
     // the 8bit chunky data don't need to reside in chip memory
-    if((result = AllocVecShared(width * height, MEMF_ANY)) != NULL)
+    if((result = AllocVecShared(PADWIDTH(width) * height, MEMF_ANY)) != NULL)
     {
       uint8 *mask = NULL;
       uint8 *mPtr = NULL;
@@ -94,7 +92,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
       if(format == MUIV_NBitmap_Type_ARGB32 && maskPtr != NULL)
       {
         // the mask MUST reside in chip memory
-        mask = AllocVec(RAWIDTH(width) * height, MEMF_CLEAR|MEMF_CHIP);
+        mask = AllocVec(RAWWIDTH(width) * height, MEMF_CLEAR|MEMF_CHIP);
         *maskPtr = mask;
         mPtr = mask;
       }
@@ -103,6 +101,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
       {
         uint32 x;
         uint8 bitMask = 0x80;
+        uint8 *rPtr = resultPtr;
 
         for(x = 0; x < width; x++)
         {
@@ -178,15 +177,15 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
           if(bestIndex != -1)
           {
             if(penMap != NULL)
-              *resultPtr++ = penMap[bestIndex];
+              *rPtr++ = penMap[bestIndex];
             else
-              *resultPtr++ = bestIndex;
+              *rPtr++ = bestIndex;
           }
           else
           {
             // no matching color found, use color 0
             // can this happen at all?
-            *resultPtr++ = 0;
+            *rPtr++ = 0;
           }
 
           if(mPtr != NULL)
@@ -202,9 +201,10 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
           }
         }
 
+        resultPtr += PADWIDTH(width);
         // advance the mask pointer by one line
         if(mPtr != NULL)
-          mPtr += RAWIDTH(width);
+          mPtr += RAWWIDTH(width);
       }
     }
   }
