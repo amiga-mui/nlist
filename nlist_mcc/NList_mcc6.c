@@ -28,6 +28,7 @@
 
 #if defined(__amigaos4__)
 #include <hardware/blit.h>
+#include <graphics/minterm.h>
 #endif
 
 #include <graphics/gfxmacros.h>
