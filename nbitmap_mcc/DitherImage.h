@@ -29,6 +29,9 @@
 #ifndef UTILITY_TAGITEM_H
   #include <utility/tagitem.h>
 #endif
+#ifndef SDI_STDARG_H
+  #include <SDI_stdarg.h>
+#endif
 
 APTR DitherImageA(CONST_APTR data, struct TagItem *tags);
 #if !defined(__AROS__) && defined(__PPC__)

@@ -23,6 +23,7 @@
 #include <proto/graphics.h>
 
 #include "Chunky2Bitmap.h"
+#include "DitherImage.h"
 #include "SetPatch.h"
 
 #include "private.h"
