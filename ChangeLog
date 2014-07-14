@@ -9,6 +9,8 @@ $URL$
 
   * nbitmap_mcc/NBitmap.c, nbitmap_mcc/DitherBitmap.c: fixed the broken display
     of dithered images on colormapped screens with AmigaOS4.
+  * nlist_mcc/NList_mcc.c: evaluate the return code of MUIM_GetConfigItem to
+    avoid dereferencing of invalid pointers.
 
 2014-06-11 Thore Böckelmann <tboeckel@gmx.de>
 

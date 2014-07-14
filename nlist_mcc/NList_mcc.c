@@ -1115,19 +1115,22 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     {
       fonttmp = MUIV_Font_List;
       fixed = FALSE;
-      DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font, &fontname);
+      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font, &fontname) == 0)
+        fontname = NULL;
     }
     else if (data->NList_Font == MUIV_NList_Font_Little)
     {
       fonttmp = MUIV_Font_Tiny;
       fixed = FALSE;
-      DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Little, &fontname);
+      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Little, &fontname) == 0)
+        fontname = NULL;
     }
     else if (data->NList_Font == MUIV_NList_Font_Fixed)
     {
       fonttmp = MUIV_Font_Fixed;
       fixed = TRUE;
-      DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Fixed, &fontname);
+      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Font_Fixed, &fontname) == 0)
+        fontname = NULL;
     }
     else
     {
@@ -1167,6 +1170,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
         // we now fall back to MUI's internal fixed font
       }
     }
+
     if (data->InUseFont)
     {
       notdoset(obj,MUIA_Font,data->InUseFont);
