@@ -35,12 +35,12 @@
 
 struct NListtreeP_Data
 {
-	Object *NLT_Sample;
+  Object *NLT_Sample;
   Object *BT_Sample_Expand;
   Object *BT_Sample_Collapse;
   Object *GR_Prefs;
-	Object *PI_ImageClosed;
-	Object *PI_ImageOpen;
+  Object *PI_ImageClosed;
+  Object *PI_ImageOpen;
   Object *PI_ImageFolder;
   Object *PP_LinePen;
   Object *PP_ShadowPen;
