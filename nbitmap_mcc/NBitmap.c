@@ -758,7 +758,7 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
               // CyberGraphics cannot blit raw data through a mask, thus we have to
               // use this ugly workaround and take the detour using a bitmap.
               D(DBF_ALWAYS, "setting up dithered bitmap %ld", i);
-              data->ditheredBitmap[i] = Chunky2Bitmap(data->ditheredImage[i], data->width, data->height, data->scrdepth);
+              data->ditheredBitmap[i] = Chunky2Bitmap(data->ditheredImage[i], data->width, data->height, data->scrdepth, _screen(obj)->RastPort.BitMap);
               #endif // !__amigaos4__
             }
           }
@@ -878,6 +878,44 @@ static void NBitmap_DrawSimpleFrame(Object *obj, uint32 x, uint32 y, uint32 w, u
 }
 
 ///
+/// BltMaskRPort
+//
+static void BltMaskRPort(struct BitMap *bm, ULONG srcx, ULONG srcy, struct RastPort *rp, ULONG destx, ULONG desty, ULONG width, ULONG height, PLANEPTR mask)
+{
+  #define MINTERM_B_OR_C      (ABC | ABNC | NABC | NABNC | ANBC | NANBC)
+  #define MINTERM_B_EQUALS_C  (ABC | ANBNC | NABC | NANBNC)
+
+  ENTER();
+
+  /* This is to work around a fat bug in BltMaskBitMapRastPort() under V39 and V40.
+   * If the source is interleaved, BltMaskBitMapRastPort() will work to the effect
+   * that the mask should be interleaved as well. Difficult for a single plane mask,
+   * isn't it? Fixing up the modulo might help, but then not every mask qualifies
+   * for that.
+   */
+  if(GetBitMapAttr(bm, BMA_FLAGS) & BMF_INTERLEAVED)
+  {
+    struct BitMap maskbm;
+    LONG i;
+
+    InitBitMap(&maskbm, 8, GetBitMapAttr(bm, BMA_WIDTH), height);
+
+    for(i = 0; i < 8; i++)
+      maskbm.Planes[i] = mask;
+
+    BltBitMapRastPort(bm, srcx, srcy, rp, destx, desty, width, height, MINTERM_B_EQUALS_C);
+    BltBitMapRastPort(&maskbm, srcx, srcy, rp, destx, desty, width, height, MINTERM_B_OR_C);
+    BltBitMapRastPort(bm, srcx, srcy, rp, destx, desty, width, height, MINTERM_B_EQUALS_C);
+  }
+  else
+  {
+    BltMaskBitMapRastPort(bm, srcx, srcy, rp, destx, desty, width, height, (ABC|ABNC|ANBC), mask);
+  }
+
+  LEAVE();
+}
+
+///
 /// NBitmap_DrawImage()
 //
 void NBitmap_DrawImage(struct IClass *cl, Object *obj)
@@ -957,12 +995,11 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
 
             if(data->dt_mask[item] != NULL)
             {
-              BltMaskBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
+              BltMaskRPort(data->dt_bitmap[item], 0, 0, _rp(obj),
                 _left(obj) + (data->border_horiz / 2),
                 _top(obj) + (data->border_vert / 2),
                 data->width,
                 data->height,
-                0xc0,
                 (APTR)data->dt_mask[item]);
             }
             else
@@ -1097,7 +1134,7 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
             if(data->ditheredMask[item] != NULL)
             {
               D(DBF_ALWAYS, "drawing remapped/dithered image with mask");
-              BltMaskBitMapRastPort(data->ditheredBitmap[item], 0, 0, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, (ABC|ABNC|ANBC), data->ditheredMask[item]);
+              BltMaskRPort(data->ditheredBitmap[item], 0, 0, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, data->ditheredMask[item]);
             }
             else
             {

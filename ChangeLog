@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2014-07-23 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: fixed the broken display of dithered images on
+    colormapped and interleaved screens.
+
 2014-07-14 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c, nbitmap_mcc/DitherBitmap.c: fixed the broken display

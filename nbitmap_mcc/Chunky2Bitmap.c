@@ -53,7 +53,7 @@ static void _WritePixelLine8(struct RastPort *rp, UWORD xstart, UWORD ystart, UW
 }
 #endif // __amigaos4 || __MORPHOS__ || __AROS__
 
-struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth)
+struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth, struct BitMap *friend)
 {
   struct BitMap *bm = NULL;
 
@@ -61,11 +61,11 @@ struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth
 
   if(chunky != NULL && width > 0 && height > 0)
   {
-    if((bm = AllocBitMap(width, height, min(8, depth), BMF_CLEAR|BMF_MINPLANES, NULL)) != NULL)
+    if((bm = AllocBitMap(width, height, min(8, depth), BMF_CLEAR|BMF_MINPLANES, friend)) != NULL)
     {
       struct BitMap *tempBM;
 
-      if((tempBM = AllocBitMap(PADWIDTH(width), 1, min(8, depth), BMF_CLEAR, NULL)) != NULL)
+      if((tempBM = AllocBitMap(PADWIDTH(width), 1, min(8, depth), BMF_CLEAR, friend)) != NULL)
       {
         struct RastPort remapRP;
         struct RastPort tempRP;

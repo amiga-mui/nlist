@@ -30,6 +30,6 @@
   #include <graphics/gfx.h>
 #endif
 
-struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth);
+struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth, struct BitMap *friend);
 
 #endif /* CHUNKY2BITMAP_H */
