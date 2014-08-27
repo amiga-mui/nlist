@@ -8,13 +8,14 @@
 # 
 # Translators:
 # Translators:
+# Michael Malyshev, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/nlist-classes/\n"
 "POT-Creation-Date: 2014-02-21 15:54+0100\n"
-"PO-Revision-Date: 2014-02-21 15:22+0000\n"
-"Last-Translator: damato <mail@jens-maus.de>\n"
+"PO-Revision-Date: 2014-08-20 06:35+0000\n"
+"Last-Translator: Michael Malyshev\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/nlist-classes/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +50,7 @@ msgstr "Изображение для 'закрытого раздела'"
 
 msgctxt "MSG_BUTTON_LABEL_LINES (7//)"
 msgid "Lines"
-msgstr ""
+msgstr "Строк"
 
 msgctxt "MSG_BUTTON_SHORTCUT_LINES (8//)"
 msgid "l"
