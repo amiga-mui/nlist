@@ -27,8 +27,8 @@ SUBDIRS = nbalance_mcc \
           nbitmap_mcc \
           nfloattext_mcc \
           nlist_mcc \
-          nlisttree_mcc \
           nlisttree_mcp \
+          nlisttree_mcc \
           nlistview_mcc \
           nlistviews_mcp \
           demo

@@ -10,6 +10,9 @@ $URL$
   * nlisttree_mcc/NListtree.c: fixed a possible memory leak because the created
     context menu object was never disposed. Furthermore the context menu is now
     created like a normal menu instead of from a static NewMenu structure.
+  * nlisttree_mcc, nlisttree_mcp: the NListtree_mcp.catalog is now used for the
+    normal NListtree.mcc class as well to provide translated context menu
+    entries. This closes #63.
 
 2014-08-27 Thore Böckelmann <tboeckel@gmx.de>
 

@@ -66,6 +66,14 @@ static const char *used_mcps[] = { "NListtree.mcp", "NListviews.mcp", NULL };
 
 #define MIN_STACKSIZE   8192
 
+#include "../common/NListtree_locale.h"
+
+struct Library *LocaleBase = NULL;
+
+#if defined(__amigaos4__)
+struct LocaleIFace *ILocale = NULL;
+#endif
+
 /******************************************************************************/
 /* define the functions used by the startup code ahead of including mccinit.c */
 /******************************************************************************/
@@ -82,9 +90,16 @@ static VOID ClassExpunge(UNUSED struct Library *base);
 /******************************************************************************/
 static BOOL ClassInit(UNUSED struct Library *base)
 {
-  if(StartClipboardServer() == TRUE)
+  if((LocaleBase = OpenLibrary("locale.library", 38)) &&
+    GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
   {
-    return(TRUE);
+    // open the NListtree_mcp catalog
+    OpenCat();
+
+    if(StartClipboardServer() == TRUE)
+    {
+      return(TRUE);
+    }
   }
 
   return(FALSE);
@@ -94,4 +109,14 @@ static BOOL ClassInit(UNUSED struct Library *base)
 static VOID ClassExpunge(UNUSED struct Library *base)
 {
   ShutdownClipboardServer();
+
+  // close the catalog
+  CloseCat();
+
+  if(LocaleBase != NULL)
+  {
+    DROPINTERFACE(ILocale);
+    CloseLibrary(LocaleBase);
+    LocaleBase = NULL;
+  }
 }

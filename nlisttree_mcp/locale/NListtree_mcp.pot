@@ -357,3 +357,23 @@ msgid ""
 "Allows to set the color for the glow\n"
 "line type"
 msgstr "Allows to set the color for the glow\nline type"
+
+msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD (76//)"
+msgid "Copy to clipboard"
+msgstr "Copy to clipboard"
+
+msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT0 (77//)"
+msgid "Unit 0"
+msgstr "Unit 0"
+
+msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT1 (78//)"
+msgid "Unit 1"
+msgstr "Unit 1"
+
+msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT2 (79//)"
+msgid "Unit 2"
+msgstr "Unit 2"
+
+msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT3 (80//)"
+msgid "Unit 3"
+msgstr "Unit 3"

@@ -46,7 +46,7 @@
 #include "private.h"
 #include "version.h"
 
-#include "locale.h"
+#include "../common/NListtree_locale.h"
 
 #include "muiextra.h"
 

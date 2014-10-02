@@ -69,7 +69,7 @@ static const char *used_mcps[] = { "NListviews.mcp", NULL };
 
 #define MIN_STACKSIZE       8192
 
-#include "locale.h"
+#include "../common/NListtree_locale.h"
 
 struct Library *LocaleBase = NULL;
 

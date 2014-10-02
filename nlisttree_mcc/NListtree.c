@@ -131,6 +131,9 @@
 #include <proto/graphics.h>
 #include <proto/utility.h>
 #include <proto/exec.h>
+#include <proto/locale.h>
+
+#include "../common/NListtree_locale.h"
 
 #include "private.h"
 
@@ -6537,11 +6540,11 @@ IPTR _ContextMenuBuild(struct IClass *cl, Object *obj, struct MUIP_NList_Context
   {
     data->contextMenu = MenustripObject,
       Child, MenuObjectT("NListtree"),
-        Child, MenuitemObject, MUIA_Menuitem_Title, "Copy to clipboard",
-          Child, MenuitemObject, MUIA_Menuitem_Title, "Unit 0", MUIA_UserData, 0, End,
-          Child, MenuitemObject, MUIA_Menuitem_Title, "Unit 1", MUIA_UserData, 1, End,
-          Child, MenuitemObject, MUIA_Menuitem_Title, "Unit 2", MUIA_UserData, 2, End,
-          Child, MenuitemObject, MUIA_Menuitem_Title, "Unit 3", MUIA_UserData, 3, End,
+        Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_COPY_TO_CLIPBOARD),
+          Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT0), MUIA_UserData, 0, End,
+          Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT1), MUIA_UserData, 1, End,
+          Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT2), MUIA_UserData, 2, End,
+          Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT3), MUIA_UserData, 3, End,
         End,
       End,
     End;

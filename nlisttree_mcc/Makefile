@@ -148,12 +148,13 @@ endif
 # none - because we want to compile with -Wall all the time
 
 # Common Directories
-PREFIX   = $(CDTHIS)
-OBJDIR   = .obj_$(OS)
-BINDIR   = bin_$(OS)
-VPATH    = $(OBJDIR)
-DEPFILE  = Makefile.dep
-DESTDIR  = MUI:Libs/MUI
+PREFIX    = $(CDTHIS)
+OBJDIR    = .obj_$(OS)
+BINDIR    = bin_$(OS)
+COMMONDIR = $(CDUP)common
+VPATH     = $(OBJDIR)
+DEPFILE   = Makefile.dep
+DESTDIR   = MUI:Libs/MUI
 
 # target definition
 TARGET    = $(BINDIR)/NListtree.mcc
@@ -164,7 +165,7 @@ WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
 OPTFLAGS = -O3 -fomit-frame-pointer
 DEBUG    = -DDEBUG -fno-omit-frame-pointer -O0
 DEBUGSYM = -g -gstabs
-CFLAGS   = -I. -I../nlisttree_mcp -I../include $(CPU) $(WARN) \
+CFLAGS   = -I. -I../include $(CPU) $(WARN) \
            $(OPTFLAGS) $(DEBUG) $(DEBUGSYM) $(USER_CFLAGS) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM)
 LDLIBS   =
@@ -176,6 +177,7 @@ LDLIBS   =
 LOBJS = library.o
 
 COBJS = NListtree.o \
+        NListtree_locale.o \
         ClipboardServer.o \
         QuickSort.o \
         Debug.o
@@ -312,7 +314,7 @@ endif
 .PHONY: all
 ifeq ($(wildcard $(DEPFILE)),$(DEPFILE))
 # great, we have a dependecies file, let's make our target
-all: $(BINDIR) $(OBJDIR) $(M68KSTUBS) $(TARGET) #$(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) $(COMMONDIR) $(COMMONDIR)/NListtree_locale.c $(M68KSTUBS) $(TARGET) #$(TESTTARGET)
 else
 # no dependecies, create it and then call make again
 all: depend
@@ -372,6 +374,10 @@ $(TESTTARGET): $(TESTOBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(TESTOBJS) $(LDLIBS) -Wl,--cref,-M,-Map=$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+
+$(OBJDIR)/NListtree_locale.o: $(COMMONDIR)/NListtree_locale.c $(COMMONDIR)/NListtree_locale.h
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) $< -o $@
 
 .PHONY: dump
 dump:
