@@ -5315,6 +5315,9 @@ IPTR _Dispose(struct IClass *cl, Object *obj, Msg msg)
   mempool = data->MemoryPool;
   treepool = data->TreePool;
 
+  if(data->contextMenu != NULL)
+    MUI_DisposeObject(data->contextMenu);
+
   ret = DoSuperMethodA(cl, obj, msg);
 
   if(treepool != NULL)
@@ -6519,32 +6522,34 @@ IPTR _ContextMenuBuild(struct IClass *cl, Object *obj, struct MUIP_NList_Context
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
 
-  STATIC struct NewMenu ContextMenu[] =
+  // dispose the previous context menu if it exists
+  if(data->contextMenu != NULL)
   {
-    /*
-    ** Type   Label               Key Flg MX  UserData
-    ** ======== ===============================   === === === ==============
-    */
-    { NM_TITLE, (STRPTR)"NListtree",          0,  0,  0,  NULL,   },
-
-    { NM_ITEM,  (STRPTR)"Copy to clipboard",  0,  0,  0,  NULL,   },
-
-    { NM_SUB,   (STRPTR)"Unit 0",             0,  0,  0,  (APTR)0,  },
-    { NM_SUB,   (STRPTR)"Unit 1",             0,  0,  0,  (APTR)1,  },
-    { NM_SUB,   (STRPTR)"Unit 2",             0,  0,  0,  (APTR)2,  },
-    { NM_SUB,   (STRPTR)"Unit 3",             0,  0,  0,  (APTR)3,  },
-
-    { NM_END, NULL,               0,  0,  0,  NULL,   }
-  };
+    MUI_DisposeObject(data->contextMenu);
+    data->contextMenu = NULL;
+  }
 
   data->MenuChoice.pos = msg->pos;
   data->MenuChoice.col = msg->column;
   data->MenuChoice.ontop = msg->ontop;
 
-  if ( !msg->ontop )
-    return( (IPTR)MUI_MakeObject( MUIO_MenustripNM, ContextMenu, 0 ) );
+  if(msg->ontop == FALSE)
+  {
+    data->contextMenu = MenustripObject,
+      Child, MenuObjectT("NListtree"),
+        Child, MenuitemObject, MUIA_Menuitem_Title, "Copy to clipboard",
+          Child, MenuitemObject, MUIA_Menuitem_Title, "Unit 0", MUIA_UserData, 0, End,
+          Child, MenuitemObject, MUIA_Menuitem_Title, "Unit 1", MUIA_UserData, 1, End,
+          Child, MenuitemObject, MUIA_Menuitem_Title, "Unit 2", MUIA_UserData, 2, End,
+          Child, MenuitemObject, MUIA_Menuitem_Title, "Unit 3", MUIA_UserData, 3, End,
+        End,
+      End,
+    End;
 
-  return( DoSuperMethodA( cl, obj, (Msg)msg) );
+    return (IPTR)data->contextMenu;
+  }
+
+  return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
 
