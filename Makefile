@@ -26,11 +26,11 @@
 SUBDIRS = nbalance_mcc \
           nbitmap_mcc \
           nfloattext_mcc \
+          nlistviews_mcp \
           nlist_mcc \
           nlisttree_mcp \
           nlisttree_mcc \
           nlistview_mcc \
-          nlistviews_mcp \
           demo
 
 .PHONY: all
