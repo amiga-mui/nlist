@@ -880,6 +880,7 @@ static void NBitmap_DrawSimpleFrame(Object *obj, uint32 x, uint32 y, uint32 w, u
 ///
 /// BltMaskRPort
 //
+#if !defined(__amigaos4__)
 static void BltMaskRPort(struct BitMap *bm, ULONG srcx, ULONG srcy, struct RastPort *rp, ULONG destx, ULONG desty, ULONG width, ULONG height, PLANEPTR mask)
 {
   #define MINTERM_B_OR_C      (ABC | ABNC | NABC | NABNC | ANBC | NANBC)
@@ -914,6 +915,7 @@ static void BltMaskRPort(struct BitMap *bm, ULONG srcx, ULONG srcy, struct RastP
 
   LEAVE();
 }
+#endif
 
 ///
 /// NBitmap_DrawImage()
