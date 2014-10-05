@@ -5318,9 +5318,6 @@ IPTR _Dispose(struct IClass *cl, Object *obj, Msg msg)
   mempool = data->MemoryPool;
   treepool = data->TreePool;
 
-  if(data->contextMenu != NULL)
-    MUI_DisposeObject(data->contextMenu);
-
   ret = DoSuperMethodA(cl, obj, msg);
 
   if(treepool != NULL)
@@ -6525,20 +6522,13 @@ IPTR _ContextMenuBuild(struct IClass *cl, Object *obj, struct MUIP_NList_Context
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
 
-  // dispose the previous context menu if it exists
-  if(data->contextMenu != NULL)
-  {
-    MUI_DisposeObject(data->contextMenu);
-    data->contextMenu = NULL;
-  }
-
   data->MenuChoice.pos = msg->pos;
   data->MenuChoice.col = msg->column;
   data->MenuChoice.ontop = msg->ontop;
 
   if(msg->ontop == FALSE)
   {
-    data->contextMenu = MenustripObject,
+    return (IPTR)MenustripObject,
       Child, MenuObjectT("NListtree"),
         Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_COPY_TO_CLIPBOARD),
           Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT0), MUIA_UserData, 0, End,
@@ -6548,8 +6538,6 @@ IPTR _ContextMenuBuild(struct IClass *cl, Object *obj, struct MUIP_NList_Context
         End,
       End,
     End;
-
-    return (IPTR)data->contextMenu;
   }
 
   return DoSuperMethodA(cl, obj, (Msg)msg);

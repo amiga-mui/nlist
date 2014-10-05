@@ -196,8 +196,6 @@ struct NListtree_Data
   ULONG             ForceActiveNotify; // *** next MUIA_NListtree_Notify notify will be enforced
   ULONG             IgnoreSelectionChange; /* *** Ignores the next selection change */
   UWORD             Error;
-
-  Object           *contextMenu;
 };
 
 
