@@ -69,20 +69,25 @@ static const char *used_mcps[] = { "NListviews.mcp", NULL };
 
 #define MIN_STACKSIZE       16384
 
+#include "../common/NListviews_locale.h"
+
 #if defined(__MORPHOS__)
 struct Library *LayersBase = NULL;
 struct Library *DiskfontBase = NULL;
 struct Library *ConsoleDevice = NULL;
+struct Library *LocaleBase = NULL;
 #else
 struct Library *LayersBase = NULL;
 struct Library *DiskfontBase = NULL;
 struct Device *ConsoleDevice = NULL;
+struct Library *LocaleBase = NULL;
 #endif
 
 #if defined(__amigaos4__)
 struct LayersIFace *ILayers = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 struct ConsoleIFace *IConsole = NULL;
+struct LocaleIFace *ILocale = NULL;
 #endif
 
 static struct IOStdReq ioreq;
@@ -138,12 +143,23 @@ static BOOL ClassInit(UNUSED struct Library *base)
             if(GETINTERFACE(ITimer, struct TimerIFace *, TimerBase))
             {
           #endif // DEBUG
-              if(NGR_Create())
+              if((LocaleBase = OpenLibrary( "locale.library", 38)) != NULL &&
+                 GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
               {
-                if(StartClipboardServer() == TRUE)
+                // open the NListviews_mcp catalog
+                OpenCat();
+
+                if(NGR_Create())
                 {
-                  return(TRUE);
+                  if(StartClipboardServer() == TRUE)
+                  {
+                    return(TRUE);
+                  }
                 }
+
+                DROPINTERFACE(ILocale);
+                CloseLibrary(LocaleBase);
+                LocaleBase = NULL;
               }
 
           #if defined(DEBUG)
@@ -179,6 +195,13 @@ static VOID ClassExpunge(UNUSED struct Library *base)
 
   NGR_Delete();
 
+  if(LocaleBase)
+  {
+    DROPINTERFACE(ILocale);
+    CloseLibrary(LocaleBase);
+    LocaleBase = NULL;
+  }
+
   #if defined(DEBUG)
   if(TimerBase)
   {
@@ -209,4 +232,3 @@ static VOID ClassExpunge(UNUSED struct Library *base)
     LayersBase = NULL;
   }
 }
-

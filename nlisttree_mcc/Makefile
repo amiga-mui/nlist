@@ -361,6 +361,10 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
+$(OBJDIR)/NListtree_locale.o: $(COMMONDIR)/NListtree_locale.c $(COMMONDIR)/NListtree_locale.h
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) $< -o $@
+
 # for linking the target
 $(TARGET): $(M68KSTUBS) $(MCCOBJS)
 	@echo "  LD $@.debug"
@@ -374,10 +378,6 @@ $(TESTTARGET): $(TESTOBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(TESTOBJS) $(LDLIBS) -Wl,--cref,-M,-Map=$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
-
-$(OBJDIR)/NListtree_locale.o: $(COMMONDIR)/NListtree_locale.c $(COMMONDIR)/NListtree_locale.h
-	@echo "  CC $<"
-	@$(CC) $(CFLAGS) $< -o $@
 
 .PHONY: dump
 dump:

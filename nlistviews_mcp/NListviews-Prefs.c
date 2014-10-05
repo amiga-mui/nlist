@@ -34,7 +34,7 @@
 #include <proto/muimaster.h>
 #include <proto/intuition.h>
 
-#include "locale.h"
+#include "../common/NListviews_locale.h"
 #include "private.h"
 
 #include "SDI_hook.h"

@@ -9,6 +9,9 @@ $URL$
 
   * nbitmap_mcc/NBitmap.c: define BltMaskRPort() for non-AmigaOS4 systems only
     as it is not required on AmigaOS4.
+  * nlist_mcc/NList_mcc5.c, nlistviews_mcp: the NListviews_mcp.catalog is now
+    used for the NList.mcc class as well to provide translated context menu
+    entries.
 
 2014-10-02 Thore Böckelmann <tboeckel@gmx.de>
 

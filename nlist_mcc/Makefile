@@ -151,12 +151,13 @@ endif
 # none - because we want to compile with -Wall all the time
 
 # Common Directories
-PREFIX   = $(CDTHIS)
-OBJDIR   = .obj_$(OS)
-BINDIR   = bin_$(OS)
-VPATH    = $(OBJDIR)
-DEPFILE  = Makefile.dep
-DESTDIR  = MUI:Libs/MUI
+PREFIX    = $(CDTHIS)
+OBJDIR    = .obj_$(OS)
+BINDIR    = bin_$(OS)
+COMMONDIR = $(CDUP)common
+VPATH     = $(OBJDIR)
+DEPFILE   = Makefile.dep
+DESTDIR   = MUI:Libs/MUI
 
 # target definition
 TARGET    = $(BINDIR)/NList.mcc
@@ -178,24 +179,25 @@ LDLIBS   =
 
 LOBJS = library.o
 
-COBJS = NList_mcc.o       \
-        NList_mcc0.o      \
-        NList_mcc1.o      \
-        NList_mcc2.o      \
-        NList_mcc3.o      \
-        NList_mcc4.o      \
-        NList_mcc5.o      \
-        NList_mcc6.o      \
-        move.o            \
-        NList_func.o      \
-        NList_func2.o     \
-        NList_func3.o     \
-        NList_func4.o     \
-        NList_grp.o       \
-        NList_img.o       \
-        NList_img2.o      \
-        ClipboardServer.o \
-        Pointer.o         \
+COBJS = NList_mcc.o         \
+        NList_mcc0.o        \
+        NList_mcc1.o        \
+        NList_mcc2.o        \
+        NList_mcc3.o        \
+        NList_mcc4.o        \
+        NList_mcc5.o        \
+        NList_mcc6.o        \
+        move.o              \
+        NList_func.o        \
+        NList_func2.o       \
+        NList_func3.o       \
+        NList_func4.o       \
+        NList_grp.o         \
+        NList_img.o         \
+        NList_img2.o        \
+        NListviews_locale.o \
+        ClipboardServer.o   \
+        Pointer.o           \
         Debug.o
 
 TOBJS = NList-Test.o
@@ -332,7 +334,7 @@ TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
 .PHONY: all
 ifeq ($(wildcard $(DEPFILE)),$(DEPFILE))
 # great, we have a dependecies file, let's make our target
-all: $(BINDIR) $(OBJDIR) $(M68KSTUBS) $(TARGET) $(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) $(COMMONDIR) $(COMMONDIR)/NListtree_locale.c $(M68KSTUBS) $(TARGET) $(TESTTARGET)
 else
 # no dependecies, create it and then call make again
 all: depend
@@ -377,6 +379,10 @@ $(OBJDIR)/%.o: %.c
 	@$(CC) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) $< -o $@
+
+$(OBJDIR)/NListviews_locale.o: $(COMMONDIR)/NListviews_locale.c $(COMMONDIR)/NListviews_locale.h
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 

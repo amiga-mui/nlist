@@ -43,7 +43,7 @@
 #include "private.h"
 #include "version.h"
 
-#include "locale.h"
+#include "../common/NListviews_locale.h"
 
 #include "muiextra.h"
 

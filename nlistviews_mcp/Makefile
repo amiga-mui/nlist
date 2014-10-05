@@ -173,13 +173,14 @@ endif
 # none - because we want to compile with -Wall all the time
 
 # Common Directories
-PREFIX   = $(CDTHIS)
-OBJDIR   = .obj_$(OS)
-BINDIR   = bin_$(OS)
-LOCALE   = locale
-VPATH    = $(OBJDIR)
-DEPFILE  = Makefile.dep
-DESTDIR  = MUI:Libs/MUI
+PREFIX    = $(CDTHIS)
+OBJDIR    = .obj_$(OS)
+BINDIR    = bin_$(OS)
+COMMONDIR = $(CDUP)common
+LOCALE    = locale
+VPATH     = $(OBJDIR)
+DEPFILE   = Makefile.dep
+DESTDIR   = MUI:Libs/MUI
 
 # target definition
 TARGET    = $(BINDIR)/NListviews.mcp
@@ -341,7 +342,7 @@ endif
 .PHONY: all
 ifeq ($(wildcard $(DEPFILE)),$(DEPFILE))
 # great, we have a dependecies file, let's make our target
-all: $(BINDIR) $(OBJDIR) $(M68KSTUBS) locale.c $(TARGET) $(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) $(COMMONDIR) $(COMMONDIR)/NListviews_locale.c $(M68KSTUBS) $(TARGET) $(TESTTARGET)
 else
 # no dependecies, create it and then call make again
 all: depend
@@ -379,12 +380,21 @@ $(BINDIR):
 	@echo "  MK $@"
 	@$(MKDIR) $(BINDIR)
 
+# make the common directories
+$(COMMONDIR):
+	@echo "  MK $@"
+	@$(MKDIR) $(COMMONDIR)
+
 # for compiling single .c files
 $(OBJDIR)/%.o: %.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) $< -o $@
+
+$(OBJDIR)/NListviews_locale.o: $(COMMONDIR)/NListviews_locale.c $(COMMONDIR)/NListviews_locale.h
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
@@ -402,10 +412,10 @@ $(TESTTARGET): $(TESTOBJS)
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-locale.h: locale.c
-locale.c: $(LOCALE)/NListviews_mcp.pot C_h.sd C_c.sd
+$(COMMONDIR)/NListviews_locale.h: $(COMMONDIR)/NListviews_locale.c
+$(COMMONDIR)/NListviews_locale.c: $(LOCALE)/NListviews_mcp.pot C_h.sd C_c.sd
 	@echo "  FC $@"
-	@$(FC) $(LOCALE)/NListviews_mcp.pot locale.h=C_h.sd locale.c=C_c.sd
+	@$(FC) $(LOCALE)/NListviews_mcp.pot $(COMMONDIR)/NListviews_locale.h=C_h.sd $(COMMONDIR)/NListviews_locale.c=C_c.sd
 
 ## CATALOG GENERATION #################
 
@@ -430,7 +440,7 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	-$(RM) locale.?
+	-$(RM) $(COMMONDIR)/NListviews_locale.?
 	-$(RM) $(LOCALE)/*.catalog
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)

@@ -63,6 +63,7 @@ struct Library *UtilityBase = NULL;
 struct Library *LayersBase = NULL;
 struct Device *ConsoleDevice = NULL;
 struct Library *DiskfontBase = NULL;
+struct Library *LocaleBase = NULL;
 
 #if defined(__amigaos4__)
 struct Library *IntuitionBase = NULL;
@@ -80,6 +81,7 @@ struct GraphicsIFace *IGraphics = NULL;
 struct IntuitionIFace *IIntuition = NULL;
 struct MUIMasterIFace *IMUIMaster = NULL;
 struct UtilityIFace *IUtility = NULL;
+struct LocaleIFace *ILocale = NULL;
 #endif
 
 static struct IOStdReq ioreq;
@@ -98,6 +100,7 @@ struct TimerIFace *ITimer = NULL;
 #endif // DEBUG
 
 #include "private.h"
+#include "../common/NListviews_locale.h"
 
 #include <mui/NListview_mcc.h>
 #include <mui/NFloattext_mcc.h>
@@ -699,6 +702,13 @@ static VOID fail(APTR APP_Main,const char *str)
 
   NGR_Delete();
 
+  if(LocaleBase)
+  {
+    DROPINTERFACE(ILocale);
+    CloseLibrary(LocaleBase);
+    LocaleBase = NULL;
+  }
+
   #if defined(DEBUG)
   if(TimerBase)
   {
@@ -791,15 +801,22 @@ static VOID init(VOID)
           if(GETINTERFACE(ITimer, TimerBase))
           {
         #endif
-            if(NGR_Create())
+            if((LocaleBase = OpenLibrary( "locale.library", 38)) != NULL &&
+               GETINTERFACE(ILocale, LocaleBase))
             {
-              if(StartClipboardServer() == TRUE)
-              {
-                #if defined(DEBUG)
-                SetupDebug();
-                #endif
+              // open the NListviews_mcp catalog
+              OpenCat();
 
-                return;
+              if(NGR_Create())
+              {
+                if(StartClipboardServer() == TRUE)
+                {
+                  #if defined(DEBUG)
+                  SetupDebug();
+                  #endif
+
+                  return;
+                }
               }
             }
         #if defined(DEBUG)

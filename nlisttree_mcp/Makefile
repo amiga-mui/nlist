@@ -369,6 +369,10 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
+$(OBJDIR)/NListtree_locale.o: $(COMMONDIR)/NListtree_locale.c $(COMMONDIR)/NListtree_locale.h
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) $< -o $@
+
 # for linking the target
 $(TARGET): $(M68KSTUBS) $(MCCOBJS)
 	@echo "  LD $@.debug"
@@ -387,10 +391,6 @@ $(COMMONDIR)/NListtree_locale.h: $(COMMONDIR)/NListtree_locale.c
 $(COMMONDIR)/NListtree_locale.c: $(LOCALE)/NListtree_mcp.pot C_h.sd C_c.sd
 	@echo "  FC $@"
 	@$(FC) $(LOCALE)/NListtree_mcp.pot $(COMMONDIR)/NListtree_locale.h=C_h.sd $(COMMONDIR)/NListtree_locale.c=C_c.sd
-
-$(OBJDIR)/NListtree_locale.o: $(COMMONDIR)/NListtree_locale.c $(COMMONDIR)/NListtree_locale.h
-	@echo "  CC $<"
-	@$(CC) $(CFLAGS) $< -o $@
 
 ## CATALOG GENERATION #################
 

@@ -39,20 +39,9 @@
 
 #include "NList_func.h"
 #include "NListview_mcc.h"
+#include "../common/NListviews_locale.h"
 
 /*#define DO_CLIPBLIT    TRUE*/
-
-static struct NewMenu MenuData[] =
-{
-  { NM_TITLE, (STRPTR)"Column", 0 ,0 ,0 ,(APTR) MUIV_NList_ContextMenu_Never },
-  { NM_ITEM,  (STRPTR)"Default Width: this", 0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefWidth_This },
-  { NM_ITEM,  (STRPTR)"Default Width: all",  0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefWidth_All },
-  { NM_ITEM,  (STRPTR)"Default Order: this", 0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefOrder_This },
-  { NM_ITEM,  (STRPTR)"Default Order: all",  0 ,0 ,0 ,(APTR) MUIV_NList_Menu_DefOrder_All },
-
-  { NM_END,NULL,0,0,0,(APTR)0 },
-};
-
 
 void NL_SetCols(struct NLData *data)
 {
@@ -1336,9 +1325,19 @@ IPTR mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuB
       if ((IPTR)MenuObj == (IPTR)-1)
         return (0);
 
-      if (!MenuObj)
-      { if (!data->MenuObj)
-          data->MenuObj = MUI_MakeObject(MUIO_MenustripNM,MenuData,0);
+      if(MenuObj == NULL)
+      {
+        if(data->MenuObj == NULL)
+        {
+          data->MenuObj = MenustripObject,
+            Child, MenuObjectT(tr(MSG_CTXMENU_COLUMN)),
+              Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_DEFAULT_WIDTH_THIS), MUIA_UserData, MUIV_NList_Menu_DefWidth_This, End,
+              Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_DEFAULT_WIDTH_ALL),  MUIA_UserData, MUIV_NList_Menu_DefWidth_All,  End,
+              Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_DEFAULT_ORDER_THIS), MUIA_UserData, MUIV_NList_Menu_DefOrder_This, End,
+              Child, MenuitemObject, MUIA_Menuitem_Title, tr(MSG_CTXMENU_DEFAULT_ORDER_ALL),  MUIA_UserData, MUIV_NList_Menu_DefOrder_All,  End,
+            End,
+          End;
+        }
         MenuObj = data->MenuObj;
       }
 
