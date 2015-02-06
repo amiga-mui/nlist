@@ -8,13 +8,14 @@
 # 
 # Translators:
 # Translators:
+# Anthony I., 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/nlist-classes/\n"
 "POT-Creation-Date: 2014-02-21 15:54+0100\n"
-"PO-Revision-Date: 2014-10-02 14:06+0000\n"
-"Last-Translator: Thore Böckelmann <tboeckel@gmx.de>\n"
+"PO-Revision-Date: 2014-10-02 15:30+0000\n"
+"Last-Translator: Anthony I.\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/nlist-classes/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,20 +362,20 @@ msgstr "Επιτρέπει να ορίστε το χρώμα για το\nτύπ
 
 msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD (76//)"
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Αντιγραφή στο πρόχειρο"
 
 msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT0 (77//)"
 msgid "Unit 0"
-msgstr ""
+msgstr "Μονάδα 0"
 
 msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT1 (78//)"
 msgid "Unit 1"
-msgstr ""
+msgstr "Μονάδα 1"
 
 msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT2 (79//)"
 msgid "Unit 2"
-msgstr ""
+msgstr "Μονάδα 2"
 
 msgctxt "MSG_CTXMENU_COPY_TO_CLIPBOARD_UNIT3 (80//)"
 msgid "Unit 3"
-msgstr ""
+msgstr "Μονάδα 3"

@@ -8,13 +8,14 @@
 # 
 # Translators:
 # Translators:
+# İbrahim Alper Sönmez <amithlondestek@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/nlist-classes/\n"
 "POT-Creation-Date: 2014-02-21 16:03+0100\n"
-"PO-Revision-Date: 2014-10-05 18:13+0000\n"
-"Last-Translator: Thore Böckelmann <tboeckel@gmx.de>\n"
+"PO-Revision-Date: 2015-01-27 10:25+0000\n"
+"Last-Translator: İbrahim Alper Sönmez <amithlondestek@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/nlist-classes/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -749,20 +750,20 @@ msgstr "Eğer sorunlarla karşılaşırsanız, simge bilgisinden yığın boyutu
 
 msgctxt "MSG_CTXMENU_COLUMN (142//)"
 msgid "Column"
-msgstr ""
+msgstr "Sütun"
 
 msgctxt "MSG_CTXMENU_DEFAULT_WIDTH_THIS (143//)"
 msgid "Default width: this"
-msgstr ""
+msgstr "Varsayılan genişlik: bu"
 
 msgctxt "MSG_CTXMENU_DEFAULT_WIDTH_ALL (144//)"
 msgid "Default width: all"
-msgstr ""
+msgstr "Varsayılan genişlik: tümü"
 
 msgctxt "MSG_CTXMENU_DEFAULT_ORDER_THIS (145//)"
 msgid "Default order: this"
-msgstr ""
+msgstr "Varsayılan sıralama: bu"
 
 msgctxt "MSG_CTXMENU_DEFAULT_ORDER_ALL (146//)"
 msgid "Default order: all"
-msgstr ""
+msgstr "Varsayılan sıralama: tümü"
