@@ -32,6 +32,11 @@
   #define MEMF_SHARED MEMF_ANY
 #endif
 
+// constant data
+/// default color map
+
+///
+
 APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
 {
   struct TagItem *tag;
@@ -39,9 +44,11 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
   uint32 height = 0;
   uint32 format = 0;
   const uint32 *colorMap = NULL;
+  int32 colorMapSize = 0;
   const int32 *penMap = NULL;
   APTR result = NULL;
   uint8 **maskPtr = NULL;
+  BOOL isDefaultColorMap = FALSE;
 
   ENTER();
 
@@ -63,6 +70,14 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
 
       case DITHERA_ColorMap:
         colorMap = (uint32 *)tag->ti_Data;
+      break;
+
+      case DITHERA_ColorMapSize:
+        colorMapSize = tag->ti_Data;
+      break;
+
+      case DITHERA_IsDefaultColorMap:
+        isDefaultColorMap = TRUE;
       break;
 
       case DITHERA_PenMap:
@@ -106,9 +121,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
         for(x = 0; x < width; x++)
         {
           uint8 a, r, g, b;
-          int32 i;
           int32 bestIndex;
-          uint32 bestError;
 
           // obtain the pixel's A, R, G and B values from the raw data
           switch(format)
@@ -145,30 +158,46 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
             break;
           }
 
-          // now calculate the best matching color from the given color map
-          bestIndex = -1;
-          bestError = 0xffffffffUL;
-
-          for(i = 0; i < 256; i++)
+          if(isDefaultColorMap == TRUE)
           {
-            int32 dr, dg, db;
-            uint32 error;
+            LONG ir, ig, ib;
 
-            // calculate the geometric difference to the current color
-            dr = (int32)((colorMap[i] >> 16) & 0xff) - (int32)r;
-            dg = (int32)((colorMap[i] >>  8) & 0xff) - (int32)g;
-            db = (int32)((colorMap[i] >>  0) & 0xff) - (int32)b;
-            error = dr * dr + dg * dg + db * db;
+            ir = (r * 6) / 255;
+            ig = (g * 6) / 255;
+            ib = (b * 6) / 255;
 
-            if(bestError > error)
+            bestIndex = ir*6*6 + ig*6 + ib;
+          }
+          else
+          {
+            int32 i;
+            uint32 bestError;
+
+            // now calculate the best matching color from the given color map
+            bestIndex = -1;
+            bestError = 0xffffffffUL;
+
+            for(i = 0; i < colorMapSize; i++)
             {
-              // remember this as the best matching color so far
-              bestError = error;
-              bestIndex = i;
+              int32 dr, dg, db;
+              uint32 error;
 
-              // bail out if we found an exact match
-              if(error == 0x00000000UL)
-                break;
+              // calculate the geometric difference to the current color
+              dr = (int32)((colorMap[i] >> 16) & 0xff) - (int32)r;
+              dg = (int32)((colorMap[i] >>  8) & 0xff) - (int32)g;
+              db = (int32)((colorMap[i] >>  0) & 0xff) - (int32)b;
+              error = dr * dr + dg * dg + db * db;
+
+              if(bestError > error)
+              {
+                // remember this as the best matching color so far
+                bestError = error;
+                bestIndex = i;
+
+                // bail out if we found an exact match
+                if(error == 0x00000000UL)
+                  break;
+              }
             }
           }
 

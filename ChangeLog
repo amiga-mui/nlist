@@ -5,6 +5,14 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2015-02-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/DitherImage.c: use a default colormap consisting of 216 colors
+    only instead of 256 colors. This makes dithering LOTS faster, because there
+    is no need to iterate over all colors to calculate the best matching pen.
+    Furthermore it saves some pens on the destination screen. Finally it matches
+    how MUI4 does its own internal dithering.
+
 2014-10-05 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/NBitmap.c: define BltMaskRPort() for non-AmigaOS4 systems only

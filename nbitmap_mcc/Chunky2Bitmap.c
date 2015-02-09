@@ -24,34 +24,8 @@
 
 #include "Chunky2Bitmap.h"
 #include "DitherImage.h"
-#include "SetPatch.h"
 
 #include "private.h"
-
-#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
-#define WPL8(rp, xstart, ystart, width, array, tmprp) WritePixelLine8(rp, xstart, ystart, width, array, tmprp)
-#else // __amigaos4 || __MORPHOS__ || __AROS__
-// WritePixelLine8() is broken on plain OS3.1 systems, don't use it!
-static void _WritePixelLine8(struct RastPort *rp, UWORD xstart, UWORD ystart, UWORD width, const UBYTE *array, UNUSED struct RastPort *tmprp)
-{
-  UWORD x;
-  const UBYTE *a = &array[xstart];
-
-  for(x = 0; x < width; x++)
-  {
-    SetAPen(rp, *a++);
-    WritePixel(rp, x+xstart, ystart);
-  }
-}
-
-#define WPL8(rp, xstart, ystart, width, array, tmprp) \
-{ \
-  if(setPatchVersion >= ((43UL << 16) | 0UL)) \
-    WritePixelLine8(rp, xstart, ystart, width, array, tmprp); \
-  else \
-    _WritePixelLine8(rp, xstart, ystart, width, array, tmprp); \
-}
-#endif // __amigaos4 || __MORPHOS__ || __AROS__
 
 struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth, struct BitMap *friend)
 {
@@ -61,16 +35,14 @@ struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth
 
   if(chunky != NULL && width > 0 && height > 0)
   {
-    if((bm = AllocBitMap(width, height, min(8, depth), BMF_CLEAR|BMF_MINPLANES, friend)) != NULL)
+    if((bm = AllocBitMap(width, height, min(8, depth), BMF_MINPLANES, friend)) != NULL)
     {
       struct BitMap *tempBM;
 
-      if((tempBM = AllocBitMap(PADWIDTH(width), 1, min(8, depth), BMF_CLEAR, friend)) != NULL)
+      if((tempBM = AllocBitMap(PADWIDTH(width), 1, min(8, depth), BMF_MINPLANES, friend)) != NULL)
       {
         struct RastPort remapRP;
         struct RastPort tempRP;
-        ULONG y;
-        char *chunkyPtr = chunky;
 
         InitRastPort(&remapRP);
         remapRP.BitMap = bm;
@@ -78,12 +50,7 @@ struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth
         InitRastPort(&tempRP);
         tempRP.BitMap = tempBM;
 
-        for(y = 0; y < height; y++)
-        {
-          WPL8(&remapRP, 0, y, width, chunkyPtr, &tempRP);
-
-          chunkyPtr += width;
-        }
+        WritePixelArray8(&remapRP, 0, 0, width-1, height-1, chunky, &tempRP);
 
         FreeBitMap(tempBM);
       }

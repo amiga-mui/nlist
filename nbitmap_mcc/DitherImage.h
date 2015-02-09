@@ -49,8 +49,10 @@ void FreeDitheredImage(APTR image, APTR mask);
 #define DITHERA_Height                 (TAG_USER+3)
 #define DITHERA_Format                 (TAG_USER+4)
 #define DITHERA_ColorMap               (TAG_USER+5)
-#define DITHERA_PenMap                 (TAG_USER+6)
-#define DITHERA_MaskPlane              (TAG_USER+7)
+#define DITHERA_ColorMapSize           (TAG_USER+6)
+#define DITHERA_IsDefaultColorMap      (TAG_USER+7)
+#define DITHERA_PenMap                 (TAG_USER+8)
+#define DITHERA_MaskPlane              (TAG_USER+9)
 
 #define PADWIDTH(w) (((((UWORD)(w))+15)>>4) << 4)
 #define RAWWIDTH(w) ((((UWORD)(w))+15)>>3 & 0xFFFE)
