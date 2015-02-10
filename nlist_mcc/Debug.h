@@ -1,8 +1,11 @@
 /***************************************************************************
 
- TextEditor.mcc - Textediting MUI Custom Class
- Copyright (C) 1997-2000 Allan Odgaard
- Copyright (C) 2005 by TextEditor.mcc Open Source Team
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number: 1d51 0x9d510030 to 0x9d5100A0
+                                           0x9d5100C0 to 0x9d5100FF
+
+ Copyright (C) 1996-2001 by Gilles Masson
+ Copyright (C) 2001-2015 NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -14,7 +17,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Lesser General Public License for more details.
 
- TextEditor class Support Site:  http://www.sf.net/projects/texteditor-mcc
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 
  $Id$
 
