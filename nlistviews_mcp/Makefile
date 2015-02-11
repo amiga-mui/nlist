@@ -202,8 +202,8 @@ LDLIBS   =
 
 LOBJS = library.o
 
-COBJS = locale.o \
-        NListviews.o \
+COBJS = NListviews.o \
+        NListviews_locale.o \
         icon.o \
         Debug.o
 
