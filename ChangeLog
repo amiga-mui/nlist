@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+#### v0.120 RELEASE ###########################################################
+
+2015-03-21 Jens Maus <mail@jens-maus.de>
+
+  * misc: final v0.120 release preparations
+ 
 2015-02-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/DitherImage.c: use a default colormap consisting of 216 colors
