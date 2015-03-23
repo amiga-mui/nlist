@@ -191,7 +191,7 @@ WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
 OPTFLAGS = -O3 -fomit-frame-pointer
 DEBUG    = -DDEBUG -fno-omit-frame-pointer -O0
 DEBUGSYM = -g -gstabs
-CFLAGS   = -I. -I../nlistviews_mcp -I../include $(CPU) $(WARN) \
+CFLAGS   = -I. -I../common -I../include $(CPU) $(WARN) \
            $(OPTFLAGS) $(DEBUG) $(DEBUGSYM) $(USER_CFLAGS) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM)
 LDLIBS   =
