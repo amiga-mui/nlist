@@ -8,13 +8,13 @@
 # 
 # Translators:
 # Translators:
-# Michael Malyshev, 2014
+# Michael Malyshev, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/nlist-classes/\n"
 "POT-Creation-Date: 2014-02-21 15:54+0100\n"
-"PO-Revision-Date: 2014-12-28 08:13+0000\n"
+"PO-Revision-Date: 2015-03-28 07:42+0000\n"
 "Last-Translator: Michael Malyshev\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/nlist-classes/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -50,7 +50,7 @@ msgstr "Изменить изображение для 'закрытого ра�
 
 msgctxt "MSG_BUTTON_LABEL_LINES (7//)"
 msgid "Lines"
-msgstr "Строк"
+msgstr "Линий"
 
 msgctxt "MSG_BUTTON_SHORTCUT_LINES (8//)"
 msgid "l"
@@ -66,7 +66,7 @@ msgstr "Изменить цвет линий"
 
 msgctxt "MSG_BUTTON_LABEL_OPEN (11//)"
 msgid "Open"
-msgstr "Открыть"
+msgstr "Открыто"
 
 msgctxt "MSG_BUTTON_SHORTCUT_OPEN (12//)"
 msgid "o"
@@ -247,7 +247,7 @@ msgstr "Объект NListtree реагирует в реальном време
 
 msgctxt "MSG_BUTTON_LABEL_EXPAND (50//)"
 msgid "Expand"
-msgstr "Пример"
+msgstr "Развернуть"
 
 msgctxt "MSG_BUTTON_SHORTCUT_EXPAND (51//)"
 msgid "n"
@@ -271,19 +271,19 @@ msgstr "l"
 
 msgctxt "MSG_LINETYPE_DISABLED (56//)"
 msgid "Disabled"
-msgstr "Отключено"
+msgstr "Отключена"
 
 msgctxt "MSG_LINETYPE_NORMAL (57//)"
 msgid "Normal"
-msgstr "Обычный"
+msgstr "Обычная"
 
 msgctxt "MSG_LINETYPE_DOTTED (58//)"
 msgid "Dotted"
-msgstr "Точечный"
+msgstr "Точечная"
 
 msgctxt "MSG_LINETYPE_SHADOW (59//)"
 msgid "Shadow"
-msgstr "Тень"
+msgstr "С тенью"
 
 msgctxt "MSG_LINETYPE_GLOW (60//)"
 msgid "Glow"
