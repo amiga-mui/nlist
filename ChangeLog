@@ -5,12 +5,18 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2015-02-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/private.h: increased the image name buffer size from 68 to 256
+    characters. This avoids very long file names to be truncated too early.
+    This closes MUI ticket #201.
+
 #### v0.120 RELEASE ###########################################################
 
 2015-03-21 Jens Maus <mail@jens-maus.de>
 
   * misc: final v0.120 release preparations
- 
+
 2015-02-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * nbitmap_mcc/DitherImage.c: use a default colormap consisting of 216 colors

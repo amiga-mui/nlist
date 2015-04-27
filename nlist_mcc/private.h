@@ -581,7 +581,7 @@ struct NLData
 
   BYTE column[DISPLAY_ARRAY_MAX+2];
 
-  char imagebuf[64+4];
+  char imagebuf[256];
 
   struct InputEvent ievent;
   char rawtext[MAXRAWBUF];
