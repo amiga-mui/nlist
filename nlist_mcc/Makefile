@@ -334,7 +334,7 @@ TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
 .PHONY: all
 ifeq ($(wildcard $(DEPFILE)),$(DEPFILE))
 # great, we have a dependecies file, let's make our target
-all: $(BINDIR) $(OBJDIR) $(COMMONDIR) $(COMMONDIR)/NListtree_locale.c $(M68KSTUBS) $(TARGET) $(TESTTARGET)
+all: $(BINDIR) $(OBJDIR) $(COMMONDIR) $(COMMONDIR)/NListviews_locale.c $(M68KSTUBS) $(TARGET) $(TESTTARGET)
 else
 # no dependecies, create it and then call make again
 all: depend
