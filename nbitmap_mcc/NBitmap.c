@@ -1004,10 +1004,6 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
         {
           if(data->fmt == PBPAFMT_LUT8)
           {
-            #if defined(__amigaos4__)
-            uint32 error;
-            #endif
-
             /* select bitmap */
             if(data->button && data->pressed && data->overlay && data->dt_bitmap[2])
               item = 2;
@@ -1017,22 +1013,19 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
             SHOWVALUE(DBF_DRAW, data->dt_mask[item]);
 
             #if defined(__amigaos4__)
-            error = BltBitMapTags(BLITA_Source, data->dt_bitmap[item],
-                                  BLITA_Dest, _rp(obj),
-                                  BLITA_SrcX, 0,
-                                  BLITA_SrcY, 0,
-                                  BLITA_DestX, x + (data->border_horiz / 2),
-                                  BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
-                                  BLITA_Width, data->width,
-                                  BLITA_Height, data->height,
-                                  BLITA_SrcType, BLITT_BITMAP,
-                                  BLITA_DestType, BLITT_RASTPORT,
-                                  BLITA_MaskPlane, data->dt_mask[item],
-                                  TAG_DONE);
-            SHOWVALUE(DBF_DRAW, error);
-
+            BltBitMapTags(BLITA_Source, data->dt_bitmap[item],
+                          BLITA_Dest, _rp(obj),
+                          BLITA_SrcX, 0,
+                          BLITA_SrcY, 0,
+                          BLITA_DestX, x + (data->border_horiz / 2),
+                          BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                          BLITA_Width, data->width,
+                          BLITA_Height, data->height,
+                          BLITA_SrcType, BLITT_BITMAP,
+                          BLITA_DestType, BLITT_RASTPORT,
+                          BLITA_MaskPlane, data->dt_mask[item],
+                          TAG_DONE);
             #else
-
             if(data->dt_mask[item] != NULL)
             {
               BltMaskRPort(data->dt_bitmap[item], 0, 0, _rp(obj),
@@ -1066,31 +1059,26 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
             {
               #if defined(__amigaos4__)
               int32 srctype;
-              uint32 error;
 
               if(data->depth == 24)
                srctype = BLITT_RGB24;
               else
                srctype = BLITT_ARGB32;
 
-              error = BltBitMapTags(BLITA_Source, data->arraypixels[item],
-                                    BLITA_Dest, _rp(obj),
-                                    BLITA_SrcX, 0,
-                                    BLITA_SrcY, 0,
-                                    BLITA_DestX, x + (data->border_horiz / 2),
-                                    BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
-                                    BLITA_Width, data->width,
-                                    BLITA_Height, data->height,
-                                    BLITA_SrcType, srctype,
-                                    BLITA_DestType, BLITT_RASTPORT,
-                                    BLITA_SrcBytesPerRow, data->arraybpr,
-                                    BLITA_UseSrcAlpha, TRUE,
-                                    TAG_DONE);
-
-              SHOWVALUE(DBF_DRAW, error);
-
+              BltBitMapTags(BLITA_Source, data->arraypixels[item],
+                            BLITA_Dest, _rp(obj),
+                            BLITA_SrcX, 0,
+                            BLITA_SrcY, 0,
+                            BLITA_DestX, x + (data->border_horiz / 2),
+                            BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                            BLITA_Width, data->width,
+                            BLITA_Height, data->height,
+                            BLITA_SrcType, srctype,
+                            BLITA_DestType, BLITT_RASTPORT,
+                            BLITA_SrcBytesPerRow, data->arraybpr,
+                            BLITA_UseSrcAlpha, TRUE,
+                            TAG_DONE);
               #else
-
               if(data->depth == 24)
               {
                 WPA(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
@@ -1099,7 +1087,6 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
               {
                 WPAA(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
               }
-
               #endif
             }
           }
@@ -1277,41 +1264,35 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
       else
       {
         #if defined(__amigaos4__)
-        uint32 error;
-
         if(data->pressed)
-          error = BltBitMapTags(BLITA_Source, data->pressedShadePixels,
-                                BLITA_Dest, _rp(obj),
-                                BLITA_SrcX, 0,
-                                BLITA_SrcY, 0,
-                                BLITA_DestX, x+1,
-                                BLITA_DestY, y+1,
-                                BLITA_Width, data->shadeWidth,
-                                BLITA_Height, data->shadeHeight,
-                                BLITA_SrcType, BLITT_ARGB32,
-                                BLITA_DestType, BLITT_RASTPORT,
-                                BLITA_SrcBytesPerRow, data->shadeBytesPerRow,
-                                BLITA_UseSrcAlpha, TRUE,
-                                TAG_DONE);
+          BltBitMapTags(BLITA_Source, data->pressedShadePixels,
+                        BLITA_Dest, _rp(obj),
+                        BLITA_SrcX, 0,
+                        BLITA_SrcY, 0,
+                        BLITA_DestX, x+1,
+                        BLITA_DestY, y+1,
+                        BLITA_Width, data->shadeWidth,
+                        BLITA_Height, data->shadeHeight,
+                        BLITA_SrcType, BLITT_ARGB32,
+                        BLITA_DestType, BLITT_RASTPORT,
+                        BLITA_SrcBytesPerRow, data->shadeBytesPerRow,
+                        BLITA_UseSrcAlpha, TRUE,
+                        TAG_DONE);
         else
-          error = BltBitMapTags(BLITA_Source, data->overShadePixels,
-                                BLITA_Dest, _rp(obj),
-                                BLITA_SrcX, 0,
-                                BLITA_SrcY, 0,
-                                BLITA_DestX, x+1,
-                                BLITA_DestY, y+1,
-                                BLITA_Width, data->shadeWidth,
-                                BLITA_Height, data->shadeHeight,
-                                BLITA_SrcType, BLITT_ARGB32,
-                                BLITA_DestType, BLITT_RASTPORT,
-                                BLITA_SrcBytesPerRow, data->shadeBytesPerRow,
-                                BLITA_UseSrcAlpha, TRUE,
-                                TAG_DONE);
-
-        SHOWVALUE(DBF_DRAW, error);
-
+          BltBitMapTags(BLITA_Source, data->overShadePixels,
+                        BLITA_Dest, _rp(obj),
+                        BLITA_SrcX, 0,
+                        BLITA_SrcY, 0,
+                        BLITA_DestX, x+1,
+                        BLITA_DestY, y+1,
+                        BLITA_Width, data->shadeWidth,
+                        BLITA_Height, data->shadeHeight,
+                        BLITA_SrcType, BLITT_ARGB32,
+                        BLITA_DestType, BLITT_RASTPORT,
+                        BLITA_SrcBytesPerRow, data->shadeBytesPerRow,
+                        BLITA_UseSrcAlpha, TRUE,
+                        TAG_DONE);
         #else
-
         if(data->pressed)
         {
           WPAA(data->pressedShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
@@ -1320,7 +1301,6 @@ void NBitmap_DrawImage(struct IClass *cl, Object *obj)
         {
           WPAA(data->overShadePixels, 0, 0, data->shadeBytesPerRow, _rp(obj), x+1, y+1, data->shadeWidth, data->shadeHeight, 0xffffffff);
         }
-
         #endif
       }
     }
