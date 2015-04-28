@@ -393,6 +393,7 @@ clean:
 distclean: clean
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)
+	-$(RMDIR) $(COMMONDIR)
 
 # install
 .PHONY: install

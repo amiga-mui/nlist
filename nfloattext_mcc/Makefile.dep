@@ -4,9 +4,9 @@ $(OBJDIR)/library.o: library.c private.h ../include/libraries/mui.h \
   ../include/mcc_common.h ../include/SDI_compiler.h ../include/SDI_hook.h \
   ../include/SDI_lib.h ../include/SDI_stdarg.h \
   ../include/mui/NFloattext_mcc.h ../include/mui/NListview_mcc.h \
-  ../include/mui/NList_mcc.h Debug.h version.h ../include/mccinit.c \
-  ../include/proto/muimaster.h ../include/interfaces/muimaster.h \
-  ../include/inline4/muimaster.h
+  ../include/mui/NList_mcc.h Debug.h version.h ../include/shellstart.c \
+  ../include/mccinit.c ../include/proto/muimaster.h \
+  ../include/interfaces/muimaster.h ../include/inline4/muimaster.h
 $(OBJDIR)/NFloattext.o: NFloattext.c private.h ../include/libraries/mui.h \
   ../include/mcc_common.h ../include/SDI_compiler.h ../include/SDI_hook.h \
   ../include/SDI_lib.h ../include/SDI_stdarg.h \

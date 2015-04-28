@@ -419,6 +419,7 @@ distclean: clean
 	-$(RM) $(LOCALE)/*.catalog
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)
+	-$(RMDIR) $(COMMONDIR)
 
 # install
 .PHONY: install
