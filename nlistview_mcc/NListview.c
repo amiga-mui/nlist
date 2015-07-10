@@ -699,6 +699,8 @@ static IPTR mNLV_Cleanup(struct IClass *cl, Object *obj, struct MUIP_Cleanup *ms
   if(_win(obj) != NULL)
     DoMethod(_win(obj), MUIM_Window_RemEventHandler, (IPTR)&data->eh);
 
+  // unpush any still pending asynchronous method
+  DoMethod(_app(obj), MUIM_Application_UnpushMethod, obj, 0, MUIM_NListview_SetScrollers);
   data->SETUP = FALSE;
 
   LEAVE();

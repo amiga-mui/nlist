@@ -1,3 +1,6 @@
+#ifndef MUIEXTRA_H
+#define MUIEXTRA_H 1
+
 #ifndef MUIA_Framedisplay_Spec
 #define MUIA_Framedisplay_Spec        0x80421794UL // V11 isg struct MUI_FrameSpec
 #endif
@@ -17,15 +20,15 @@
 #define MUIA_Prop_DoSmooth            0x804236ceUL // V4  i.. LONG
 #endif
 #ifndef MUIM_GoActive
-#define MUIM_GoActive			            0x8042491aUL
+#define MUIM_GoActive			      0x8042491aUL
 #endif
 #ifndef MUIM_GoInactive
-#define MUIM_GoInactive 		          0x80422c0cUL
+#define MUIM_GoInactive 		      0x80422c0cUL
 #endif
 #ifndef MUIA_Group_Type
 #define MUIA_Group_Type               0x8042e866UL /* V11 ..g LONG */
 #endif
-#ifndef MUIV_Group_Type_Horiz 
+#ifndef MUIV_Group_Type_Horiz
 #define MUIV_Group_Type_Horiz   1
 #endif
 #ifndef MUIM_Mccprefs_RegisterGadget
@@ -82,6 +85,9 @@
 #ifndef MUII_PopFont
 #define MUII_PopFont           42
 #endif
+#ifndef MUIM_Application_UnpushMethod
+#define MUIM_Application_UnpushMethod 0x804211ddUL /* V20 */
+#endif
 
 struct MUI_ImageSpec
 {
@@ -96,4 +102,6 @@ struct MUI_FrameSpec
 
 struct MUIP_DeleteDragImage { ULONG MethodID; struct MUI_DragImage *di; };              /* Custom Class */
 struct MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
-#endif
+#endif // !__AROS
+
+#endif /* MUIEXTRA_H */

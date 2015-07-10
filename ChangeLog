@@ -5,6 +5,11 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2015-07-10 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: unpush any still pending pushed and yet unhandled
+    MUIM_NListview_SetScrollers method. This refs YAM ticket #590.
+
 2015-02-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/private.h: increased the image name buffer size from 68 to 256
