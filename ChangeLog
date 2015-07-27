@@ -5,6 +5,12 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL$
 
+2015-07-27 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree/NListtree.c: applied patch kindly provided by Krzysztof 'deadwood'
+    Smiechowicz. It fixes certain issues when inserting items into the tree
+    using the MUIV_NListtree_Insert_PrevNode_Sorted flag.
+
 2015-07-10 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistview_mcc/NListview.c: unpush any still pending pushed and yet unhandled
