@@ -421,7 +421,7 @@ $(COMMONDIR)/NListviews_locale.c: $(LOCALE)/NListviews_mcp.pot C_h.sd C_c.sd
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.po $(LOCALE)/NListviews_mcp.pot
 	@echo "  FC $@"
-	@$(FC) POFILE $< CATALOG $@
+	@$(FC) REVISION $(shell git rev-list --all --count $<) POFILE $< CATALOG $@
 
 .IGNORE: $(CATALOGS)
 

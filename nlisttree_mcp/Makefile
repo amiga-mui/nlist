@@ -396,7 +396,7 @@ $(COMMONDIR)/NListtree_locale.c: $(LOCALE)/NListtree_mcp.pot C_h.sd C_c.sd
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.po $(LOCALE)/NListtree_mcp.pot
 	@echo "  FC $@"
-	@$(FC) POFILE $< CATALOG $@
+	@$(FC) REVISION $(shell git rev-list --all --count $<) POFILE $< CATALOG $@
 
 .IGNORE: $(CATALOGS)
 
