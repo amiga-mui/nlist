@@ -2,8 +2,11 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
-$Id$
-$URL$
+#### v0.121 RELEASE ###########################################################
+
+2016-08-05 Jens Maus <mail@jens-maus.de>
+
+  * misc: final v0.121 release preparations
 
 2015-07-27 Thore Böckelmann <tboeckel@gmx.de>
 

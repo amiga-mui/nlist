@@ -1,3 +1,8 @@
 common/
 .obj_*/
 bin_*/
+release/
+nlistviews_mcp/locale/*.catalog
+nlisttree_mcp/locale/*.catalog
+MCC_NList-*.lha
+MCC_NList-*.readme

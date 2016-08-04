@@ -5,7 +5,7 @@
                                            0x9d5100C0 to 0x9d5100FF
 
  Copyright (C) 1996-2001 by Gilles Masson
- Copyright (C) 2001-2015 NList Open Source Team
+ Copyright (C) 2001-2016 NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -32,9 +32,9 @@
 
 // for setting all necessary version information
 #define LIB_VERSION    20
-#define LIB_REVISION   139
-#define LIB_DATE       "21.03.2015"
-#define LIB_COPYRIGHT  "Copyright (C) 2001-2015 NList Open Source Team"
+#define LIB_REVISION   140
+#define LIB_DATE       "05.08.2016"
+#define LIB_COPYRIGHT  "Copyright (C) 2001-2016 NList Open Source Team"
 
 // set the LIB_REV_STRING
 #define LIB_REV_STRING STR(LIB_VERSION) "." STR(LIB_REVISION)
