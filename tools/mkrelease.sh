@@ -100,7 +100,7 @@ for language in `ls nlistviews_mcp/locale/*.catalog`; do
 done
 
 cp -a -R dist/* "release/"
-cp -a AUTHORS ChangeLog COPYING "release/MCC_NList/"
+cp -a ChangeLog COPYING "release/MCC_NList/"
 cp -a docs/ReadMe "release/MCC_NList/ReadMe"
 cp -a docs/*.doc "release/MCC_NList/Developer/Autodocs/MCC/"
 cp -a demo/*.c "release/MCC_NList/Developer/C/Examples/"

@@ -242,15 +242,7 @@ APTR DitherImageA(CONST_APTR data, struct TagItem *tags)
   return result;
 }
 
-#ifdef __AROS__
-APTR STDARGS VARARGS68K DitherImage(CONST_APTR data, Tag tag1, ...)
-{
-  AROS_SLOWSTACKTAGS_PRE_AS(tag1, APTR)
-  retval = DitherImageA(data, AROS_SLOWSTACKTAGS_ARG(tag1));
-  AROS_SLOWSTACKTAGS_POST
-}
-#else
-#if !defined(__PPC__)
+#if !defined(__AROS__) && !defined(__MORPHOS__)
 APTR STDARGS VARARGS68K DitherImage(CONST_APTR data, ...)
 {
   APTR ret;
@@ -262,7 +254,6 @@ APTR STDARGS VARARGS68K DitherImage(CONST_APTR data, ...)
 
   return ret;
 }
-#endif
 #endif
 
 void FreeDitheredImage(APTR image, APTR mask)

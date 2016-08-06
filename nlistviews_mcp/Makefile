@@ -415,13 +415,13 @@ $(TESTTARGET): $(TESTOBJS)
 $(COMMONDIR)/NListviews_locale.h: $(COMMONDIR)/NListviews_locale.c
 $(COMMONDIR)/NListviews_locale.c: $(LOCALE)/NListviews_mcp.pot C_h.sd C_c.sd
 	@echo "  FC $@"
-	@$(FC) $(LOCALE)/NListviews_mcp.pot $(COMMONDIR)/NListviews_locale.h=C_h.sd $(COMMONDIR)/NListviews_locale.c=C_c.sd
+	@$(FC) $(LOCALE)/NListviews_mcp.pot $(COMMONDIR)/NListviews_locale.h=C_h.sd $(COMMONDIR)/NListviews_locale.c=C_c.sd CODESET ISO-8859-1
 
 ## CATALOG GENERATION #################
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.po $(LOCALE)/NListviews_mcp.pot
 	@echo "  FC $@"
-	@$(FC) REVISION $(shell git rev-list --all --count $<) POFILE $< CATALOG $@
+	@$(FC) REVISION $(shell git rev-list --all --count $<) POFILE $< CATALOG $@ CODESET UTF-8
 
 .IGNORE: $(CATALOGS)
 

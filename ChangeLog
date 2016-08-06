@@ -4,9 +4,11 @@ MUI NList MCC classes - ChangeLog
 
 #### v0.121 RELEASE ###########################################################
 
-2016-08-05 Jens Maus <mail@jens-maus.de>
+2016-08-06 Jens Maus <mail@jens-maus.de>
 
   * misc: final v0.121 release preparations
+  * include: updated SDI headers and replaced all VARARGS68K uses for the
+    MorphOS compiles with inline macro calls.
 
 2015-07-27 Thore Böckelmann <tboeckel@gmx.de>
 

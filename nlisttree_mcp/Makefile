@@ -390,13 +390,13 @@ $(TESTTARGET): $(TESTOBJS)
 $(COMMONDIR)/NListtree_locale.h: $(COMMONDIR)/NListtree_locale.c
 $(COMMONDIR)/NListtree_locale.c: $(LOCALE)/NListtree_mcp.pot C_h.sd C_c.sd
 	@echo "  FC $@"
-	@$(FC) $(LOCALE)/NListtree_mcp.pot $(COMMONDIR)/NListtree_locale.h=C_h.sd $(COMMONDIR)/NListtree_locale.c=C_c.sd
+	@$(FC) $(LOCALE)/NListtree_mcp.pot $(COMMONDIR)/NListtree_locale.h=C_h.sd $(COMMONDIR)/NListtree_locale.c=C_c.sd CODESET ISO-8859-1
 
 ## CATALOG GENERATION #################
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.po $(LOCALE)/NListtree_mcp.pot
 	@echo "  FC $@"
-	@$(FC) REVISION $(shell git rev-list --all --count $<) POFILE $< CATALOG $@
+	@$(FC) REVISION $(shell git rev-list --all --count $<) POFILE $< CATALOG $@ CODESET UTF-8
 
 .IGNORE: $(CATALOGS)
 

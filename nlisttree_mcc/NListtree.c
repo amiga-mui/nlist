@@ -783,9 +783,9 @@ INLINE ULONG MyCallHookA(struct Hook *hook, struct NListtree_Data *data, struct 
 }
 #endif
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(__MORPHOS__)
 #define MyCallHook(hook, data, ...) \
- ({ IPTR __args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
+ ({ IPTR __args[] = { SDI_VACAST(__VA_ARGS__) }; \
     CallHookPkt(hook, data->Obj, __args); })
 #else
 static IPTR STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)

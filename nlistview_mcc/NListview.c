@@ -56,7 +56,7 @@ static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
 
   if(imsg->Class == IDCMP_RAWKEY)
   {
-    TEXT buf[4];
+    char buf[4];
 
     ie.ie_Code         = imsg->Code & ~dccode;
     ie.ie_Qualifier    = imsg->Qualifier & ~dcquali;
