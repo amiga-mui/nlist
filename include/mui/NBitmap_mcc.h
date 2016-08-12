@@ -5,7 +5,7 @@
 
  NBitmap.mcc - New Bitmap MUI Custom Class
  Copyright (C) 2006      by Daniel Allsopp
- Copyright (C) 2007-2015 NList Open Source Team
+ Copyright (C) 2007-2016 NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
