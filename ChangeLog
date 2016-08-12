@@ -2,6 +2,11 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+2016-08-12 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/Makefile: generate ISO8859-1 encoded catalogs instead of UTF8 encoded
+    ones.
+
 #### v0.121 RELEASE ###########################################################
 
 2016-08-06 Jens Maus <mail@jens-maus.de>
