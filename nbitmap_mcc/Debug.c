@@ -213,7 +213,7 @@ void CleanupDebug(void)
 
 /****************************************************************************/
 
-STATIC static INLINE void _INDENT(void)
+STATIC INLINE void _INDENT(void)
 {
   int i;
 
