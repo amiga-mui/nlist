@@ -56,7 +56,7 @@
 
 #define	INSTDATA            NLVData
 
-#define USERLIBID           CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID           CLASS " " LIB_REV_STRING " (" LIB_DATE ") " LIB_COPYRIGHT " [" SYSTEMSHORT "/" CPU "]"
 #define MASTERVERSION       19
 
 #define	CLASSINIT
