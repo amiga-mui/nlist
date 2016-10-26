@@ -48,8 +48,10 @@ ULONG SetDTAttrs( Object *o, struct Window *win, struct Requester *req, Tag tag1
 { return SetDTAttrsA(o, win, req, (struct TagItem *)&tag1); }
 ULONG GetDTAttrs( Object *o, Tag tag1, ... )
 { return GetDTAttrsA(o, (struct TagItem *)&tag1); }
+#ifndef DoDTMethod
 ULONG DoDTMethod( Object *o, struct Window *win, struct Requester *req, ULONG data, ... )
 { return DoDTMethodA(o, win, req, (Msg)&data); }
+#endif
 
 #else
   #error "VARGS stubs are only save on m68k systems!"

@@ -38,8 +38,10 @@ APTR NewObject( struct IClass *classPtr, CONST_STRPTR classID, Tag tag1, ... )
 { return NewObjectA(classPtr, classID, (struct TagItem *)&tag1); }
 ULONG SetAttrs( APTR object, ULONG tag1, ... )
 { return SetAttrsA(object, (struct TagItem *)&tag1); }
+#ifndef EasyRequest
 LONG EasyRequest( struct Window *window, CONST struct EasyStruct *easyStruct, ULONG *idcmpPtr, ... )
 { return EasyRequestArgs(window, easyStruct, idcmpPtr, (const APTR) ((ULONG) &idcmpPtr + sizeof(ULONG *))); }
+#endif
 
 #include <proto/dos.h>
 struct Process *CreateNewProcTags( ULONG tag1, ... )
