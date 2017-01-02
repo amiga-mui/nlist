@@ -5,7 +5,7 @@
 
  NListtree.mcc - New Listtree MUI Custom Class
  Copyright (C) 1999-2001 by Carsten Scholling
- Copyright (C) 2001-2016 NList Open Source Team
+ Copyright (C) 2001-2017 NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
