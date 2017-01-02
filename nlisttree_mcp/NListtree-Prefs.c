@@ -105,7 +105,7 @@ int main(void)
           app = MUI_NewObject("Application.mui",
               MUIA_Application_Author,      "NList Open Source Team",
               MUIA_Application_Base,        "NListtree-Prefs",
-              MUIA_Application_Copyright,   "(c) 2001-2011 NList Open Source Team",
+              MUIA_Application_Copyright,   "Copyright (C) 2001-2011 NList Open Source Team",
               MUIA_Application_Description, "Preference for NListtree classes",
               MUIA_Application_Title,       "NListtree-Prefs",
               MUIA_Application_Version,     "$VER: NListtree-Prefs V1.0 (05.07.2011)",

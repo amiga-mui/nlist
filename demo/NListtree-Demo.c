@@ -895,7 +895,7 @@ MakeStaticHook(testhook, testfunc);
 int main(UNUSED int argc, UNUSED char *argv[])
 {
 	ULONG signals;
-	static const char *const UsedClasses[] = { 
+	static const char *const UsedClasses[] = {
 		"NList.mcc",
 		"NListtree.mcc",
 		"NListviews.mcc",
@@ -916,7 +916,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
 		app = ApplicationObject,
 			MUIA_Application_Title,       "NListtree-Demo",
 			MUIA_Application_Version,     "$VER: NListtree-Demo 1.0 (" __DATE__ ")",
-			MUIA_Application_Copyright (C) 2001-2017 NList Open Source Team",
+			MUIA_Application_Copyright,   "Copyright (C) 2001-2017 NList Open Source Team",
 			MUIA_Application_Author,      "NList Open Source Team",
 			MUIA_Application_Description, "Demonstration program for MUI class NListtree.mcc",
 			MUIA_Application_Base,        "NLISTTREEDEMO",

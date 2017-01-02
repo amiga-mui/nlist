@@ -108,7 +108,7 @@ int main(void)
           app = MUI_NewObject("Application.mui",
               MUIA_Application_Author,      "NList Open Source Team",
               MUIA_Application_Base,        "NListviews-Prefs",
-              MUIA_Application_Copyright,   "(c) 2001-2007 NList Open Source Team",
+              MUIA_Application_Copyright,   "Copyright (C) 2001-2007 NList Open Source Team",
               MUIA_Application_Description, "Preference for NList classes",
               MUIA_Application_Title,       "NListviews-Prefs",
               MUIA_Application_Version,     "$VER: NListviews-Prefs V1.0 (15.09.2007)",

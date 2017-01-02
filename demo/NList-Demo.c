@@ -537,7 +537,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
 {
   LONG win_opened = 0;
   LONG result;
-  static const char *const UsedClasses[] = { 
+  static const char *const UsedClasses[] = {
     "NList.mcc",
     "NListviews.mcc",
     NULL
@@ -548,7 +548,7 @@ int main(UNUSED int argc, UNUSED char *argv[])
   APP_Main = ApplicationObject,
     MUIA_Application_Title      , "NList-Demo",
     MUIA_Application_Version    , "$VER: NList-Demo 1.0 (" __DATE__ ")",
-    MUIA_Application_Copyright (C) 2001-2017 NList Open Source Team",
+    MUIA_Application_Copyright  , "Copyright (C) 2001-2017 NList Open Source Team",
     MUIA_Application_Author     , "NList Open Source Team",
     MUIA_Application_Description, "NList-Demo",
     MUIA_Application_Base       , "NList-Demo",

@@ -101,7 +101,7 @@ int main(void)
                 app = MUI_NewObject("Application.mui",
                       MUIA_Application_Author,      "NBalance.mcc Open Source Team",
                       MUIA_Application_Base,        "NBalance-Test",
-                      MUIA_Application_Copyright,   "(c) 2008 NBalance.mcc Open Source Team",
+                      MUIA_Application_Copyright,   "Copyright (C) 2008 NBalance.mcc Open Source Team",
                       MUIA_Application_Description, "NBalance.mcc test program",
                       MUIA_Application_Title,       "NBalance-Test",
                       MUIA_Application_Version,     "$VER: NBalance-Test (" __DATE__ ")",

@@ -149,7 +149,7 @@ int main(void)
               app = MUI_NewObject("Application.mui",
                     MUIA_Application_Author,      "NBitmap.mcc Open Source Team",
                     MUIA_Application_Base,        "NBitmap-Test",
-                    MUIA_Application_Copyright,   "(c) 2007-2010 NBitmap.mcc Open Source Team",
+                    MUIA_Application_Copyright,   "Copyright (C) 2007-2010 NBitmap.mcc Open Source Team",
                     MUIA_Application_Description, "NBitmap.mcc test program",
                     MUIA_Application_Title,       "NBitmap-Test",
                     MUIA_Application_Version,     "$VER: NBitmap-Test (" __DATE__ ")",
