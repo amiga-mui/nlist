@@ -97,7 +97,12 @@ DISPATCHER(NLI_Dispatcher)
 
 struct MUI_CustomClass *NLI_Create(void)
 {
-  NLI_Class = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Image, NULL, sizeof(struct NLIData), ENTRY(NLI_Dispatcher));
+  if((NLI_Class = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Image, NULL, sizeof(struct NLIData), ENTRY(NLI_Dispatcher))) != NULL)
+  {
+    // set up unique names for our custom classes
+    NLI_Class->mcc_Class->cl_ID = (ClassID)MUIC_NList "/NLI";
+  }
+
   return (NLI_Class);
 }
 
