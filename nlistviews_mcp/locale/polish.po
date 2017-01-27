@@ -8,15 +8,15 @@
 # 
 # Translators:
 # Translators:
-# MandiATO <mandi@interia.pl>, 2014
+# Mariusz Danilewicz <mandi@interia.pl>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/nlist-classes/\n"
 "POT-Creation-Date: 2014-02-21 16:03+0100\n"
 "PO-Revision-Date: 2014-10-07 16:57+0000\n"
-"Last-Translator: MandiATO <mandi@interia.pl>\n"
-"Language-Team: Polish (http://www.transifex.com/projects/p/nlist-classes/language/pl/)\n"
+"Last-Translator: Mariusz Danilewicz <mandi@interia.pl>\n"
+"Language-Team: Polish (http://www.transifex.com/ato/nlist-classes/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
