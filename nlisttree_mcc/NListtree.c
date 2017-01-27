@@ -5289,6 +5289,10 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
         {
           if((data->CL_NodeImage = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Image, NULL, sizeof(struct TreeImage_Data), ENTRY(NodeImage_Dispatcher))))
           {
+            // set up unique names for our custom classes
+            data->CL_TreeImage->mcc_Class->cl_ID = (ClassID)MUIC_NListtree "/treeimage";
+            data->CL_NodeImage->mcc_Class->cl_ID = (ClassID)MUIC_NListtree "/nodeimage";
+
             ActivateNotify( data );
 
             return( (IPTR)obj );
