@@ -9,13 +9,13 @@
 # Translators:
 # Translators:
 # Alexandre BALABAN <transifex@balaban.fr>, 2014
-# Marc JOUAULT <scriptjester@laposte.net>, 2016
+# Marc JOUAULT <scriptjester@laposte.net>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/nlist-classes/\n"
 "POT-Creation-Date: 2014-02-21 16:03+0100\n"
-"PO-Revision-Date: 2016-12-30 17:28+0000\n"
+"PO-Revision-Date: 2017-02-01 15:55+0000\n"
 "Last-Translator: Marc JOUAULT <scriptjester@laposte.net>\n"
 "Language-Team: French (http://www.transifex.com/ato/nlist-classes/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -31,15 +31,15 @@ msgstr "Polices"
 
 msgctxt "MSG_NORMAL_FONT (1//)"
 msgid "Normal Font:"
-msgstr "Police normale :"
+msgstr "Police par défaut :"
 
 msgctxt "MSG_NORMAL_FONT_HELP (2//)"
 msgid "Choose the normal NList font."
-msgstr "Choisissez une police normale pour Nlist."
+msgstr "Choisissez la police par défaut des Nlist."
 
 msgctxt "MSG_NORMAL_FONT_ASL (3//)"
 msgid "Please select the normal font..."
-msgstr "SVP, choisissez une police normale..."
+msgstr "Sélectionner la police par défaut..."
 
 msgctxt "MSG_SMALL_FONT (4//)"
 msgid "Small Font:"
@@ -755,16 +755,16 @@ msgstr "Colonne"
 
 msgctxt "MSG_CTXMENU_DEFAULT_WIDTH_THIS (143//)"
 msgid "Default width: this"
-msgstr ""
+msgstr "Largeur par défaut : celle-ci"
 
 msgctxt "MSG_CTXMENU_DEFAULT_WIDTH_ALL (144//)"
 msgid "Default width: all"
-msgstr ""
+msgstr "Largeur par défaut : tout"
 
 msgctxt "MSG_CTXMENU_DEFAULT_ORDER_THIS (145//)"
 msgid "Default order: this"
-msgstr ""
+msgstr "Ordre par défaut : celui-ci"
 
 msgctxt "MSG_CTXMENU_DEFAULT_ORDER_ALL (146//)"
 msgid "Default order: all"
-msgstr ""
+msgstr "Ordre par défaut : tout"
