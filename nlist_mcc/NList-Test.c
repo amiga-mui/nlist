@@ -543,7 +543,7 @@ struct LITD {
 
 HOOKPROTONHNO(ConstructLI_TextFunc, APTR, struct NList_ConstructMessage *ncm)
 {
-  struct LITD *new_entry = (struct LITD *) AllocVec(sizeof(struct LITD),0);
+  struct LITD *new_entry = (struct LITD *) AllocVecShared(sizeof(struct LITD),0);
 
   if (new_entry)
   {
