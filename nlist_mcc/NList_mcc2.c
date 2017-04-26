@@ -794,7 +794,8 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             {
               data->selectmode = data->NList_List_Select;
               if (data->NList_Input && !data->NList_TypeSelect)
-              { if (data->NList_Active > data->NList_First)
+              {
+                if (data->NList_Active > data->NList_First)
                   NL_List_Active(data,MUIV_NList_Active_PageUp,NULL,data->selectmode,FALSE,0);
                 else
                   NL_List_Active(data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
@@ -805,11 +806,12 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               data->moves = TRUE;
               NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
-            else if ((lyl >= data->NList_Visible) || (lyl2 >= data->NList_Entries))
+            else if (lyl >= data->NList_Visible && lyl2 < data->NList_Entries)
             {
               data->selectmode = data->NList_List_Select;
               if (data->NList_Input && !data->NList_TypeSelect)
-              { if (data->NList_Active < data->NList_First - 1 + data->NList_Visible)
+              {
+                if (data->NList_Active < data->NList_First - 1 + data->NList_Visible)
                   NL_List_Active(data,MUIV_NList_Active_PageDown,NULL,data->selectmode,FALSE,0);
                 else
                   NL_List_Active(data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
@@ -821,9 +823,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               NL_RequestIDCMP(data,IDCMP_MOUSEMOVE);
             }
             else
+            {
               do_else = TRUE;
+            }
 
-            if ((lx < 0) || (lx >= data->NList_Horiz_Visible) || (ly2 < 0) || (lyl >= data->NList_Visible) || (lyl2 >= data->NList_Entries))
+            if ((lx < 0) || (lx >= data->NList_Horiz_Visible) || (ly2 < 0) || (lyl >= data->NList_Visible && lyl2 < data->NList_Entries))
               lyl2 = -2;
             else if ((ly2 >= 0) && (ly < 0))
               lyl2 = -1;

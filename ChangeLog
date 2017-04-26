@@ -2,6 +2,11 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+2017-04-25 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: clicks below the last entry are ignored now instead
+    of activating the last entry. This refs #1.
+
 2017-01-25 Thore Böckelmann <tboeckel@gmx.de>
 
   * misc: added unique names for the private custom classes.
