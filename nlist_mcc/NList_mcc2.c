@@ -774,6 +774,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             BOOL do_else = FALSE;
             BOOL mclick = FALSE;
 
+            // lyl is the visible entry number
+            // lyl2 is the absolute entry number
+
             if (lx < 0)
             {
               NL_List_Horiz_First(data,MUIV_NList_Horiz_First_Left,NULL);
