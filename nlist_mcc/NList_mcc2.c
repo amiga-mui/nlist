@@ -1774,7 +1774,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               data->last_sel_click_y = sel_y +1;
             }
           }
-          else if ((lyl >= data->NList_Visible) || (lyl2 >= data->NList_Entries))
+          else if (lyl >= data->NList_Visible && lyl2 < data->NList_Entries)
           {
             long lactive = data->NList_First + data->NList_Visible;
             if (lactive >= data->NList_Entries)

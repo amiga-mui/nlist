@@ -2,10 +2,13 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
-2017-04-25 Thore Böckelmann <tboeckel@gmx.de>
+2017-04-26 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc2.c: clicks below the last entry are ignored now instead
     of activating the last entry. This refs #1.
+  * nlist_mcc/NList_mcc2.c: fixed yet another wrong check for clicks below the
+    last entry. This code is really far too convoluted to be maintainable :(
+    This refs #1.
 
 2017-01-25 Thore Böckelmann <tboeckel@gmx.de>
 
