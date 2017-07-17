@@ -97,6 +97,8 @@ int main(void)
       {
         Object *app = NULL;
         Object *window = NULL;
+        Object *config = NULL;
+        Object *mcp = NULL;
         struct MUI_CustomClass *mcc = NULL;
 
         mcc = MUI_CreateCustomClass(NULL, (STRPTR)"Group.mui", NULL, sizeof(struct NListtreeP_Data), ENTRY(_DispatcherP));
@@ -123,7 +125,7 @@ int main(void)
                   MUIA_InnerTop,    11,
 
 //                  Child, RectangleObject, End,
-                  Child, NewObject(mcc->mcc_Class, NULL, TAG_DONE),
+                  Child, mcp = NewObject(mcc->mcc_Class, NULL, TAG_DONE),
 
                   TAG_DONE ),
                 TAG_DONE ),
@@ -134,24 +136,31 @@ int main(void)
         {
           unsigned long sigs;
 
-          DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
-          set(window, MUIA_Window_Open, TRUE);
-
-          while((LONG)DoMethod(app, MUIM_Application_NewInput, &sigs) != (LONG)MUIV_Application_ReturnID_Quit)
+          config = MUI_NewObject(MUIC_Dataspace, TAG_DONE);
+          if(config != NULL)
           {
-            if(sigs)
+            DoMethod(mcp, MUIM_Mccprefs_ConfigToGadgets, config);
+            DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+            set(window, MUIA_Window_Open, TRUE);
+
+            while((LONG)DoMethod(app, MUIM_Application_NewInput, &sigs) != (LONG)MUIV_Application_ReturnID_Quit)
             {
-              sigs = Wait(sigs | SIGBREAKF_CTRL_C);
-              if(sigs & SIGBREAKF_CTRL_C)
-                break;
+              if(sigs)
+              {
+                sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+                if(sigs & SIGBREAKF_CTRL_C)
+                  break;
+              }
             }
+
+            MUI_DisposeObject(config);
           }
 
           MUI_DisposeObject(app);
-
-          if(mcc)
-            MUI_DeleteCustomClass(mcc);
         }
+
+        if(mcc)
+          MUI_DeleteCustomClass(mcc);
 
         DROPINTERFACE(IMUIMaster);
         CloseLibrary(MUIMasterBase);
