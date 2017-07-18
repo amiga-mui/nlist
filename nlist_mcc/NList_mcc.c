@@ -295,8 +295,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   LONG Dropable = TRUE;      /*TRUE*/
   LONG dropable = TRUE;      /*TRUE*/
   STRPTR ShortHelp = NULL;   // RHP: Added for Special ShortHelp
-  APTR img_tr,grp;
-  const char *img_name = "noimage";
+  APTR grp;
 
   if((tag = FindTagItem(MUIA_ShortHelp, taglist)))
     ShortHelp = (STRPTR)tag->ti_Data;
@@ -355,16 +354,6 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
         MUIA_Group_LayoutHook, &NL_LayoutHookGroup,
         MUIA_FillArea, FALSE,
         NoFrame,
-        Child, img_tr = MUI_NewObject(MUIC_Image,
-          MUIA_FillArea,FALSE,
-          MUIA_Image_Spec,img_name,
-/*
- *         MUIA_Image_FontMatch, TRUE,
- *         MUIA_Font, Topaz_8,
- *         MUIA_Image_State, IDS_NORMAL,
- */
-        End,
-        /*Child, HVSpace,*/
       End,
     TAG_MORE, taglist
   );
@@ -443,8 +432,8 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->marktype = 0;
   data->NList_ShowDropMarks = TRUE;
   data->NImage2 = NULL;
-  data->NImage.NImgObj = img_tr;
-  data->NImage.ImgName = (char *)img_name;
+  data->NImage.NImgObj = NULL;
+  data->NImage.ImgName = NULL;
   data->NImage.next = NULL;
   data->multiselect = MUIV_NList_MultiSelect_None;
   data->multisel_qualifier = 0;

@@ -114,9 +114,9 @@ struct NImgList *GetNImage(struct NLData *data,char *ImgName)
   struct NImgList *nimg = &data->NImage;
   int nameLen = strlen(ImgName)+2;
 
-  while (nimg && nimg->ImgName && strcmp(nimg->ImgName,ImgName))
+  while (nimg != NULL && nimg->ImgName != NULL && strcmp(nimg->ImgName, ImgName) != 0)
     nimg = nimg->next;
-  if (!nimg && (nimg = (struct NImgList *)AllocVecPooled(data->Pool, sizeof(struct NImgList)+nameLen)) != NULL)
+  if(nimg == NULL && (nimg = (struct NImgList *)AllocVecPooled(data->Pool, sizeof(struct NImgList)+nameLen)) != NULL)
   { nimg->ImgName = (char *) nimg;
     nimg->ImgName = &nimg->ImgName[sizeof(struct NImgList)];
     strlcpy(nimg->ImgName, ImgName, nameLen);
@@ -331,15 +331,15 @@ void GetImages(struct NLData *data)
 
     while (nimg)
     {
-      if (!nimg->NImgObj)
-        GetNImage(data,nimg->ImgName);
+      if(nimg->NImgObj == NULL && nimg->ImgName != NULL)
+        GetNImage(data, nimg->ImgName);
       nimg = nimg->next;
     }
 
     while (nimg2)
     {
-      if (nimg2->ImgName && !nimg2->NImgObj && (nimg2->width == -1000))
-        GetNImage2(data,nimg2->ImgName);
+      if(nimg2->NImgObj == NULL && nimg2->ImgName != NULL && nimg2->width == -1000)
+        GetNImage2(data, nimg2->ImgName);
       nimg2 = nimg2->next;
     }
     data->do_images = FALSE;
