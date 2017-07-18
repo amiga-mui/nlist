@@ -117,6 +117,7 @@ int main(void)
                 MUIA_Window_Title,    "NListtree-Prefs",
                 MUIA_Window_RootObject,
                   MUI_NewObject("Group.mui",
+                  //MUI_NewObject("Virtgroup.mui",
                   MUIA_Background, MUII_PageBack,
                   MUIA_Frame, MUIV_Frame_Text,
                   MUIA_InnerBottom, 11,
