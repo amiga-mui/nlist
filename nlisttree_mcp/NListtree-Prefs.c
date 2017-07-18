@@ -139,7 +139,7 @@ int main(void)
           config = MUI_NewObject(MUIC_Dataspace, TAG_DONE);
           if(config != NULL)
           {
-            DoMethod(mcp, MUIM_Mccprefs_ConfigToGadgets, config);
+            DoMethod(mcp, MUIM_Settingsgroup_ConfigToGadgets, config);
             DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
             set(window, MUIA_Window_Open, TRUE);
 
