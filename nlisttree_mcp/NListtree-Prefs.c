@@ -69,7 +69,7 @@ struct IOStdReq ioreq;
 
 extern DISPATCHERPROTO(_DispatcherP);
 
-int main(void)
+int main(int argc, char **argv)
 {
   ioreq.io_Message.mn_Length = sizeof(ioreq);
   if((UtilityBase = OpenLibrary("utility.library", 38)) &&
@@ -104,6 +104,8 @@ int main(void)
         mcc = MUI_CreateCustomClass(NULL, (STRPTR)"Group.mui", NULL, sizeof(struct NListtreeP_Data), ENTRY(_DispatcherP));
         if(mcc)
         {
+          const char *groupClass = (argc == 2 && strcmp(argv[1], "virt") == 0) ? MUIC_Virtgroup : MUIC_Group;
+
           app = MUI_NewObject("Application.mui",
               MUIA_Application_Author,      "NList Open Source Team",
               MUIA_Application_Base,        "NListtree-Prefs",
@@ -116,17 +118,16 @@ int main(void)
                 window = MUI_NewObject("Window.mui",
                 MUIA_Window_Title,    "NListtree-Prefs",
                 MUIA_Window_RootObject,
-                  MUI_NewObject("Group.mui",
-                  //MUI_NewObject("Virtgroup.mui",
-                  MUIA_Background, MUII_PageBack,
-                  MUIA_Frame, MUIV_Frame_Text,
-                  MUIA_InnerBottom, 11,
-                  MUIA_InnerLeft,  6,
-                  MUIA_InnerRight,   6,
-                  MUIA_InnerTop,    11,
+                  MUI_NewObject(groupClass,
+                    MUIA_Background, MUII_PageBack,
+                    MUIA_Frame, MUIV_Frame_Text,
+                    MUIA_InnerBottom, 11,
+                    MUIA_InnerLeft,  6,
+                    MUIA_InnerRight,   6,
+                    MUIA_InnerTop,    11,
 
 //                  Child, RectangleObject, End,
-                  Child, mcp = NewObject(mcc->mcc_Class, NULL, TAG_DONE),
+                    Child, mcp = NewObject(mcc->mcc_Class, NULL, TAG_DONE),
 
                   TAG_DONE ),
                 TAG_DONE ),
