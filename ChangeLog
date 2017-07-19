@@ -2,6 +2,12 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+2017-07-18 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c, nlist_mcc/NList_func4.c: don't add dummy images which
+    are neither used nor displayed at all. This avoids the MUI warnings about
+    failed layout operations (MUI debug build).
+
 2017-04-26 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc2.c: clicks below the last entry are ignored now instead
