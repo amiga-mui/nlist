@@ -2,6 +2,11 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+2017-07-25 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree/NListtree.c: don't use the same pointer as destination buffer and
+    argument in snprintf() calls.
+
 2017-07-18 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/NList_mcc.c, nlist_mcc/NList_func4.c: don't add dummy images which
