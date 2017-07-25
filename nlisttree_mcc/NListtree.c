@@ -638,31 +638,33 @@ DISPATCHER(TreeImage_Dispatcher)
 */
 DISPATCHER(NodeImage_Dispatcher)
 {
-  if ( msg->MethodID == MUIM_Show )
+  IPTR rc = DoSuperMethodA(cl, obj, msg);
+
+  if(msg->MethodID == MUIM_AskMinMax)
   {
     struct  MyImage *im;
     UWORD w, h;
 
-    im = (struct MyImage *)xget( obj, MUIA_UserData );
+    im = (struct MyImage *)xget(obj, MUIA_UserData);
 
     w = _defwidth( obj );
     h = _defheight( obj );
 
-    if ( im->nltdata->MaxImageWidth < w )
+    if(im->nltdata->MaxImageWidth < w)
       im->nltdata->MaxImageWidth = w;
 
-    if ( im->nltdata->MaxImageHeight < h )
+    if(im->nltdata->MaxImageHeight < h)
     {
       im->nltdata->MaxImageHeight = h;
 
-      if ( xget( obj, MUIA_NList_LineHeight ) < h )
-        nnset( im->nltdata->Obj, MUIA_NList_MinLineHeight, h );
+      if(xget(obj, MUIA_NList_LineHeight) < h)
+        nnset(im->nltdata->Obj, MUIA_NList_MinLineHeight, h);
     }
 
     D(DBF_IMAGES, "=====> DefWidth: %ld, DefHeight: %ld, MaxWidth: %ld", w, h, im->nltdata->MaxImageWidth);
   }
 
-  return( DoSuperMethodA( cl, obj, (Msg)msg) );
+  return rc;
 }
 
 /*****************************************************************************\

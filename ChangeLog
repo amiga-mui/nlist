@@ -6,6 +6,12 @@ MUI NList MCC classes - ChangeLog
 
   * nlisttree/NListtree.c: don't use the same pointer as destination buffer and
     argument in snprintf() calls.
+  * nlisttree/NListtree.c: the node image's dimensions must be obtained in
+    MUIM_AskMinMax instead of MUIM_Show. First of all, the former is the method
+    where these values are really set up initially. Second, MUIM_Show is not
+    guaranteed to be called at all for an object (i.e. when being contained in
+    a virtual group). This finally solves the broken listtree display in virtual
+    groups, like the prefs pages of MUI prefs.
 
 2017-07-18 Thore Böckelmann <tboeckel@gmx.de>
 
