@@ -2853,7 +2853,7 @@ static void InsertImage( struct NListtree_Data *data, struct MUI_NListtree_TreeN
     // add some indent width
     if(data->IndentWidth > 0)
     {
-      snprintf(tmp, sizeof(tmp), "\033O[%lx;%x;%d,%d]", (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, SPEC_Hor, (unsigned int)data->IndentWidth);
+      snprintf(tmp, sizeof(tmp), "\033O[%lx;%x;%d,%d]", (unsigned long)data->Image[IMAGE_Tree].ListImage, (unsigned int)MUIA_TI_Spec, (unsigned int)SPEC_Hor, (unsigned int)data->IndentWidth);
       strlcat(data->buf, tmp, DATA_BUF_SIZE);
     }
 
