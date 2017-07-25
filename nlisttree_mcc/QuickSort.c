@@ -33,7 +33,7 @@
 #include <clib/alib_protos.h>
 #include <proto/intuition.h>
 
-#include "NListtree.h"
+#include "QuickSort.h"
 
 #define SWAP(a,b)     temp=(a);(a)=(b);(b)=temp
 #define COMPARE(a,b)  (LONG)DoMethod(data->Obj, MUIM_NListtree_Compare, (a), (b))

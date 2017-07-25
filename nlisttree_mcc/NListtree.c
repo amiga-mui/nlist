@@ -138,6 +138,7 @@
 #include "private.h"
 
 #include "NListtree.h"
+#include "QuickSort.h"
 #include "version.h"
 #include "muiextra.h"
 
@@ -154,12 +155,6 @@ LONG __stack = 16384;
 #define DIFF(a,b)       (MAX((a),(b))-MIN((a),(b)))
 #define CLN(x)          ((struct MUI_NListtree_ListNode *)(x))
 #define CTN(x)          ((struct MUI_NListtree_TreeNode *)(x))
-
-/*
-**  Type definition for compare function.
-*/
-
-void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct NListtree_Data *data);
 
 /*
 **  Some prototypes.
