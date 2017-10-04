@@ -2,6 +2,8 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+#### v0.122 RELEASE (special MUI 5.0-2017R3 release) ##########################
+
 2017-07-25 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlisttree/NListtree.c: don't use the same pointer as destination buffer and
