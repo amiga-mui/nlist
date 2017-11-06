@@ -1936,7 +1936,7 @@ VOID OpenTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *t
       {
         i = MUIV_NList_Insert_Bottom;
 
-        DoMethod( data->Obj, MUIM_NList_Clear, 0 );
+        DoMethod(data->Obj, MUIM_NList_Clear);
 
         CLEAR_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
         InsertTreeVisible( data, CTN( &data->RootList ), &i );
@@ -2001,7 +2001,7 @@ VOID OpenTreeNodeListExpand( struct NListtree_Data *data, struct MUI_NListtree_L
   {
     i = MUIV_NList_Insert_Bottom;
 
-    DoMethod( data->Obj, MUIM_NList_Clear, 0 );
+    DoMethod(data->Obj, MUIM_NList_Clear);
 
     ExpandTree( data, CTN( ln ) );
     InsertTreeVisible( data, CTN( ln ), &i );
@@ -2011,7 +2011,7 @@ VOID OpenTreeNodeListExpand( struct NListtree_Data *data, struct MUI_NListtree_L
   {
     i = MUIV_NList_Insert_Bottom;
 
-    DoMethod( data->Obj, MUIM_NList_Clear, 0 );
+    DoMethod(data->Obj, MUIM_NList_Clear);
 
     ExpandTree( data, CTN( ln ) );
     InsertTreeVisible( data, CTN( &data->RootList ), &i );
@@ -2091,7 +2091,7 @@ VOID CloseTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *
     {
       i = MUIV_NList_Insert_Bottom;
 
-      DoMethod( data->Obj, MUIM_NList_Clear, 0 );
+      DoMethod(data->Obj, MUIM_NList_Clear);
 
       CLEAR_FLAG(tn->tn_IFlags, TNIF_VISIBLE);
       InsertTreeVisible( data, CTN( &data->RootList ), &i );
@@ -2149,7 +2149,7 @@ VOID CloseTreeNodeListCollapse( struct NListtree_Data *data, struct MUI_NListtre
   {
     i = MUIV_NList_Insert_Bottom;
 
-    DoMethod( data->Obj, MUIM_NList_Clear, 0 );
+    DoMethod(data->Obj, MUIM_NList_Clear);
 
     CollapseTree( data, CTN( ln ), TRUE );
     InsertTreeVisible( data, CTN( ln ), &i );
@@ -2159,7 +2159,7 @@ VOID CloseTreeNodeListCollapse( struct NListtree_Data *data, struct MUI_NListtre
   {
     i = MUIV_NList_Insert_Bottom;
 
-    DoMethod( data->Obj, MUIM_NList_Clear, 0 );
+    DoMethod(data->Obj, MUIM_NList_Clear);
 
     CollapseTree( data, CTN( ln ), TRUE );
     InsertTreeVisible( data, CTN( &data->RootList ), &i );
@@ -7777,7 +7777,7 @@ IPTR _NListtree_Clear(struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtr
     **  memory pointer which refers to the old pool. Then initialize
     **  active node and list.
     */
-    DoMethod( obj, MUIM_NList_Clear, 0 );
+    DoMethod(obj, MUIM_NList_Clear);
 
     QuickRemoveNodes( data, ln );
 

@@ -179,7 +179,7 @@ static IPTR mNFT_Dispose(struct IClass *cl,Object *obj,Msg msg)
 {
   struct NFTData *data;
   data = INST_DATA(cl,obj);
-  DoMethod(obj,MUIM_NList_Clear,NULL);
+  DoMethod(obj,MUIM_NList_Clear);
   if (data->NFloattext_Copied && data->NFloattext_Text)
     FreeVec(data->NFloattext_Text);
   data->NFloattext_Text = NULL;
@@ -202,7 +202,7 @@ static IPTR mNFT_Set(struct IClass *cl,Object *obj,Msg msg)
     {
       case MUIA_Floattext_Text:
       case MUIA_NFloattext_Text:
-        DoMethod(obj,MUIM_NList_Clear,NULL);
+        DoMethod(obj,MUIM_NList_Clear);
         if (data->NFloattext_Copied && data->NFloattext_Text)
           FreeVec(data->NFloattext_Text);
         data->NFloattext_Copied = FALSE;

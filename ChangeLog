@@ -2,6 +2,11 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+2017-11-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nfloattext_mcc/NFloattext.c, nlisttree_mcc/NListtree.c: removed the
+    superflous parameter of all MUIM_NList_Clear calls.
+
 #### v0.122 RELEASE (special MUI 5.0-2017R3 release) ##########################
 
 2017-07-25 Thore Böckelmann <tboeckel@gmx.de>
