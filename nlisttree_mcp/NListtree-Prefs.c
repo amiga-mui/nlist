@@ -21,6 +21,7 @@
 ***************************************************************************/
 
 #include <stdio.h>
+#include <string.h>
 
 #include <exec/tasks.h>
 #include <exec/memory.h>
