@@ -214,12 +214,16 @@ struct SelPoint {
 
 
 struct NImgList
-{ struct NImgList *next;
+{
+  struct NImgList *next;
   APTR NImgObj;
   WORD width,height;
   WORD dx,dy;
   char *ImgName;
 };
+
+#define INVALID_IMAGE_NAME        ((char *)-1)
+#define IS_VALID_IMAGE_NAME(x)    ((x) != NULL && (x) != INVALID_IMAGE_NAME)
 
 #define MAXRAWBUF 40
 

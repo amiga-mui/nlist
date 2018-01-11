@@ -109,28 +109,38 @@ BOOL NL_OnWindow(struct NLData *data,LONG x,LONG y)
 
 
 
-struct NImgList *GetNImage(struct NLData *data,char *ImgName)
+struct NImgList *GetNImage(struct NLData *data, const char *ImgName)
 {
-  struct NImgList *nimg = &data->NImage;
-  int nameLen = strlen(ImgName)+1;
+  struct NImgList *nimg = NULL;
 
-  while (nimg != NULL && nimg->ImgName != NULL && strcmp(nimg->ImgName, ImgName) != 0)
-    nimg = nimg->next;
-
-  if(nimg == NULL && (nimg = (struct NImgList *)AllocVecPooled(data->Pool, sizeof(struct NImgList)+nameLen)) != NULL)
+  if(IS_VALID_IMAGE_NAME(ImgName))
   {
-    nimg->ImgName = (char *) nimg;
-    nimg->ImgName = &nimg->ImgName[sizeof(struct NImgList)];
-    strlcpy(nimg->ImgName, ImgName, nameLen);
-    nimg->NImgObj = NULL;
-    nimg->width = -1;
-    nimg->height = -1;
-    nimg->dx = 0;
-    nimg->dy = 0;
-    nimg->next = data->NImage.next;
-    data->NImage.next = nimg;
+	nimg = &data->NImage;
+
+    while(nimg != NULL && nimg->ImgName != NULL && (nimg->ImgName == INVALID_IMAGE_NAME || strcmp(nimg->ImgName, ImgName) != 0))
+      nimg = nimg->next;
   }
-  if (nimg && !nimg->NImgObj && data->adding_member && (nimg->width != -1000))
+
+  if(nimg == NULL && IS_VALID_IMAGE_NAME(ImgName))
+  {
+    int nameLen = strlen(ImgName)+1;
+
+    if((nimg = (struct NImgList *)AllocVecPooled(data->Pool, sizeof(*nimg)+nameLen)) != NULL)
+    {
+      nimg->ImgName = (char *)nimg;
+      nimg->ImgName = &nimg->ImgName[sizeof(*nimg)];
+      strlcpy(nimg->ImgName, ImgName, nameLen);
+      nimg->NImgObj = NULL;
+      nimg->width = -1;
+      nimg->height = -1;
+      nimg->dx = 0;
+      nimg->dy = 0;
+      nimg->next = data->NImage.next;
+      data->NImage.next = nimg;
+    }
+  }
+
+  if(nimg != NULL && nimg->NImgObj == NULL && data->adding_member && (nimg->width != -1000))
   {
     if ((data->adding_member == 1) && !data->NList_Quiet && !data->NList_Disabled && data->SETUP && data->SHOW && DoMethod(data->NL_Group,MUIM_Group_InitChange))
       data->adding_member = 2;

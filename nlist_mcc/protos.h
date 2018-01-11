@@ -192,7 +192,7 @@ extern IPTR mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *m
 /* NList_func4.c */
 
 extern BOOL NL_OnWindow(struct NLData *data,LONG x,LONG y);
-extern struct NImgList *GetNImage(struct NLData *data,char *ImgName);
+extern struct NImgList *GetNImage(struct NLData *data, const char *ImgName);
 extern void DeleteNImages(struct NLData *data);
 extern struct NImgList *GetNImage2(struct NLData *data,APTR imgobj);
 extern void DeleteNImages2(struct NLData *data);

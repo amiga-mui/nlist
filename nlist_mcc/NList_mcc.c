@@ -433,7 +433,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_ShowDropMarks = TRUE;
   data->NImage2 = NULL;
   data->NImage.NImgObj = NULL;
-  data->NImage.ImgName = NULL;
+  data->NImage.ImgName = INVALID_IMAGE_NAME;
   data->NImage.next = NULL;
   data->multiselect = MUIV_NList_MultiSelect_None;
   data->multisel_qualifier = 0;
