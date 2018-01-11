@@ -112,12 +112,14 @@ BOOL NL_OnWindow(struct NLData *data,LONG x,LONG y)
 struct NImgList *GetNImage(struct NLData *data,char *ImgName)
 {
   struct NImgList *nimg = &data->NImage;
-  int nameLen = strlen(ImgName)+2;
+  int nameLen = strlen(ImgName)+1;
 
   while (nimg != NULL && nimg->ImgName != NULL && strcmp(nimg->ImgName, ImgName) != 0)
     nimg = nimg->next;
+
   if(nimg == NULL && (nimg = (struct NImgList *)AllocVecPooled(data->Pool, sizeof(struct NImgList)+nameLen)) != NULL)
-  { nimg->ImgName = (char *) nimg;
+  {
+    nimg->ImgName = (char *) nimg;
     nimg->ImgName = &nimg->ImgName[sizeof(struct NImgList)];
     strlcpy(nimg->ImgName, ImgName, nameLen);
     nimg->NImgObj = NULL;
@@ -129,8 +131,10 @@ struct NImgList *GetNImage(struct NLData *data,char *ImgName)
     data->NImage.next = nimg;
   }
   if (nimg && !nimg->NImgObj && data->adding_member && (nimg->width != -1000))
-  { if ((data->adding_member == 1) && !data->NList_Quiet && !data->NList_Disabled && data->SETUP && data->SHOW && DoMethod(data->NL_Group,MUIM_Group_InitChange))
+  {
+    if ((data->adding_member == 1) && !data->NList_Quiet && !data->NList_Disabled && data->SETUP && data->SHOW && DoMethod(data->NL_Group,MUIM_Group_InitChange))
       data->adding_member = 2;
+
     if (data->adding_member >= 2)
     {
       nimg->NImgObj = MUI_NewObject(MUIC_Image,
@@ -158,7 +162,8 @@ struct NImgList *GetNImage(struct NLData *data,char *ImgName)
           data->do_images = TRUE;
       }
       else
-      { nimg->width = -1000;
+      {
+        nimg->width = -1000;
         nimg->height = 2;
       }
     }
@@ -185,10 +190,13 @@ void DeleteNImages(struct NLData *data)
 struct NImgList *GetNImage2(struct NLData *data,APTR imgobj)
 {
   struct NImgList *nimg2 = data->NImage2;
+
   while (nimg2 && (nimg2->NImgObj != imgobj) && (nimg2->ImgName != imgobj))
     nimg2 = nimg2->next;
+
   if (!nimg2 && (nimg2 = (struct NImgList *)AllocVecPooled(data->Pool, sizeof(struct NImgList))) != NULL)
-  { nimg2->NImgObj = NULL;
+  {
+    nimg2->NImgObj = NULL;
     nimg2->width = -1000;
     nimg2->height = 2;
     nimg2->dx = 0;
@@ -206,21 +214,26 @@ struct NImgList *GetNImage2(struct NLData *data,APTR imgobj)
  */
     }
     else
-    { if ((data->adding_member == 1) && !data->NList_Quiet && !data->NList_Disabled && data->SETUP && data->SHOW && DoMethod(data->NL_Group,MUIM_Group_InitChange))
+    {
+      if ((data->adding_member == 1) && !data->NList_Quiet && !data->NList_Disabled && data->SETUP && data->SHOW && DoMethod(data->NL_Group,MUIM_Group_InitChange))
         data->adding_member = 2;
+
       if (data->adding_member >= 2)
-      { nimg2->NImgObj = (APTR) nimg2->ImgName;
+      {
+        nimg2->NImgObj = (APTR) nimg2->ImgName;
         nimg2->ImgName = NULL;
 /*D(bug("%lx|OM_ADDMEMBER,nimg2->NImgObj %ld\n",obj,data->adding_member));*/
         DoMethod(data->NL_Group,OM_ADDMEMBER,nimg2->NImgObj);
         set(nimg2->NImgObj, MUIA_Disabled, FALSE);
 
         if (data->SHOW)
-        { nimg2->width = _defwidth(nimg2->NImgObj);
+        {
+          nimg2->width = _defwidth(nimg2->NImgObj);
           nimg2->height = _defheight(nimg2->NImgObj);
         }
         else
-        { nimg2->width = -1;
+        {
+          nimg2->width = -1;
           nimg2->height = -1;
           data->do_images = TRUE;
         }
