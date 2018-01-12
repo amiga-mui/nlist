@@ -1,7 +1,7 @@
 /***************************************************************************
 
  NBalance.mcc - New Balance MUI Custom Class
- Copyright (C) 2008-2016 NList Open Source Team
+ Copyright (C) 2008-2018 NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -28,9 +28,9 @@
 
 // for setting all necessary version information
 #define LIB_VERSION    15
-#define LIB_REVISION   22
-#define LIB_DATE       "04.10.2017"
-#define LIB_COPYRIGHT  "Copyright (C) 2008-2016 NList Open Source Team"
+#define LIB_REVISION   23
+#define LIB_DATE       "12.01.2018"
+#define LIB_COPYRIGHT  "Copyright (C) 2008-2018 NList Open Source Team"
 
 // set the LIB_REV_STRING
 #define LIB_REV_STRING STR(LIB_VERSION) "." STR(LIB_REVISION)
