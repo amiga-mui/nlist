@@ -79,8 +79,11 @@ struct MUI_CustomClass *NGR_Create(void)
 {
   if((NGR_Class = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Group, NULL, sizeof(struct NGRData), ENTRY(NGR_Dispatcher))) != NULL)
   {
-    // set up unique names for our custom classes
-    NGR_Class->mcc_Class->cl_ID = (ClassID)MUIC_NList "/NGR";
+    if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 0))
+    {
+      // set up unique names for our custom classes
+      NGR_Class->mcc_Class->cl_ID = (ClassID)MUIC_NList "/NGR";
+    }
   }
 
   return (NGR_Class);

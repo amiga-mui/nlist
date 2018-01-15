@@ -100,9 +100,13 @@ struct MUI_CustomClass *NLI2_Create(void)
   //NLI2_Class = MUI_CreateCustomClass(NULL, MUIC_Image, NULL, sizeof(struct NLIData), ENTRY(NLI2_Dispatcher));
   if((NLI2_Class = MUI_CreateCustomClass(NULL, MUIC_Image, NULL, sizeof(struct NLIData), ENTRY(NLI_Dispatcher))) != NULL)
   {
-    // set up unique names for our custom classes
-    NLI2_Class->mcc_Class->cl_ID = (ClassID)MUIC_NList "/NLI2";
+    if(LIB_VERSION_IS_AT_LEAST(MUIMasterBase, 20, 0))
+    {
+      // set up unique names for our custom classes
+      NLI2_Class->mcc_Class->cl_ID = (ClassID)MUIC_NList "/NLI2";
+    }
   }
+
   return (NLI2_Class);
 }
 

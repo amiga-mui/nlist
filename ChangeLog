@@ -2,6 +2,11 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+2018-01-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: add the unique names for private custom classes for MUI4 and up only.
+    With MUI 3.8 this causes crashes. This closes #2.
+
 #### v0.123 RELEASE ###########################################################
 
 2018-01-11 Thore Böckelmann <tboeckel@gmx.de>
