@@ -8,13 +8,13 @@
 # 
 # Translators:
 # Translators:
-# Thore Böckelmann <tboeckel@gmx.de>, 2014
+# Thore Böckelmann <tboeckel@gmx.de>, 2014,2018
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/nlist-classes/\n"
 "POT-Creation-Date: 2014-02-21 16:03+0100\n"
-"PO-Revision-Date: 2014-10-05 18:14+0000\n"
+"PO-Revision-Date: 2018-11-19 10:36+0000\n"
 "Last-Translator: Thore Böckelmann <tboeckel@gmx.de>\n"
 "Language-Team: German (http://www.transifex.com/ato/nlist-classes/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -767,3 +767,23 @@ msgstr "Standardreihenfolge: diese"
 msgctxt "MSG_CTXMENU_DEFAULT_ORDER_ALL (146//)"
 msgid "Default order: all"
 msgstr "Standardreihenfolge: alle"
+
+msgctxt "MSG_LISTALT_BG_WIN (147//)"
+msgid "Alternative List Background"
+msgstr "Alternativer Listenhintergrund"
+
+msgctxt "MSG_LISTALT_BG_HELP (148//)"
+msgid ""
+"For adjusting the alternative background\n"
+"color of a list."
+msgstr "Ändert die alternative Hintergrundfarbe der Liste."
+
+msgctxt "MSG_ROW_STRIPING (149//)"
+msgid "Row striping effect"
+msgstr "Streifeneffekt für Zeilen"
+
+msgctxt "MSG_ROW_STRIPING_HELP (150//)"
+msgid ""
+"Apply row striping effect using the\n"
+"alternative background color of a list."
+msgstr "Fügt einen Streifeneffekt durch Verwendung des alternativen\nListenhintergrunds hinzu."
