@@ -704,6 +704,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->mcp_PenInactive = NULL;
   data->mcp_BG_Title = NULL;
   data->mcp_BG_List = NULL;
+  data->mcp_BG_ListAlt = NULL;
   data->mcp_BG_Select = NULL;
   data->mcp_BG_Cursor = NULL;
   data->mcp_BG_UnselCur = NULL;
@@ -719,6 +720,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->mcp_Font_Little = NULL;
   data->mcp_Font_Fixed = NULL;
   data->mcp_ForcePen = NULL;
+  data->mcp_RowStriping = NULL;
   data->mcp_ColWidthDrag = NULL;
   data->mcp_PartialCol = NULL;
   data->mcp_List_Select = NULL;
@@ -897,12 +899,22 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
                 MUIA_ShortHelp,    tr(MSG_LIST_PEN_HELP),
               End,
               Child, VCenter(Label(tr(MSG_PBG_LIST))),
-              Child, data->mcp_BG_List = PopimageObject,
-                MUIA_CycleChain,        1,
-                MUIA_Imageadjust_Type,  MUIV_Imageadjust_Type_Background,
-                MUIA_Window_Title,      tr(MSG_LIST_BG_WIN),
-                MUIA_Draggable,         TRUE,
-                MUIA_ShortHelp,         tr(MSG_LIST_BG_HELP),
+              Child, HGroup,
+                MUIA_Group_SameWidth, TRUE,
+                Child, data->mcp_BG_List = PopimageObject,
+                  MUIA_CycleChain,        1,
+                  MUIA_Imageadjust_Type,  MUIV_Imageadjust_Type_Background,
+                  MUIA_Window_Title,      tr(MSG_LIST_BG_WIN),
+                  MUIA_Draggable,         TRUE,
+                  MUIA_ShortHelp,         tr(MSG_LIST_BG_HELP),
+                End,
+                Child, data->mcp_BG_ListAlt = PopimageObject,
+                  MUIA_CycleChain,        1,
+                  MUIA_Imageadjust_Type,  MUIV_Imageadjust_Type_Background,
+                  MUIA_Window_Title,      tr(MSG_LISTALT_BG_WIN),
+                  MUIA_Draggable,         TRUE,
+                  MUIA_ShortHelp,         tr(MSG_LISTALT_BG_HELP),
+                End,
               End,
 
               Child, data->mcp_PenSelect = PoppenObject,
@@ -972,20 +984,35 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
               MUIA_VertWeight, 15,
 
               Child, VSpace(0),
+
               Child, HGroup,
                 Child, HSpace(0),
-                Child, data->mcp_ForcePen = ImageObject,
-                  ImageButtonFrame,
-                  MUIA_InputMode,      MUIV_InputMode_Toggle,
-                  MUIA_Image_Spec,     MUII_CheckMark,
-                  MUIA_Image_FreeVert, TRUE,
-                  MUIA_Background,     MUII_ButtonBack,
-                  MUIA_ShowSelState,   FALSE,
+                Child, ColGroup(2),
+                  Child, data->mcp_ForcePen = ImageObject,
+                    ImageButtonFrame,
+                    MUIA_InputMode,      MUIV_InputMode_Toggle,
+                    MUIA_Image_Spec,     MUII_CheckMark,
+                    MUIA_Image_FreeVert, TRUE,
+                    MUIA_Background,     MUII_ButtonBack,
+                    MUIA_ShowSelState,   FALSE,
+                    MUIA_ShortHelp, tr(MSG_FORCE_SELECT_PEN_HELP),
+                  End,
+                  Child, LLabel(tr(MSG_FORCE_SELECT_PEN)),
+
+                  Child, data->mcp_RowStriping = ImageObject,
+                    ImageButtonFrame,
+                    MUIA_InputMode,      MUIV_InputMode_Toggle,
+                    MUIA_Image_Spec,     MUII_CheckMark,
+                    MUIA_Image_FreeVert, TRUE,
+                    MUIA_Background,     MUII_ButtonBack,
+                    MUIA_ShowSelState,   FALSE,
+                    MUIA_ShortHelp, tr(MSG_ROW_STRIPING_HELP),
+                 End,
+                 Child, LLabel(tr(MSG_ROW_STRIPING)),
                End,
-               Child, Label(tr(MSG_FORCE_SELECT_PEN)),
-               MUIA_ShortHelp, tr(MSG_FORCE_SELECT_PEN_HELP),
                Child, HSpace(0),
               End,
+
               Child, VSpace(0),
              End,
            End;
@@ -1561,6 +1588,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Title,     MUICFG_NList_BG_Title, 1, tr(MSG_TITLE_BG_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_List,      MUICFG_NList_BG_List, 1, tr(MSG_LIST_BG_WIN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_ListAlt,   MUICFG_NList_BG_ListAlt, 1, tr(MSG_LISTALT_BG_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Select,    MUICFG_NList_BG_Select, 1, tr(MSG_SELECT_BG_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_Cursor,    MUICFG_NList_BG_Cursor, 1, tr(MSG_CURSOR_BG_WIN));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_BG_UnselCur,  MUICFG_NList_BG_UnselCur, 1, tr(MSG_UNSEL_BG_WIN));
@@ -1580,6 +1608,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_B_Smooth,     MUICFG_NList_Smooth, 1, tr(MSG_SMOOTH_SCROLLING));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_ForcePen,     MUICFG_NList_ForcePen, 1, tr(MSG_FORCE_SELECT_PEN));
+    DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_RowStriping,  MUICFG_NList_RowStriping, 1, tr(MSG_ROW_STRIPING));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_ColWidthDrag, MUICFG_NList_ColWidthDrag, 1, tr(MSG_BALANCING_COLS));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_PartialCol,   MUICFG_NList_PartialCol, 1, tr(MSG_PARTIAL_COL_MARK));
     DoMethod(obj, MUIM_Mccprefs_RegisterGadget, data->mcp_List_Select,  MUICFG_NList_List_Select, 1, tr(MSG_MULTISEL_MOVEACTIVE));
@@ -1626,27 +1655,28 @@ IPTR mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsg
 
   D(DBF_STARTUP, "configToGadgets");
 
-  LOAD_DATASPEC(data->mcp_PenTitle,   MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_Title,   DEFAULT_PEN_TITLE);
-  LOAD_DATASPEC(data->mcp_PenList,    MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_List,    DEFAULT_PEN_LIST);
-  LOAD_DATASPEC(data->mcp_PenSelect,  MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_Select,  DEFAULT_PEN_SELECT);
-  LOAD_DATASPEC(data->mcp_PenCursor,  MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_Cursor,  DEFAULT_PEN_CURSOR);
-  LOAD_DATASPEC(data->mcp_PenUnselCur,MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_UnselCur,DEFAULT_PEN_UNSELCUR);
-  LOAD_DATASPEC(data->mcp_PenInactive,MUIA_Pendisplay_Spec,  MUICFG_NList_Pen_Inactive,DEFAULT_PEN_INACTIVE);
+  LOAD_DATASPEC(data->mcp_PenTitle,    MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Title,    DEFAULT_PEN_TITLE);
+  LOAD_DATASPEC(data->mcp_PenList,     MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_List,     DEFAULT_PEN_LIST);
+  LOAD_DATASPEC(data->mcp_PenSelect,   MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Select,   DEFAULT_PEN_SELECT);
+  LOAD_DATASPEC(data->mcp_PenCursor,   MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Cursor,   DEFAULT_PEN_CURSOR);
+  LOAD_DATASPEC(data->mcp_PenUnselCur, MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_UnselCur, DEFAULT_PEN_UNSELCUR);
+  LOAD_DATASPEC(data->mcp_PenInactive, MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Inactive, DEFAULT_PEN_INACTIVE);
 
-  LOAD_DATASPEC(data->mcp_BG_Title,   MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Title,    DEFAULT_BG_TITLE);
-  LOAD_DATASPEC(data->mcp_BG_List,    MUIA_Imagedisplay_Spec,MUICFG_NList_BG_List,     DEFAULT_BG_LIST);
-  LOAD_DATASPEC(data->mcp_BG_Select,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Select,   DEFAULT_BG_SELECT);
-  LOAD_DATASPEC(data->mcp_BG_Cursor,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Cursor,   DEFAULT_BG_CURSOR);
-  LOAD_DATASPEC(data->mcp_BG_UnselCur,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_UnselCur, DEFAULT_BG_UNSELCUR);
-  LOAD_DATASPEC(data->mcp_BG_Inactive,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Inactive, DEFAULT_BG_INACTIVE);
+  LOAD_DATASPEC(data->mcp_BG_Title,    MUIA_Imagedisplay_Spec, MUICFG_NList_BG_Title,     DEFAULT_BG_TITLE);
+  LOAD_DATASPEC(data->mcp_BG_List,     MUIA_Imagedisplay_Spec, MUICFG_NList_BG_List,      DEFAULT_BG_LIST);
+  LOAD_DATASPEC(data->mcp_BG_ListAlt,  MUIA_Imagedisplay_Spec, MUICFG_NList_BG_ListAlt,   DEFAULT_BG_LISTALT);
+  LOAD_DATASPEC(data->mcp_BG_Select,   MUIA_Imagedisplay_Spec, MUICFG_NList_BG_Select,    DEFAULT_BG_SELECT);
+  LOAD_DATASPEC(data->mcp_BG_Cursor,   MUIA_Imagedisplay_Spec, MUICFG_NList_BG_Cursor,    DEFAULT_BG_CURSOR);
+  LOAD_DATASPEC(data->mcp_BG_UnselCur, MUIA_Imagedisplay_Spec, MUICFG_NList_BG_UnselCur,  DEFAULT_BG_UNSELCUR);
+  LOAD_DATASPEC(data->mcp_BG_Inactive, MUIA_Imagedisplay_Spec, MUICFG_NList_BG_Inactive,  DEFAULT_BG_INACTIVE);
 
-  LOAD_DATALONG(data->mcp_SL_VertInc, MUIA_Numeric_Value,    MUICFG_NList_VertInc,     DEFAULT_VERT_INC);
+  LOAD_DATALONG(data->mcp_SL_VertInc,  MUIA_Numeric_Value,     MUICFG_NList_VertInc,      DEFAULT_VERT_INC);
 
-  LOAD_DATALONG(data->mcp_B_Smooth,   MUIA_Selected,         MUICFG_NList_Smooth,      DEFAULT_SMOOTHSCROLL);
+  LOAD_DATALONG(data->mcp_B_Smooth,    MUIA_Selected,          MUICFG_NList_Smooth,       DEFAULT_SMOOTHSCROLL);
 
-  LOAD_DATAFONT(data->mcp_Font,       MUICFG_NList_Font);
-  LOAD_DATAFONT(data->mcp_Font_Little,MUICFG_NList_Font_Little);
-  LOAD_DATAFONT(data->mcp_Font_Fixed, MUICFG_NList_Font_Fixed);
+  LOAD_DATAFONT(data->mcp_Font,        MUICFG_NList_Font);
+  LOAD_DATAFONT(data->mcp_Font_Little, MUICFG_NList_Font_Little);
+  LOAD_DATAFONT(data->mcp_Font_Fixed,  MUICFG_NList_Font_Fixed);
 
   {
     LONG *ptrd;
@@ -1745,6 +1775,7 @@ IPTR mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   LOAD_DATALONG(data->mcp_DragLines,    MUIA_Numeric_Value,    MUICFG_NList_DragLines, DEFAULT_DRAGLINES);
   LOAD_DATALONG(data->mcp_VerticalCenteredLines, MUIA_Selected, MUICFG_NList_VCenteredLines, DEFAULT_VCENTERED);
   LOAD_DATALONG(data->mcp_SelectPointer, MUIA_Selected, MUICFG_NList_SelectPointer, DEFAULT_SELECTPOINTER);
+  LOAD_DATALONG(data->mcp_RowStriping,   MUIA_Selected, MUICFG_NList_RowStriping, DEFAULT_ROWSTRIPING);
   LOAD_DATALONG(data->mcp_WheelStep,    MUIA_Numeric_Value,    MUICFG_NList_WheelStep, DEFAULT_WHEELSTEP);
   LOAD_DATALONG(data->mcp_WheelFast,    MUIA_Numeric_Value,    MUICFG_NList_WheelFast, DEFAULT_WHEELFAST);
   LOAD_DATALONG(data->mcp_WheelMMB,     MUIA_Selected,         MUICFG_NList_WheelMMB,  DEFAULT_WHEELMMB);
@@ -1834,27 +1865,28 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
 
   D(DBF_STARTUP, "GadgetsToConfig");
 
-  SAVE_DATASPEC(data->mcp_PenTitle,   MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Title);
-  SAVE_DATASPEC(data->mcp_PenList,    MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_List);
-  SAVE_DATASPEC(data->mcp_PenSelect,  MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Select);
-  SAVE_DATASPEC(data->mcp_PenCursor,  MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Cursor);
-  SAVE_DATASPEC(data->mcp_PenUnselCur,MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_UnselCur);
-  SAVE_DATASPEC(data->mcp_PenInactive,MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Inactive);
+  SAVE_DATASPEC(data->mcp_PenTitle,    MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Title);
+  SAVE_DATASPEC(data->mcp_PenList,     MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_List);
+  SAVE_DATASPEC(data->mcp_PenSelect,   MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Select);
+  SAVE_DATASPEC(data->mcp_PenCursor,   MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Cursor);
+  SAVE_DATASPEC(data->mcp_PenUnselCur, MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_UnselCur);
+  SAVE_DATASPEC(data->mcp_PenInactive, MUIA_Pendisplay_Spec,   MUICFG_NList_Pen_Inactive);
 
-  SAVE_DATASPEC(data->mcp_BG_Title,   MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Title);
-  SAVE_DATASPEC(data->mcp_BG_List,    MUIA_Imagedisplay_Spec,MUICFG_NList_BG_List);
-  SAVE_DATASPEC(data->mcp_BG_Select,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Select);
-  SAVE_DATASPEC(data->mcp_BG_Cursor,  MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Cursor);
-  SAVE_DATASPEC(data->mcp_BG_UnselCur,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_UnselCur);
-  SAVE_DATASPEC(data->mcp_BG_Inactive,MUIA_Imagedisplay_Spec,MUICFG_NList_BG_Inactive);
+  SAVE_DATASPEC(data->mcp_BG_Title,    MUIA_Imagedisplay_Spec, MUICFG_NList_BG_Title);
+  SAVE_DATASPEC(data->mcp_BG_List,     MUIA_Imagedisplay_Spec, MUICFG_NList_BG_List);
+  SAVE_DATASPEC(data->mcp_BG_ListAlt,  MUIA_Imagedisplay_Spec, MUICFG_NList_BG_ListAlt);
+  SAVE_DATASPEC(data->mcp_BG_Select,   MUIA_Imagedisplay_Spec, MUICFG_NList_BG_Select);
+  SAVE_DATASPEC(data->mcp_BG_Cursor,   MUIA_Imagedisplay_Spec, MUICFG_NList_BG_Cursor);
+  SAVE_DATASPEC(data->mcp_BG_UnselCur, MUIA_Imagedisplay_Spec, MUICFG_NList_BG_UnselCur);
+  SAVE_DATASPEC(data->mcp_BG_Inactive, MUIA_Imagedisplay_Spec, MUICFG_NList_BG_Inactive);
 
-  SAVE_DATALONG(data->mcp_SL_VertInc, MUIA_Numeric_Value,     MUICFG_NList_VertInc);
+  SAVE_DATALONG(data->mcp_SL_VertInc,  MUIA_Numeric_Value,     MUICFG_NList_VertInc);
 
-  SAVE_DATALONG(data->mcp_B_Smooth,   MUIA_Selected,          MUICFG_NList_Smooth);
+  SAVE_DATALONG(data->mcp_B_Smooth,    MUIA_Selected,          MUICFG_NList_Smooth);
 
-  SAVE_DATAFONT(data->mcp_Font,       MUICFG_NList_Font);
-  SAVE_DATAFONT(data->mcp_Font_Little,MUICFG_NList_Font_Little);
-  SAVE_DATAFONT(data->mcp_Font_Fixed, MUICFG_NList_Font_Fixed);
+  SAVE_DATAFONT(data->mcp_Font,        MUICFG_NList_Font);
+  SAVE_DATAFONT(data->mcp_Font_Little, MUICFG_NList_Font_Little);
+  SAVE_DATAFONT(data->mcp_Font_Fixed,  MUICFG_NList_Font_Fixed);
 
   {
     LONG ptrd=0,num;
@@ -1916,6 +1948,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   SAVE_DATALONG(data->mcp_DragLines,    MUIA_Numeric_Value,     MUICFG_NList_DragLines);
   SAVE_DATALONG(data->mcp_VerticalCenteredLines,    MUIA_Selected,     MUICFG_NList_VCenteredLines);
   SAVE_DATALONG(data->mcp_SelectPointer,MUIA_Selected,          MUICFG_NList_SelectPointer);
+  SAVE_DATALONG(data->mcp_RowStriping,  MUIA_Selected,          MUICFG_NList_RowStriping);
   SAVE_DATALONG(data->mcp_WheelStep,    MUIA_Numeric_Value,     MUICFG_NList_WheelStep);
   SAVE_DATALONG(data->mcp_WheelFast,    MUIA_Numeric_Value,     MUICFG_NList_WheelFast);
   SAVE_DATALONG(data->mcp_WheelMMB,     MUIA_Selected,          MUICFG_NList_WheelMMB);

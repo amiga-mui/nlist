@@ -56,6 +56,7 @@
 
 #define MUICFG_NList_BG_Title         0x9d510006UL
 #define MUICFG_NList_BG_List          0x9d510007UL
+#define MUICFG_NList_BG_ListAlt       0x9d510107UL
 #define MUICFG_NList_BG_Select        0x9d510008UL
 #define MUICFG_NList_BG_Cursor        0x9d510009UL
 #define MUICFG_NList_BG_UnselCur      0x9d51000aUL
@@ -87,6 +88,7 @@
 #define MUICFG_NList_DragLines        0x9d51001FUL
 #define MUICFG_NList_VCenteredLines   0x9d510020UL
 #define MUICFG_NList_SelectPointer    0x9d510106UL
+#define MUICFG_NList_RowStriping      0x9d510108UL
 
 #define MUICFG_NList_WheelStep        0x9d510101UL
 #define MUICFG_NList_WheelFast        0x9d510102UL
@@ -109,6 +111,7 @@
 #define DEFAULT_PEN_INACTIVE    "m5"
 #define DEFAULT_BG_TITLE        "0:140"
 #define DEFAULT_BG_LIST         "2:m2"
+#define DEFAULT_BG_LISTALT      "2:m1"
 #define DEFAULT_BG_SELECT       "0:135"
 #define DEFAULT_BG_CURSOR       "0:131"
 #define DEFAULT_BG_UNSELCUR     "2:m3"
@@ -132,6 +135,7 @@
 #define DEFAULT_SERMOUSEFIX     FALSE
 #define DEFAULT_LIST_SELECT     TRUE
 #define DEFAULT_FORCEPEN        FALSE
+#define DEFAULT_ROWSTRIPING     FALSE
 
 #define KEYTAG_QUALIFIER_MULTISELECT       0x9d51C001UL
 #define KEYTAG_QUALIFIER_DRAG              0x9d51C002UL

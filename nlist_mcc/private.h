@@ -1,5 +1,5 @@
-#ifndef MUI_NList_priv_MCC_H
-#define MUI_NList_priv_MCC_H
+#ifndef MUI_NLIST_PRIV_MCC_H
+#define MUI_NLIST_PRIV_MCC_H
 
 /***************************************************************************
 
@@ -296,6 +296,7 @@ struct NLData
   IPTR NList_InactivePen;
   IPTR NList_TitleBackGround;
   IPTR NList_ListBackGround;
+  IPTR NList_ListAltBackGround;
   IPTR NList_SelectBackground;
   IPTR NList_CursorBackground;
   IPTR NList_UnselCurBackground;
@@ -338,6 +339,7 @@ struct NLData
   LONG  NList_VerticalCenteredText;
   BOOL  NList_AutoClip;
   BOOL  NList_SelectPointer;
+  BOOL  NList_RowStriping;
 
   // object pointers for forwarding the
   // key focus to other objects.
@@ -467,6 +469,7 @@ struct NLData
   IPTR Pen_Inactive_init;
   IPTR BG_Title_init;
   IPTR BG_List_init;
+  IPTR BG_ListAlt_init;
   IPTR BG_Select_init;
   IPTR BG_Cursor_init;
   IPTR BG_UnselCur_init;
@@ -598,6 +601,7 @@ struct NLData
   char NList_InactivePenBuffer[128];
   char NList_TitleBackGroundBuffer[128];
   char NList_ListBackGroundBuffer[128];
+  char NList_ListAltBackGroundBuffer[128];
   char NList_SelectBackgroundBuffer[128];
   char NList_CursorBackgroundBuffer[128];
   char NList_UnselCurBackgroundBuffer[128];
@@ -662,4 +666,4 @@ IPTR xget(Object *obj, const IPTR attr);
 #define AllocVecShared(size, flags)  AllocVec((size), (flags))
 #endif
 
-#endif /* MUI_NList_priv_MCC_H */
+#endif /* MUI_NLIST_PRIV_MCC_H */

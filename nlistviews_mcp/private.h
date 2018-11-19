@@ -1,5 +1,5 @@
-#ifndef MUI_NLISTVIEWS_priv_MCP_H
-#define MUI_NLISTVIEWS_priv_MCP_H
+#ifndef MUI_NLISTVIEWS_PRIV_MCP_H
+#define MUI_NLISTVIEWS_PRIV_MCP_H
 
 /***************************************************************************
 
@@ -51,6 +51,7 @@ struct NListviews_MCP_Data
   Object *mcp_PenInactive;
   Object *mcp_BG_Title;
   Object *mcp_BG_List;
+  Object *mcp_BG_ListAlt;
   Object *mcp_BG_Select;
   Object *mcp_BG_Cursor;
   Object *mcp_BG_UnselCur;
@@ -68,6 +69,7 @@ struct NListviews_MCP_Data
   Object *mcp_Font_Little;
   Object *mcp_Font_Fixed;
   Object *mcp_ForcePen;
+  Object *mcp_RowStriping;
 
   Object *mcp_ColWidthDrag;
   Object *mcp_PartialCol;
@@ -116,4 +118,4 @@ struct NListviews_MCP_Data
 #define AllocVecShared(size, flags)  AllocVec((size), (flags))
 #endif
 
-#endif /* MUI_NLISTVIEWS_priv_MCP_H */
+#endif /* MUI_NLISTVIEWS_PRIV_MCP_H */

@@ -945,6 +945,9 @@ IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_ListBackground :
         SET_BG(data->NList_ListBackGround,data->BG_List_init);
         break;
+      case MUIA_NList_ListAltBackground :
+        SET_BG(data->NList_ListAltBackGround,data->BG_ListAlt_init);
+        break;
       case MUIA_NList_SelectBackground :
         SET_BG(data->NList_SelectBackground,data->BG_Select_init);
         break;
@@ -1262,6 +1265,7 @@ IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_NList_InactivePen:            *msg->opg_Storage = (ULONG) data->NList_InactivePen;        return( TRUE );
     case MUIA_NList_TitleBackground:        *msg->opg_Storage = (ULONG) data->NList_TitleBackGround;    return( TRUE );
     case MUIA_NList_ListBackground:         *msg->opg_Storage = (ULONG) data->NList_ListBackGround;    return( TRUE );
+    case MUIA_NList_ListAltBackground:      *msg->opg_Storage = (ULONG) data->NList_ListAltBackGround;    return( TRUE );
     case MUIA_NList_SelectBackground:       *msg->opg_Storage = (ULONG) data->NList_SelectBackground;    return( TRUE );
     case MUIA_NList_CursorBackground:       *msg->opg_Storage = (ULONG) data->NList_CursorBackground;    return( TRUE );
     case MUIA_NList_UnselCurBackground:     *msg->opg_Storage = (ULONG) data->NList_UnselCurBackground;    return( TRUE );

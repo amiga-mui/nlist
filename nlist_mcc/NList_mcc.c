@@ -482,6 +482,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->lastactived = MUIV_NList_Active_Off;
   data->selectskiped = FALSE;
   data->NList_ListBackGround = -1;
+  data->NList_ListAltBackGround = -1;
   data->actbackground = -1;
   data->NList_CompareHook = NULL;
   data->NList_ConstructHook = NULL;
@@ -585,6 +586,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->pad1 = -1;
   data->pad2 = TRUE;
   data->isActiveObject = FALSE;
+  data->NList_RowStriping = DEFAULT_ROWSTRIPING;
   data->NList_KeyUpFocus = NULL;
   data->NList_KeyDownFocus = NULL;
   data->NList_KeyLeftFocus = NULL;
@@ -923,6 +925,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   INIT_BG(MUIA_Background,              data->NList_ListBackGround,    data->BG_List_init);
   if (!data->BG_List_init)
     INIT_BG(MUIA_NList_ListBackground,  data->NList_ListBackGround,    data->BG_List_init);
+  INIT_BG(MUIA_NList_ListAltBackground, data->NList_ListAltBackGround, data->BG_ListAlt_init);
   INIT_BG(MUIA_NList_SelectBackground,  data->NList_SelectBackground,  data->BG_Select_init);
   INIT_BG(MUIA_NList_CursorBackground,  data->NList_CursorBackground,  data->BG_Cursor_init);
   INIT_BG(MUIA_NList_UnselCurBackground,data->NList_UnselCurBackground,data->BG_UnselCur_init);
@@ -1289,6 +1292,18 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
   }
 
+  {
+    LONG *ptrd;
+    data->NList_RowStriping = DEFAULT_ROWSTRIPING;
+    if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_RowStriping, &ptrd))
+    {
+      if(*ptrd != 0)
+        data->NList_RowStriping = TRUE;
+      else
+        data->NList_RowStriping = FALSE;
+    }
+  }
+
   // determine our parent NListview object
   data->nlistviewobj = NULL;
   o = obj;
@@ -1440,6 +1455,7 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   LOAD_BG(data->BG_Title_init,   data->NList_TitleBackGround,   MUICFG_NList_BG_Title,   DEFAULT_BG_TITLE);
   LOAD_BG(data->BG_List_init,    data->NList_ListBackGround,    MUICFG_NList_BG_List,    DEFAULT_BG_LIST);
+  LOAD_BG(data->BG_ListAlt_init, data->NList_ListAltBackGround, MUICFG_NList_BG_ListAlt, DEFAULT_BG_LISTALT);
   LOAD_BG(data->BG_Select_init,  data->NList_SelectBackground,  MUICFG_NList_BG_Select,  DEFAULT_BG_SELECT);
   LOAD_BG(data->BG_Cursor_init,  data->NList_CursorBackground,  MUICFG_NList_BG_Cursor,  DEFAULT_BG_CURSOR);
   LOAD_BG(data->BG_UnselCur_init,data->NList_UnselCurBackground,MUICFG_NList_BG_UnselCur,DEFAULT_BG_UNSELCUR);

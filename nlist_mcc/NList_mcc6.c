@@ -150,14 +150,14 @@ void DrawOldLine(struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
   }
   if ((ent < 0) || (ent >= data->NList_Entries))
   {
-    SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
+    SetBackGround(data->NList_RowStriping == TRUE && (ent % 2) == 1 ? data->NList_ListAltBackGround : data->NList_ListBackGround); mypen = data->NList_ListPen;
     DrawBackground(obj, minx, vert1, maxx-minx, vertd, hfirst+data->vdx, vert2-vert1+data->vdy);
   }
   else
   {
     if (data->EntriesArray[ent]->Select == TE_Select_None)
     {
-      SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen; forcepen = FALSE;
+      SetBackGround(data->NList_RowStriping == TRUE && (ent % 2) == 1 ? data->NList_ListAltBackGround : data->NList_ListBackGround); mypen = data->NList_ListPen; forcepen = FALSE;
     }
     else
     {
@@ -251,6 +251,8 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
 #endif
   while (ent < ent2)
   {
+    BOOL isListBG;
+
     forcepen = FALSE;
     if ((ent != data->NList_First) && (ent != (data->NList_First + data->NList_Visible - 1)) &&
         (((not_all == 1) && ((ent - data->NList_First) & 1L)) ||
@@ -278,11 +280,11 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
 
           if(data->NList_ActiveObjectOnClick == TRUE && (data->isActiveObject == FALSE || xget(_win(obj), MUIA_Window_Activate) == FALSE))
           {
-            SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
+            SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen; isListBG = FALSE;
           }
           else
           {
-            SetBackGround(MUII_myListCursor); mypen = data->NList_CursorPen; forcepen = data->ForcePen;
+            SetBackGround(MUII_myListCursor); mypen = data->NList_CursorPen; forcepen = data->ForcePen; isListBG = FALSE;
           }
         }
         else
@@ -299,7 +301,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
               ent3 = ent + (dent / 2);
           }
 
-          SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
+          SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen; isListBG = TRUE;
         }
       }
       else
@@ -310,24 +312,26 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
 
           if(data->NList_ActiveObjectOnClick == TRUE && (data->isActiveObject == FALSE || xget(_win(obj), MUIA_Window_Activate) == FALSE))
           {
-            SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
+            SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen; isListBG = FALSE;
           }
           else if(data->EntriesArray[ent]->Select == TE_Select_None)
           {
-            SetBackGround(MUII_myListUnselCur); mypen = data->NList_UnselCurPen; forcepen = data->ForcePen;
+            SetBackGround(MUII_myListUnselCur); mypen = data->NList_UnselCurPen; forcepen = data->ForcePen; isListBG = FALSE;
           }
           else
           {
-            SetBackGround(MUII_myListCursor); mypen = data->NList_CursorPen; forcepen = data->ForcePen;
+            SetBackGround(MUII_myListCursor); mypen = data->NList_CursorPen; forcepen = data->ForcePen; isListBG = FALSE;
           }
 
           data->do_draw_active = FALSE;
         }
         else
-        { cursel = data->EntriesArray[ent]->Select;
+        {
+          cursel = data->EntriesArray[ent]->Select;
           ent3 = ent + 1;
           if (!not_all)
-          { while ((ent3 < ent2) && (data->EntriesArray[ent3]->Select == cursel) && (ent3 != data->NList_Active))
+          {
+            while ((ent3 < ent2) && (data->EntriesArray[ent3]->Select == cursel) && (ent3 != data->NList_Active))
               ent3++;
             dent = ent3 - ent;
             if (dent >= 14)
@@ -338,15 +342,15 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
 
           if(cursel == TE_Select_None)
           {
-            SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
+            SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen; isListBG = TRUE;
           }
           else if(data->NList_ActiveObjectOnClick == TRUE && (data->isActiveObject == FALSE || xget(_win(obj), MUIA_Window_Activate) == FALSE))
           {
-            SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen;
+            SetBackGround(MUII_myListInactive); mypen = data->NList_InactivePen; forcepen = data->ForcePen; isListBG = FALSE;
           }
           else
           {
-            SetBackGround(MUII_myListSelect); mypen = data->NList_SelectPen; forcepen = data->ForcePen;
+            SetBackGround(MUII_myListSelect); mypen = data->NList_SelectPen; forcepen = data->ForcePen; isListBG = FALSE;
           }
         }
       }
@@ -355,7 +359,8 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
       vert2 = data->vpos + (ent*data->vinc);
       vertd = data->vinc * (ent3 - ent);
       if (data->NList_First_Incr)
-      { vert1 -= data->NList_First_Incr;
+      {
+        vert1 -= data->NList_First_Incr;
         if (ent == data->NList_First)
         { vertd -= data->NList_First_Incr;
           vert2 += data->NList_First_Incr;
@@ -375,6 +380,15 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
         if (!data->NList_First_Incr || do_extrems || ((ent > data->NList_First) && (ent < data->NList_First + data->NList_Visible)))
 #endif
         {
+          // draw the alternative background if we are on an odd line and would draw/keep the normal background otherwise
+          if(isListBG == TRUE && data->NList_RowStriping == TRUE && (ent % 2) == 1)
+          {
+            ULONG oldbg = data->actbackground;
+
+            SetBackGround(data->NList_ListAltBackGround);
+            DrawBackground(obj, minx, vert1, maxx-minx, data->vinc, hfirst+data->vdx, vert2-vert1+data->vdy);
+            SetBackGround(oldbg);
+          }
           linelen = DrawText(data,ent,data->hpos-hfirst,vert1+data->voff,minx,maxx-1,MUIPEN(mypen),data->hinc,forcepen);
           if(linelen > hmax)
             hmax = linelen;
@@ -424,7 +438,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
 
       if(x1 < x2)
       {
-        SetBackGround(data->NList_ListBackGround);
+        SetBackGround(data->NList_RowStriping == TRUE && (ent % 2) == 1 ? data->NList_ListAltBackGround : data->NList_ListBackGround);
         DrawBackground(obj, x1, vert3, x2-x1, vertd, hfirst+data->vdx, vert2-vert3+data->vdy);
       }
       if (x2 < x3)
@@ -442,7 +456,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
       }
       if (x3 < x4)
       {
-        SetBackGround(data->NList_ListBackGround);
+        SetBackGround(data->NList_RowStriping == TRUE && (ent % 2) == 1 ? data->NList_ListAltBackGround : data->NList_ListBackGround);
         DrawBackground(obj, x3, vert3, x4-x3, vertd, hfirst+data->vdx, vert2-vert3-data->vdy);
       }
 
@@ -493,7 +507,7 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
 
   if (ent < ent4)
   {
-    SetBackGround(data->NList_ListBackGround);
+    SetBackGround(data->NList_RowStriping == TRUE && (ent % 2) == 1 ? data->NList_ListAltBackGround : data->NList_ListBackGround);
     vert3 = data->vpos+(data->vinc * (ent - data->NList_First));
     vert2 = data->vpos + (ent*data->vinc);
     vertd = data->vinc * (ent4 - ent);

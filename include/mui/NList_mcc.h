@@ -23,8 +23,8 @@
 
 ***************************************************************************/
 
-#ifndef MUI_NList_MCC_H
-#define MUI_NList_MCC_H
+#ifndef MUI_NLIST_MCC_H
+#define MUI_NLIST_MCC_H
 
 #ifndef LIBRARIES_MUI_H
 #include <libraries/mui.h>
@@ -89,6 +89,7 @@ extern "C" {
 #define MUIA_NList_InactivePen              0x9d5100C1UL /* GM  isg  LONG              */
 
 #define MUIA_NList_ListBackground           0x9d51003eUL /* GM  isg  LONG              */
+#define MUIA_NList_ListAltBackground        0x9d5100C8UL /* GM  isg  LONG              */
 #define MUIA_NList_TitleBackground          0x9d51003fUL /* GM  isg  LONG              */
 #define MUIA_NList_SelectBackground         0x9d510040UL /* GM  isg  LONG              */
 #define MUIA_NList_CursorBackground         0x9d510041UL /* GM  isg  LONG              */
@@ -669,4 +670,4 @@ struct NList_CopyColumnToClipMessage
 }
 #endif
 
-#endif /* MUI_NList_MCC_H */
+#endif /* MUI_NLIST_MCC_H */
