@@ -47,6 +47,12 @@
 #include <stdio.h>
 #include <time.h>
 
+#if defined(__amigaos4__)
+#define AllocVecShared(size, flags)  AllocVecTags((size), AVT_Type, MEMF_SHARED, AVT_Lock, FALSE, ((flags)&MEMF_CLEAR) ? AVT_ClearWithValue : TAG_IGNORE, 0, TAG_DONE)
+#else
+#define AllocVecShared(size, flags)  AllocVec((size), (flags))
+#endif
+
 #ifdef MYDEBUG
  #define bug kprintf
  #define D(x)
@@ -299,7 +305,7 @@ HOOKPROTONHNO(confunc, SIPTR, struct MUIP_NListtree_ConstructMessage *msg)
 	/*
 	**	Allocate needed piece of memory for the new entry.
 	*/
-	if((sa = (struct SampleArray *)AllocVec( sizeof( struct SampleArray) + strlen( msg->Name ) + 1, MEMF_CLEAR)))
+	if((sa = (struct SampleArray *)AllocVecShared( sizeof( struct SampleArray) + strlen( msg->Name ) + 1, MEMF_CLEAR)))
 	{
 		/*
 		**	Save the user data field right after the

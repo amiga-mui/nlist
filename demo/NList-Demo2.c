@@ -61,6 +61,12 @@ extern struct Library *MUIMasterBase;
 
 #include "SDI_hook.h"
 
+#if defined(__amigaos4__)
+#define AllocVecShared(size, flags)  AllocVecTags((size), AVT_Type, MEMF_SHARED, AVT_Lock, FALSE, ((flags)&MEMF_CLEAR) ? AVT_ClearWithValue : TAG_IGNORE, 0, TAG_DONE)
+#else
+#define AllocVecShared(size, flags)  AllocVec((size), (flags))
+#endif
+
 /* *********************************************** */
 
 struct LITD {
@@ -73,7 +79,7 @@ struct LITD {
 
 HOOKPROTONHNO(ConstructLI_TextFunc, APTR, struct NList_ConstructMessage *ncm)
 {
-  struct LITD *new_entry = (struct LITD *) AllocVec(sizeof(struct LITD),0);
+  struct LITD *new_entry = (struct LITD *) AllocVecShared(sizeof(struct LITD),0);
 
   if (new_entry)
   {
