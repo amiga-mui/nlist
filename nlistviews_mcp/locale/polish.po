@@ -9,13 +9,14 @@
 # Translators:
 # Translators:
 # Mariusz Danilewicz <mandi@interia.pl>, 2014
+# Mariusz Danilewicz <mandi@interia.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: http://sf.net/p/nlist-classes/\n"
 "POT-Creation-Date: 2014-02-21 16:03+0100\n"
-"PO-Revision-Date: 2018-11-19 10:32+0000\n"
-"Last-Translator: Thore Böckelmann <tboeckel@gmx.de>\n"
+"PO-Revision-Date: 2018-11-19 16:07+0000\n"
+"Last-Translator: Mariusz Danilewicz <mandi@interia.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/ato/nlist-classes/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -770,20 +771,20 @@ msgstr "Domyślna kolejność: wszystkich"
 
 msgctxt "MSG_LISTALT_BG_WIN (147//)"
 msgid "Alternative List Background"
-msgstr ""
+msgstr "Alternatywne tło listy"
 
 msgctxt "MSG_LISTALT_BG_HELP (148//)"
 msgid ""
 "For adjusting the alternative background\n"
 "color of a list."
-msgstr ""
+msgstr "Ustawia alternatywny\nkolor tła listy."
 
 msgctxt "MSG_ROW_STRIPING (149//)"
 msgid "Row striping effect"
-msgstr ""
+msgstr "Wiersze jako paski"
 
 msgctxt "MSG_ROW_STRIPING_HELP (150//)"
 msgid ""
 "Apply row striping effect using the\n"
 "alternative background color of a list."
-msgstr ""
+msgstr "Włącza wyświetlanie wierszy jako paski\nw alternatywnym kolorze tła listy."
