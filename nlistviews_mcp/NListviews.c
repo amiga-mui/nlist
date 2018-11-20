@@ -233,7 +233,7 @@ static const char *MainTextArray[] =
   "All releases are available on",
   "http://www.sourceforge.net/projects/nlist-classes/",
   "\033C",
-  "\033r\0333(C) 2001-2013 by NList Open Source Team",
+  "\033r\0333(C) 2001-2018 by NList Open Source Team",
   "\033r\0333(C) 1996-1998 by Gilles Masson",
   "\033r\0333http://www.sourceforge.net/projects/nlist-classes/",
   "\033C",
