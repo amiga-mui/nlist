@@ -150,7 +150,8 @@ void DrawOldLine(struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
   }
   if ((ent < 0) || (ent >= data->NList_Entries))
   {
-    SetBackGround(data->NList_RowStriping == TRUE && (ent % 2) == 1 ? data->NList_ListAltBackGround : data->NList_ListBackGround); mypen = data->NList_ListPen;
+    // the space below the last entry is always drawn with the normal background pattern
+    SetBackGround(data->NList_ListBackGround); mypen = data->NList_ListPen;
     DrawBackground(obj, minx, vert1, maxx-minx, vertd, hfirst+data->vdx, vert2-vert1+data->vdy);
   }
   else
@@ -507,7 +508,8 @@ WORD DrawLines(struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfir
 
   if (ent < ent4)
   {
-    SetBackGround(data->NList_RowStriping == TRUE && (ent % 2) == 1 ? data->NList_ListAltBackGround : data->NList_ListBackGround);
+    // the remaining space is always drawn with the normal background pattern
+    SetBackGround(data->NList_ListBackGround);
     vert3 = data->vpos+(data->vinc * (ent - data->NList_First));
     vert2 = data->vpos + (ent*data->vinc);
     vertd = data->vinc * (ent4 - ent);
