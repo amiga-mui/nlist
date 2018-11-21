@@ -17,7 +17,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Lesser General Public License for more details.
 
- NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+ NList classes Support Site:  https://github.com/amiga-mui/nlist/
 
  $Id$
 
@@ -318,7 +318,7 @@ const char MainTextString2[] =
   "\033iTry just clicking on the left/right borders !\033n" NL
   "\033C" NL
   "\033r\033uGive some feedback about it ! :-)" NL
-  "\033r\033bhttp://www.sf.net/projects/nlist-classes/"
+  "\033r\033bhttps://github.com/amiga-mui/nlist//"
 };
 
 /* *********************************************** */
@@ -340,7 +340,7 @@ const char MainTextString[] =
   "\033c\033iTry just clicking on the left/right borders !\033n" NL
   "" NL
   "\033r\033uGive some feedback about it ! :-)" NL
-  "\033r\033bhttp://www.sf.net/projects/nlist-classes/"
+  "\033r\033bhttps://github.com/amiga-mui/nlist//"
 };
 
 /* *********************************************** */
@@ -360,7 +360,7 @@ const char *MainTextArray[] =
   "\033c\033iTry just clicking on the left/right borders !\033n",
   "",
   "\033r\033uGive some feedback about it ! :-)",
-  "\033r\033bhttp://www.sf.net/projects/nlist-classes/"
+  "\033r\033bhttps://github.com/amiga-mui/nlist//"
   "",
   "",
   "",

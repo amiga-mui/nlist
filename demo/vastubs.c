@@ -13,7 +13,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Lesser General Public License for more details.
 
- NBalance class Support Site:  http://www.sf.net/projects/nlist-classes
+ NBalance class Support Site:  https://github.com/amiga-mui/nlist/
 
  $Id$
 

@@ -14,7 +14,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Lesser General Public License for more details.
 
- NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+ NList classes Support Site:  https://github.com/amiga-mui/nlist/
 
  $Id$
 
@@ -264,7 +264,7 @@ static IPTR _NewP( struct IClass *cl, Object *obj, Msg msg )
                                   "Distributed under the terms of the LGPL2.\n"
                                   "\n"
                                   "For the latest version, check out:\n"
-                                  "http://www.sf.net/projects/nlist-classes/\n"
+                                  "https://github.com/amiga-mui/nlist//\n"
                                   "\n";
 
   static unsigned char msg_closed_key;

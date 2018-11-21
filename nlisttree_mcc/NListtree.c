@@ -14,7 +14,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Lesser General Public License for more details.
 
- NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+ NList classes Support Site:  https://github.com/amiga-mui/nlist/
 
  $Id$
 
@@ -5202,7 +5202,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
                                      "NList.mcc which is used by task `%s'\n"
                                      "is outdated (V%ld.%ld). Please update at least to\n"
                                      "version 20.130, which is available at\n\n"
-                                     "http://www.sf.net/projects/nlist-classes\n\n"
+                                     "https://github.com/amiga-mui/nlist/\n\n"
                                      "NListtree will terminate now to avoid problems...\n";
           es.es_GadgetFormat = (STRPTR)"Terminate";
 

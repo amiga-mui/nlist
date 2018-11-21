@@ -13,7 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
 #
-# NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+# NList classes Support Site:  https://github.com/amiga-mui/nlist/
 #
 # $Id$
 #

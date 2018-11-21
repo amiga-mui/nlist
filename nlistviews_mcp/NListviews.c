@@ -17,7 +17,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Lesser General Public License for more details.
 
- NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+ NList classes Support Site:  https://github.com/amiga-mui/nlist/
 
  $Id$
 
@@ -231,11 +231,11 @@ static const char *MainTextArray[] =
   "\033C",
   "Latest public release can be found on aminet (dev/mui).",
   "All releases are available on",
-  "http://www.sourceforge.net/projects/nlist-classes/",
+  "https://github.com/amiga-mui/nlist/",
   "\033C",
   "\033r\0333(C) 2001-2018 by NList Open Source Team",
   "\033r\0333(C) 1996-1998 by Gilles Masson",
-  "\033r\0333http://www.sourceforge.net/projects/nlist-classes/",
+  "\033r\0333https://github.com/amiga-mui/nlist/",
   "\033C",
   "\033cThis new list/listview custom class",
   "\033chandles its own configurable backgrounds,",
@@ -683,7 +683,7 @@ static IPTR mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
                                   "Distributed under the terms of the LGPL2.\n"
                                   "\n"
                                   "For the latest version, check out:\n"
-                                  "http://www.sf.net/projects/nlist-classes/\n"
+                                  "https://github.com/amiga-mui/nlist/\n"
                                   "\n";
 
   if(!(obj = (Object *)DoSuperMethodA(cl, obj,(Msg) msg)))
