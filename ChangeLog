@@ -2,11 +2,15 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+#### v0.125 RELEASE ###########################################################
+
 2018-11-19 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc, nlistviews_mcp: implemented row striping similar to List class of
     MUI5. This allows to have different colors/patterns for even and odd lines.
     This refs #3.
+
+#### v0.124 RELEASE ###########################################################
 
 2018-01-15 Thore Böckelmann <tboeckel@gmx.de>
 
