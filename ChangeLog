@@ -2,6 +2,11 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+2019-01-10 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistviews_mcp/locale/italian.po: completed italian translation with strings
+    kindly provided my Samir Hawamdeh.
+
 #### v0.125 RELEASE ###########################################################
 
 2018-11-19 Thore Böckelmann <tboeckel@gmx.de>
