@@ -11,9 +11,9 @@ YEAR=`date +%Y`
 
 # walk through the whole directory this script is called in and search
 # for files which we will try to update the Copyright notice
-find . \( -not -path "*/.svn/*" -not -name "update_copyright.sh" \) -type f \
+find . \( -not -path "*/.git/*" -not -name "update_copyright.sh" \) -type f \
        -exec sed -i "s/Copyright (C) 2001-.*NList Open Source Team/Copyright (C) 2001-${YEAR} NList Open Source Team/g" {} \;
-find . \( -not -path "*/.svn/*" -not -name "update_copyright.sh" \) -type f \
+find . \( -not -path "*/.git/*" -not -name "update_copyright.sh" \) -type f \
        -exec sed -i "s/Copyright (C) 2007-.*NList Open Source Team/Copyright (C) 2007-${YEAR} NList Open Source Team/g" {} \;
-find . \( -not -path "*/.svn/*" -not -name "update_copyright.sh" \) -type f \
+find . \( -not -path "*/.git/*" -not -name "update_copyright.sh" \) -type f \
        -exec sed -i "s/Copyright (C) 2008-.*NList Open Source Team/Copyright (C) 2008-${YEAR} NList Open Source Team/g" {} \;

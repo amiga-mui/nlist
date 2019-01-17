@@ -115,7 +115,7 @@ cp -a nlisttree_mcp/locale/NListtree_mcp.pot "release/MCC_NList/Locale/"
 cp -a nlistviews_mcp/locale/NListviews_mcp.pot "release/MCC_NList/Locale/"
 
 echo "  MK MCC_NList-0.$1.lha"
-find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
+find release -nowarn -name ".git" -exec rm -rf {} \; 2>/dev/null
 cd release
 lha -ao5q ../MCC_NList-0.$1.lha *
 cp MCC_NList/ReadMe ../MCC_NList-0.$1.readme
