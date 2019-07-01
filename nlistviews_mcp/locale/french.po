@@ -9,14 +9,15 @@
 # Translators:
 # Translators:
 # Alexandre BALABAN <transifex@balaban.fr>, 2014
+# Doryan R, 2019
 # Marc JOUAULT <scriptjester@laposte.net>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: https://github.com/amiga-mui/nlist/\n"
 "POT-Creation-Date: 2014-02-21 16:03+0100\n"
-"PO-Revision-Date: 2019-01-11 07:32+0000\n"
-"Last-Translator: Thore Böckelmann <tboeckel@gmx.de>\n"
+"PO-Revision-Date: 2019-06-29 20:26+0000\n"
+"Last-Translator: Doryan R\n"
 "Language-Team: French (http://www.transifex.com/ato/nlist-classes/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -747,7 +748,7 @@ msgid ""
 "\\033r\\033bGive some feedback about it ! :-)\n"
 "\\033C\n"
 "**************************************************************************************************\n"
-msgstr ""
+msgstr "Si vous avez des problèmes, essayez d'augmenter la valeur de la pile,\ndans les infos d'icône si vous lancez le programme à partir d'icône,\npile de CLI si vous le démarrez à partir de CLI / Shell,\net si vous le lancez à partir d'un utilitaire, lisez sa documentation\npour voir comment l'augmenter.\nUne pile de 12 Ko, 16 Ko ou 20 Ko est la plupart du temps une bonne idée.\n\nSi vous avez toujours des problèmes, essayez de voir s'ils se produisent avec le prog de la démo, puis dites-moi.\n\\033C\nLa dernière version publique est disponible sur aminet (dev / mui).\nToutes les versions sont disponibles sur\nhttps://github.com/amiga-mui/nlist/\n\\033C\n\\033r\\0333(C) 2001-2019 NList Open Source Team\n\\033r\\0333(C) 1996-1998 Gilles Masson\n\\033r\\0333https://github.com/amiga-mui/nlist/\n\\033C\n\\033cCette nouvelle classe personnalisée listview / listview\n\\033cpoignées ses propres arrière-plans configurables,\n\\033cstylos, polices, barres de défilement, clés et qualificatifs\n\\033C\n\\033cLa manière utilisée pour gérer le curseur en multisélection\n\\033cis pas exactement comme celui de listview !\n\\033cDrag & Drop est supporté, les deux barres de défilement\n\\033cpeut être configuré pour disparaître automatiquement\n\\033cquand pas nécessaire parce que tout est visible.\n\\033cJuste l'essayer...\n\\033C\n\\033cVous pouvez faire défiler horizontalement avec les touches du curseur,\n\\033cou aller à droite et à gauche de la liste\n\\033cen sélectionnant avec la souris.\n\\033cEssayez simplement de cliquer sur les bordures gauche / droite !\n\\033C\n\\033cVous pouvez modifier la largeur des colonnes en faisant simplement glisser\n\\033cle séparateur vertical entre les titres des colonnes\n\\033c(essayez-le aussi avec le qualificatif d'équilibrage).\n\\033C\n\\033cVous pouvez changer l'ordre des colonnes en faisant simplement glisser\n\\033cles titres de colonne.\n\\033C\n\\033cIl y a une copie intégrée dans le presse-papiers\n\\033capacité de sélection des caractères classiques cand.\n\\033C\n\\033cEssayez le programme de démonstration pour tester tout cela...\n\n\n\\033r\\033bDonner des commentaires à ce sujet ! :-)\n\\033C\n**************************************************************************************************\n"
 
 msgctxt "MSG_CTXMENU_COLUMN (142//)"
 msgid "Column"
@@ -771,20 +772,20 @@ msgstr "Ordre par défaut : tout"
 
 msgctxt "MSG_LISTALT_BG_WIN (147//)"
 msgid "Alternative List Background"
-msgstr ""
+msgstr "Fond de liste alternatif"
 
 msgctxt "MSG_LISTALT_BG_HELP (148//)"
 msgid ""
 "For adjusting the alternative background\n"
 "color of a list."
-msgstr ""
+msgstr "Pour ajuster le fond alternatif\ncouleur d'une liste."
 
 msgctxt "MSG_ROW_STRIPING (149//)"
 msgid "Row striping effect"
-msgstr ""
+msgstr "Effet de rayure"
 
 msgctxt "MSG_ROW_STRIPING_HELP (150//)"
 msgid ""
 "Apply row striping effect using the\n"
 "alternative background color of a list."
-msgstr ""
+msgstr "Appliquez un effet de rayure en utilisant le\ncouleur de fond alternative d'une liste."
