@@ -8,14 +8,14 @@
 # 
 # Translators:
 # Translators:
-# Niels Bache <nbache2@mail.dk>, 2015
+# Niels Bache <nbache2@mail.dk>, 2015,2020
 msgid ""
 msgstr ""
 "Project-Id-Version: MCC NList Classes\n"
 "Report-Msgid-Bugs-To: https://github.com/amiga-mui/nlist/\n"
 "POT-Creation-Date: 2014-02-21 16:03+0100\n"
-"PO-Revision-Date: 2019-01-11 07:32+0000\n"
-"Last-Translator: Thore Böckelmann <tboeckel@gmx.de>\n"
+"PO-Revision-Date: 2020-04-26 12:24+0000\n"
+"Last-Translator: Niels Bache <nbache2@mail.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/ato/nlist-classes/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -746,7 +746,7 @@ msgid ""
 "\\033r\\033bGive some feedback about it ! :-)\n"
 "\\033C\n"
 "**************************************************************************************************\n"
-msgstr ""
+msgstr "Hvis du får problemer, så prøv at øge stakstørrelsen. Det gør du i\nikonets informationsvindue hvis du starter programmet fra et ikon,\nmed CLI-stakkommandoen hvis du starter det fra CLI/Shell, og hvis\ndu starter det fra et andet hjælpeprogram, må du læse dettes dokumentation\nfor at finde ud af hvordan man øger stakken.\nEn stak på 12 kB, 16 kB eller 20 kB er som regel en god idé.\n\nHvis du stadig har problemer, så prøv at undersøge om de opstår med\nDemo-programmet, og i så fald fortæl mig om det.\n\\033C\nDen seneste offentlige release kan findes på aminet (dev/mui).\nAlle releases kan findes på\nhttps://github.com/amiga-mui/nlist/\n\\033C\n\\033r\\0333© 2001-2019 NList Open Source Team\n\\033r\\0333© 1996-1998 Gilles Masson\n\\033r\\0333https://github.com/amiga-mui/nlist/\n\\033C\n\\033cDenne nye tredjeparts-liste- og listevisningsklasse\n\\033chåndterer selv sine indstillelige baggrunde,\n\\033cpenne, skriftsnit, rulleskakter, taster og kvalifikatorer\n\\033C\n\\033cMåden som markøren håndteres på ved multimarkering,\n\\033cer ikke helt ligesom for almindelige MUI-lister.\n\\033cTræk & slip understøttes, begge rulleskakter\n\\033ckan indstilles til at forsvinde automatisk når\n\\033cde ikke er nødvendige fordi alt er er synligt.\n\\033cBare prøv det ...\n\\033C\n\\033cMan kan rulle vandret med piletasterne,\n\\033celler ved at bevæge sig til højre eller\n\\033cvenstre for listen under markering med musen.\n\\033cPrøv bare at klikke på venstre eller højre kant.\n\\033C\n\\033cMan kan ændre kolonnebredder ved blot at trække i\n\\033cden lodrette adskillelse mellem kolonneoverskrifterne\n\\033c(prøv det også sammen med balancekvalifikatoren).\n\\033C\n\\033cMan kan ændre kolonnerækkefølge ved blot at trække\n\\033ci kolonneoverskrifterne.\n\\033C\n\\033cDer er indbygget kopiering til udklipsholder\n\\033cog klassisk tegnmarkeringsmulighed.\n\\033C\n\\033cPrøv Demo-programmet for at afprøve alt dette...\n\n\n\\033r\\033bSend en tilbagemelding om det! :-)\n\\033C\n**************************************************************************************************\n"
 
 msgctxt "MSG_CTXMENU_COLUMN (142//)"
 msgid "Column"
@@ -770,20 +770,20 @@ msgstr "Standardsortering: Alle"
 
 msgctxt "MSG_LISTALT_BG_WIN (147//)"
 msgid "Alternative List Background"
-msgstr ""
+msgstr "Alternativ listebaggrund"
 
 msgctxt "MSG_LISTALT_BG_HELP (148//)"
 msgid ""
 "For adjusting the alternative background\n"
 "color of a list."
-msgstr ""
+msgstr "Til tilpasning af en listes\nalternative baggrundsfarve."
 
 msgctxt "MSG_ROW_STRIPING (149//)"
 msgid "Row striping effect"
-msgstr ""
+msgstr "Stribede rækker"
 
 msgctxt "MSG_ROW_STRIPING_HELP (150//)"
 msgid ""
 "Apply row striping effect using the\n"
 "alternative background color of a list."
-msgstr ""
+msgstr "Til at lave rækkerne stribede ved skiftevis\nat bruge listens alternative baggrundsfarve."
