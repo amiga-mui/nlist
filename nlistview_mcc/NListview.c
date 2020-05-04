@@ -463,14 +463,15 @@ static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
   VA_LIST args;
-
-  ENTER();
+  struct opSet msg;
 
   VA_START(args, obj);
-  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  msg.MethodID = OM_NEW;
+  msg.ops_AttrList = VA_ARG(args, struct TagItem *);
+  msg.ops_GInfo = NULL;
+  rc = (Object *)DoSuperMethodA(cl, obj, (Msg)&msg);
   VA_END(args);
 
-  RETURN(rc);
   return rc;
 }
 #endif
