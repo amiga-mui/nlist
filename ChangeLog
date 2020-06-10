@@ -2,6 +2,13 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+2020-06-10 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/ClipboarsServer.c, nlisttree_mcc: set "MUI:" as default "CURRDIR:"
+    and "PROGDIR:" for the global clipboard server process to avoid locking the
+    directory of the first started MUI application using this class until it is
+    eventually flushed from memory.
+
 2019-01-10 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlistviews_mcp/locale/italian.po: completed italian translation with strings
