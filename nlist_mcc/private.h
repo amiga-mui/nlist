@@ -453,7 +453,7 @@ struct NLData
   LONG marktype;
   LONG markdrawnum;
   LONG markerasenum;
-  LONG actbackground;
+  IPTR actbackground;
   LONG NumIntuiTick;
   struct RastPort *DragRPort;
   char *DragText;
