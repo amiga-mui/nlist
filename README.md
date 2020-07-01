@@ -68,7 +68,7 @@ The NList/NListview/NFloattext classes were originally written in 1996
 and are Copyright (C) 1996-1997 by Gilles Masson, whereas the NListtree
 classes were originally written in 1999 and are Copyright (C) 1999-2001
 by Carsten Scholling. Since 2001, both class families are maintained and
-Copyright (C) 2001-2018 NList Open Source Team.
+Copyright (C) 2001-2020 NList Open Source Team.
 
 All NList classes are distributed and licensed under the GNU Lesser General
 Public License Version 2.1. See [COPYING](COPYING) for more detailed information.

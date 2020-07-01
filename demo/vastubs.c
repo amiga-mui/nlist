@@ -1,7 +1,7 @@
 /***************************************************************************
 
  NList classes
- Copyright (C) 2008-2018 NList Open Source Team
+ Copyright (C) 2008-2020 NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public

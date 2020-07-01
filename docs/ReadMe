@@ -2,8 +2,8 @@ Short:        NList custom classes for MUI
 Author:       NList Open Source Team
 Uploader:     Jens Maus <mail@jens-maus.de>
 Type:         dev/mui
-Version:      0.125
-Replaces:     dev/mui/MCC_NList-0.124.lha
+Version:      0.126
+Replaces:     dev/mui/MCC_NList-0.125.lha
 Requires:     AmigaOS V37+, MorphOS or AROS, MUI 3.8+, HotkeyString.mcc
 Architecture: ppc-amigaos >= 4.0.0; m68k-amigaos >= 3.0; ppc-morphos >= 1.4.2; i386-aros; ppc-aros; x86_64-aros
 
@@ -27,14 +27,14 @@ enabling copy to clipboard and key moving.
 
 This package includes:
 
-NList.mcc         20.144    28.12.2018
-NListview.mcc     19.99     28.12.2018
-NFloattext.mcc    19.80     28.12.2018
-NListviews.mcp    19.95     28.12.2018
-NListtree.mcc     18.51     28.12.2018
-NListtree.mcp     18.39     28.12.2018
-NBitmap.mcc       15.29     28.12.2018
-NBalance.mcc      15.25     28.12.2018
+NList.mcc         20.145    01.07.2020
+NListview.mcc     19.100    01.07.2020
+NFloattext.mcc    19.81     01.07.2020
+NListviews.mcp    19.96     01.07.2020
+NListtree.mcc     18.52     01.07.2020
+NListtree.mcp     18.40     01.07.2020
+NBitmap.mcc       15.30     01.07.2020
+NBalance.mcc      15.26     01.07.2020
 
 
 INSTALLATION
@@ -67,7 +67,7 @@ The NList/NListview/NFloattext classes were originally written in 1996
 and are Copyright (C) 1996-1997 by Gilles Masson, whereas the NListtree
 classes were originally written in 1999 and are Copyright (C) 1999-2001
 by Carsten Scholling. Since 2001, both class families are maintained and
-Copyright (C) 2001-2018 NList Open Source Team.
+Copyright (C) 2001-2020 NList Open Source Team.
 
 The complete NList package is distributed under the GNU Lesser General
 Public License (LGPL) and the development is hosted at github.com:
