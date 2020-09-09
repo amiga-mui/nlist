@@ -2,14 +2,18 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+  * nlist_mcc/ClipboardServer.c, nlisttree_mcc/ClipboardServer.c: changed the
+    default path for "CURRDIR:" and "PROGDIR:" to "T:", because the "MUI:"
+    assign does not exist on all systems, i.e. AROS.
+
 #### v0.126 RELEASE ###########################################################
 
 2020-06-10 Thore Böckelmann <tboeckel@gmx.de>
 
-  * nlist_mcc/ClipboarsServer.c, nlisttree_mcc: set "MUI:" as default "CURRDIR:"
-    and "PROGDIR:" for the global clipboard server process to avoid locking the
-    directory of the first started MUI application using this class until it is
-    eventually flushed from memory.
+  * nlist_mcc/ClipboardServer.c, nlisttree_mcc/ClipboardServer.c: set "MUI:" as
+    default "CURRDIR:" and "PROGDIR:" for the global clipboard server process to
+    avoid locking the directory of the first started MUI application using this
+    class until it is eventually flushed from memory.
 
 2019-01-10 Thore Böckelmann <tboeckel@gmx.de>
 
