@@ -2,6 +2,8 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+#### v0.127 RELEASE ###########################################################
+
 2020-09-09 Thore Böckelmann <tboeckel@gmx.de>
 
   * nlist_mcc/ClipboardServer.c, nlisttree_mcc/ClipboardServer.c: changed the
