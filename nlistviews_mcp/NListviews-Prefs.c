@@ -5,7 +5,7 @@
                                             and 0x9d510101 to 0x9d51013F)
 
  Copyright (C) 1996-2001 by Gilles Masson
- Copyright (C) 2001-2020 NList Open Source Team
+ Copyright (C) 2001-2021 NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -108,7 +108,7 @@ int main(void)
           app = MUI_NewObject("Application.mui",
               MUIA_Application_Author,      "NList Open Source Team",
               MUIA_Application_Base,        "NListviews-Prefs",
-              MUIA_Application_Copyright,   "Copyright (C) 2001-2020 NList Open Source Team",
+              MUIA_Application_Copyright,   "Copyright (C) 2001-2021 NList Open Source Team",
               MUIA_Application_Description, "Preference for NList classes",
               MUIA_Application_Title,       "NListviews-Prefs",
               MUIA_Application_Version,     "$VER: NListviews-Prefs V1.0 (15.09.2007)",
