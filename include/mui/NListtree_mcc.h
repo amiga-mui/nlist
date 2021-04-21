@@ -43,7 +43,7 @@ extern "C" {
 
 /***********************************************************************/
 
-// STACKED ensures proper alignment on AROS 64 bit systems
+/* STACKED ensures proper alignment on AROS 64 bit systems */
 #if !defined(__AROS__) && !defined(STACKED)
 #define STACKED
 #endif
@@ -61,33 +61,33 @@ extern "C" {
 
 /*** Attributes ***/
 
-#define MUIA_NListtree_Active                               0xfec81201UL  // *** [.SGN]
-#define MUIA_NListtree_ActiveList                           0xfec81202UL  // *** [..GN]
-#define MUIA_NListtree_CloseHook                            0xfec81203UL  // *** [IS..]
-#define MUIA_NListtree_ConstructHook                        0xfec81204UL  // *** [IS..]
-#define MUIA_NListtree_DestructHook                         0xfec81205UL  // *** [IS..]
-#define MUIA_NListtree_DisplayHook                          0xfec81206UL  // *** [IS..]
-#define MUIA_NListtree_DoubleClick                          0xfec81207UL  // *** [ISGN]
-#define MUIA_NListtree_DragDropSort                         0xfec81208UL  // *** [IS..]
-#define MUIA_NListtree_DupNodeName                          0xfec81209UL  // *** [IS..]
-#define MUIA_NListtree_EmptyNodes                           0xfec8120aUL  // *** [IS..]
-#define MUIA_NListtree_Format                               0xfec8120bUL  // *** [IS..]
-#define MUIA_NListtree_OpenHook                             0xfec8120cUL  // *** [IS..]
-#define MUIA_NListtree_Quiet                                0xfec8120dUL  // *** [.S..]
-#define MUIA_NListtree_CompareHook                          0xfec8120eUL  // *** [IS..]
-#define MUIA_NListtree_Title                                0xfec8120fUL  // *** [IS..]
-#define MUIA_NListtree_TreeColumn                           0xfec81210UL  // *** [ISG.]
-#define MUIA_NListtree_AutoVisible                          0xfec81211UL  // *** [ISG.]
-#define MUIA_NListtree_FindNameHook                         0xfec81212UL  // *** [IS..]
-#define MUIA_NListtree_MultiSelect                          0xfec81213UL  // *** [I...]
-#define MUIA_NListtree_MultiTestHook                        0xfec81214UL  // *** [IS..]
-#define MUIA_NListtree_CopyToClipHook                       0xfec81217UL  // *** [IS..]
-#define MUIA_NListtree_DropType                             0xfec81218UL  // *** [..G.]
-#define MUIA_NListtree_DropTarget                           0xfec81219UL  // *** [..G.]
-#define MUIA_NListtree_DropTargetPos                        0xfec8121aUL  // *** [..G.]
-#define MUIA_NListtree_FindUserDataHook                     0xfec8121bUL  // *** [IS..]
-#define MUIA_NListtree_ShowTree                             0xfec8121cUL  // *** [ISG.]
-#define MUIA_NListtree_SelectChange                         0xfec8121dUL  // *** [ISGN]
+#define MUIA_NListtree_Active                               0xfec81201UL  /* [.SGN] */
+#define MUIA_NListtree_ActiveList                           0xfec81202UL  /* [..GN] */
+#define MUIA_NListtree_CloseHook                            0xfec81203UL  /* [IS..] */
+#define MUIA_NListtree_ConstructHook                        0xfec81204UL  /* [IS..] */
+#define MUIA_NListtree_DestructHook                         0xfec81205UL  /* [IS..] */
+#define MUIA_NListtree_DisplayHook                          0xfec81206UL  /* [IS..] */
+#define MUIA_NListtree_DoubleClick                          0xfec81207UL  /* [ISGN] */
+#define MUIA_NListtree_DragDropSort                         0xfec81208UL  /* [IS..] */
+#define MUIA_NListtree_DupNodeName                          0xfec81209UL  /* [IS..] */
+#define MUIA_NListtree_EmptyNodes                           0xfec8120aUL  /* [IS..] */
+#define MUIA_NListtree_Format                               0xfec8120bUL  /* [IS..] */
+#define MUIA_NListtree_OpenHook                             0xfec8120cUL  /* [IS..] */
+#define MUIA_NListtree_Quiet                                0xfec8120dUL  /* [.S..] */
+#define MUIA_NListtree_CompareHook                          0xfec8120eUL  /* [IS..] */
+#define MUIA_NListtree_Title                                0xfec8120fUL  /* [IS..] */
+#define MUIA_NListtree_TreeColumn                           0xfec81210UL  /* [ISG.] */
+#define MUIA_NListtree_AutoVisible                          0xfec81211UL  /* [ISG.] */
+#define MUIA_NListtree_FindNameHook                         0xfec81212UL  /* [IS..] */
+#define MUIA_NListtree_MultiSelect                          0xfec81213UL  /* [I...] */
+#define MUIA_NListtree_MultiTestHook                        0xfec81214UL  /* [IS..] */
+#define MUIA_NListtree_CopyToClipHook                       0xfec81217UL  /* [IS..] */
+#define MUIA_NListtree_DropType                             0xfec81218UL  /* [..G.] */
+#define MUIA_NListtree_DropTarget                           0xfec81219UL  /* [..G.] */
+#define MUIA_NListtree_DropTargetPos                        0xfec8121aUL  /* [..G.] */
+#define MUIA_NListtree_FindUserDataHook                     0xfec8121bUL  /* [IS..] */
+#define MUIA_NListtree_ShowTree                             0xfec8121cUL  /* [ISG.] */
+#define MUIA_NListtree_SelectChange                         0xfec8121dUL  /* [ISGN] */
 
 
 /*** Special attribute values ***/
@@ -155,10 +155,10 @@ extern "C" {
 /*** Structures & Flags ***/
 
 struct MUI_NListtree_TreeNode {
-    struct  MinNode tn_Node;    // ***  To make it a node.
-    STRPTR  tn_Name;            // ***  Simple name field.
-    UWORD   tn_Flags;           // ***  Used for the flags below.
-    APTR    tn_User;            // ***  Free for user data.
+    struct  MinNode tn_Node;    /* To make it a node        */
+    STRPTR  tn_Name;            /* Simple name field        */
+    UWORD   tn_Flags;           /* Used for the flags below */
+    APTR    tn_User;            /* Free for user data       */
 };
 
 
@@ -201,19 +201,19 @@ struct MUI_NListtree_TestPos_Result {
 #define MUIM_NListtree_MultiTest                            0xfec81111UL
 #define MUIM_NListtree_Select                               0xfec81112UL
 #define MUIM_NListtree_Copy                                 0xfec81113UL
-#define MUIM_NListtree_InsertStruct                         0xfec81114UL  // *** Insert a struct (like a path) into the list.
-#define MUIM_NListtree_Active                               0xfec81115UL  // *** Method which gives the active node/number.
-#define MUIM_NListtree_DoubleClick                          0xfec81116UL  // *** Occurs on every double click.
-#define MUIM_NListtree_PrevSelected                         0xfec81118UL  // *** Like reverse NextSelected.
-#define MUIM_NListtree_CopyToClip                           0xfec81119UL  // *** Copy an entry or part to the clipboard.
-#define MUIM_NListtree_FindUserData                         0xfec8111aUL  // *** Find a node upon user data.
-#define MUIM_NListtree_Clear                                0xfec8111bUL  // *** Clear complete tree.
-#define MUIM_NListtree_DropType                             0xfec8111eUL  // ***
-#define MUIM_NListtree_DropDraw                             0xfec8111fUL  // ***
-#define MUIM_NListtree_Construct                            0xfec81120UL  // *** Construct a treenode
-#define MUIM_NListtree_Destruct                             0xfec81121UL  // *** Destruct a treenode
-#define MUIM_NListtree_Display                              0xfec81122UL  // *** Display a treenode
-#define MUIM_NListtree_Compare                              0xfec81123UL  // *** Compare two treenodes
+#define MUIM_NListtree_InsertStruct                         0xfec81114UL  /* Insert a struct (like a path) into the list */
+#define MUIM_NListtree_Active                               0xfec81115UL  /* Method which gives the active node/number */
+#define MUIM_NListtree_DoubleClick                          0xfec81116UL  /* Occurs on every double click */
+#define MUIM_NListtree_PrevSelected                         0xfec81118UL  /* Like reverse NextSelected */
+#define MUIM_NListtree_CopyToClip                           0xfec81119UL  /* Copy an entry or part to the clipboard */
+#define MUIM_NListtree_FindUserData                         0xfec8111aUL  /* Find a node upon user data */
+#define MUIM_NListtree_Clear                                0xfec8111bUL  /* Clear complete tree */
+#define MUIM_NListtree_DropType                             0xfec8111eUL  /* */
+#define MUIM_NListtree_DropDraw                             0xfec8111fUL  /* */
+#define MUIM_NListtree_Construct                            0xfec81120UL  /* Construct a treenode */
+#define MUIM_NListtree_Destruct                             0xfec81121UL  /* Destruct a treenode */
+#define MUIM_NListtree_Display                              0xfec81122UL  /* Display a treenode */
+#define MUIM_NListtree_Compare                              0xfec81123UL  /* Compare two treenodes */
 
 
 /*** Method structs ***/

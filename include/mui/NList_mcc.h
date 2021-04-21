@@ -44,7 +44,7 @@ extern "C" {
 
 /***********************************************************************/
 
-// STACKED ensures proper alignment on AROS 64 bit systems
+/* STACKED ensures proper alignment on AROS 64 bit systems */
 #if !defined(__AROS__) && !defined(STACKED)
 #define STACKED
 #endif
