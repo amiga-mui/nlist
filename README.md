@@ -1,6 +1,7 @@
 # NList MUI Classes
 
-[![Build Status](https://travis-ci.org/amiga-mui/nlist.svg?branch=master)](https://travis-ci.org/amiga-mui/nlist) [![Code Climate](https://codeclimate.com/github/amiga-mui/nlist/badges/gpa.svg)](https://codeclimate.com/github/amiga-mui/nlist) [![License](http://img.shields.io/:license-lgpl2-blue.svg?style=flat)](http://www.gnu.org/licenses/lgpl-2.1.html) [![Github Issues](http://githubbadges.herokuapp.com/amiga-mui/nlist/issues.svg)](https://github.com/amiga-mui/nlist/issues)
+[![Build](https://github.com/amiga-mui/nlist/workflows/CI/badge.svg)](https://github.com/amiga-mui/nlist/actions)
+[![License](http://img.shields.io/:license-lgpl2-blue.svg?style=flat)](http://www.gnu.org/licenses/lgpl-2.1.html)
 
 This is a MUI custom class package containing replacements for the
 List/Listtree/Listviews/Floattext/Bitmap/Balance MUI built-in classes.
