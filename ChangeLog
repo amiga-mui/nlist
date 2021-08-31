@@ -2,6 +2,8 @@
 MUI NList MCC classes - ChangeLog
 ---------------------------------
 
+#### v0.128 RELEASE ###########################################################
+
 2021-01-03 Thore Böckelmann <tboeckel@gmx.de>
 
   * dist: added italian translation to Installer script kindly provided by Samir
