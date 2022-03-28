@@ -4549,7 +4549,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
           }
         }
 
-        if(tag->ti_Data == (ULONG)MUIV_NListtree_ConstructHook_String)
+        if(tag->ti_Data == (IPTR)MUIV_NListtree_ConstructHook_String)
         {
           D(DBF_GETSET, "SET MUIA_NListtree_ConstructHook: MUIV_NListtree_ConstructHook_String");
 
@@ -4585,7 +4585,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
           }
         }
 
-        if(tag->ti_Data == (ULONG)MUIV_NListtree_DestructHook_String)
+        if(tag->ti_Data == (IPTR)MUIV_NListtree_DestructHook_String)
         {
           D(DBF_GETSET, "SET MUIA_NListtree_DestructHook: MUIV_NListtree_DestructHook_String");
 
@@ -4608,7 +4608,7 @@ static VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL 
 
       case MUIA_NListtree_DisplayHook:
       {
-        if(tag->ti_Data != (ULONG)MUIV_NListtree_DisplayHook_Default)
+        if(tag->ti_Data != (IPTR)MUIV_NListtree_DisplayHook_Default)
         {
           data->DisplayHook     = (struct Hook *)tag->ti_Data;
         }
